@@ -11,9 +11,6 @@ import org.dlearn.helsinki.skeleton.model.SpiderGraph;
 public class Database {
 
     private static final String DB_DRIVER = "org.postgresql.Driver";
-    private static final String DB_CONNECTION = "jdbc:postgresql://localhost:5432/Dlearn_db?verifyServerCertificate=false&useSSL=true";
-    private static final String DB_USER = "postgres";
-    private static final String DB_PASSWORD = "admin";
 
     public void testConnection() throws Exception {
         try(Connection dbConnection = getDBConnection()) {
@@ -101,9 +98,8 @@ public class Database {
             System.out.println(e.getMessage());
         }
         try {
-            dbConnection = DriverManager.getConnection(
-                    DB_CONNECTION, DB_USER, DB_PASSWORD);
-            return dbConnection;
+            String dbUrl = System.getenv("JDBC_DATABASE_URL");
+            dbConnection = DriverManager.getConnection(dbUrl);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

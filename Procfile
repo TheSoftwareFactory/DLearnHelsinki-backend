@@ -1,0 +1,1 @@
+web: cd backend/skeleton && mvn TODO_WHAT_TO_USE
