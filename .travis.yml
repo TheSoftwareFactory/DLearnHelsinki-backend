@@ -9,7 +9,6 @@ jdk: openjdk8
 #   - postgresql
 
 before_script:
-  - cd 'backend/skeleton'
 # - psql -c ./src/main/resources/TestDB.sql -U postgres
 
 after_success:
