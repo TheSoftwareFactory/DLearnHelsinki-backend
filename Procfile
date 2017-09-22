@@ -1,1 +1,1 @@
-web: mvn clean install && java $JAVA_OPTS -cp target/classes:target/dependency/* skeleton
+web: mvn clean package && java -jar target/dependency/webapp-runner.jar target/*.war
