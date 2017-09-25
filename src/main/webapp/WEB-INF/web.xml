@@ -19,34 +19,4 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
         <servlet-name>Jersey Web Application</servlet-name>
         <url-pattern>/webapi/*</url-pattern>
     </servlet-mapping>
-    
-    <security-constraint>
-      <web-resource-collection>
-         <web-resource-name>student listing</web-resource-name>
-         <url-pattern>/webapi/students/*</url-pattern>
-         <http-method>GET</http-method>
-      </web-resource-collection>
-      <auth-constraint>
-         <role-name>teacher</role-name>
-         <role-name>student</role-name>
-      </auth-constraint>
-<!--      <user-data-constraint> TODO: Force HTTPS
-         <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-      </user-data-constraint>-->
-    </security-constraint>
-
-    <login-config>
-        <auth-method>BASIC</auth-method>
-        <realm-name>jaxrs</realm-name>
-    </login-config>
-
-    <security-role>
-        <role-name>researcher</role-name>
-    </security-role>
-    <security-role>
-        <role-name>teacher</role-name>
-    </security-role>
-    <security-role>
-        <role-name>student</role-name>
-    </security-role>
 </web-app>
