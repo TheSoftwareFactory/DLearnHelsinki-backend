@@ -1,6 +1,5 @@
 package org.dlearn.helsinki.skeleton.resource;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -31,8 +30,10 @@ public class StudentResource {
         return new Student(student_id, "lastname", "firstname", "username", "password");
     }
 
+    /*
     @Path("/{student_id}/spidergraphs")
     public SpiderGraphResource getSpiderGraphResource(@PathParam("student_id") int student_id) {
         return new SpiderGraphResource();
     }
+    */
 }
