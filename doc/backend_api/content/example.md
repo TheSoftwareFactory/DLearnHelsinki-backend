@@ -1,7 +1,11 @@
-## Dlearn
+# Dlearn
 
 This is our high-quality API. You can use this API to request
 and remove different students and spidergraphs.
+
+## Teacher role
+
+End points available for teacher.
 
 ### List students
 
@@ -22,18 +26,16 @@ $ curl localhost:8080/skeleton/webapi/students/
 ```json
 [
   {
-    "_id": {student_id},
-    "lastname": "{lastname}",
-    "firstname": "{firstname}",
-    "username": "{username}",
-    "password" : "password"
+    "_id": 1,
+    "lastname": "Meikäläinen",
+    "firstname": "Matti",
+    "username": "iloinen tanssiva aurinko"
   },
   {
-    "_id": {student_id},
-    "lastname": "{lastname}",
-    "firstname": "{firstname}",
-    "username": "{username}",
-    "password" : "password"
+    "_id": 2,
+    "lastname": "Meikäläinen",
+    "firstname": "Maija",
+    "username": "kirjava hyppivä puu"
   }
 ]
 ```
@@ -43,7 +45,7 @@ $ curl localhost:8080/skeleton/webapi/students/
 This is how you can get a specific student by their id.
 
 ```endpoint
-GET /students/1
+GET /students/{student_id}
 ```
 
 #### Example request
@@ -56,11 +58,10 @@ $ curl localhost:8080/skeleton/webapi/students/1
 
 ```json
 {
-  "_id": {student_id},
-  "lastname": "{lastname}",
-  "firstname": "{firstname}",
-  "username": "{username}",
-  "password" : "password"
+  "_id": 1,
+  "lastname": "Meikäläinen",
+  "firstname": "Matti",
+  "username": "iloinen tanssiva aurinko"
 }
 ```
 
@@ -69,7 +70,7 @@ $ curl localhost:8080/skeleton/webapi/students/1
 Returns a single spidergraph.
 
 ```endpoint
-GET /students/1/spidergraphs/1
+GET /students/{student_id}/spidergraphs/{id}
 ```
 
 Retrieve information about an existing spidegraph.
@@ -77,17 +78,135 @@ Retrieve information about an existing spidegraph.
 #### Example request
 
 ```curl
-curl localhost:8080/skeleton/webapi/students/1/spidergraphics/1
+curl localhost:8080/skeleton/webapi/students/1/spidergraphs/1
+```
+
+#### Example response
+
+<!--TODO: Actual response-->
+
+```json
+{
+
+}
+```
+
+### List surveys
+
+Retrieves surveys for a teacher
+
+```endpoint
+GET teachers/{teacher_id}/surveys/
+```
+
+#### Example request
+
+```curl
+curl localhost:8080/skeleton/webapi/teachers/1/surveys/
+```
+
+#### Example response
+
+<!--TODO: Actual response-->
+
+```json
+{
+
+}
+```
+
+### Add new survey
+
+Adds new survey
+
+```endpoint
+POST teachers/{teacher_id}/surveys/
+```
+
+#### Example request
+
+```curl
+curl --request POST localhost:8080/skeleton/webapi/teachers/{teacher_id}/surveys \
+  -d @data.json
+```
+
+#### Example request body
+
+```json
+{
+  "_id": 1,
+  "name": "Reilu peli leikkikentällä",
+  "group_id": 1,
+  "start_data": "2007-04-05T12:30Z",
+  "end_date": "2007-04-05T13:30Z",
+  "teacher_id": 1,
+}
+```
+
+#### Example response
+
+<!--TODO: Actual response-->
+
+```json
+{
+
+}
+```
+
+<!-- TODO: Updating survey? -->
+
+## Student role
+
+Endpoints available for student.
+
+### List information
+
+This is how student can get their own information.
+
+```endpoint
+GET /student/
+```
+
+#### Example request
+
+```curl
+$ curl localhost:8080/skeleton/webapi/student/
 ```
 
 #### Example response
 
 ```json
 {
-  "owner": "{username}",
-  "id": "{wobble_id}",
-  "created": "{timestamp}",
-  "modified": "{timestamp}"
+  "_id": 1,
+  "lastname": "Meikäläinen",
+  "firstname": "Matti",
+  "username": "iloinen tanssiva aurinko"
+}
+```
+
+### Retrieve a student's spidergraph
+
+Returns a single spidergraph.
+
+```endpoint
+GET /student/spidergraphs/1
+```
+
+Retrieve information about an existing spidegraph.
+
+#### Example request
+
+```curl
+curl localhost:8080/skeleton/webapi/student/spidergraphs/1
+```
+
+#### Example response
+
+<!--TODO: Actual response-->
+
+```json
+{
+  
 }
 ```
 
