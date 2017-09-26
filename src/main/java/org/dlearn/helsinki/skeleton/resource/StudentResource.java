@@ -1,6 +1,5 @@
 package org.dlearn.helsinki.skeleton.resource;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.GET;
