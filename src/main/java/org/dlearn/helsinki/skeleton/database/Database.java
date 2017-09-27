@@ -16,6 +16,7 @@ import org.dlearn.helsinki.skeleton.model.Survey;
 public class Database {
 
     private static final String DB_DRIVER = "org.postgresql.Driver";
+    
     /* dev environment online */
     private static final String DB_CONNECTION = "jdbc:postgresql://localhost:5432/Dlearn_db?verifyServerCertificate=false&useSSL=true";
     private static final String DB_USER = "postgres";
