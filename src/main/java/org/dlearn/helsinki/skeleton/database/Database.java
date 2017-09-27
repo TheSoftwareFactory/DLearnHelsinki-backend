@@ -96,7 +96,7 @@ public class Database {
 		try(Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Surveys\" (name, group_id, start_date, end_date, teacher_id) "
-            		+ "VALUES (?,?,?,?,?)";
+                       + "VALUES (?,?,?,?,?) RETURNING _id";
             try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
                 insert.setString(1, "name_of_survey"); 
                 insert.setInt(2, 1);
@@ -104,16 +104,11 @@ public class Database {
                 insert.setDate(4, new Date(0));
                 insert.setInt(5, 1);
                 // execute query
-                insert.executeQuery();
-                
-                // TODO implement
-                try (ResultSet generatedKeys = insert.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                    	System.out.println(generatedKeys.getInt(1));
-                    	survey.set_id(generatedKeys.getInt(1));
-                    }
-                    else {
-                        throw new SQLException("Creating user failed, no ID obtained.");
+                try(ResultSet result = insert.executeQuery()) {
+                    if (result.first()) {
+                        survey.set_id(result.getInt("_id"));
+                    } else {
+                        System.out.println("Inserting survey didn't return ID of it.");
                     }
                 }
             }
