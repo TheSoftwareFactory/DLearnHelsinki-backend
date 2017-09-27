@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 import org.dlearn.helsinki.skeleton.model.SpiderGraph;
 import org.dlearn.helsinki.skeleton.service.SpiderGraphService;
 
-@Path("/")
+@Path("/spiderGraphs")
 public class SpiderGraphResource {
 
     SpiderGraphService spiderGraphService = new SpiderGraphService();

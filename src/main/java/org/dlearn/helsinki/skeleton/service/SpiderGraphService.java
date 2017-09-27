@@ -1,7 +1,6 @@
 package org.dlearn.helsinki.skeleton.service;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import jersey.repackaged.com.google.common.collect.Lists;
 
@@ -40,7 +39,6 @@ public class SpiderGraphService {
         try {
             newSpider = db.updateSpidergraph(spidergraph);
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return newSpider;
