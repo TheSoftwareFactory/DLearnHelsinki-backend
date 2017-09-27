@@ -210,6 +210,75 @@ curl localhost:8080/skeleton/webapi/student/spidergraphs/1
 }
 ```
 
+### Retrieve the active survey ID
+
+Returns the survey ID that the specified group of students can answer right now. If no survey is active, returns nothing.
+
+```endpoint
+GET /student/groups/{group_id}/surveys
+```
+
+#### Example request
+
+```curl
+curl localhost:8080/skeleton/webapi/student/groups/1/surveys
+```
+
+#### Example response
+
+```json
+{
+  "_id": 1
+}
+```
+
+### Retrieve questions for a survey
+
+Returns the array of questions for a survey.
+
+```endpoint
+GET /student/groups/{group_id}/surveys/{survey_id}/questions
+```
+#### Example request
+
+```curl
+curl localhost:8080/skeleton/webapi/student/groups/1/surveys/1/questions
+```
+
+#### Example response
+
+```json
+[
+	{
+  		"_id" : 1,
+		"question" : "Are you happy?",
+		"min_answer" : 1,
+		"max_answer" : 5
+	},
+	{
+  		"_id" : 2,
+		"question" : "Rate your teacher.",
+		"min_answer" : 1,
+		"max_answer" : 5
+	}
+]
+```
+
+### Send answers to the questions
+
+Sends the answer to the specified question.
+
+```endpoint
+PUT /student/groups/{group_id}/surveys/{survey_id}/questions/{question_id}/answer
+```
+
+#### Example of the message body
+
+```json
+{
+	"answer" : 2
+}
+```
 ### Update a wobble
 
 Updates the properties of a particular wobble.
