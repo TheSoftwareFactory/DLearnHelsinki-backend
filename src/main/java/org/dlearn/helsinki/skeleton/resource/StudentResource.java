@@ -22,14 +22,7 @@ public class StudentResource {
             new Student(student_id + 1, "lastname2", "firstname2", "username2", "password2")
         );
     }
-
-    @GET
-    @Path("/{student_id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Student getStudentFromId(@PathParam("student_id") int student_id) {
-        return new Student(student_id, "lastname", "firstname", "username", "password");
-    }
-
+    
     /*
     @Path("/{student_id}/spidergraphs")
     public SpiderGraphResource getSpiderGraphResource(@PathParam("student_id") int student_id) {

@@ -171,6 +171,41 @@ public class Database {
         }
 	}
 	
+	// Method getQuestionFromSurvey
+	// parameter : int, id of survey
+	// output : ArrayList<Question>, list of questions from the survey
+	// Takes a survey id and returns all the questions set to that survey
+	public List<Question> getQuestionsFromSurvey(int survey_id) {
+		
+		System.out.println("Getting the questions from the survey.");
+		ArrayList<Question> questions = new ArrayList<Question>();
+		try(Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "Select _id, question, min_answer, max_answer FROM \"Questions\", \"Survey_questions\" WHERE"
+            		+ " \"Survey_questions\".survey_id = ? AND \"Survey_questions\".question_id = \"Questions\"._id";
+            //prepare statement with survey_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+                select.setInt(1, survey_id);
+
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                    while (result.next()) {
+                    	Question question = new Question();
+                    	question.set_id(result.getInt(1));
+                    	question.setQuestion(result.getString(2));
+                    	question.setMin_answer(result.getInt(3));
+                    	question.setMax_answer(result.getInt(4));
+                    	questions.add(question);
+                    	System.out.println(question.getQuestion());
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+		return questions;
+	}
+	
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
