@@ -7,18 +7,18 @@ and remove different students and spidergraphs.
 
 End points available for teacher.
 
-### List students
+### List students in one class
 
-Lists all students available.
+Lists all students inside one specified class.
 
 ```endpoint
-GET /students/
+GET teachers/{teacher_id}/classes/{class_id}/students/
 ```
 
 #### Example request
 
 ```curl
-$ curl localhost:8080/skeleton/webapi/students/
+$ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/students/
 ```
 
 #### Example response
@@ -40,18 +40,111 @@ $ curl localhost:8080/skeleton/webapi/students/
 ]
 ```
 
-### List individual students
+### List of all groups in one specified class
 
-This is how you can get a specific student by their id.
+This request allows you to retrieve a detailed list of all students in their respective groups, in one class 
 
 ```endpoint
-GET /students/{student_id}
+GET teachers/{teacher_id}/classes/{class_id}/groups/
 ```
 
 #### Example request
 
 ```curl
-$ curl localhost:8080/skeleton/webapi/students/1
+$ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/groups/
+```
+
+#### Example response
+
+```json
+[
+
+    {
+    	"group_id" = 1,
+        "grpName" : "Grp1",
+        [
+            
+		{
+			 "_id": 1,
+			  "lastname": "Meikäläinen",
+			  "firstname": "Matti",
+			  "username": "iloinen tanssiva aurinko"
+		},
+           	 {
+			 "_id": 2,
+			  "lastname": "Jo",
+			  "firstname": "Doe",
+			  "username": "iloinen tanssiva aurinko"
+		}
+        ]
+    },
+    {
+    	"group_id" = 2,
+        "grpName" : "Grp2",
+        [
+            
+		{
+			 "_id": 3,
+			  "lastname": "Thomas",
+			  "firstname": "Mimi",
+			  "username": "iloinen tanssiva aurinko"
+		},
+           	 {
+			 "_id": 3,
+			  "lastname": "Jean",
+			  "firstname": "Dujardin",
+			  "username": "iloinen tanssiva aurinko"
+		}
+        ]
+    }
+]
+```
+
+### List of students in a group
+
+```endpoint
+GET teachers/{teacher_id}/classes/{class_id}/groups/{group_id}/students
+```
+
+#### Example request
+
+```curl
+$ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/groups/1/students
+```
+
+#### Example response
+
+```json
+[
+            
+	{
+		 "_id": 3,
+		  "lastname": "Thomas",
+		  "firstname": "Mimi",
+		  "username": "iloinen tanssiva aurinko"
+	},
+	 {
+		 "_id": 3,
+		  "lastname": "Jean",
+		  "firstname": "Dujardin",
+		  "username": "iloinen tanssiva aurinko"
+	}
+]
+```
+
+
+### List individual students
+
+This is how you can get a specific student by their id.
+
+```endpoint
+GET teachers/{teacher_id}/classes/{class_id}/students/{student_id}
+```
+
+#### Example request
+
+```curl
+$ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/students/1
 ```
 
 #### Example response
@@ -65,12 +158,13 @@ $ curl localhost:8080/skeleton/webapi/students/1
 }
 ```
 
-### Retrieve a student's spidergraph
+### Retrieve a student's result
 
-Returns a single spidergraph.
+Returns a single result for a specified survey.
 
 ```endpoint
-GET /students/{student_id}/spidergraphs/{id}
+GET teachers/{teacher_id}/classes/{class_id}/surveys/{survey_id}/students/{student_id}/answers
+GET /
 ```
 
 Retrieve information about an existing spidegraph.
@@ -78,7 +172,7 @@ Retrieve information about an existing spidegraph.
 #### Example request
 
 ```curl
-curl localhost:8080/skeleton/webapi/students/1/spidergraphs/1
+curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/students/1/answers
 ```
 
 #### Example response
@@ -91,18 +185,73 @@ curl localhost:8080/skeleton/webapi/students/1/spidergraphs/1
 }
 ```
 
-### List surveys
+### Retrieve a group's results
 
-Retrieves surveys for a teacher
+Returns a single result for a specified survey for a specified group.
 
 ```endpoint
-GET teachers/{teacher_id}/surveys/
+GET teachers/{teacher_id}/classes/{class_id}/surveys/{survey_id}/groups/{group_id}/answers
+GET /
+```
+
+Retrieve information about an existing spidegraph.
+
+#### Example request
+
+```curl
+curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/groups/1/answers
+```
+
+#### Example response
+
+<!--TODO: Actual response-->
+
+```json
+{
+
+}
+```
+
+### Retrieve a class's results
+
+Returns a single result for a specified survey for a specified class.
+
+```endpoint
+GET teachers/{teacher_id}/classes/{class_id}/surveys/{survey_id}/answers
+GET /
+```
+
+Retrieve information about an existing spidegraph.
+
+#### Example request
+
+```curl
+curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/answers
+```
+
+#### Example response
+
+<!--TODO: Actual response-->
+
+```json
+{
+
+}
+```
+
+
+### List surveys
+
+Retrieves surveys for a teacher, for one class, on one survey
+
+```endpoint
+GET teachers/{teacher_id}/classes/{class_id}/surveys/{survey_id}/answers
 ```
 
 #### Example request
 
 ```curl
-curl localhost:8080/skeleton/webapi/teachers/1/surveys/
+curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/answers
 ```
 
 #### Example response
@@ -115,18 +264,22 @@ curl localhost:8080/skeleton/webapi/teachers/1/surveys/
 }
 ```
 
-### Add new survey
+### Add/Open new survey
 
 Adds new survey
 
 ```endpoint
+v1.0 (Remove as soon as possible)
 POST teachers/{teacher_id}/surveys/
+
+v2.0
+POST teachers/{teacher_id}/classes/{class_id}/surveys/
 ```
 
 #### Example request
 
 ```curl
-curl --request POST localhost:8080/skeleton/webapi/teachers/{teacher_id}/surveys \
+curl --request POST localhost:8080/skeleton/webapi/teachers/{teacher_id}/surveys 
   -d @data.json
 ```
 
@@ -164,13 +317,13 @@ Endpoints available for student.
 This is how student can get their own information.
 
 ```endpoint
-GET /student/
+GET /student/{student_id}
 ```
 
 #### Example request
 
 ```curl
-$ curl localhost:8080/skeleton/webapi/student/
+$ curl localhost:8080/skeleton/webapi/student/{student_id}
 ```
 
 #### Example response
@@ -184,12 +337,12 @@ $ curl localhost:8080/skeleton/webapi/student/
 }
 ```
 
-### Retrieve a student's spidergraph
+### Retrieve a student's result for specific survey
 
 Returns a single spidergraph.
 
 ```endpoint
-GET /student/spidergraphs/1
+GET /student/{student_id}/classes/{class_id}/surveys/{survey_id}/answers
 ```
 
 Retrieve information about an existing spidegraph.
@@ -197,7 +350,7 @@ Retrieve information about an existing spidegraph.
 #### Example request
 
 ```curl
-curl localhost:8080/skeleton/webapi/student/spidergraphs/1
+curl localhost:8080/skeleton/webapi/student/1/classes/1/surveys/1/answers
 ```
 
 #### Example response
@@ -206,30 +359,48 @@ curl localhost:8080/skeleton/webapi/student/spidergraphs/1
 
 ```json
 {
-  
+	"question_id" : 1,
+	"student_id" : 1,
+	"answer" : 3
 }
 ```
 
-### Retrieve the active survey ID
+### Retrieve all the surveys
 
-Returns the survey ID that the specified group of students can answer right now. If no survey is active, returns nothing.
+Returns all the survey for one class. Can be used to find the open survey
 
 ```endpoint
-GET /student/groups/{group_id}/surveys
+GET /students/{student_id}/classes/{class_id}/surveys
 ```
 
 #### Example request
 
 ```curl
-curl localhost:8080/skeleton/webapi/student/groups/1/surveys
+curl localhost:8080/skeleton/webapi/students/1/classes/1/surveys
 ```
 
 #### Example response
 
 ```json
+[{
+	"_id" : 1,
+	"teacher_id" : 1,
+	"class_id" : 1,
+	"name" : "Math survey",
+	"description" : "survey for the exercie 3 page 40",
+	"date" : "2007-04-05T13:30Z",
+	"open" : true
+},
 {
-  "_id": 1
-}
+	"_id" : 2,
+	"teacher_id" : 1,
+	"class_id" : 1,
+	"name" : "Math survey",
+	"description" : "survey for the exercie 5 page 13",
+	"date" : "2007-04-05T13:30Z",
+	"open" : false
+}, 
+...]
 ```
 
 ### Retrieve questions for a survey
@@ -237,7 +408,7 @@ curl localhost:8080/skeleton/webapi/student/groups/1/surveys
 Returns the array of questions for a survey.
 
 ```endpoint
-GET /student/groups/{group_id}/surveys/{survey_id}/questions
+GET /students/{student_id}/classes/{class_id}/surveys/{survey_id}/questions
 ```
 #### Example request
 
@@ -251,25 +422,26 @@ curl localhost:8080/skeleton/webapi/student/groups/1/surveys/1/questions
 [
 	{
   		"_id" : 1,
-		"question" : "Are you happy?",
+		"question" : "I presented my own viewpoints in the group",
 		"min_answer" : 1,
 		"max_answer" : 5
 	},
 	{
   		"_id" : 2,
-		"question" : "Rate your teacher.",
+		"question" : "I took enough responsibility of the groupwork.",
 		"min_answer" : 1,
-		"max_answer" : 5
-	}
+		"max_answer" : 7
+	},
+	...
 ]
 ```
 
 ### Send answers to the questions
 
-Sends the answer to the specified question.
+Sends one and only one answer to the specified question.
 
 ```endpoint
-PUT /student/groups/{group_id}/surveys/{survey_id}/questions/{question_id}/answer
+PUT /students/{student_id}/classes/{class_id}/surveys/{survey_id}/answers/{question_id}
 ```
 
 #### Example of the message body
@@ -279,281 +451,3 @@ PUT /student/groups/{group_id}/surveys/{survey_id}/questions/{question_id}/answe
 	"answer" : 2
 }
 ```
-### Update a wobble
-
-Updates the properties of a particular wobble.
-
-```endpoint
-PATCH /wobbles/v1/{username}/{wobble_id}
-```
-
-#### Example request
-
-```curl
-curl --request PATCH https://wobble.biz/wobbles/v1/{username}/{wobble_id} \
-  -d @data.json
-```
-
-```python
-resp = wobbles.update_wobble(
-  wobble_id,
-  name='updated example',
-  description='An updated example wobble'
-  ).json()
-```
-
-```bash
-$ wbl wobble update-wobble wobble-id
-```
-
-```javascript
-var options = { name: 'foo' };
-client.updateWobble('wobble-id', options, function(err, wobble) {
-  console.log(wobble);
-});
-```
-
-#### Example request body
-
-```json
-{
-  "name": "foo",
-  "description": "bar"
-}
-```
-
-Property | Description
----|---
-`name` | (optional) the name of the wobble
-`description` | (optional) a description of the wobble
-
-#### Example response
-
-```json
-{
-  "owner": "{username}",
-  "id": "{wobble_id}",
-  "name": "foo",
-  "description": "bar",
-  "created": "{timestamp}",
-  "modified": "{timestamp}"
-}
-```
-
-### Delete a wobble
-
-Deletes a wobble, including all wibbles it contains.
-
-```endpoint
-DELETE /wobbles/v1/{username}/{wobble_id}
-```
-
-#### Example request
-
-```curl
-curl -X DELETE https://wobble.biz/wobbles/v1/{username}/{wobble_id}
-```
-
-```bash
-$ wbl wobble delete-wobble wobble-id
-```
-
-```python
-resp = wobbles.delete_wobble(wobble_id)
-```
-
-```javascript
-client.deleteWobble('wobble-id', function(err) {
-  if (!err) console.log('deleted!');
-});
-```
-
-#### Example response
-
-> HTTP 204
-
-### List wibbles
-
-List all the wibbles in a wobble. The response body will be a
-WobbleCollection.
-
-```endpoint
-GET /wobbles/v1/{username}/{wobble_id}/wibbles
-```
-
-#### Example request
-
-```curl
-curl https://wobble.biz/wobbles/v1/{username}/{wobble_id}/wibbles
-```
-
-```bash
-$ wbl wobble list-wibbles wobble-id
-```
-
-```python
-collection = wobbles.list_wibbles(wobble_id).json()
-```
-
-```javascript
-client.listWobbles('wobble-id', {}, function(err, collection) {
-  console.log(collection);
-});
-```
-
-#### Example response
-
-```json
-{
-  "type": "Wobble",
-  "wibbles": [
-    {
-      "id": "{wibble_id}",
-      "type": "Wobble",
-      "properties": {
-        "prop0": "value0"
-      }
-    },
-    {
-      "id": "{wibble_id}",
-      "type": "Wobble",
-      "properties": {
-        "prop0": "value0"
-      }
-    }
-  ]
-}
-```
-
-### Insert or update a wibble
-
-Inserts or updates a wibble in a wobble. If there's already a wibble
-with the given ID in the wobble, it will be replaced. If there isn't
-a wibble with that ID, a new wibble is created.
-
-```endpoint
-PUT /wobbles/v1/{username}/{wobble_id}/wibbles/{wibble_id}
-```
-
-#### Example request
-
-```curl
-curl https://wobble.biz/wobbles/v1/{username}/{wobble_id}/wibbles/{wibble_id} \
-  -X PUT \
-  -d @file.geojson
-```
-
-```bash
-$ wbl wobble put-wibble wobble-id wibble-id 'geojson-wibble'
-```
-
-```javascript
-var wibble = {
-  "type": "Wobble",
-  "properties": { "name": "Null Island" }
-};
-client.insertWobble(wibble, 'wobble-id', function(err, wibble) {
-  console.log(wibble);
-});
-```
-
-#### Example request body
-
-```json
-{
-  "id": "{wibble_id}",
-  "type": "Wobble",
-  "properties": {
-    "prop0": "value0"
-  }
-}
-```
-
-Property | Description
---- | ---
-`id` | the id of an existing wibble in the wobble
-
-#### Example response
-
-```json
-{
-  "id": "{wibble_id}",
-  "type": "Wobble",
-  "properties": {
-    "prop0": "value0"
-  }
-}
-```
-
-### Retrieve a wibble
-
-Retrieves a wibble in a wobble.
-
-```endpoint
-GET /wobbles/v1/{username}/{wobble_id}/wibbles/{wibble_id}
-```
-
-#### Example request
-
-```curl
-curl https://wobble.biz/wobbles/v1/{username}/{wobble_id}/wibbles/{wibble_id}
-```
-
-```bash
-$ wbl wobble read-wibble wobble-id wibble-id
-```
-
-```javascript
-client.readWobble('wibble-id', 'wobble-id',
-  function(err, wibble) {
-    console.log(wibble);
-  });
-```
-
-```python
-wibble = wobbles.read_wibble(wobble_id, '2').json()
-```
-
-#### Example response
-
-```json
-{
-  "id": "{wibble_id}",
-  "type": "Wobble",
-  "properties": {
-    "prop0": "value0"
-  }
-}
-```
-
-### Delete a wibble
-
-Removes a wibble from a wobble.
-
-```endpoint
-DELETE /wobbles/v1/{username}/{wobble_id}/wibbles/{wibble_id}
-```
-
-#### Example request
-
-```javascript
-client.deleteWobble('wibble-id', 'wobble-id', function(err, wibble) {
-  if (!err) console.log('deleted!');
-});
-```
-
-```curl
-curl -X DELETE https://wobble.biz/wobbles/v1/{username}/{wobble_id}/wibbles/{wibble_id}
-```
-
-```python
-resp = wobbles.delete_wibble(wobble_id, wibble_id)
-```
-
-```bash
-$ wbl wobble delete-wibble wobble-id wibble-id
-```
-
-#### Example response
-
-> HTTP 204
