@@ -229,13 +229,17 @@ public class Database {
         }
         try {
             String dbUrl = System.getenv("JDBC_DATABASE_URL");
+            String dbLogin = System.getenv("JDBC_DATABASE_LOGIN");
+            String dbPassword = System.getenv("JDBC_DATABASE_PASSWORD");
             if(dbUrl == null){ // local # TODO fix
             	System.out.println("JDBC env empty, on local");
                 dbConnection = DriverManager.getConnection(
                         DB_CONNECTION, DB_USER, DB_PASSWORD);
-            }else{ // production
+            }else if(dbLogin == null && dbPassword == null) { // production
             	dbConnection = DriverManager.getConnection(dbUrl);
-            }
+            } else {
+            	dbConnection = DriverManager.getConnection(dbUrl, dbLogin, dbPassword);
+            };
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
