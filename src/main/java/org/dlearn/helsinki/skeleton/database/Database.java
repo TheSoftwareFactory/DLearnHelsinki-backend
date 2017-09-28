@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.model.SpiderGraph;
 import org.dlearn.helsinki.skeleton.model.Survey;
@@ -204,6 +205,19 @@ public class Database {
             System.out.println(e.getMessage());
         }
 		return questions;
+	}
+	
+	public List<Group> getAllGroupsOfStudent(int studentID) {
+		System.out.println("Getting groups for the student " + Integer.toString(studentID));
+		ArrayList<Group> groups = new ArrayList<Group>();
+		try(Connection dbConnection = getDBConnection()) {
+			//TODO finish procedure
+            String statement = "Select _id, question, min_answer, max_answer FROM \"Questions\", \"Survey_questions\" WHERE"
+            		+ " \"Survey_questions\".survey_id = ? AND \"Survey_questions\".question_id = \"Questions\"._id";
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }		
+		return groups;
 	}
 	
 /////////////////////////////////////////////////////////
