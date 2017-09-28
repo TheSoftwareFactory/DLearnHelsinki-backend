@@ -15,11 +15,8 @@ public class StudentAccessResource {
         return "logged in";
     }
 
-
-    @GET
     @Path("/groups")
-    public GroupResource getStudentFromId() {
-    	System.out.println("groups");
+    public GroupResource getGroups() {
         return new GroupResource();
     }
 }

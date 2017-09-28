@@ -17,7 +17,7 @@ import org.dlearn.helsinki.skeleton.model.Survey;
 import org.dlearn.helsinki.skeleton.model.Teacher;
 import org.dlearn.helsinki.skeleton.service.SurveyService;
 
-@Path("/")
+
 public class SurveyResource {
 	
 	SurveyService surveyService = new SurveyService();
@@ -26,6 +26,7 @@ public class SurveyResource {
 	// request teachers/{teacher_id}/surveys/
 	// returns all the surveys from teacher based on the teacher_id. a sort of history
 	// TODO implement to answer to history request
+	@Path("/")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Survey> getSurveys(@PathParam("teacher_id") int teacher_id) {
@@ -38,6 +39,7 @@ public class SurveyResource {
             );
     }
 
+	@Path("/")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

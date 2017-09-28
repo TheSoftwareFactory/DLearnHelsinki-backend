@@ -11,7 +11,7 @@ import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.model.Survey;
 import org.dlearn.helsinki.skeleton.service.AnswerQuestionService;
 
-public class AnswerQuestionResource {
+public class QuestionResource {
 	
 	AnswerQuestionService answerQuestionService = new AnswerQuestionService();
 
@@ -19,6 +19,7 @@ public class AnswerQuestionResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Question> getSurvey(@PathParam("survey_id") int survey_id) {
+    	System.out.println("fetching survey questions");
         return answerQuestionService.getSurveyQuestions(survey_id);
     }
 }

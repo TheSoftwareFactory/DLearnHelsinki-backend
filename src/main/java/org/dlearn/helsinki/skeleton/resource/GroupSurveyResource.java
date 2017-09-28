@@ -15,11 +15,10 @@ import org.dlearn.helsinki.skeleton.model.Survey;
 public class GroupSurveyResource {
 
 	// TODO get last survey on db
-	@Path("/")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Survey getSurvey() {
-        return new Survey();
+        return new Survey(1,null, 1,null, null, 1);
     }
     
     // TODO implement same as getSurvey()
@@ -31,8 +30,12 @@ public class GroupSurveyResource {
     }
     
     @Path("/{survey_id}/questions")
-    @GET
-    public AnswerQuestionResource getQuestions(@PathParam("survey_id") int survey_id) {
-    	return new AnswerQuestionResource();
+    public QuestionResource getQuestions(@PathParam("survey_id") int survey_id) {
+    	return new QuestionResource();
+    }
+    
+    @Path("/{survey_id}/answers")
+    public AnswerResource getAnswers(@PathParam("survey_id") int survey_id) {
+    	return new AnswerResource();
     }
 }

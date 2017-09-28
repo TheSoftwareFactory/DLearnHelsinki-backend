@@ -15,12 +15,11 @@ import org.dlearn.helsinki.skeleton.model.Student;
 import jersey.repackaged.com.google.common.collect.Lists;
 
 public class GroupResource {
-	
-    @GET
+
+	@GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Group> getGroups() {
-    	System.out.println("test");
-        ArrayList<Group> groups = new ArrayList<>();
+        List<Group> groups = new ArrayList<>();
         groups.add(new Group(3, "name", 0, 0));
         return groups;
     }
@@ -33,9 +32,8 @@ public class GroupResource {
     }
     
     @Path("/{group_id}/survey")
-    @GET
     public GroupSurveyResource getGroupSurvey(@PathParam("group_id") int group_id) {
         return new GroupSurveyResource();
     }
-
+	
 }

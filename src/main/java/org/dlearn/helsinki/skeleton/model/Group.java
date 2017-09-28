@@ -7,6 +7,8 @@ public class Group {
 	public int student_id;
 	public int teacher_id;
 	
+	public Group() {}
+	
 	public Group(int _id, String name, int student_id, int teacher_id) {
 		super();
 		this._id = _id;
