@@ -5,11 +5,11 @@ language: java
 jdk: openjdk8
 
 # TODO: Database setup or should we mock database in tests? Probably yes.
-# services:
-#   - postgresql
+services:
+ - postgresql
 
 before_script:
-# - psql -c ./src/main/resources/TestDB.sql -U postgres
+ - psql -c ./db.pgsql -U postgres
 
 after_success:
-  - mvn clean cobertura:cobertura coveralls:report
+ - mvn clean cobertura:cobertura coveralls:report
