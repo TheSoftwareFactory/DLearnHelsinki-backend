@@ -1,6 +1,7 @@
 package org.dlearn.helsinki.skeleton.database;
 
 import java.sql.Connection;
+
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -207,17 +208,32 @@ public class Database {
 		return questions;
 	}
 	
-	public List<Group> getAllGroupsOfStudent(int studentID) {
+	public List<Group> getAllGroupsForStudent(int studentID) {
 		System.out.println("Getting groups for the student " + Integer.toString(studentID));
 		ArrayList<Group> groups = new ArrayList<Group>();
+
 		try(Connection dbConnection = getDBConnection()) {
-			//TODO finish procedure
-            String statement = "Select _id, question, min_answer, max_answer FROM \"Questions\", \"Survey_questions\" WHERE"
-            		+ " \"Survey_questions\".survey_id = ? AND \"Survey_questions\".question_id = \"Questions\"._id";
+            String statement = "Select _id, name, student_id, teacher_id FROM public.\"Groups\" WHERE student_id = ?";
+            //prepare statement with student_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+            	select.setInt(1, studentID);
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                    while (result.next()) {
+                    	Group group = new Group();
+                    	group.set_id(result.getInt(1));
+                    	group.setStudent_id(result.getInt(2));
+                    	group.setTeacher_id(result.getInt(3));
+                    	group.setName(result.getString(1));
+                    	groups.add(group);
+                    }
+                }
+            }
 	    } catch (SQLException e) {
 	    	System.out.println(e.getMessage());
 	    }		
 		return groups;
+		//*/
 	}
 	
 /////////////////////////////////////////////////////////
@@ -252,7 +268,10 @@ public class Database {
             }else if(dbLogin == null && dbPassword == null) { // production
             	dbConnection = DriverManager.getConnection(dbUrl);
             } else {
-            	dbConnection = DriverManager.getConnection(dbUrl, dbLogin, dbPassword);
+            	//"jdbc:postgresql://localhost/test?user=fred&password=secret&ssl=true"
+            	dbUrl += "?user=" + dbLogin + "&password=" + dbPassword + "&ssl=true";
+            	//dbConnection = DriverManager.getConnection(dbUrl, dbLogin, dbPassword);
+            	dbConnection = DriverManager.getConnection(dbUrl);
             };
         } catch (SQLException e) {
             System.out.println(e.getMessage());

@@ -10,6 +10,6 @@ public class GroupService {
 	Database db = new Database();
 	
 	public List<Group> getAllGroupsTheStudentIsIn(int studentID) {
-		return db.getAllGroupsOfStudent(studentID);
+		return db.getAllGroupsForStudent(studentID);
 	}
 }

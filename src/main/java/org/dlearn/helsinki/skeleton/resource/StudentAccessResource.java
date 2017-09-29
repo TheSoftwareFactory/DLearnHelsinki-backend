@@ -13,7 +13,6 @@ import org.dlearn.helsinki.skeleton.service.GroupService;
 
 @Path("/student")
 public class StudentAccessResource {
-	
 	GroupService groupService = new GroupService();
 	
     @GET
@@ -27,10 +26,10 @@ public class StudentAccessResource {
         return new GroupResource();
     }
     
-    @Path("{studentID}/groups")
+    @Path("/{studentID}/groups")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Group> getAllGroupsTheStudentIsIn(@PathParam("studentID") int studentID) {
         return groupService.getAllGroupsTheStudentIsIn(studentID);
-    }    
+    }  
 }
