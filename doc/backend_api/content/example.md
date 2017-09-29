@@ -26,23 +26,23 @@ $ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/students/
 ```json
 [
   {
-    "_id": 1,
-    "lastname": "Meikäläinen",
-    "firstname": "Matti",
-    "username": "iloinen tanssiva aurinko"
+    "_id" : 1,
+    "lastname" : "Meikäläinen",
+    "firstname" : "Matti",
+    "username" : "iloinen tanssiva aurinko"
   },
   {
-    "_id": 2,
-    "lastname": "Meikäläinen",
-    "firstname": "Maija",
-    "username": "kirjava hyppivä puu"
+    "_id" : 2,
+    "lastname" : "Meikäläinen",
+    "firstname" : "Maija",
+    "username" : "kirjava hyppivä puu"
   }
 ]
 ```
 
 ### List of all groups in one specified class
 
-This request allows you to retrieve a detailed list of all students in their respective groups, in one class 
+This request allows you to retrieve a detailed list of all students in their respective groups, in one class
 
 ```endpoint
 GET teachers/{teacher_id}/classes/{class_id}/groups/
@@ -58,45 +58,42 @@ $ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/groups/
 
 ```json
 [
-
-    {
-    	"group_id" = 1,
-        "grpName" : "Grp1",
-        [
-            
-		{
-			 "_id": 1,
-			  "lastname": "Meikäläinen",
-			  "firstname": "Matti",
-			  "username": "iloinen tanssiva aurinko"
-		},
-           	 {
-			 "_id": 2,
-			  "lastname": "Jo",
-			  "firstname": "Doe",
-			  "username": "iloinen tanssiva aurinko"
-		}
-        ]
-    },
-    {
-    	"group_id" = 2,
-        "grpName" : "Grp2",
-        [
-            
-		{
-			 "_id": 3,
-			  "lastname": "Thomas",
-			  "firstname": "Mimi",
-			  "username": "iloinen tanssiva aurinko"
-		},
-           	 {
-			 "_id": 3,
-			  "lastname": "Jean",
-			  "firstname": "Dujardin",
-			  "username": "iloinen tanssiva aurinko"
-		}
-        ]
-    }
+  {
+    "group_id" : 1,
+    "grpName" : "Grp1",
+    "students" : [
+      {
+        "_id" : 1,
+        "lastname" : "Meikäläinen",
+        "firstname" : "Matti",
+        "username" : "iloinen tanssiva aurinko"
+      },
+      {
+        "_id" : 2,
+        "lastname" : "Jo",
+        "firstname" : "Doe",
+        "username" : "iloinen tanssiva aurinko"
+      }
+    ]
+  },
+  {
+    "group_id" : 2,
+    "grpName" : "Grp2",
+    "students" : [
+      {
+        "_id" : 3,
+        "lastname" : "Thomas",
+        "firstname" : "Mimi",
+        "username" : "iloinen tanssiva aurinko"
+      },
+      {
+        "_id" : 3,
+        "lastname" : "Jean",
+        "firstname" : "Dujardin",
+        "username" : "iloinen tanssiva aurinko"
+      }
+    ]
+  }
 ]
 ```
 
@@ -115,20 +112,19 @@ $ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/groups/1/students
 #### Example response
 
 ```json
-[
-            
-	{
-		 "_id": 3,
-		  "lastname": "Thomas",
-		  "firstname": "Mimi",
-		  "username": "iloinen tanssiva aurinko"
-	},
-	 {
-		 "_id": 3,
-		  "lastname": "Jean",
-		  "firstname": "Dujardin",
-		  "username": "iloinen tanssiva aurinko"
-	}
+[        
+  {
+    "_id" : 3,
+    "lastname" : "Thomas",
+    "firstname" : "Mimi",
+    "username" : "iloinen tanssiva aurinko"
+  },
+  {
+    "_id" : 3,
+    "lastname" : "Jean",
+    "firstname" : "Dujardin",
+    "username" : "iloinen tanssiva aurinko"
+  }
 ]
 ```
 
@@ -151,10 +147,10 @@ $ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/students/1
 
 ```json
 {
-  "_id": 1,
-  "lastname": "Meikäläinen",
-  "firstname": "Matti",
-  "username": "iloinen tanssiva aurinko"
+  "_id" : 1,
+  "lastname" : "Meikäläinen",
+  "firstname" : "Matti",
+  "username" : "iloinen tanssiva aurinko"
 }
 ```
 
@@ -172,7 +168,7 @@ Retrieve information about an existing spidegraph.
 #### Example request
 
 ```curl
-curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/students/1/answers
+$ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/students/1/answers
 ```
 
 #### Example response
@@ -199,7 +195,7 @@ Retrieve information about an existing spidegraph.
 #### Example request
 
 ```curl
-curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/groups/1/answers
+$ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/groups/1/answers
 ```
 
 #### Example response
@@ -226,7 +222,7 @@ Retrieve information about an existing spidegraph.
 #### Example request
 
 ```curl
-curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/answers
+$ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/answers
 ```
 
 #### Example response
@@ -251,7 +247,7 @@ GET teachers/{teacher_id}/classes/{class_id}/surveys/{survey_id}/answers
 #### Example request
 
 ```curl
-curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/answers
+$ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/answers
 ```
 
 #### Example response
@@ -279,7 +275,7 @@ POST teachers/{teacher_id}/classes/{class_id}/surveys/
 #### Example request
 
 ```curl
-curl --request POST localhost:8080/skeleton/webapi/teachers/{teacher_id}/surveys 
+$ curl --request POST localhost:8080/skeleton/webapi/teachers/{teacher_id}/surveys
   -d @data.json
 ```
 
@@ -287,12 +283,12 @@ curl --request POST localhost:8080/skeleton/webapi/teachers/{teacher_id}/surveys
 
 ```json
 {
-  "_id": 1,
-  "name": "Reilu peli leikkikentällä",
-  "group_id": 1,
-  "start_data": "2007-04-05T12:30Z",
-  "end_date": "2007-04-05T13:30Z",
-  "teacher_id": 1,
+  "_id" : 1,
+  "name" : "Reilu peli leikkikentällä",
+  "group_id" : 1,
+  "start_data" : "2007-04-05T12:30Z",
+  "end_date" : "2007-04-05T13:30Z",
+  "teacher_id" : 1,
 }
 ```
 
@@ -330,10 +326,10 @@ $ curl localhost:8080/skeleton/webapi/student/{student_id}
 
 ```json
 {
-  "_id": 1,
-  "lastname": "Meikäläinen",
-  "firstname": "Matti",
-  "username": "iloinen tanssiva aurinko"
+  "_id" : 1,
+  "lastname" : "Meikäläinen",
+  "firstname" : "Matti",
+  "username" : "iloinen tanssiva aurinko"
 }
 ```
 
@@ -350,7 +346,7 @@ Retrieve information about an existing spidegraph.
 #### Example request
 
 ```curl
-curl localhost:8080/skeleton/webapi/student/1/classes/1/surveys/1/answers
+$ curl localhost:8080/skeleton/webapi/student/1/classes/1/surveys/1/answers
 ```
 
 #### Example response
@@ -376,31 +372,32 @@ GET /students/{student_id}/classes/{class_id}/surveys
 #### Example request
 
 ```curl
-curl localhost:8080/skeleton/webapi/students/1/classes/1/surveys
+$ curl localhost:8080/skeleton/webapi/students/1/classes/1/surveys
 ```
 
 #### Example response
 
 ```json
-[{
-	"_id" : 1,
-	"teacher_id" : 1,
-	"class_id" : 1,
-	"name" : "Math survey",
-	"description" : "survey for the exercie 3 page 40",
-	"date" : "2007-04-05T13:30Z",
-	"open" : true
-},
-{
-	"_id" : 2,
-	"teacher_id" : 1,
-	"class_id" : 1,
-	"name" : "Math survey",
-	"description" : "survey for the exercie 5 page 13",
-	"date" : "2007-04-05T13:30Z",
-	"open" : false
-}, 
-...]
+[
+  {
+    "_id" : 1,
+    "teacher_id" : 1,
+    "class_id" : 1,
+    "name" : "Math survey",
+    "description" : "survey for the exercie 3 page 40",
+    "date" : "2007-04-05T13:30Z",
+    "open" : true
+  },
+  {
+    "_id" : 2,
+    "teacher_id" : 1,
+    "class_id" : 1,
+    "name" : "Math survey",
+    "description" : "survey for the exercie 5 page 13",
+    "date" : "2007-04-05T13:30Z",
+    "open" : false
+  },
+]
 ```
 
 ### Retrieve questions for a survey
@@ -413,26 +410,25 @@ GET /students/{student_id}/classes/{class_id}/surveys/{survey_id}/questions
 #### Example request
 
 ```curl
-curl localhost:8080/skeleton/webapi/student/groups/1/surveys/1/questions
+$ curl localhost:8080/skeleton/webapi/student/groups/1/surveys/1/questions
 ```
 
 #### Example response
 
 ```json
 [
-	{
-  		"_id" : 1,
-		"question" : "I presented my own viewpoints in the group",
-		"min_answer" : 1,
-		"max_answer" : 5
-	},
-	{
-  		"_id" : 2,
-		"question" : "I took enough responsibility of the groupwork.",
-		"min_answer" : 1,
-		"max_answer" : 7
-	},
-	...
+  {
+    "_id" : 1,
+    "question" : "I presented my own viewpoints in the group",
+    "min_answer" : 1,
+    "max_answer" : 5
+  },
+  {
+    "_id" : 2,
+    "question" : "I took enough responsibility of the group work.",
+    "min_answer" : 1,
+    "max_answer" : 7
+  },
 ]
 ```
 
