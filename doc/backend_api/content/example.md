@@ -355,9 +355,9 @@ $ curl localhost:8080/skeleton/webapi/student/1/classes/1/surveys/1/answers
 
 ```json
 {
-	"question_id" : 1,
-	"student_id" : 1,
-	"answer" : 3
+  "question_id" : 1,
+  "student_id" : 1,
+  "answer" : 3
 }
 ```
 
@@ -444,6 +444,6 @@ PUT /students/{student_id}/classes/{class_id}/surveys/{survey_id}/answers/{quest
 
 ```json
 {
-	"answer" : 2
+  "answer" : 2
 }
 ```
