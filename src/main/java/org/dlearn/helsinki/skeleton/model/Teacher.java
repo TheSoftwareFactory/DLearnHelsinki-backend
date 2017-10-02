@@ -2,24 +2,21 @@ package org.dlearn.helsinki.skeleton.model;
 
 public class Teacher {
 
-	public int _id;
+    public int _id;
     public String lastname;
     public String firstname;
     public String username;
-    public String password;
 
     public Teacher() {
         super();
     }
 
-    public Teacher(int _id, String lastname, String firstname, String username,
-            String password) {
+    public Teacher(int _id, String lastname, String firstname, String username) {
         super();
         this._id = _id;
         this.lastname = lastname;
         this.firstname = firstname;
         this.username = username;
-        this.password = password;
     }
 
     public int get_id() {
@@ -52,13 +49,5 @@ public class Teacher {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

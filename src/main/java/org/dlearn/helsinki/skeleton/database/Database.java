@@ -12,18 +12,19 @@ import java.util.List;
 import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.model.SpiderGraph;
 import org.dlearn.helsinki.skeleton.model.Survey;
+import org.springframework.jdbc.datasource.AbstractDataSource;
 
-public class Database {
+public class Database extends AbstractDataSource {
 
     private static final String DB_DRIVER = "org.postgresql.Driver";
-    
+
     /* dev environment online */
     private static final String DB_CONNECTION = "jdbc:postgresql://localhost:5432/Dlearn_db?verifyServerCertificate=false&useSSL=true";
     private static final String DB_USER = "postgres";
     private static final String DB_PASSWORD = "admin";
 
     public void testConnection() throws Exception {
-        try(Connection dbConnection = getDBConnection()) {
+        try (Connection dbConnection = getDBConnection()) {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -31,15 +32,15 @@ public class Database {
 
     public SpiderGraph getSpiderGraph(int student_id, int spidergraph_id) throws SQLException {
         SpiderGraph spidergraph = new SpiderGraph();
-        
-        try(Connection dbConnection = getDBConnection()) {
+
+        try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "SELECT * FROM public.\"SpiderGraphs\" WHERE _id = ? AND student_id = ?";
-            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+            try (PreparedStatement select = dbConnection.prepareStatement(statement)) {
                 select.setInt(1, spidergraph_id);
                 select.setInt(2, student_id);
                 // execute query
-                try(ResultSet result = select.executeQuery()) {
+                try (ResultSet result = select.executeQuery()) {
                     while (result.next()) {
                         spidergraph.set_id(spidergraph_id);
                         spidergraph.setStudent_id(student_id);
@@ -59,8 +60,10 @@ public class Database {
 
     public SpiderGraph updateSpidergraph(SpiderGraph spidergraph) throws SQLException {
         SpiderGraph old_spidergraph = getSpiderGraph(spidergraph.getStudent_id(), spidergraph.get_id());
-        
+
         System.out.println(old_spidergraph.getValue1());
+        // TODO: This doesn't work when value is smaller than -1
+        // as % is remainder and not modulus
         old_spidergraph.setValue1((old_spidergraph.getValue1() + 1) % 5);
 
         String updateSpidergraphFromId = "UPDATE public.\"SpiderGraphs\" SET value1 = ? WHERE _id = ? AND student_id = ?";
@@ -78,7 +81,7 @@ public class Database {
                 //ps_update.setInt(6, spidergraph.get_id());
                 //ps_update.setInt(7, spidergraph.getStudent_id());
                 // execute update SQL statement
-                System.out.println("updating "+ps_update.toString());
+                System.out.println("updating " + ps_update.toString());
                 ps_update.executeUpdate();
             }
         } catch (SQLException e) {
@@ -92,27 +95,26 @@ public class Database {
     /*
         
      */
-	public Survey postSurvey(Survey survey) throws SQLException {
-		try(Connection dbConnection = getDBConnection()) {
+    public Survey postSurvey(Survey survey) throws SQLException {
+        try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Surveys\" (name, group_id, start_date, end_date, teacher_id) "
-            		+ "VALUES (?,?,?,?,?)";
-            try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
-                insert.setString(1, "name_of_survey"); 
+                    + "VALUES (?,?,?,?,?)";
+            try (PreparedStatement insert = dbConnection.prepareStatement(statement)) {
+                insert.setString(1, "name_of_survey");
                 insert.setInt(2, 1);
                 insert.setDate(3, new Date(0));
                 insert.setDate(4, new Date(0));
                 insert.setInt(5, 1);
                 // execute query
                 insert.executeQuery();
-                
+
                 // TODO implement
                 try (ResultSet generatedKeys = insert.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                    	System.out.println(generatedKeys.getInt(1));
-                    	survey.set_id(generatedKeys.getInt(1));
-                    }
-                    else {
+                        System.out.println(generatedKeys.getInt(1));
+                        survey.set_id(generatedKeys.getInt(1));
+                    } else {
                         throw new SQLException("Creating user failed, no ID obtained.");
                     }
                 }
@@ -120,62 +122,61 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-		//TODO remove
-		survey.set_id(4); 
-		return survey;
-	}
-	
-	// TODO finish getQuestions method
-	public List<Question> getQuestions() {
-		
-		ArrayList<Question> questions = new ArrayList<Question>();
-		try(Connection dbConnection = getDBConnection()) {
+        //TODO remove
+        survey.set_id(4);
+        return survey;
+    }
+
+    // TODO finish getQuestions method
+    public List<Question> getQuestions() {
+        ArrayList<Question> questions = new ArrayList<>();
+        try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "Select * FROM public.\"Questions\"";
-            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+            try (PreparedStatement select = dbConnection.prepareStatement(statement)) {
                 //select.setInt(1, spidergraph_id);
                 //select.setInt(2, student_id);
                 // execute query
-                try(ResultSet result = select.executeQuery()) {
+                try (ResultSet result = select.executeQuery()) {
                     while (result.next()) {
-                    	Question question = new Question();
-                    	question.setQuestion(result.getString(1));
-                    	question.setMin_answer(result.getInt(2));
-                    	question.setMax_answer(result.getInt(3));
-                    	question.set_id(result.getInt(4));
-                    	questions.add(question);
-                    	System.out.println(question.getQuestion());
+                        Question question = new Question();
+                        question.setQuestion(result.getString(1));
+                        question.setMin_answer(result.getInt(2));
+                        question.setMax_answer(result.getInt(3));
+                        question.set_id(result.getInt(4));
+                        questions.add(question);
+                        System.out.println(question.getQuestion());
                     }
                 }
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-		return questions;
-	}
-	
-	public void postSurveyQuestions(List<Question> questions, Survey survey) {
-		try(Connection dbConnection = getDBConnection()) {
+        return questions;
+    }
+
+    public void postSurveyQuestions(List<Question> questions, Survey survey) {
+        try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Survey_questions\" (survey_id, question_id) "
-            		+ "VALUES (?,?)";
-            try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
-            	// prepare batch
-            	System.out.println("before for loop.");
-            	for(Question question : questions){
-                    insert.setInt(1,survey.get_id()); 
+                    + "VALUES (?,?)";
+            try (PreparedStatement insert = dbConnection.prepareStatement(statement)) {
+                // prepare batch
+                System.out.println("before for loop.");
+                for (Question question : questions) {
+                    insert.setInt(1, survey.get_id());
                     insert.setInt(2, question.get_id());
                     System.out.println("Preparing batch: " + question.get_id());
                     insert.addBatch();
-            	}
+                }
                 // execute query
                 insert.executeBatch();
             }
         } catch (SQLException e) {
-            System.out.println("SQL Error(postSurveyQuestions): "+ e.getMessage());
+            System.out.println("SQL Error(postSurveyQuestions): " + e.getMessage());
         }
-	}
-	
+    }
+
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
@@ -189,7 +190,6 @@ public class Database {
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
     private static Connection getDBConnection() {
-
         Connection dbConnection = null;
 
         try {
@@ -199,12 +199,12 @@ public class Database {
         }
         try {
             String dbUrl = System.getenv("JDBC_DATABASE_URL");
-            if(dbUrl == null){ // local # TODO fix
-            	System.out.println("JDBC env empty, on local");
+            if (dbUrl == null) { // local # TODO fix
+                System.out.println("JDBC env empty, on local");
                 dbConnection = DriverManager.getConnection(
                         DB_CONNECTION, DB_USER, DB_PASSWORD);
-            }else{ // production
-            	dbConnection = DriverManager.getConnection(dbUrl);
+            } else { // production
+                dbConnection = DriverManager.getConnection(dbUrl);
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -220,6 +220,16 @@ public class Database {
         java.util.Date today = new java.util.Date();
         return new java.sql.Timestamp(today.getTime());
 
+    }
+
+    @Override
+    public Connection getConnection() throws SQLException {
+        return getDBConnection();
+    }
+
+    @Override
+    public Connection getConnection(String username, String password) throws SQLException {
+        throw new SQLException("Not supported");
     }
 
 }

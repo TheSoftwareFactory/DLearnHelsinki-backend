@@ -6,20 +6,17 @@ public class Student {
     public String lastname;
     public String firstname;
     public String username;
-    public String password;
 
     public Student() {
         super();
     }
 
-    public Student(int _id, String lastname, String firstname, String username,
-            String password) {
+    public Student(int _id, String lastname, String firstname, String username) {
         super();
         this._id = _id;
         this.lastname = lastname;
         this.firstname = firstname;
         this.username = username;
-        this.password = password;
     }
 
     public int get_id() {
@@ -52,14 +49,6 @@ public class Student {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
 }
