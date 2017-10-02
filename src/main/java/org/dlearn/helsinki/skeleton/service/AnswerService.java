@@ -19,7 +19,7 @@ public class AnswerService {
 		System.out.println("asnwers : " + answers);
 		System.out.println("survey_id : " + survey_id);
 		// TODO replace student_id with real student id
-		return db.postStudentAnswersForSurvey(answers, survey_id, 1);
+		db.postStudentAnswersForSurvey(answers, survey_id, 1);
 	}
 
 }

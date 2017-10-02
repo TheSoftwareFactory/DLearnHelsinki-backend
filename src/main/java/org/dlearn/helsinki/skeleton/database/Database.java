@@ -209,9 +209,8 @@ public class Database {
 
 	// Method : postSutdentAnswersForSurvey
 	// Takes the survey_id, the student_id
-	public Object postStudentAnswersForSurvey(List<Answer> answers, int survey_id, int student_id) {
+	public void postStudentAnswersForSurvey(List<Answer> answers, int survey_id, int student_id) {
 		// TODO Auto-generated method stub
-		return null;
 	}
 	
 /////////////////////////////////////////////////////////
