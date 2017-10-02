@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dlearn.helsinki.skeleton.model.Answer;
 import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.model.SpiderGraph;
 import org.dlearn.helsinki.skeleton.model.Survey;
@@ -204,6 +205,13 @@ public class Database {
             System.out.println(e.getMessage());
         }
 		return questions;
+	}
+
+	// Method : postSutdentAnswersForSurvey
+	// Takes the survey_id, the student_id
+	public Object postStudentAnswersForSurvey(List<Answer> answers, int survey_id, int student_id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 /////////////////////////////////////////////////////////

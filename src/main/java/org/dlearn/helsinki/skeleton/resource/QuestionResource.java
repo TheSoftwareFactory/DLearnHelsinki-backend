@@ -15,10 +15,9 @@ public class QuestionResource {
 	
 	AnswerQuestionService answerQuestionService = new AnswerQuestionService();
 
-	// TODO get last survey on db
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Question> getSurvey(@PathParam("survey_id") int survey_id) {
+    public List<Question> getSurveyQuestions(@PathParam("survey_id") int survey_id) {
     	System.out.println("fetching survey questions");
         return answerQuestionService.getSurveyQuestions(survey_id);
     }

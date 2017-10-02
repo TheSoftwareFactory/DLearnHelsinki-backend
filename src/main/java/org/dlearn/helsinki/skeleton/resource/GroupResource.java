@@ -31,7 +31,7 @@ public class GroupResource {
         return new Group(0, null, 0, 0);
     }
     
-    @Path("/{group_id}/survey")
+    @Path("/{group_id}/surveys")
     public GroupSurveyResource getGroupSurvey(@PathParam("group_id") int group_id) {
         return new GroupSurveyResource();
     }
