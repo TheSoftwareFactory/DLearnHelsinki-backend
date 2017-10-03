@@ -8,9 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -19,19 +17,22 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-            .withUser("teacher").password("password").roles("TEACHER")
-            .and()
-            .withUser("student").password("password").roles("STUDENT");
-        /*auth.jdbcAuthentication()
+        auth.jdbcAuthentication()
             .dataSource(db)
-            .withDefaultSchema()
-            .usersByUsernameQuery("select username,password, enabled from users where username=?")
-            .authoritiesByUsernameQuery("select username, role from user_roles where username=?")
+            .usersByUsernameQuery("select * ("
+                        + "select username, password, true from students"
+                        + "union"
+                        + "select username, password, true from teachers"
+                    + ") where username=?")
+            .authoritiesByUsernameQuery("select * ("
+                        + "select username, 'ROLE_STUDENT' from students"
+                        + "union"
+                        + "select username, 'ROLE_TEACHER' from teachers"
+                    + ") where username=?")
             .passwordEncoder(new BCryptPasswordEncoder(16))
             .withUser("teacher").password("password").roles("TEACHER")
             .and()
-            .withUser("student").password("password").roles("STUDENT");*/
+            .withUser("student").password("password").roles("STUDENT");
     }
     
     @Override
