@@ -208,7 +208,6 @@ public class Database extends AbstractDataSource {
 /////////////////////////////////////////////////////////
     private static Connection getDBConnection() {
         Connection dbConnection = null;
-
         try {
             Class.forName(DB_DRIVER);
         } catch (ClassNotFoundException e) {
@@ -216,24 +215,16 @@ public class Database extends AbstractDataSource {
         }
         try {
             String dbUrl = System.getenv("JDBC_DATABASE_URL");
-            String dbLogin = System.getenv("JDBC_DATABASE_LOGIN");
-            String dbPassword = System.getenv("JDBC_DATABASE_PASSWORD");
             if(dbUrl == null){ // local # TODO fix
             	System.out.println("JDBC env empty, on local");
                 dbConnection = DriverManager.getConnection(
                         DB_CONNECTION, DB_USER, DB_PASSWORD);
-            }else if(dbLogin == null && dbPassword == null) { // production
+            }else { // production
             	dbConnection = DriverManager.getConnection(dbUrl);
-            } else {
-            	//"jdbc:postgresql://localhost/test?user=fred&password=secret&ssl=true"
-            	dbUrl += "?user=" + dbLogin + "&password=" + dbPassword + "&ssl=true";
-            	//dbConnection = DriverManager.getConnection(dbUrl, dbLogin, dbPassword);
-            	dbConnection = DriverManager.getConnection(dbUrl);
-            };
+            }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("CREATING CONNECTION FAILED HORRIBLY " + e.getMessage() + " (fix pls)");
         }
-
         return dbConnection;
 
     }

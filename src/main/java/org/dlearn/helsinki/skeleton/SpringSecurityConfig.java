@@ -19,13 +19,19 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication()
-            .dataSource(db)
-            .withDefaultSchema()
-            .passwordEncoder(new BCryptPasswordEncoder(16))
+        auth.inMemoryAuthentication()
             .withUser("teacher").password("password").roles("TEACHER")
             .and()
             .withUser("student").password("password").roles("STUDENT");
+        /*auth.jdbcAuthentication()
+            .dataSource(db)
+            .withDefaultSchema()
+            .usersByUsernameQuery("select username,password, enabled from users where username=?")
+            .authoritiesByUsernameQuery("select username, role from user_roles where username=?")
+            .passwordEncoder(new BCryptPasswordEncoder(16))
+            .withUser("teacher").password("password").roles("TEACHER")
+            .and()
+            .withUser("student").password("password").roles("STUDENT");*/
     }
     
     @Override
