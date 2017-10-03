@@ -21,6 +21,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication()
             .dataSource(db)
+            .withDefaultSchema()
             .passwordEncoder(new BCryptPasswordEncoder(16))
             .withUser("teacher").password("password").roles("TEACHER")
             .and()
