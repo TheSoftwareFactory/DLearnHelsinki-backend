@@ -223,11 +223,12 @@ public class Database {
             }else if(dbLogin == null && dbPassword == null) { // production
             	dbConnection = DriverManager.getConnection(dbUrl);
             } else {
+            	
             	//"jdbc:postgresql://localhost/test?user=fred&password=secret&ssl=true"
             	dbUrl += "?user=" + dbLogin + "&password=" + dbPassword + "&ssl=true";
             	//dbConnection = DriverManager.getConnection(dbUrl, dbLogin, dbPassword);
             	dbConnection = DriverManager.getConnection(dbUrl);
-            };
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
