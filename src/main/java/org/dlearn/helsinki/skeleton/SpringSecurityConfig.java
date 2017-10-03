@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 @Configuration
 @EnableWebSecurity
@@ -17,12 +18,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication()
             .dataSource(db)
-            .passwordEncoder(new BCryptPasswordEncoder(16));
-
-        auth.inMemoryAuthentication()
-            .withUser("student").password("password").roles("STUDENT")
+            .passwordEncoder(new BCryptPasswordEncoder(16))
+            .withUser("teacher").password("password").roles("TEACHER")
             .and()
-            .withUser("teacher").password("password").roles("TEACHER");
+            .withUser("student").password("password").roles("STUDENT");
     }
     
     @Override
