@@ -1,6 +1,7 @@
 package org.dlearn.helsinki.skeleton.database;
 
 import java.sql.Connection;
+
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
+import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.model.Survey;
 
@@ -162,6 +164,33 @@ public class Database {
 		return null;
 	}
 	
+	public List<Group> getAllGroupsForStudent(int studentID) {
+		System.out.println("Getting groups for the student " + Integer.toString(studentID));
+		ArrayList<Group> groups = new ArrayList<>();
+
+		try(Connection dbConnection = getDBConnection()) {
+            String statement = "Select _id, name, student_id, teacher_id FROM public.\"Groups\" WHERE student_id = ?";
+            //prepare statement with student_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+            	select.setInt(1, studentID);
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                    while (result.next()) {
+                    	Group group = new Group();
+                    	group.set_id(result.getInt(1));
+                    	group.setStudent_id(result.getInt(2));
+                    	group.setName(result.getString(1));
+                    	groups.add(group);
+                    }
+                }
+            }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }		
+		return groups;
+		//*/
+	}
+	
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
@@ -185,13 +214,20 @@ public class Database {
         }
         try {
             String dbUrl = System.getenv("JDBC_DATABASE_URL");
+            String dbLogin = System.getenv("JDBC_DATABASE_LOGIN");
+            String dbPassword = System.getenv("JDBC_DATABASE_PASSWORD");
             if(dbUrl == null){ // local # TODO fix
             	System.out.println("JDBC env empty, on local");
                 dbConnection = DriverManager.getConnection(
                         DB_CONNECTION, DB_USER, DB_PASSWORD);
-            }else{ // production
+            }else if(dbLogin == null && dbPassword == null) { // production
             	dbConnection = DriverManager.getConnection(dbUrl);
-            }
+            } else {
+            	//"jdbc:postgresql://localhost/test?user=fred&password=secret&ssl=true"
+            	dbUrl += "?user=" + dbLogin + "&password=" + dbPassword + "&ssl=true";
+            	//dbConnection = DriverManager.getConnection(dbUrl, dbLogin, dbPassword);
+            	dbConnection = DriverManager.getConnection(dbUrl);
+            };
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
