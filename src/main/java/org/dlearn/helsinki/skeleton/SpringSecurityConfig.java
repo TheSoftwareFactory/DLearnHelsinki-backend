@@ -30,6 +30,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                         + "select username, 'ROLE_TEACHER' from teachers"
                     + ") where username=?")
             .passwordEncoder(new BCryptPasswordEncoder(16))
+            .and()
+            .inMemoryAuthentication()
             .withUser("teacher").password("password").roles("TEACHER")
             .and()
             .withUser("student").password("password").roles("STUDENT");
