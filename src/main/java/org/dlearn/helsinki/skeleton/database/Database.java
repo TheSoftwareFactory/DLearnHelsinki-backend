@@ -208,23 +208,27 @@ public class Database extends AbstractDataSource {
 /////////////////////////////////////////////////////////
     private static Connection getDBConnection() {
         Connection dbConnection = null;
-
+        System.out.println("1");
         try {
             Class.forName(DB_DRIVER);
         } catch (ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
+        System.out.println("2");
         try {
             String dbUrl = System.getenv("JDBC_DATABASE_URL");
             String dbLogin = System.getenv("JDBC_DATABASE_LOGIN");
             String dbPassword = System.getenv("JDBC_DATABASE_PASSWORD");
             if(dbUrl == null){ // local # TODO fix
+                System.out.println("4");
             	System.out.println("JDBC env empty, on local");
                 dbConnection = DriverManager.getConnection(
                         DB_CONNECTION, DB_USER, DB_PASSWORD);
             }else if(dbLogin == null && dbPassword == null) { // production
+                System.out.println("5");
             	dbConnection = DriverManager.getConnection(dbUrl);
             } else {
+                System.out.println("6");
             	//"jdbc:postgresql://localhost/test?user=fred&password=secret&ssl=true"
             	dbUrl += "?user=" + dbLogin + "&password=" + dbPassword + "&ssl=true";
             	//dbConnection = DriverManager.getConnection(dbUrl, dbLogin, dbPassword);
@@ -232,8 +236,9 @@ public class Database extends AbstractDataSource {
             };
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            System.out.println("7");
         }
-
+        System.out.println("8");
         return dbConnection;
 
     }
