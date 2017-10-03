@@ -23,8 +23,8 @@ public class TeacherResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Teacher> getTeachers() {
         return Lists.newArrayList(
-            new Teacher(1, "lastname", "firstname", "username", "password"),
-            new Teacher(2, "lastname2", "firstname2", "username2", "password2")
+        		new Teacher(1, "username2", "password"),
+            new Teacher(2, "username1", "password")
         );
     }
 	
@@ -34,14 +34,15 @@ public class TeacherResource {
     @Path("/{teacher_id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Teacher getTeacherFromId(@PathParam("teacher_id") int teacher_id) {
-        return new Teacher(teacher_id, "lastname "+teacher_id, "firstname", "username", "password");
+        return new Teacher(teacher_id, "username "+teacher_id, "password");
     }
-	
+    
 	// Request webapi/teachers/1/surveys
 	// Returns a teacher based on the id given.
-    @Path("/{teacher_id}/surveys")
-    public SurveyResource getStudentFromId(@PathParam("teacher_id") int teacher_id) {
-        return new SurveyResource();
+    @Path("/{teacher_id}/classes")
+    public TeacherClassResource getClassesFromId(@PathParam("teacher_id") int teacher_id) {
+    	System.out.println("calling classes");
+        return new TeacherClassResource();
     }
 
 }
