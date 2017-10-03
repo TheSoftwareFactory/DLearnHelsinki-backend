@@ -21,10 +21,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+            .csrf().disable()
             .authorizeRequests()
             .antMatchers("/webapi").authenticated()
             .antMatchers("/webapi/students/**").hasRole("TEACHER")
-            .anyRequest().denyAll()
+            .antMatchers("/webapi/teachers/**").hasRole("TEACHER")
+            .anyRequest().authenticated()
             .and()
             .httpBasic();
     }
