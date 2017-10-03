@@ -290,16 +290,58 @@ $ curl --request POST localhost:8080/webapi/teachers/1/classes/1/surveys
 <!--TODO: Actual response-->
 
 ```json
-{
-
-}
+{}
 ```
-
 <!-- TODO: Updating survey? -->
 
 #### Note
 
 This will create a survey even if another survey is currently open.
+
+
+### Get list of All surveys for one class (TODO)
+
+Adds new survey
+
+```endpoint
+GET teachers/{teacher_id}/classes/{class_id}/surveys
+```
+
+#### Example request
+
+```curl
+$ curl localhost:8080/webapi/teachers/1/classes/1/surveys
+  -d @data.json
+```
+
+#### Example response
+
+<!--TODO: Actual response-->
+```json
+[
+  {
+    "_id" : 1,
+    "teacher_id" : 1,
+    "class_id" : 1,
+    "title" : "Math survey",
+    "description" : "survey for the exercie 3 page 40",
+    "start_date" : "2007-04-05T13:30Z",
+    "end_date" : "2007-04-05T13:30Z",
+    "open" : true
+  },
+  {
+    "_id" : 2,
+    "teacher_id" : 1,
+    "class_id" : 1,
+    "title" : "Physic survey",
+    "description" : "survey for the exercie 5 page 13",
+    "start_date" : "2007-04-05T13:30Z",
+    "end_date" : "2007-04-05T13:30Z",
+    "open" : false
+  },
+]
+```
+
 
 -----------------------------------------------
 
@@ -382,18 +424,20 @@ $ curl localhost:8080/webapi/students/1/classes/1/surveys
     "_id" : 1,
     "teacher_id" : 1,
     "class_id" : 1,
-    "name" : "Math survey",
+    "title" : "Math survey",
     "description" : "survey for the exercie 3 page 40",
-    "date" : "2007-04-05T13:30Z",
+    "start_date" : "2007-04-05T13:30Z",
+    "end_date" : "2007-04-05T13:30Z",
     "open" : true
   },
   {
     "_id" : 2,
     "teacher_id" : 1,
     "class_id" : 1,
-    "name" : "Math survey",
+    "title" : "Physic survey",
     "description" : "survey for the exercie 5 page 13",
-    "date" : "2007-04-05T13:30Z",
+    "start_date" : "2007-04-05T13:30Z",
+    "end_date" : "2007-04-05T13:30Z",
     "open" : false
   },
 ]
