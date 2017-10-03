@@ -12,7 +12,7 @@ services:
  - postgresql
 
 before_script:
- - psql -c ./database/db.sql -U postgres
+ - psql -c database/db.sql -U postgres
 
 after_success:
  - mvn clean cobertura:cobertura coveralls:report
