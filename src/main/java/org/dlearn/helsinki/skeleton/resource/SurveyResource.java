@@ -12,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 
 import jersey.repackaged.com.google.common.collect.Lists;
 
-import org.dlearn.helsinki.skeleton.model.SpiderGraph;
 import org.dlearn.helsinki.skeleton.model.Survey;
 import org.dlearn.helsinki.skeleton.model.Teacher;
 import org.dlearn.helsinki.skeleton.service.SurveyService;
@@ -31,10 +30,8 @@ public class SurveyResource {
     public List<Survey> getSurveys(@PathParam("teacher_id") int teacher_id) {
         //return surveyService.getSurveysFromTeacherId(teacher_id);
         return Lists.newArrayList(
-                new Survey(1, "name", 2, "feb 12",
-                		"13 feb", teacher_id),
-                new Survey(1, "name", 2, "feb 12",
-                		"13 feb", teacher_id)
+                new Survey(),
+                new Survey()
             );
     }
 	
@@ -42,7 +39,7 @@ public class SurveyResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public void postSurvey(@PathParam("teacher_id") int teacher_id, Survey survey) {
 		survey.teacher_id = teacher_id; // need group_id and name from consumer TODO
-		System.out.println(survey.getName());
+		System.out.println(survey.getTitle());
 		surveyService.postSurvey(survey);
     }
 }

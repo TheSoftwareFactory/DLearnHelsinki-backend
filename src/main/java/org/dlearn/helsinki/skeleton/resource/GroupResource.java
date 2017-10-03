@@ -20,7 +20,7 @@ public class GroupResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Group> getGroups() {
         List<Group> groups = new ArrayList<>();
-        groups.add(new Group(3, "name", 0, 0));
+        groups.add(new Group(3, "name", 1));
         return groups;
     }
     
@@ -28,7 +28,7 @@ public class GroupResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Group getGroupInfo(@PathParam("group_id") int group_id) {
-        return new Group(0, null, 0, 0);
+        return new Group(0, null, 1);
     }
     
     @Path("/{group_id}/surveys")

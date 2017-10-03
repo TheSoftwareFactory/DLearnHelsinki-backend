@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.dlearn.helsinki.skeleton.database.Database;
 import org.dlearn.helsinki.skeleton.model.Question;
-import org.dlearn.helsinki.skeleton.model.SpiderGraph;
 import org.dlearn.helsinki.skeleton.model.Survey;
 
 public class SurveyService {
@@ -25,6 +24,6 @@ public class SurveyService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return new Survey(-1,"name",-1,"","",-1);
+        return new Survey();
 	}
 }
