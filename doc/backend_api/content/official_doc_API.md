@@ -7,7 +7,7 @@ and remove different students and spidergraphs.
 
 End points available for teacher.
 
-### List students in one class
+### List students in one class (TODO)
 
 Lists all students inside one specified class.
 
@@ -40,7 +40,7 @@ $ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/students/
 ]
 ```
 
-### List of all groups in one specified class
+### List of all groups in one specified class (TODO)
 
 This request allows you to retrieve a detailed list of all students in their respective groups, in one class
 
@@ -97,7 +97,7 @@ $ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/groups/
 ]
 ```
 
-### List of students in a group
+### List of students in a group (TODO)
 
 ```endpoint
 GET teachers/{teacher_id}/classes/{class_id}/groups/{group_id}/students
@@ -129,7 +129,7 @@ $ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/groups/1/students
 ```
 
 
-### List individual students
+### List individual students (TODO)
 
 This is how you can get a specific student by their id.
 
@@ -154,7 +154,7 @@ $ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/students/1
 }
 ```
 
-### Retrieve a student's result
+### Retrieve a student's result (TODO)
 
 Returns a single result for a specified survey.
 
@@ -181,7 +181,7 @@ $ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/students/1/
 }
 ```
 
-### Retrieve a group's results
+### Retrieve a group's results (TODO)
 
 Returns a single result for a specified survey for a specified group.
 
@@ -208,7 +208,7 @@ $ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/groups/1/an
 }
 ```
 
-### Retrieve a class's results
+### Retrieve a class's results (TODO)
 
 Returns a single result for a specified survey for a specified class.
 
@@ -236,7 +236,7 @@ $ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/answers
 ```
 
 
-### List surveys
+### List surveys (TODO)
 
 Retrieves surveys for a teacher, for one class, on one survey
 
@@ -260,7 +260,7 @@ $ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/answers
 }
 ```
 
-### Add/Open new survey
+### Add/Open new survey (TODO)
 
 Adds new survey
 
@@ -304,11 +304,13 @@ $ curl --request POST localhost:8080/skeleton/webapi/teachers/{teacher_id}/surve
 
 <!-- TODO: Updating survey? -->
 
+-----------------------------------------------
+
 ## Student role
 
 Endpoints available for student.
 
-### List information
+### List information (TODO)
 
 This is how student can get their own information.
 
@@ -333,7 +335,7 @@ $ curl localhost:8080/skeleton/webapi/student/{student_id}
 }
 ```
 
-### Retrieve a student's result for specific survey
+### Retrieve a student's result for specific survey (TODO)
 
 Returns a single spidergraph.
 
@@ -361,7 +363,7 @@ $ curl localhost:8080/skeleton/webapi/student/1/classes/1/surveys/1/answers
 }
 ```
 
-### Retrieve all the surveys
+### Retrieve all the surveys (TODO)
 
 Returns all the survey for one class. Can be used to find the open survey
 
@@ -400,7 +402,7 @@ $ curl localhost:8080/skeleton/webapi/students/1/classes/1/surveys
 ]
 ```
 
-### Retrieve questions for a survey
+### Retrieve questions for a survey (TODO)
 
 Returns the array of questions for a survey.
 
@@ -432,7 +434,7 @@ $ curl localhost:8080/skeleton/webapi/student/groups/1/surveys/1/questions
 ]
 ```
 
-### Send answers to the questions
+### Send answers to the questions (TODO)
 
 Sends one and only one answer to the specified question.
 
