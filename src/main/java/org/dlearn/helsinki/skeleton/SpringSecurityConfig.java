@@ -23,12 +23,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                         + "select username, password, true from students"
                         + "union"
                         + "select username, password, true from teachers"
-                    + ") where username=?")
+                    + ") A where username=?")
             .authoritiesByUsernameQuery("select * ("
                         + "select username, 'ROLE_STUDENT' from students"
                         + "union"
                         + "select username, 'ROLE_TEACHER' from teachers"
-                    + ") where username=?")
+                    + ") A where username=?")
             .passwordEncoder(new BCryptPasswordEncoder(16))
             .and()
             .inMemoryAuthentication()
