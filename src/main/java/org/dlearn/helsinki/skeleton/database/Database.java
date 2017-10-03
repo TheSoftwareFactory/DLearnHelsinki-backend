@@ -219,7 +219,9 @@ public class Database extends AbstractDataSource {
             	System.out.println("JDBC env empty, on local");
                 dbConnection = DriverManager.getConnection(
                         DB_CONNECTION, DB_USER, DB_PASSWORD);
+
             }else { // production
+
             	dbConnection = DriverManager.getConnection(dbUrl);
             }
         } catch (SQLException e) {
