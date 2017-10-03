@@ -260,7 +260,7 @@ $ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/answers
 }
 ```
 
-### Add/Open new survey (TODO)
+### Add/Open new survey (DONE)
 
 Adds new survey
 
@@ -303,6 +303,10 @@ $ curl --request POST localhost:8080/skeleton/webapi/teachers/{teacher_id}/surve
 ```
 
 <!-- TODO: Updating survey? -->
+
+#### Note
+
+This will create a survey even if another survey is currently open.
 
 -----------------------------------------------
 
