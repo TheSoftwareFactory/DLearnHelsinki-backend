@@ -28,8 +28,8 @@ public class StudentClassResource {
     }
     
     @Path("/{class_id}/surveys")
-    public SurveyResource getSurveyResource(@PathParam("class_id") int class_id) {
+    public StudentSurveyResource getStudentSurveyResource(@PathParam("class_id") int class_id) {
     	System.out.println("calling classes");
-    	return new SurveyResource();
+    	return new StudentSurveyResource();
     }
 }

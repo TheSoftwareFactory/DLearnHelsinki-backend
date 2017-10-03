@@ -37,14 +37,14 @@ public class Database {
 	public Survey postSurvey(Survey survey) throws SQLException {
 		try(Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "INSERT INTO public.\"Surveys\" (title, class_id, start_date, end_date, teacher_id, open) "
+            String statement = "INSERT INTO public.\"Surveys\" (title, class_id, start_date, teacher_id, description, open) "
                        + "VALUES (?,?,?,?,?,True) RETURNING _id";
             try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
-                insert.setString(1, "name_of_survey"); 
-                insert.setInt(2, 1);
+                insert.setString(1, survey.title); 
+                insert.setInt(2, survey.getClass_id());
                 insert.setDate(3, new Date(0));
-                insert.setDate(4, new Date(0));
-                insert.setInt(5, 1);
+                insert.setInt(4, survey.getTeacher_id());
+                insert.setString(5, survey.description);
                 // execute query
                 try(ResultSet result = insert.executeQuery()) {
                 	if (result.next()) {
@@ -152,6 +152,14 @@ public class Database {
 	// Takes the survey_id, the student_id
 	public void postStudentAnswersForSurvey(List<Answer> answers, int survey_id, int student_id) {
 		// TODO Auto-generated method stub
+	}
+	
+	// Method : getSurveysFromClassAsStudent
+	// Input  : the survey_id, the student_id
+	// Output : returns a list of surveys available to the student
+	public List<Survey> getSurveysFromClassAsStudent(int student_id, int class_id) throws SQLException{
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 /////////////////////////////////////////////////////////
