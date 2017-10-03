@@ -96,8 +96,8 @@ public class Database {
 	public Survey postSurvey(Survey survey) throws SQLException {
 		try(Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "INSERT INTO public.\"Surveys\" (name, group_id, start_date, end_date, teacher_id) "
-                       + "VALUES (?,?,?,?,?) RETURNING _id";
+            String statement = "INSERT INTO public.\"Surveys\" (title, class_id, start_date, end_date, teacher_id, open) "
+                       + "VALUES (?,?,?,?,?,True) RETURNING _id";
             try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
                 insert.setString(1, "name_of_survey"); 
                 insert.setInt(2, 1);
@@ -106,7 +106,7 @@ public class Database {
                 insert.setInt(5, 1);
                 // execute query
                 try(ResultSet result = insert.executeQuery()) {
-                    if (result.first()) {
+                	if (result.next()) {
                         survey.set_id(result.getInt("_id"));
                     } else {
                         System.out.println("Inserting survey didn't return ID of it.");
@@ -115,9 +115,9 @@ public class Database {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-        }
+        } 
 		//TODO remove
-		survey.set_id(4); 
+		//survey.set_id(4); 
 		return survey;
 	}
 	

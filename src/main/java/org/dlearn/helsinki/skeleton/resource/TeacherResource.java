@@ -41,6 +41,7 @@ public class TeacherResource {
 	// Returns a teacher based on the id given.
     @Path("/{teacher_id}/surveys")
     public SurveyResource getStudentFromId(@PathParam("teacher_id") int teacher_id) {
+    	System.out.println("calling surveys");
         return new SurveyResource();
     }
 

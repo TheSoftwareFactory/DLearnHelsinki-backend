@@ -26,7 +26,6 @@ public class SurveyResource {
 	// request teachers/{teacher_id}/surveys/
 	// returns all the surveys from teacher based on the teacher_id. a sort of history
 	// TODO implement to answer to history request
-	@Path("/")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Survey> getSurveys(@PathParam("teacher_id") int teacher_id) {
@@ -38,13 +37,12 @@ public class SurveyResource {
                 		"13 feb", teacher_id)
             );
     }
-
-	@Path("/")
+	
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public void postSurvey(@PathParam("teacher_id") int teacher_id, Survey survey) {
 		survey.teacher_id = teacher_id; // need group_id and name from consumer TODO
+		System.out.println(survey.getName());
 		surveyService.postSurvey(survey);
     }
 }
