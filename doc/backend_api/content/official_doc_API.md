@@ -52,7 +52,7 @@ GET teachers/{teacher_id}/classes/{class_id}/groups/
 #### Example request
 
 ```curl
-$ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/groups/
+$ curl localhost:8080/webapi/teachers/1/classes/1/groups/
 ```
 
 #### Example response
@@ -107,7 +107,7 @@ GET teachers/{teacher_id}/classes/{class_id}/groups/{group_id}/students
 #### Example request
 
 ```curl
-$ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/groups/1/students
+$ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/students
 ```
 
 #### Example response
@@ -141,7 +141,7 @@ GET teachers/{teacher_id}/classes/{class_id}/students/{student_id}
 #### Example request
 
 ```curl
-$ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/students/1
+$ curl localhost:8080/webapi/teachers/1/classes/1/students/1
 ```
 
 #### Example response
@@ -169,7 +169,7 @@ Retrieve information about an existing spidegraph.
 #### Example request
 
 ```curl
-$ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/students/1/answers
+$ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1/students/1/answers
 ```
 
 #### Example response
@@ -196,7 +196,7 @@ Retrieve information about an existing spidegraph.
 #### Example request
 
 ```curl
-$ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/groups/1/answers
+$ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1/groups/1/answers
 ```
 
 #### Example response
@@ -223,7 +223,7 @@ Retrieve information about an existing spidegraph.
 #### Example request
 
 ```curl
-$ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/answers
+$ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1/answers
 ```
 
 #### Example response
@@ -248,7 +248,7 @@ GET teachers/{teacher_id}/classes/{class_id}/surveys/{survey_id}/answers
 #### Example request
 
 ```curl
-$ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/answers
+$ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1/answers
 ```
 
 #### Example response
@@ -272,7 +272,7 @@ POST teachers/{teacher_id}/classes/{class_id}/surveys
 #### Example request
 
 ```curl
-$ curl --request POST localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys
+$ curl --request POST localhost:8080/webapi/teachers/1/classes/1/surveys
   -d @data.json
 ```
 
@@ -318,7 +318,7 @@ GET /student/{student_id}
 #### Example request
 
 ```curl
-$ curl localhost:8080/skeleton/webapi/student/{student_id}
+$ curl localhost:8080/webapi/student/{student_id}
 ```
 
 #### Example response
@@ -345,7 +345,7 @@ Retrieve information about an existing spidegraph.
 #### Example request
 
 ```curl
-$ curl localhost:8080/skeleton/webapi/student/1/classes/1/surveys/1/answers
+$ curl localhost:8080/webapi/student/1/classes/1/surveys/1/answers
 ```
 
 #### Example response
@@ -371,7 +371,7 @@ GET /students/{student_id}/classes/{class_id}/surveys
 #### Example request
 
 ```curl
-$ curl localhost:8080/skeleton/webapi/students/1/classes/1/surveys
+$ curl localhost:8080/webapi/students/1/classes/1/surveys
 ```
 
 #### Example response
@@ -409,7 +409,7 @@ GET /students/{student_id}/classes/{class_id}/surveys/{survey_id}/questions
 #### Example request
 
 ```curl
-$ curl localhost:8080/skeleton/webapi/student/groups/1/surveys/1/questions
+$ curl localhost:8080/webapi/student/groups/1/surveys/1/questions
 ```
 
 #### Example response
