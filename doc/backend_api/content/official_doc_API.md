@@ -3,6 +3,7 @@
 This is our high-quality API. You can use this API to request
 and remove different students and spidergraphs.
 
+
 ## Teacher role
 
 End points available for teacher.
@@ -265,17 +266,13 @@ $ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys/1/answers
 Adds new survey
 
 ```endpoint
-v1.0 (Remove as soon as possible)
-POST teachers/{teacher_id}/surveys/
-
-v2.0
-POST teachers/{teacher_id}/classes/{class_id}/surveys/
+POST teachers/{teacher_id}/classes/{class_id}/surveys
 ```
 
 #### Example request
 
 ```curl
-$ curl --request POST localhost:8080/skeleton/webapi/teachers/{teacher_id}/surveys
+$ curl --request POST localhost:8080/skeleton/webapi/teachers/1/classes/1/surveys
   -d @data.json
 ```
 
@@ -283,12 +280,8 @@ $ curl --request POST localhost:8080/skeleton/webapi/teachers/{teacher_id}/surve
 
 ```json
 {
-  "_id" : 1,
-  "name" : "Reilu peli leikkikentällä",
-  "group_id" : 1,
-  "start_data" : "2007-04-05T12:30Z",
-  "end_date" : "2007-04-05T13:30Z",
-  "teacher_id" : 1,
+  "title" : "math survey",
+  "description" : "Fist math survey of the year"
 }
 ```
 
