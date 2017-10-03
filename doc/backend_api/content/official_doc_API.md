@@ -19,7 +19,7 @@ GET teachers/{teacher_id}/classes/{class_id}/students/
 #### Example request
 
 ```curl
-$ curl localhost:8080/skeleton/webapi/teachers/1/classes/1/students/
+$ curl localhost:8080/webapi/teachers/1/classes/1/students/
 ```
 
 #### Example response
