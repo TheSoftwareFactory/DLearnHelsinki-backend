@@ -22,11 +22,4 @@ public class StudentResource {
             new Student(student_id + 1, "username2", "password2", null, student_id)
         );
     }
-    
-    /*
-    @Path("/{student_id}/spidergraphs")
-    public SpiderGraphResource getSpiderGraphResource(@PathParam("student_id") int student_id) {
-        return new SpiderGraphResource();
-    }
-    */
 }

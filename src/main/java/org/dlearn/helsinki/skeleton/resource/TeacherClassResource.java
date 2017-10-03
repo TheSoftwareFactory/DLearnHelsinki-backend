@@ -13,12 +13,12 @@ import org.dlearn.helsinki.skeleton.model.Survey;
 
 import jersey.repackaged.com.google.common.collect.Lists;
 
-public class ClassResource {
+public class TeacherClassResource {
 	
 	
-	// request teachers/{teacher_id}/surveys/
-	// returns all the surveys from teacher based on the teacher_id. a sort of history
-	// TODO implement to answer to history request
+	// request teachers/{teacher_id}/classes
+	// returns the teacher's classes based on the teacher_id.
+	// TODO implement to answer to request with the classes of the teacher.
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Classes> getClasses(@PathParam("teacher_id") int teacher_id) {

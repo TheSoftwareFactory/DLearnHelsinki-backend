@@ -40,9 +40,9 @@ public class TeacherResource {
 	// Request webapi/teachers/1/surveys
 	// Returns a teacher based on the id given.
     @Path("/{teacher_id}/classes")
-    public ClassResource getClassesFromId(@PathParam("teacher_id") int teacher_id) {
+    public TeacherClassResource getClassesFromId(@PathParam("teacher_id") int teacher_id) {
     	System.out.println("calling classes");
-        return new ClassResource();
+        return new TeacherClassResource();
     }
 
 }

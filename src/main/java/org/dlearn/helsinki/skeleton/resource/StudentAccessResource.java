@@ -6,7 +6,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Path("/student")
+@Path("/students")
 public class StudentAccessResource {
 
     @GET
@@ -15,8 +15,9 @@ public class StudentAccessResource {
         return "logged in";
     }
 
-    @Path("/groups")
-    public GroupResource getGroups() {
-        return new GroupResource();
+    
+    @Path("/{student_id}/classes")
+    public StudentClassResource getGroups() {
+        return new StudentClassResource();
     }
 }

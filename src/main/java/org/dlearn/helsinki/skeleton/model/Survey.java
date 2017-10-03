@@ -6,6 +6,7 @@ public class Survey {
 	
 	public int _id;
 	public String title;
+	public String description;
 	public String start_date;
 	public String end_date;
 	public int teacher_id;
@@ -16,11 +17,12 @@ public class Survey {
 		super();
 	}
 
-	public Survey(int _id, String title, String start_date, String end_date, int teacher_id, int class_id,
+	public Survey(int _id, String title, String description, String start_date, String end_date, int teacher_id, int class_id,
 			boolean open) {
 		super();
 		this._id = _id;
 		this.title = title;
+		this.description = description;
 		this.start_date = start_date;
 		this.end_date = end_date;
 		this.teacher_id = teacher_id;
