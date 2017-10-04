@@ -4,12 +4,15 @@ sudo: false
 language: java
 jdk: openjdk8
 
+env:
+ - JDBC_DATABASE_URL="jdbc:postgresql://localhost/Dlearn_db?user=postgres&ssl=false"
+
 # TODO: Database setup or should we mock database in tests? Probably yes.
-# services:
-#   - postgresql
+services:
+ - postgresql
 
 before_script:
-# - psql -c ./src/main/resources/TestDB.sql -U postgres
+ - psql -f database/db.sql -U postgres
 
 after_success:
-  - mvn clean cobertura:cobertura coveralls:report
+ - mvn clean cobertura:cobertura coveralls:report
