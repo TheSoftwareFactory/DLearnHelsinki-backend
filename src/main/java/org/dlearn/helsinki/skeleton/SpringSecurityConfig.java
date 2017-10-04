@@ -19,12 +19,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication()
             .dataSource(db)
-            .usersByUsernameQuery("select * ("
+            .usersByUsernameQuery("select * from ("
                         + "select username, password, true from students"
                         + "union"
                         + "select username, password, true from teachers"
                     + ") A where username=?")
-            .authoritiesByUsernameQuery("select * ("
+            .authoritiesByUsernameQuery("select * from ("
                         + "select username, 'ROLE_STUDENT' from students"
                         + "union"
                         + "select username, 'ROLE_TEACHER' from teachers"
