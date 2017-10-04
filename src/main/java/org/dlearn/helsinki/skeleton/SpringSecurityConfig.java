@@ -20,9 +20,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.jdbcAuthentication()
             .dataSource(db)
             .usersByUsernameQuery("select * from ("
-                        + "select username, password, 'true' as enabled from students"
+                        + "select username, pwd, 'true' as enabled from Students"
                         + " union "
-                        + "select username, password, 'true' as enabled from teachers"
+                        + "select username, pwd, 'true' as enabled from Teachers"
                     + ") A where username=?")
             .authoritiesByUsernameQuery("select * from ("
                         + "select username, 'ROLE_STUDENT' from students"
