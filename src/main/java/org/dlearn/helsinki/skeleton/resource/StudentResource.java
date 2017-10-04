@@ -12,11 +12,13 @@ import jersey.repackaged.com.google.common.collect.Lists;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.service.GroupService;
+import org.dlearn.helsinki.skeleton.service.StudentService;
 
-@Path("/students")
+
 public class StudentResource {
-		
-    @GET
+	static final StudentService studentService = new StudentService(); 	
+	@GET
+	@Path("/students")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Student> getStudents(@PathParam("student_id") int student_id) {
         return Lists.newArrayList(
@@ -24,4 +26,11 @@ public class StudentResource {
             new Student(student_id + 1, "username2", "password2", null, student_id)
         );
     }
+	
+	@GET
+	@Path("/student/{studentId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Student getStudentInfo(@PathParam("studentId") int student_id) {
+		return studentService.getStudent(student_id);
+    }	
 }

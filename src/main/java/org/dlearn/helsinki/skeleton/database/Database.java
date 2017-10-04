@@ -13,6 +13,7 @@ import java.util.List;
 import org.dlearn.helsinki.skeleton.model.Answer;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.Question;
+import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.Survey;
 import org.springframework.jdbc.datasource.AbstractDataSource;
 
@@ -215,9 +216,31 @@ public class Database extends AbstractDataSource {
 	    	System.out.println(e.getMessage());
 	    }		
 		return groups;
-		//*/
 	}
 
+	public Student getStudent(int studentID) {
+		Student student = null;
+
+		try(Connection dbConnection = getDBConnection()) {
+            String statement = "Select _id, name, student_id, teacher_id FROM public.\"Groups\" WHERE student_id = ?";
+            //prepare statement with student_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+            	select.setInt(1, studentID);
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                   	student = new Student();
+                   	student.set_id(result.getInt(1));
+                   	student.setAge(result.getInt(2));
+                   	student.setUsername(result.getString(1));
+                   	student.setPassword(null);
+                   	student.setGender(result.getString(3));
+                }
+            }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }		
+		return student;
+	}
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////

@@ -46,4 +46,22 @@ public class Student {
     public void setPassword(String password) {
         this.pwd = password;
     }
+    
+    public void setAge(int age) {
+        this.age = age;
+    }
+    
+    public int getAge() {
+        return age;
+    }
+    
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+    
+    public String getGender() {
+        return gender;
+    }
+    
+    
 }
