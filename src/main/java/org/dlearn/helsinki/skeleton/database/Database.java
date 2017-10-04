@@ -203,7 +203,7 @@ public class Database extends AbstractDataSource {
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Students\" (username, pwd, gender, age) "
-                    + "VALUES (?,?,?,?) RETURNING _id";
+                    + "VALUES (?::varchar,?::varchar,?::varchar,?) RETURNING _id";
             try (PreparedStatement insert = dbConnection.prepareStatement(statement)) {
                 insert.setString(1, student.username);
                 insert.setString(2, hasher.encode(student.pwd));
