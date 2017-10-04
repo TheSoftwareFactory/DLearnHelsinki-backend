@@ -23,11 +23,11 @@ public class DatabaseTest {
           this.open = true;
         }};
         db.postSurvey(survey);
-        List<Question> questions = Arrays.asList(new Question(){{
+        List<Question> questions = Arrays.asList(db.postQuestion(new Question(){{
             this.question = "Do you like trains?";
             this.min_answer = 7;
             this.max_answer = 42;
-        }});
+        }}));
         db.postSurveyQuestions(questions, survey);
         List<Question> questionsFromDb = db.getQuestionsFromSurvey(survey._id);
         
