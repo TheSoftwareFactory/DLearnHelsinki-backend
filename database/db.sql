@@ -71,7 +71,7 @@ ALTER SEQUENCE "Answers__id_seq" OWNED BY "Answers"._id;
 
 CREATE TABLE "Classes" (
     _id integer NOT NULL,
-    name character(50)[],
+    name character varying(80),
     teacher_id integer
 );
 
@@ -100,7 +100,7 @@ ALTER SEQUENCE "Classes__id_seq" OWNED BY "Classes"._id;
 --
 
 CREATE TABLE "Groups" (
-    name character(50),
+    name character varying(80),
     _id integer NOT NULL,
     class_id integer
 );
@@ -130,7 +130,7 @@ ALTER SEQUENCE "Groups__id_seq" OWNED BY "Groups"._id;
 --
 
 CREATE TABLE "Questions" (
-    question character(512),
+    question character varying(600),
     min_answer integer,
     max_answer integer,
     _id integer NOT NULL
@@ -193,9 +193,9 @@ ALTER SEQUENCE "Student_Classes__id_seq" OWNED BY "Student_Classes"._id;
 
 CREATE TABLE "Students" (
     _id integer NOT NULL,
-    username character(30)[],
-    pwd character(50)[],
-    gender character(10)[],
+    username character varying(35),
+    pwd character varying(55),
+    gender character varying(15),
     age integer
 );
 
@@ -234,14 +234,14 @@ CREATE TABLE "Survey_questions" (
 --
 
 CREATE TABLE "Surveys" (
-    title character(50),
+    title character varying(60),
     start_date date,
     end_date date,
     teacher_id integer,
     _id integer NOT NULL,
     open boolean,
     class_id integer,
-    description character varying
+    description character varying(100)
 );
 
 
@@ -269,10 +269,10 @@ ALTER SEQUENCE "Surveys__id_seq" OWNED BY "Surveys"._id;
 --
 
 CREATE TABLE "Teachers" (
-    lastname character(30)[],
-    firstname character(30)[],
-    username character(30)[],
-    pwd character(30)[],
+    lastname character varying(40),
+    firstname character varying(40),
+    username character varying(40),
+    pwd character varying(40),
     _id integer NOT NULL
 );
 
@@ -350,6 +350,14 @@ ALTER TABLE ONLY "Surveys" ALTER COLUMN _id SET DEFAULT nextval('"Surveys__id_se
 --
 
 ALTER TABLE ONLY "Teachers" ALTER COLUMN _id SET DEFAULT nextval('"Teachers__id_seq"'::regclass);
+
+
+--
+-- Name: Answers Answers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "Answers"
+    ADD CONSTRAINT "Answers_pkey" PRIMARY KEY (questionnaire_id, student_id);
 
 
 --
