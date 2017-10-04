@@ -13,8 +13,11 @@ import java.util.List;
 import org.dlearn.helsinki.skeleton.model.Answer;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.Question;
+import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.Survey;
 import org.springframework.jdbc.datasource.AbstractDataSource;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class Database extends AbstractDataSource {
 
@@ -193,6 +196,34 @@ public class Database extends AbstractDataSource {
 		return groups;
 		//*/
 	}
+
+    private final PasswordEncoder hasher = new BCryptPasswordEncoder(16);
+
+    public Student createStudent(Student student) {
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "INSERT INTO public.\"Students\" (username, pwd, gender, age) "
+                    + "VALUES (?,?,?,?) RETURNING _id";
+            try (PreparedStatement insert = dbConnection.prepareStatement(statement)) {
+                insert.setString(1, student.username);
+                insert.setString(2, hasher.encode(student.pwd));
+                insert.setString(3, student.gender);
+                insert.setInt(4, student.age);
+
+                // execute query
+                try (ResultSet result = insert.executeQuery()) {
+                    if (result.next()) {
+                        student.set_id(result.getInt("_id"));
+                    } else {
+                        System.out.println("Inserting survey didn't return ID of it.");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return student;
+    }
 
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
