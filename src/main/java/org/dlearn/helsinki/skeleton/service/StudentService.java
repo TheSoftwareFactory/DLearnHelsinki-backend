@@ -13,5 +13,10 @@ public class StudentService {
 		// TODO Auto-generated method stub
 		return db.getStudent(student_id);
 	}
-
+	
+	public Student getStudentNoPassword(int student_id) {
+		// TODO Auto-generated method stub
+		return db.getStudent(student_id).setPassword(null);
+	}
+	
 }

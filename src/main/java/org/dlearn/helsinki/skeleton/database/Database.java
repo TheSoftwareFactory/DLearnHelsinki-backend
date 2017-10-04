@@ -222,18 +222,20 @@ public class Database extends AbstractDataSource {
 		Student student = null;
 
 		try(Connection dbConnection = getDBConnection()) {
-            String statement = "Select _id, name, student_id, teacher_id FROM public.\"Groups\" WHERE student_id = ?";
+            String statement = "Select username, pwd, gender, age FROM public.\"Students\" WHERE _id = ?";
             //prepare statement with student_id
             try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
             	select.setInt(1, studentID);
                 // execute query
                 try(ResultSet result = select.executeQuery()) {
-                   	student = new Student();
-                   	student.set_id(result.getInt(1));
-                   	student.setAge(result.getInt(2));
-                   	student.setUsername(result.getString(1));
-                   	student.setPassword(null);
-                   	student.setGender(result.getString(3));
+                	if(result.next()) { 
+                		student = new Student();
+                   		student.set_id(studentID);
+                   		student.setAge(result.getInt("age"));
+                   		student.setUsername(result.getString("username"));
+                   		student.setPassword(result.getString("pwd"));
+                   		student.setGender(result.getString("gender"));
+                	}
                 }
             }
 	    } catch (SQLException e) {
