@@ -379,7 +379,7 @@ $ curl localhost:8080/webapi/students/{student_id}
 }
 ```
 
-### Retrieve a student's result for specific survey (TODO)
+### Retrieve a student's result for specific survey (TESTING)
 
 Returns a single spidergraph.
 
@@ -400,11 +400,26 @@ $ curl localhost:8080/webapi/students/1/classes/1/surveys/1/answers
 <!--TODO: Actual response-->
 
 ```json
-{
-  "question_id" : 1,
-  "student_id" : 1,
-  "answer" : 3
-}
+[
+    {
+        "survey_id": 27,
+        "question_id": 1,
+        "student_id": 1,
+        "answer": 4
+    },
+    {
+        "survey_id": 27,
+        "question_id": 2,
+        "student_id": 1,
+        "answer": 4
+    },
+    {
+        "survey_id": 27,
+        "question_id": 3,
+        "student_id": 1,
+        "answer": 4
+    }
+]
 ```
 
 ### Retrieve all the surveys (TODO)
@@ -448,7 +463,7 @@ $ curl localhost:8080/webapi/students/1/classes/1/surveys
 ]
 ```
 
-### Retrieve questions for a survey (TODO)
+### Retrieve questions for a survey (DONE)
 
 Returns the array of questions for a survey.
 
@@ -480,7 +495,7 @@ $ curl localhost:8080/webapi/students/1/classes/1/surveys/1/questions
 ]
 ```
 
-### Send answers to the questions (TODO)
+### Send answers to the questions (DONE)
 
 Sends one and only one answer to the specified question.
 
