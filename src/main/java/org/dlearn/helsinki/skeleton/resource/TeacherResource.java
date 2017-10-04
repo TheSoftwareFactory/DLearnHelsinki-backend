@@ -16,10 +16,10 @@ import org.dlearn.helsinki.skeleton.model.Teacher;
 
 @Path("/teachers")
 public class TeacherResource {
-	
-	// Request webapi/teachers/
-	// Returns all teachers present in the db.
-	@GET
+
+    // Request webapi/teachers/
+    // Returns all teachers present in the db.
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Teacher> getTeachers() {
         return Lists.newArrayList(
@@ -28,9 +28,9 @@ public class TeacherResource {
         );
     }
 	
-	// Request webapi/teachers/1
-	// Returns a teacher based on the id given.
-	@GET
+    // Request webapi/teachers/1
+    // Returns a teacher based on the id given.
+    @GET
     @Path("/{teacher_id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Teacher getTeacherFromId(@PathParam("teacher_id") int teacher_id) {

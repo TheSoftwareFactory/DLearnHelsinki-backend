@@ -10,7 +10,8 @@ public class Teacher {
         super();
     }
 
-    public Teacher(int _id, String lastname,
+
+    public Teacher(int _id, String username,
             String password) {
         super();
         this._id = _id;
