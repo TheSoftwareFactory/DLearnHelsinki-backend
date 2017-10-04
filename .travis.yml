@@ -5,7 +5,7 @@ language: java
 jdk: openjdk8
 
 env:
- - JDBC_DATABASE_URL="jdbc:postgresql://localhost/public?user=postgres&ssl=false"
+ - JDBC_DATABASE_URL="jdbc:postgresql://localhost/postgres?user=postgres&ssl=false"
 
 # TODO: Database setup or should we mock database in tests? Probably yes.
 services:
