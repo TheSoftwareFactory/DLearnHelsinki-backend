@@ -39,30 +39,11 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE "Answers" (
-    questionnaire_id integer NOT NULL,
+    question_id integer NOT NULL,
     student_id integer NOT NULL,
     answer integer DEFAULT 0,
-    _id integer NOT NULL
+    survey_id integer NOT NULL
 );
-
-
---
--- Name: Answers__id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE "Answers__id_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: Answers__id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE "Answers__id_seq" OWNED BY "Answers"._id;
 
 
 --
@@ -297,13 +278,6 @@ ALTER SEQUENCE "Teachers__id_seq" OWNED BY "Teachers"._id;
 
 
 --
--- Name: Answers _id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY "Answers" ALTER COLUMN _id SET DEFAULT nextval('"Answers__id_seq"'::regclass);
-
-
---
 -- Name: Classes _id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -357,7 +331,7 @@ ALTER TABLE ONLY "Teachers" ALTER COLUMN _id SET DEFAULT nextval('"Teachers__id_
 --
 
 ALTER TABLE ONLY "Answers"
-    ADD CONSTRAINT "Answers_pkey" PRIMARY KEY (questionnaire_id, student_id);
+    ADD CONSTRAINT "Answers_pkey" PRIMARY KEY (question_id, student_id, survey_id);
 
 
 --
