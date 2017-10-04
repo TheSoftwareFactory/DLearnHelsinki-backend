@@ -95,11 +95,11 @@ public class Database extends AbstractDataSource {
         return questions;
     }
 
-    public Question postQuestion(Question question)throws SQLException {
+    public Question postQuestion(Question question) throws SQLException {
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Questions\" (question, min_answer, max_answer) "
-                       + "VALUES (?, ?) RETURNING _id";
+                       + "VALUES (?, ?, ?) RETURNING _id";
             try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
                 insert.setString(0, question.question);
                 insert.setInt(1, question.min_answer);
