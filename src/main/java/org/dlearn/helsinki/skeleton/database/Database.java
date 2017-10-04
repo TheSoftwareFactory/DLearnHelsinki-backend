@@ -202,7 +202,7 @@ public class Database extends AbstractDataSource {
     private final PasswordEncoder hasher = new BCryptPasswordEncoder(16);
 
     private Array toArray(Connection db, String s) throws SQLException {
-        return db.createArrayOf("character", s.chars().mapToObj(c -> (char)c).toArray(Character[]::new));
+        return db.createArrayOf("character[]", s.chars().mapToObj(c -> (char)c).toArray(Character[]::new));
     }
 
     public Student createStudent(Student student) {
