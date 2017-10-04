@@ -163,7 +163,7 @@ public class Database extends AbstractDataSource {
 	// Input  : the survey_id, the student_id
 	// Output : returns a list of surveys available to the student
 	public List<Survey> getSurveysFromClassAsStudent(int student_id, int class_id) throws SQLException{
-		// TODO Auto-generated method stub
+		//SELECT * FROM public."Surveys",public."Students",public."Student_Classes" WHERE public."Students"._id = public."Student_Classes".class_id AND public."Student_Classes".class_id = public."Surveys".class_id AND public."Student_Classes".class_id = 1 AND public."Students"._id = 1
 		return null;
 	}
 	
@@ -206,6 +206,8 @@ public class Database extends AbstractDataSource {
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
+	
+	
     private static Connection getDBConnection() {
         Connection dbConnection = null;
         try {
