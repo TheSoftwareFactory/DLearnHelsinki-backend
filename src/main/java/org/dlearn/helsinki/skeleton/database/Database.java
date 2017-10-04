@@ -1,5 +1,6 @@
 package org.dlearn.helsinki.skeleton.database;
 
+import java.sql.Array;
 import java.sql.Connection;
 
 import java.sql.Date;
@@ -9,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.sql.rowset.serial.SerialArray;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
 import org.dlearn.helsinki.skeleton.model.Group;
@@ -199,15 +201,19 @@ public class Database extends AbstractDataSource {
 
     private final PasswordEncoder hasher = new BCryptPasswordEncoder(16);
 
+    private Array toArray(Connection db, String s) throws SQLException {
+        return db.createArrayOf("character", s.chars().mapToObj(c -> (char)c).toArray(Character[]::new));
+    }
+
     public Student createStudent(Student student) {
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Students\" (username, pwd, gender, age) "
-                    + "VALUES (?::character[],?::character[],?::character[],?) RETURNING _id";
+                    + "VALUES (?,?,?,?) RETURNING _id";
             try (PreparedStatement insert = dbConnection.prepareStatement(statement)) {
-                insert.setString(1, student.username);
-                insert.setString(2, hasher.encode(student.pwd));
-                insert.setString(3, student.gender);
+                insert.setArray(1, toArray(dbConnection, student.username));
+                insert.setArray(2, toArray(dbConnection, hasher.encode(student.pwd)));
+                insert.setArray(3, toArray(dbConnection, student.gender));
                 insert.setInt(4, student.age);
 
                 // execute query
