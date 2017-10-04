@@ -26,9 +26,16 @@ public class StudentSurveyAnswerResource{
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{answer_id}")
-    public void getSurveyAnswers(@PathParam("student_id") int student_id, @PathParam("survey_id") int survey_id, @PathParam("answer_id") int answer_id, Answer answer) {
+    public void putSurveyAnswers(@PathParam("student_id") int student_id, @PathParam("survey_id") int survey_id, @PathParam("answer_id") int answer_id, Answer answer) {
         //return surveyService.getSurveysFromTeacherId(teacher_id);
         studentSurveyAnswerService.putAnswerToQuestion(student_id,survey_id,answer_id,answer);
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Answer> getSurveyAnswers(@PathParam("student_id") int student_id, @PathParam("survey_id") int survey_id) {
+        //return surveyService.getSurveysFromTeacherId(teacher_id);
+        return studentSurveyAnswerService.getAnswers(student_id,survey_id);
     }
 
 }

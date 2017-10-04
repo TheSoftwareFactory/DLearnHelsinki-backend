@@ -258,7 +258,7 @@ public class Database extends AbstractDataSource {
             		+ "VALUES (?, ?, ?, ?) "
             		+ "ON CONFLICT (question_id,student_id,survey_id) DO UPDATE SET answer = ?";
             try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
-                insert.setInt(1, answer.questionnaire_id); 
+                insert.setInt(1, answer.question_id); 
                 insert.setInt(2, answer.student_id);
                 insert.setInt(3, answer.answer);
                 insert.setInt(4, answer.survey_id);
@@ -271,6 +271,35 @@ public class Database extends AbstractDataSource {
 
         }
 		
+	}
+
+	public List<Answer> getAnswersFromStudentSurvey(int student_id, int survey_id) {
+		ArrayList<Answer> answers = new ArrayList<Answer>();
+		try(Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "Select student_id, survey_id, question_id, answer FROM \"Answers\" WHERE"
+            		+ " survey_id = ? AND student_id = ?";
+            //prepare statement with survey_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+                select.setInt(1, survey_id);
+                select.setInt(2, student_id);
+
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                    while (result.next()) {
+                    	Answer answer = new Answer();
+                    	answer.student_id = result.getInt(1);
+                    	answer.survey_id = result.getInt(2);
+                    	answer.setQuestion_id(result.getInt(3));
+                    	answer.setAnswer(result.getInt(4));
+                    	answers.add(answer);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+		return answers;
 	}
 
 }
