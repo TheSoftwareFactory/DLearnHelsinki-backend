@@ -101,9 +101,9 @@ public class Database extends AbstractDataSource {
             String statement = "INSERT INTO public.\"Questions\" (question, min_answer, max_answer) "
                        + "VALUES (?, ?, ?) RETURNING _id";
             try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
-                insert.setString(0, question.question);
-                insert.setInt(1, question.min_answer);
-                insert.setInt(2, question.max_answer);
+                insert.setString(1, question.question);
+                insert.setInt(2, question.min_answer);
+                insert.setInt(3, question.max_answer);
                 // execute query
                 try(ResultSet result = insert.executeQuery()) {
                     if (result.next()) {
