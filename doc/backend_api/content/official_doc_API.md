@@ -354,7 +354,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/surveys
 
 Endpoints available for student.
 
-### List information (TODO)
+### List information (DONE, on branch student_id_api)
 
 This is how student can get their own information.
 
