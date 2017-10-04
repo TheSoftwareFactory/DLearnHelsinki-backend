@@ -14,8 +14,8 @@ public class StudentSurveyQuestionResource {
 	
 	StudentSurveyQuestionService studentSurveyQuestionService = new StudentSurveyQuestionService();
 	
-	// returns all the surveys from teacher based on the student_id. a sort of history
-	// TODO implement to answer to history request
+	// Takes a survey_id
+	// Returns all the questions of the survey id
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Question> getSurveys(@PathParam("survey_id") int survey_id) {

@@ -249,4 +249,28 @@ public class Database extends AbstractDataSource {
         throw new SQLException("Not supported");
     }
 
+    // Inserts an answer into the database
+	public void putAnswerToQuestion(Answer answer) {
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "INSERT INTO public.\"Answers\" "
+            		+ "(question_id, student_id, answer, survey_id)"
+            		+ "VALUES (?, ?, ?, ?) "
+            		+ "ON CONFLICT (question_id,student_id,survey_id) DO UPDATE SET answer = ?";
+            try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
+                insert.setInt(1, answer.questionnaire_id); 
+                insert.setInt(2, answer.student_id);
+                insert.setInt(3, answer.answer);
+                insert.setInt(4, answer.survey_id);
+                insert.setInt(5, answer.answer);
+                // execute query
+                insert.executeQuery();
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+
+        }
+		
+	}
+
 }

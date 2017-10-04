@@ -35,6 +35,12 @@ public class StudentSurveyResource {
         //return surveyService.getSurveysFromTeacherId(teacher_id);
         return new StudentSurveyQuestionResource();
     }
+    
+    @Path("/{survey_id}/answers")
+    public StudentSurveyAnswerResource getSurveyAnswers(@PathParam("survey_id") int survey_id) {
+        //return surveyService.getSurveysFromTeacherId(teacher_id);
+        return new StudentSurveyAnswerResource();
+    }
 	/*
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
