@@ -163,7 +163,7 @@ public class Database extends AbstractDataSource {
                     while (result.next()) {
                     	Question question = new Question();
                     	question.set_id(result.getInt(1));
-                        question.setQuestion(result.getNString(2));
+                    	question.setQuestion(result.getString(2));
                     	question.setMin_answer(result.getInt(3));
                     	question.setMax_answer(result.getInt(4));
                     	questions.add(question);

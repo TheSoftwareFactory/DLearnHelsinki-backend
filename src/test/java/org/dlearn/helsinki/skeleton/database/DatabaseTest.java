@@ -32,7 +32,7 @@ public class DatabaseTest {
         List<Question> questionsFromDb = db.getQuestionsFromSurvey(survey._id);
         
         assertEquals(1, questionsFromDb.size());
-        assertEquals(questions.get(0).question, questionsFromDb.get(0).question);
+        assertEquals(questions.get(0).question, questionsFromDb.get(0).question.trim());
         assertEquals(questions.get(0).min_answer, questionsFromDb.get(0).min_answer);
         assertEquals(questions.get(0).max_answer, questionsFromDb.get(0).max_answer);
     }
