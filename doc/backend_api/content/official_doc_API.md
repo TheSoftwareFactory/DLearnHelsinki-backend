@@ -458,7 +458,7 @@ GET /students/{student_id}/classes/{class_id}/surveys/{survey_id}/questions
 #### Example request
 
 ```curl
-$ curl localhost:8080/webapi/student/groups/1/surveys/1/questions
+$ curl localhost:8080/webapi/students/1/classes/1/surveys/1/questions
 ```
 
 #### Example response
