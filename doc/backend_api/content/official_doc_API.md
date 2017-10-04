@@ -359,13 +359,13 @@ Endpoints available for student.
 This is how student can get their own information.
 
 ```endpoint
-GET /student/{student_id}
+GET /students/{student_id}
 ```
 
 #### Example request
 
 ```curl
-$ curl localhost:8080/webapi/student/{student_id}
+$ curl localhost:8080/webapi/students/{student_id}
 ```
 
 #### Example response
@@ -384,7 +384,7 @@ $ curl localhost:8080/webapi/student/{student_id}
 Returns a single spidergraph.
 
 ```endpoint
-GET /student/{student_id}/classes/{class_id}/surveys/{survey_id}/answers
+GET /students/{student_id}/classes/{class_id}/surveys/{survey_id}/answers
 ```
 
 Retrieve information about an existing spidegraph.
@@ -392,7 +392,7 @@ Retrieve information about an existing spidegraph.
 #### Example request
 
 ```curl
-$ curl localhost:8080/webapi/student/1/classes/1/surveys/1/answers
+$ curl localhost:8080/webapi/students/1/classes/1/surveys/1/answers
 ```
 
 #### Example response
