@@ -12,4 +12,12 @@ public class GroupService {
 	public List<Group> getAllGroupsTheStudentIsIn(int studentID) {
 		return db.getAllGroupsForStudent(studentID);
 	}
+	
+	public List<Group> getAllGroupsFromClass(int class_id) {
+		return db.getAllGroupsFromClass(class_id);
+	}
+	
+	public Group getGroupFromClass(int class_id, int group_id) {
+		return db.getGroupFromClass(class_id, group_id);
+	}
 }
