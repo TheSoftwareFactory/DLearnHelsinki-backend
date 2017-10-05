@@ -214,7 +214,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/surveys/1/answers
 
 ```
 
-### Retrieve a class's results (TODO)
+### Retrieve a class's results (DONE)
 
 Returns a single result for a specified survey for a specified class.
 
@@ -387,7 +387,7 @@ $ curl localhost:8080/webapi/students/{student_id}
 }
 ```
 
-### Retrieve a student's result for specific survey (TESTING)
+### Retrieve a student's result for specific survey (DONE)
 
 Returns a single spidergraph.
 
