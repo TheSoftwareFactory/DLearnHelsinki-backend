@@ -7,16 +7,9 @@ import org.dlearn.helsinki.skeleton.model.Student;
 
 
 public class StudentService {	
-	Database db = new Database();
+	static final Database db = new Database();
 
-	public Student getStudent(int student_id) {
-		// TODO Auto-generated method stub
-		return db.getStudent(student_id);
-	}
-	
 	public Student getStudentNoPassword(int student_id) {
-		// TODO Auto-generated method stub
 		return db.getStudent(student_id).setPassword(null);
 	}
-	
 }

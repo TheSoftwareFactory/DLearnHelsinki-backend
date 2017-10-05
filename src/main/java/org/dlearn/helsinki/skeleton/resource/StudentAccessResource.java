@@ -15,8 +15,6 @@ import org.dlearn.helsinki.skeleton.service.StudentService;
 
 @Path("/students")
 public class StudentAccessResource {
-	static final GroupService groupService = new GroupService();
-	static final StudentService studentService = new StudentService(); 	
 	
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -30,19 +28,10 @@ public class StudentAccessResource {
         return new StudentClassResource();
     }
     
-    /*
-    @Path("/{studentID}/groups")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Group> getAllGroupsTheStudentIsIn(@PathParam("studentID") int studentID) {
-        return groupService.getAllGroupsTheStudentIsIn(studentID);
-    } 
-    */
-    
+    @Path("/{studentId}")
 	@GET
-	@Path("/{studentId}")
     @Produces(MediaType.APPLICATION_JSON)
-	public Student getStudentInfo(@PathParam("studentId") int student_id) {
-		return studentService.getStudentNoPassword(student_id);
-    }
+	public StudentResource getStudentInfo() {
+		return new StudentResource();
+    }	
 }

@@ -14,16 +14,13 @@ import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.service.GroupService;
 import org.dlearn.helsinki.skeleton.service.StudentService;
 
-@Path("/student")
 public class StudentResource {
 	static final StudentService studentService = new StudentService(); 	
 	
 	@GET
+	//@Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Student> getStudents(@PathParam("student_id") int student_id) {
-        return Lists.newArrayList(
-            new Student(student_id, "username", "password", null, student_id),
-            new Student(student_id + 1, "username2", "password2", null, student_id)
-        );
-    }
+	public Student getStudentInfo(@PathParam("studentId") int student_id) {
+		return studentService.getStudentNoPassword(student_id);
+    }	
 }
