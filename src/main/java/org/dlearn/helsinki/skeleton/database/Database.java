@@ -8,12 +8,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.GroupAnswer;
 import org.dlearn.helsinki.skeleton.model.Question;
+import org.dlearn.helsinki.skeleton.model.Student;
+import org.dlearn.helsinki.skeleton.model.StudentGroup;
 import org.dlearn.helsinki.skeleton.model.Survey;
 import org.springframework.jdbc.datasource.AbstractDataSource;
 
@@ -353,6 +356,53 @@ public class Database extends AbstractDataSource {
             System.out.println(e.getMessage());
         }
 		return answers;
+	}
+
+	public List<StudentGroup> getGroupsWithStudents(int class_id) {
+		ArrayList<StudentGroup> studentGroups = new ArrayList<StudentGroup>();
+		try(Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "SELECT \"Groups\"._id,\"Groups\".name,\"Students\"._id,\"Students\".username,\"Students\".gender,\"Students\".age "
+            		+ "FROM \"Students\",\"Groups\",\"Student_Classes\" "
+            		+ "WHERE \"Groups\"._id = \"Student_Classes\".group_id"
+            		+ "AND \"Student_Classes\".student_id = \"Students\"._id"
+            		+ "AND \"Student_Classes\".class_id = ?;";
+            //prepare statement with survey_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+                select.setInt(1, class_id);
+
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                	ArrayList<Integer> group_ids = new ArrayList<>();
+                    while (result.next()) {
+                    	if(group_ids.contains(result.getInt(1))){
+                    		// add Student to Group
+                    		//TODO
+                    	}else{
+                    		// update group_id list
+                    		group_ids.add(result.getInt(1));
+                    		// add Group
+                    		StudentGroup group = new StudentGroup();
+                    		group._id = result.getInt(1);
+                    		group.name = result.getString(2);
+                    		
+                    		// add Student to Group
+                    		Student student = new Student();
+                    		student.set_id(result.getInt(3));
+                    		student.setUsername(result.getString(4));
+                    		student.gender = result.getString(5);
+                    		student.age = result.getInt(6);
+                    		group.students.add(student);
+                    		
+                    		studentGroups.add(group);
+                    	}
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+		return studentGroups;
 	}
 
 }
