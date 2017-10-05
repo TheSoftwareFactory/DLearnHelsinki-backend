@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -27,6 +28,18 @@ public class StudentSurveyResource {
     public List<Survey> getSurveys(@PathParam("student_id") int student_id, @PathParam("class_id") int class_id) {
         //return surveyService.getSurveysFromTeacherId(teacher_id);
         return surveyService.getSurveysFromClass(student_id,class_id);
+    }
+    
+    @Path("/{survey_id}/questions")
+    public StudentSurveyQuestionResource getSurveyQuestions(@PathParam("survey_id") int survey_id) {
+        //return surveyService.getSurveysFromTeacherId(teacher_id);
+        return new StudentSurveyQuestionResource();
+    }
+    
+    @Path("/{survey_id}/answers")
+    public StudentSurveyAnswerResource getSurveyAnswers(@PathParam("survey_id") int survey_id) {
+        //return surveyService.getSurveysFromTeacherId(teacher_id);
+        return new StudentSurveyAnswerResource();
     }
 	/*
     @POST

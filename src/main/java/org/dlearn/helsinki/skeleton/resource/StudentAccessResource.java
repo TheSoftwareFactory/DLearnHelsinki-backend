@@ -27,10 +27,12 @@ public class StudentAccessResource {
         return new StudentClassResource();
     }
     
+    /*
     @Path("/{studentID}/groups")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Group> getAllGroupsTheStudentIsIn(@PathParam("studentID") int studentID) {
         return groupService.getAllGroupsTheStudentIsIn(studentID);
-    }  
+    } 
+    */ 
 }
