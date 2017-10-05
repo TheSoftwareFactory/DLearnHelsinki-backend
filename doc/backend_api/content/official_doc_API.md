@@ -41,7 +41,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/students/
 ]
 ```
 
-### List of all groups in one specified class (TODO)
+### List of all groups in one specified class (TESTING)
 
 This request allows you to retrieve a detailed list of all students in their respective groups, in one class
 
