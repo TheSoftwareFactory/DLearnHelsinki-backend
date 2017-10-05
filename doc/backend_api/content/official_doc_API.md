@@ -60,38 +60,38 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/
 ```json
 [
   {
-    "group_id" : 1,
-    "grpName" : "Grp1",
+    "_id" : 1,
+    "name" : "Grp1",
     "students" : [
       {
         "_id" : 1,
-        "lastname" : "Meikäläinen",
-        "firstname" : "Matti",
-        "username" : "iloinen tanssiva aurinko"
+        "username" : "Meikäläinen",
+        "age" : 10,
+        "gender" : "male"
       },
       {
-        "_id" : 2,
-        "lastname" : "Jo",
-        "firstname" : "Doe",
-        "username" : "iloinen tanssiva aurinko"
+        "_id" : 1,
+        "username" : "Meikäläinen",
+        "age" : 10,
+        "gender" : "male"
       }
     ]
   },
   {
-    "group_id" : 2,
-    "grpName" : "Grp2",
+    "_id" : 2,
+    "name" : "Grp2",
     "students" : [
       {
-        "_id" : 3,
-        "lastname" : "Thomas",
-        "firstname" : "Mimi",
-        "username" : "iloinen tanssiva aurinko"
+        "_id" : 1,
+        "username" : "Meikäläinen",
+        "age" : 10,
+        "gender" : "male"
       },
       {
-        "_id" : 3,
-        "lastname" : "Jean",
-        "firstname" : "Dujardin",
-        "username" : "iloinen tanssiva aurinko"
+        "_id" : 1,
+        "username" : "Meikäläinen",
+        "age" : 10,
+        "gender" : "male"
       }
     ]
   }
