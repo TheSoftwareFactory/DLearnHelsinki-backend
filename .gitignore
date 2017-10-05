@@ -96,3 +96,4 @@ nbactions.xml
 # NodeJS specific
 node_modules
 package-lock.json
+/nbproject/

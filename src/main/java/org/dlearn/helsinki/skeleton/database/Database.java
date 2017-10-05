@@ -95,6 +95,30 @@ public class Database extends AbstractDataSource {
         return questions;
     }
 
+    public Question postQuestion(Question question) throws SQLException {
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "INSERT INTO public.\"Questions\" (question, min_answer, max_answer) "
+                       + "VALUES (?, ?, ?) RETURNING _id";
+            try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
+                insert.setString(1, question.question);
+                insert.setInt(2, question.min_answer);
+                insert.setInt(3, question.max_answer);
+                // execute query
+                try(ResultSet result = insert.executeQuery()) {
+                    if (result.next()) {
+                        question.set_id(result.getInt("_id"));
+                    } else {
+                        System.out.println("Inserting question didn't return ID of it.");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return question;
+    }
+
     public void postSurveyQuestions(List<Question> questions, Survey survey) {
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
