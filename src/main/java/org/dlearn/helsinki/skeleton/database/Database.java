@@ -341,10 +341,10 @@ public class Database extends AbstractDataSource {
                     while (result.next()) {
                     	GroupAnswer answer = new GroupAnswer();
                     	answer.setQuestion_id(result.getInt(1));
-                    	answer.setAverage_answer(result.getFloat(2));
+                    	answer.setAverage(result.getFloat(2));
                     	answer.setGroup_id(group_id);
                     	answer.setSurvey_id(survey_id);
-                    	System.out.println("Average answer : " + answer.getAverage_answer());
+                    	System.out.println("Average answer : " + answer.getAverage());
                     	answers.add(answer);
                     }
                 }
