@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
 import org.dlearn.helsinki.skeleton.model.Group;
+import org.dlearn.helsinki.skeleton.model.GroupAnswer;
 import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.model.Survey;
 import org.springframework.jdbc.datasource.AbstractDataSource;
@@ -167,7 +168,6 @@ public class Database extends AbstractDataSource {
                     	question.setMin_answer(result.getInt(3));
                     	question.setMax_answer(result.getInt(4));
                     	questions.add(question);
-                    	System.out.println(question.getQuestion());
                     }
                 }
             }
@@ -316,6 +316,35 @@ public class Database extends AbstractDataSource {
                     	answer.survey_id = result.getInt(2);
                     	answer.setQuestion_id(result.getInt(3));
                     	answer.setAnswer(result.getInt(4));
+                    	answers.add(answer);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+		return answers;
+	}
+
+	public List<GroupAnswer> getAverageAnswersFromGroup(int class_id, int group_id, int survey_id) {
+		ArrayList<GroupAnswer> answers = new ArrayList<GroupAnswer>();
+		try(Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "SELECT question_id,avg(answer) FROM public.\"Answers\", public.\"Student_Classes\" WHERE \"Answers\".student_id = \"Student_Classes\".student_id AND \"Student_Classes\".group_id = ? AND \"Answers\".survey_id = ? GROUP BY question_id";
+            //prepare statement with survey_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+                select.setInt(1, group_id);
+                select.setInt(2, survey_id);
+
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                    while (result.next()) {
+                    	GroupAnswer answer = new GroupAnswer();
+                    	answer.setQuestion_id(result.getInt(1));
+                    	answer.setAverage_answer(result.getFloat(2));
+                    	answer.setGroup_id(group_id);
+                    	answer.setSurvey_id(survey_id);
+                    	System.out.println("Average answer : " + answer.getAverage_answer());
                     	answers.add(answer);
                     }
                 }

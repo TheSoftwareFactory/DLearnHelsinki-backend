@@ -30,9 +30,15 @@ public class TeacherClassResource {
     }
     
     @Path("/{class_id}/surveys")
-    public SurveyResource getSurveyResource(@PathParam("class_id") int class_id) {
-    	System.out.println("calling classes");
-    	return new SurveyResource();
+    public TeacherSurveyResource getSurveyResource(@PathParam("class_id") int class_id) {
+    	System.out.println("calling class surveys");
+    	return new TeacherSurveyResource();
+    }
+    
+    @Path("/{class_id}/groups")
+    public TeacherGroupResource getGroupResource(@PathParam("class_id") int class_id) {
+    	System.out.println("calling class groups");
+    	return new TeacherGroupResource();
     }
 
 }
