@@ -27,14 +27,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.jdbcAuthentication()
             .dataSource(db)
             .usersByUsernameQuery("select * from ("
-                        + "select TRIM(TRAILING FROM username::varchar), TRIM(TRAILING FROM pwd::varchar), 'true' as enabled from public.\"Students\""
+                        + "select TRIM(TRAILING FROM username::varchar) as username, TRIM(TRAILING FROM pwd::varchar), 'true' as enabled from public.\"Students\""
                         + " union "
-                        + "select TRIM(TRAILING FROM username::varchar), TRIM(TRAILING FROM pwd::varchar), 'true' as enabled from public.\"Teachers\""
+                        + "select TRIM(TRAILING FROM username::varchar) as username, TRIM(TRAILING FROM pwd::varchar), 'true' as enabled from public.\"Teachers\""
                     + ") A where username::varchar=?")
             .authoritiesByUsernameQuery("select * from ("
-                        + "select TRIM(TRAILING FROM username::varchar), 'ROLE_STUDENT' as role from public.\"Students\""
+                        + "select TRIM(TRAILING FROM username::varchar) as username, 'ROLE_STUDENT' as role from public.\"Students\""
                         + " union "
-                        + "select TRIM(TRAILING FROM username::varchar), 'ROLE_TEACHER' as role from public.\"Teachers\""
+                        + "select TRIM(TRAILING FROM username::varchar) as username, 'ROLE_TEACHER' as role from public.\"Teachers\""
                     + ") A where username::varchar=?")
             .passwordEncoder(new BCryptPasswordEncoder(16))
             .and()
