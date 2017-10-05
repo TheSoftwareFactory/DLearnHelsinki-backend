@@ -9,12 +9,12 @@ public class GroupAnswer {
 	
 	public GroupAnswer(){}
 
-	public GroupAnswer(int survey_id, int question_id, int group_id, float average) {
+	public GroupAnswer(int survey_id, int question_id, int group_id, float answer) {
 		super();
 		this.survey_id = survey_id;
 		this.question_id = question_id;
 		this.group_id = group_id;
-		this.answer = average;
+		this.answer = answer;
 	}
 
 	public int getSurvey_id() {
@@ -41,12 +41,12 @@ public class GroupAnswer {
 		this.group_id = group_id;
 	}
 
-	public float getAverage() {
+	public float getAnswer() {
 		return answer;
 	}
 
-	public void setAverage(float average) {
-		this.answer = average;
+	public void setAnswer(float answer) {
+		this.answer = answer;
 	}
 	
 	
