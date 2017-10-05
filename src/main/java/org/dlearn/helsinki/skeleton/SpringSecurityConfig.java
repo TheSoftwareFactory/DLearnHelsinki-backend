@@ -27,14 +27,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.jdbcAuthentication()
             .dataSource(db)
             .usersByUsernameQuery("select * from ("
-                        + "select username, pwd, 'true' as enabled from public.\"Students\""
+                        + "select username::varchar, pwd::varchar, 'true' as enabled from public.\"Students\""
                         + " union "
-                        + "select username, pwd, 'true' as enabled from public.\"Teachers\""
+                        + "select username::varchar, pwd::varchar, 'true' as enabled from public.\"Teachers\""
                     + ") A where username::varchar=?")
             .authoritiesByUsernameQuery("select * from ("
-                        + "select username, 'ROLE_STUDENT' as role from public.\"Students\""
+                        + "select username::varchar, 'ROLE_STUDENT' as role from public.\"Students\""
                         + " union "
-                        + "select username, 'ROLE_TEACHER' as role from public.\"Teachers\""
+                        + "select username::varchar, 'ROLE_TEACHER' as role from public.\"Teachers\""
                     + ") A where username::varchar=?")
             .passwordEncoder(new BCryptPasswordEncoder(16))
             .and()
