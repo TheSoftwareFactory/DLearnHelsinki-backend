@@ -8,7 +8,7 @@ and remove different students and spidergraphs.
 
 End points available for teacher.
 
-### List students in one class (TODO)
+### List students in one class (TESTING)
 
 Lists all students inside one specified class.
 
@@ -362,7 +362,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/surveys
 
 Endpoints available for student.
 
-### List information (DONE, on branch student_id_api)
+### List information (TESTING, on branch student_id_api)
 
 This is how student can get their own information.
 
