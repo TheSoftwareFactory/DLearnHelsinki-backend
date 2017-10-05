@@ -98,7 +98,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/
 ]
 ```
 
-### List of students in a group (TODO)
+### List of students in a group (TESTING)
 
 ```endpoint
 GET teachers/{teacher_id}/classes/{class_id}/groups/{group_id}/students
