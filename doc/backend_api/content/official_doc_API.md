@@ -160,7 +160,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/students/1
 Returns a single result for a specified survey.
 
 ```endpoint
-GET teachers/{teacher_id}/classes/{class_id}/surveys/{survey_id}/students/{student_id}/answers
+GET teachers/{teacher_id}/classes/{class_id}/students/{student_id}/surveys/{survey_id}/answers
 GET /
 ```
 
@@ -169,7 +169,7 @@ Retrieve information about an existing spidegraph.
 #### Example request
 
 ```curl
-$ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1/students/1/answers
+$ curl localhost:8080/webapi/teachers/1/classes/1/students/1/surveys/1/answers
 ```
 
 #### Example response
@@ -187,7 +187,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1/students/1/answers
 Returns a single result for a specified survey for a specified group.
 
 ```endpoint
-GET teachers/{teacher_id}/classes/{class_id}/surveys/{survey_id}/groups/{group_id}/answers
+GET teachers/{teacher_id}/classes/{class_id}/groups/{group_id}/surveys/{survey_id}/answers
 GET /
 ```
 
@@ -196,7 +196,7 @@ Retrieve information about an existing spidegraph.
 #### Example request
 
 ```curl
-$ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1/groups/1/answers
+$ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/surveys/1/answers
 ```
 
 #### Example response
@@ -204,9 +204,14 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1/groups/1/answers
 <!--TODO: Actual response-->
 
 ```json
-{
 
-}
+  {
+      "survey_id": 1,
+      "question_id": 1,
+      "group_id": 1,
+      "answer": 4
+  }
+
 ```
 
 ### Retrieve a class's results (TODO)
@@ -231,9 +236,12 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1/answers
 <!--TODO: Actual response-->
 
 ```json
-{
-
-}
+  {
+      "survey_id": 1,
+      "question_id": 1,
+      "class_id": 1,
+      "answer": 6
+  }
 ```
 
 
@@ -242,13 +250,13 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1/answers
 Retrieves surveys for a teacher, for one class, on one survey
 
 ```endpoint
-GET teachers/{teacher_id}/classes/{class_id}/surveys/{survey_id}/answers
+GET teachers/{teacher_id}/classes/{class_id}/surveys/{survey_id}
 ```
 
 #### Example request
 
 ```curl
-$ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1/answers
+$ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1
 ```
 
 #### Example response
@@ -257,7 +265,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1/answers
 
 ```json
 {
-
+  
 }
 ```
 
