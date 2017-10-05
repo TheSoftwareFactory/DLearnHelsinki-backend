@@ -13,6 +13,7 @@ import java.util.List;
 import org.dlearn.helsinki.skeleton.model.Answer;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.Question;
+import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.Survey;
 import org.springframework.jdbc.datasource.AbstractDataSource;
 
@@ -229,7 +230,7 @@ public class Database extends AbstractDataSource {
             	select.setInt(1, class_id);
                 // execute query
                 try(ResultSet result = select.executeQuery()) {
-                	groups = new ArrayList<>();
+                	groups = new ArrayList<Group>();
                     while (result.next()) {
                     	Group group = new Group();
                     	group.set_id(result.getInt("_id"));
@@ -266,6 +267,44 @@ public class Database extends AbstractDataSource {
 	    	System.out.println(e.getMessage());
 	    }		
 		return group;
+	}
+	
+	public List<Student> getAllStudentsFromClassAndGroup(int class_id, int group_id) {
+		System.out.println("Getting groups for the class " + Integer.toString(group_id));
+		ArrayList<Student> students = null;
+
+		try(Connection dbConnection = getDBConnection()) {
+			// String statement = "Select std._id, username, pwd, gender, age "
+			// 		+ "FROM public.\"Student_Classes\" as cls "
+			// 		+ "INNER JOIN public.\"Groups\" as gr ON (cls._id = gr.class_id) "
+			// 		+ "INNER JOIN public.\"Students\" as std ON (cls.student_id = std._id)"
+			// 		+ "WHERE (gr._id = ?);";
+			String statement = "Select std._id, username, pwd, gender, age "
+			 		+ "FROM public.\"Student_Classes\" as cls " 
+			 		+ "INNER JOIN public.\"Students\" as std "
+			 		+ "ON (cls.student_id = std._id)"
+			 		+ "WHERE (cls.class_id = ?) AND (cls.group_id = ?)";
+            //prepare statement with student_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+            	select.setInt(1, class_id);
+            	select.setInt(2, group_id);
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                	students = new ArrayList<Student>();
+                    while (result.next()) {
+                  		Student student = new Student(result.getInt("_id"), 
+                  									  result.getString("username"),
+                  									  result.getString("pwd"),
+                  									  result.getString("gender"),
+                  									  result.getInt("age"));   
+                   		students.add(student);
+                    }
+                }
+            }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }		
+		return  students;
 	}
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////

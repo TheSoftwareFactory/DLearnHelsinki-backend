@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.dlearn.helsinki.skeleton.database.Database;
 import org.dlearn.helsinki.skeleton.model.Group;
+import org.dlearn.helsinki.skeleton.model.Student;
 
 public class GroupService {
 	
@@ -19,5 +20,9 @@ public class GroupService {
 	
 	public Group getGroupFromClass(int class_id, int group_id) {
 		return db.getGroupFromClass(class_id, group_id);
+	}
+	
+	public List<Student> getAllStudentsFromClassAndGroup(int class_id, int group_id) {
+		return db.getAllStudentsFromClassAndGroup(class_id, group_id);
 	}
 }
