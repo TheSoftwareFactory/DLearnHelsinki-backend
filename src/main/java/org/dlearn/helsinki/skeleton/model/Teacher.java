@@ -1,29 +1,25 @@
 package org.dlearn.helsinki.skeleton.model;
 
-public class Student {
+public class Teacher {
 
-    public int _id;
+	public int _id;
     public String username;
     public String pwd;
-    public String gender;
-    public int age;
 
-    public Student() {
+    public Teacher() {
         super();
     }
 
-    public Student(int _id, String username, String pwd, String gender, int age) {
-		super();
-		this._id = _id;
-		this.username = username;
-		this.pwd = pwd;
-		this.gender = gender;
-		this.age = age;
-	}
 
+    public Teacher(int _id, String username,
+            String password) {
+        super();
+        this._id = _id;
+        this.username = username;
+        this.pwd = password;
+    }
 
-
-	public int get_id() {
+    public int get_id() {
         return _id;
     }
 

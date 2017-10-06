@@ -1,81 +1,311 @@
 package org.dlearn.helsinki.skeleton.database;
 
 import java.sql.Connection;
+
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.dlearn.helsinki.skeleton.model.SpiderGraph;
+import org.dlearn.helsinki.skeleton.model.Answer;
+import org.dlearn.helsinki.skeleton.model.Group;
+import org.dlearn.helsinki.skeleton.model.Question;
+import org.dlearn.helsinki.skeleton.model.Student;
+import org.dlearn.helsinki.skeleton.model.Survey;
+import org.springframework.jdbc.datasource.AbstractDataSource;
 
-public class Database {
+public class Database extends AbstractDataSource {
 
     private static final String DB_DRIVER = "org.postgresql.Driver";
 
+    /* dev environment online */
+    private static final String DB_CONNECTION = "jdbc:postgresql://localhost:5432/Dlearn_db?verifyServerCertificate=false&useSSL=true";
+    private static final String DB_USER = "postgres";
+    private static final String DB_PASSWORD = "admin";
+
     public void testConnection() throws Exception {
-        try(Connection dbConnection = getDBConnection()) {
+        try (Connection dbConnection = getDBConnection()) {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public SpiderGraph getSpiderGraph(int student_id, int spidergraph_id) throws SQLException {
-        SpiderGraph spidergraph = new SpiderGraph();
+    // Survey postSurvey : returns the survey that was posted on the database.
+    // TODO return id
+    /*
         
-        try(Connection dbConnection = getDBConnection()) {
+     */
+    public Survey postSurvey(Survey survey) throws SQLException {
+        try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "SELECT * FROM public.\"SpiderGraphs\" WHERE _id = ? AND student_id = ?";
-            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
-                select.setInt(1, spidergraph_id);
-                select.setInt(2, student_id);
+            String statement = "INSERT INTO public.\"Surveys\" (title, class_id, start_date, teacher_id, description, open) "
+                       + "VALUES (?,?,?,?,?,True) RETURNING _id";
+            try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
+                insert.setString(1, survey.title); 
+                insert.setInt(2, survey.getClass_id());
+                insert.setDate(3, new Date(0));
+                insert.setInt(4, survey.getTeacher_id());
+                insert.setString(5, survey.description);
                 // execute query
-                try(ResultSet result = select.executeQuery()) {
+                try(ResultSet result = insert.executeQuery()) {
+                	if (result.next()) {
+                        survey.set_id(result.getInt("_id"));
+                    } else {
+                        System.out.println("Inserting survey didn't return ID of it.");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+
+        } 
+		//TODO remove
+		//survey.set_id(4); 
+		return survey;
+	}
+	
+	// TODO finish getQuestions method
+	public List<Question> getQuestions() {
+		
+		ArrayList<Question> questions = new ArrayList<Question>();
+		try(Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "Select * FROM public.\"Questions\"";
+            try (PreparedStatement select = dbConnection.prepareStatement(statement)) {
+                //select.setInt(1, spidergraph_id);
+                //select.setInt(2, student_id);
+                // execute query
+                try (ResultSet result = select.executeQuery()) {
                     while (result.next()) {
-                        spidergraph.set_id(spidergraph_id);
-                        spidergraph.setStudent_id(student_id);
-                        spidergraph.setValue1(result.getInt(1));
-                        spidergraph.setValue2(result.getInt(2));
-                        spidergraph.setValue3(result.getInt(3));
-                        spidergraph.setValue4(result.getInt(4));
-                        spidergraph.setValue5(result.getInt(5));
+                        Question question = new Question();
+                        question.setQuestion(result.getString(1));
+                        question.setMin_answer(result.getInt(2));
+                        question.setMax_answer(result.getInt(3));
+                        question.set_id(result.getInt(4));
+                        questions.add(question);
+                        System.out.println(question.getQuestion());
                     }
                 }
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return spidergraph;
+        return questions;
     }
 
-    public SpiderGraph updateSpidergraph(SpiderGraph spidergraph) throws SQLException {
-        SpiderGraph old_spidergraph = getSpiderGraph(spidergraph.getStudent_id(), spidergraph.get_id());
-        
-        System.out.println(old_spidergraph.getValue1());
-        old_spidergraph.setValue1((old_spidergraph.getValue1() + 1) % 5);
-
-        String updateSpidergraphFromId = "UPDATE public.\"SpiderGraphs\" SET value1 = ? WHERE _id = ? AND student_id = ?";
-
+    public Question postQuestion(Question question) throws SQLException {
         try (Connection dbConnection = getDBConnection()) {
-            try (PreparedStatement ps_update = dbConnection.prepareStatement(updateSpidergraphFromId)) {
-                ps_update.setInt(1, old_spidergraph.getValue1());
-                ps_update.setInt(2, old_spidergraph.get_id());
-                ps_update.setInt(3, old_spidergraph.getStudent_id());
-                //ps_update.setInt(1, spidergraph.getValue1());
-                //ps_update.setInt(2, spidergraph.getValue2());
-                //ps_update.setInt(3, spidergraph.getValue3());
-                //ps_update.setInt(4, spidergraph.getValue4());
-                //ps_update.setInt(5, spidergraph.getValue5()); 
-                //ps_update.setInt(6, spidergraph.get_id());
-                //ps_update.setInt(7, spidergraph.getStudent_id());
-                // execute update SQL statement
-                ps_update.executeUpdate();
+            // Set up batch of statements
+            String statement = "INSERT INTO public.\"Questions\" (question, min_answer, max_answer) "
+                       + "VALUES (?, ?, ?) RETURNING _id";
+            try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
+                insert.setString(1, question.question);
+                insert.setInt(2, question.min_answer);
+                insert.setInt(3, question.max_answer);
+                // execute query
+                try(ResultSet result = insert.executeQuery()) {
+                    if (result.next()) {
+                        question.set_id(result.getInt("_id"));
+                    } else {
+                        System.out.println("Inserting question didn't return ID of it.");
+                    }
+                }
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return getSpiderGraph(spidergraph.getStudent_id(), spidergraph.get_id());
+        return question;
     }
 
+    public void postSurveyQuestions(List<Question> questions, Survey survey) {
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "INSERT INTO public.\"Survey_questions\" (survey_id, question_id) "
+                    + "VALUES (?,?)";
+            try (PreparedStatement insert = dbConnection.prepareStatement(statement)) {
+                // prepare batch
+                System.out.println("before for loop.");
+                for (Question question : questions) {
+                    insert.setInt(1, survey.get_id());
+                    insert.setInt(2, question.get_id());
+                    System.out.println("Preparing batch: " + question.get_id());
+                    insert.addBatch();
+                }
+                // execute query
+                insert.executeBatch();
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Error(postSurveyQuestions): " + e.getMessage());
+        }
+
+	}
+	
+	// Method getQuestionFromSurvey
+	// parameter : int, id of survey
+	// output : ArrayList<Question>, list of questions from the survey
+	// Takes a survey id and returns all the questions set to that survey
+	public List<Question> getQuestionsFromSurvey(int survey_id) {
+		
+		System.out.println("Getting the questions from the survey.");
+		ArrayList<Question> questions = new ArrayList<Question>();
+		try(Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "Select _id, question, min_answer, max_answer FROM \"Questions\", \"Survey_questions\" WHERE"
+            		+ " \"Survey_questions\".survey_id = ? AND \"Survey_questions\".question_id = \"Questions\"._id";
+            //prepare statement with survey_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+                select.setInt(1, survey_id);
+
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                    while (result.next()) {
+                    	Question question = new Question();
+                    	question.set_id(result.getInt(1));
+                    	question.setQuestion(result.getString(2));
+                    	question.setMin_answer(result.getInt(3));
+                    	question.setMax_answer(result.getInt(4));
+                    	questions.add(question);
+                    	System.out.println(question.getQuestion());
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+		return questions;
+	}
+
+	// Method : postSutdentAnswersForSurvey
+	// Takes the survey_id, the student_id
+	public void postStudentAnswersForSurvey(List<Answer> answers, int survey_id, int student_id) {
+		// TODO Auto-generated method stub
+	}
+	
+	// Method : getSurveysFromClassAsStudent
+	// Input  : the survey_id, the student_id
+	// Output : returns a list of surveys available to the student
+	public List<Survey> getSurveysFromClassAsStudent(int student_id, int class_id) throws SQLException{
+		//SELECT * FROM public."Surveys",public."Students",public."Student_Classes" WHERE public."Students"._id = public."Student_Classes".class_id AND public."Student_Classes".class_id = public."Surveys".class_id AND public."Student_Classes".class_id = 1 AND public."Students"._id = 1
+		return null;
+	}
+	
+	public List<Group> getAllGroupsForStudent(int studentID) {
+		System.out.println("Getting groups for the student " + Integer.toString(studentID));
+		ArrayList<Group> groups = new ArrayList<>();
+
+		try(Connection dbConnection = getDBConnection()) {
+            String statement = "Select _id, name, student_id, teacher_id FROM public.\"Groups\" WHERE student_id = ?";
+            //prepare statement with student_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+            	select.setInt(1, studentID);
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                    while (result.next()) {
+                    	Group group = new Group();
+                    	group.set_id(result.getInt(1));
+                    	group.setClass_id(result.getInt(2));
+                    	group.setName(result.getString(1));
+                    	groups.add(group);
+                    }
+                }
+            }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }		
+		return groups;
+		//*/
+	}	
+
+	public List<Group> getAllGroupsFromClass(int class_id) {
+		System.out.println("Getting groups for the class " + Integer.toString(class_id));
+		ArrayList<Group> groups = null;
+
+		try(Connection dbConnection = getDBConnection()) {
+			 String statement = "Select name, _id, class_id FROM public.\"Groups\" WHERE (class_id = ?);";
+            //prepare statement with student_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+            	select.setInt(1, class_id);
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                	groups = new ArrayList<Group>();
+                    while (result.next()) {
+                    	Group group = new Group();
+                    	group.set_id(result.getInt("_id"));
+                    	group.setClass_id(result.getInt("class_id"));
+                    	group.setName(result.getString("name"));
+                    	groups.add(group);
+                    }
+                }
+            }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }		
+		return groups;
+	}
+
+	public Group getGroupFromClass(int class_id, int group_id) {
+		System.out.println("Getting group class " + Integer.toString(class_id));
+		Group group = null;
+
+		try(Connection dbConnection = getDBConnection()) {
+			 String statement = "Select name FROM public.\"Groups\" WHERE (class_id = ?) and (_id = ?);";
+            //prepare statement with student_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+            	select.setInt(1, class_id);
+            	select.setInt(2, group_id);
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                    if(result.next()) {
+                    	group = new Group(group_id, result.getString("name"), class_id); 
+                    }
+                }
+            }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }		
+		return group;
+	}
+	
+	public List<Student> getAllStudentsFromClassAndGroup(int class_id, int group_id) {
+		System.out.println("Getting groups for the class " + Integer.toString(group_id));
+		ArrayList<Student> students = null;
+
+		try(Connection dbConnection = getDBConnection()) {
+			// String statement = "Select std._id, username, pwd, gender, age "
+			// 		+ "FROM public.\"Student_Classes\" as cls "
+			// 		+ "INNER JOIN public.\"Groups\" as gr ON (cls._id = gr.class_id) "
+			// 		+ "INNER JOIN public.\"Students\" as std ON (cls.student_id = std._id)"
+			// 		+ "WHERE (gr._id = ?);";
+			String statement = "Select std._id, username, pwd, gender, age "
+			 		+ "FROM public.\"Student_Classes\" as cls " 
+			 		+ "INNER JOIN public.\"Students\" as std "
+			 		+ "ON (cls.student_id = std._id)"
+			 		+ "WHERE (cls.class_id = ?) AND (cls.group_id = ?)";
+            //prepare statement with student_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+            	select.setInt(1, class_id);
+            	select.setInt(2, group_id);
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                	students = new ArrayList<Student>();
+                    while (result.next()) {
+                  		Student student = new Student(result.getInt("_id"), 
+                  									  result.getString("username"),
+                  									  result.getString("pwd"),
+                  									  result.getString("gender"),
+                  									  result.getInt("age"));   
+                   		students.add(student);
+                    }
+                }
+            }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }		
+		return  students;
+	}
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
@@ -88,10 +318,10 @@ public class Database {
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
+	
+	
     private static Connection getDBConnection() {
-
         Connection dbConnection = null;
-
         try {
             Class.forName(DB_DRIVER);
         } catch (ClassNotFoundException e) {
@@ -99,11 +329,16 @@ public class Database {
         }
         try {
             String dbUrl = System.getenv("JDBC_DATABASE_URL");
-            dbConnection = DriverManager.getConnection(dbUrl);
+            if(dbUrl == null){ // local # TODO fix
+            	System.out.println("JDBC env empty, on local");
+                dbConnection = DriverManager.getConnection(
+                        DB_CONNECTION, DB_USER, DB_PASSWORD);
+            }else { // production
+            	dbConnection = DriverManager.getConnection(dbUrl);
+            }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("CREATING CONNECTION FAILED HORRIBLY " + e.getMessage() + " (fix pls)");
         }
-
         return dbConnection;
 
     }
@@ -116,4 +351,66 @@ public class Database {
 
     }
 
+    @Override
+    public Connection getConnection() throws SQLException {
+        return getDBConnection();
+    }
+
+    @Override
+    public Connection getConnection(String username, String password) throws SQLException {
+        throw new SQLException("Not supported");
+    }
+
+    // Inserts an answer into the database
+	public void putAnswerToQuestion(Answer answer) {
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "INSERT INTO public.\"Answers\" "
+            		+ "(question_id, student_id, answer, survey_id)"
+            		+ "VALUES (?, ?, ?, ?) "
+            		+ "ON CONFLICT (question_id,student_id,survey_id) DO UPDATE SET answer = ?";
+            try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
+                insert.setInt(1, answer.question_id); 
+                insert.setInt(2, answer.student_id);
+                insert.setInt(3, answer.answer);
+                insert.setInt(4, answer.survey_id);
+                insert.setInt(5, answer.answer);
+                // execute query
+                insert.executeQuery();
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+
+        }
+		
+	}
+
+	public List<Answer> getAnswersFromStudentSurvey(int student_id, int survey_id) {
+		ArrayList<Answer> answers = new ArrayList<Answer>();
+		try(Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "Select student_id, survey_id, question_id, answer FROM \"Answers\" WHERE"
+            		+ " survey_id = ? AND student_id = ?";
+            //prepare statement with survey_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+                select.setInt(1, survey_id);
+                select.setInt(2, student_id);
+
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                    while (result.next()) {
+                    	Answer answer = new Answer();
+                    	answer.student_id = result.getInt(1);
+                    	answer.survey_id = result.getInt(2);
+                    	answer.setQuestion_id(result.getInt(3));
+                    	answer.setAnswer(result.getInt(4));
+                    	answers.add(answer);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+		return answers;
+	}
 }
