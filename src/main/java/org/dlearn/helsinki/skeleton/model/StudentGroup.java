@@ -1,5 +1,6 @@
 package org.dlearn.helsinki.skeleton.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StudentGroup {
@@ -8,7 +9,9 @@ public class StudentGroup {
 	public String name;
 	public List<Student> students;
 	
-	public StudentGroup(){}
+	public StudentGroup(){
+		students = new ArrayList<Student>();
+	}
 
 	public StudentGroup(int _id, String name, List<Student> students) {
 		super();

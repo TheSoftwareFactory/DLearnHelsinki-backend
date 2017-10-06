@@ -364,9 +364,9 @@ public class Database extends AbstractDataSource {
             // Set up batch of statements
             String statement = "SELECT \"Groups\"._id,\"Groups\".name,\"Students\"._id,\"Students\".username,\"Students\".gender,\"Students\".age "
             		+ "FROM \"Students\",\"Groups\",\"Student_Classes\" "
-            		+ "WHERE \"Groups\"._id = \"Student_Classes\".group_id"
-            		+ "AND \"Student_Classes\".student_id = \"Students\"._id"
-            		+ "AND \"Student_Classes\".class_id = ?;";
+            		+ "WHERE \"Groups\"._id = \"Student_Classes\".group_id "
+            		+ "AND \"Student_Classes\".student_id = \"Students\"._id "
+            		+ "AND \"Student_Classes\".class_id = ?";
             //prepare statement with survey_id
             try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
                 select.setInt(1, class_id);
@@ -377,6 +377,17 @@ public class Database extends AbstractDataSource {
                     while (result.next()) {
                     	if(group_ids.contains(result.getInt(1))){
                     		// add Student to Group
+                    		for(StudentGroup group : studentGroups){
+                    			if(group._id == result.getInt(1)){
+                    				// add Student to Group
+                            		Student student = new Student();
+                            		student.set_id(result.getInt(3));
+                            		student.setUsername(result.getString(4));
+                            		student.gender = result.getString(5);
+                            		student.age = result.getInt(6);
+                            		group.students.add(student);
+                    			}
+                    		}
                     		//TODO
                     	}else{
                     		// update group_id list
