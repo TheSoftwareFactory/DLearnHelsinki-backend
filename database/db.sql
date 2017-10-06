@@ -175,7 +175,7 @@ ALTER SEQUENCE "Student_Classes__id_seq" OWNED BY "Student_Classes"._id;
 CREATE TABLE "Students" (
     _id integer NOT NULL,
     username character varying(35),
-    pwd character varying(55),
+    pwd character varying(100),
     gender character varying(15),
     age integer
 );
@@ -253,7 +253,7 @@ CREATE TABLE "Teachers" (
     lastname character varying(40),
     firstname character varying(40),
     username character varying(40),
-    pwd character varying(40),
+    pwd character varying(100),
     _id integer NOT NULL
 );
 
@@ -340,6 +340,14 @@ ALTER TABLE ONLY "Answers"
 
 ALTER TABLE ONLY "Classes"
     ADD CONSTRAINT "Classes_pkey" PRIMARY KEY (_id);
+
+
+--
+-- Name: Student_Classes Student_Classes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "Student_Classes"
+    ADD CONSTRAINT "Student_Classes_pkey" PRIMARY KEY (_id);
 
 
 --
