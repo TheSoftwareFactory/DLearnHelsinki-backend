@@ -36,18 +36,15 @@ public class TeacherClassResource {
     	return new SurveyResource();
     }
     
-<<<<<<< HEAD
     @Path("/{class_id}/students")
     public TeacherStudentResource getgetAllStudentsFromClass(@PathParam("class_id") int class_id) {
     	System.out.println("calling classes");
     	return new TeacherStudentResource();
     }
 
-=======
     @Path("/{class_id}/groups")
     public TeacherGroupResource getGroupsResource(@PathParam("class_id") int class_id) {
     	System.out.println("calling classes");
     	return new  TeacherGroupResource();
     }
->>>>>>> a79a4c2bfe3826683036525a472321a995ba2bde
 }
