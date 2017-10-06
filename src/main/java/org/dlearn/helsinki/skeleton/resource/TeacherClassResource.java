@@ -9,12 +9,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.dlearn.helsinki.skeleton.model.Classes;
+import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.Survey;
+import org.dlearn.helsinki.skeleton.service.StudentService;
 
 import jersey.repackaged.com.google.common.collect.Lists;
 
 public class TeacherClassResource {
-	
 	
 	// request teachers/{teacher_id}/classes
 	// returns the teacher's classes based on the teacher_id.
@@ -35,6 +36,12 @@ public class TeacherClassResource {
     	return new SurveyResource();
     }
     
+    @Path("/{class_id}/students")
+    public TeacherStudentResource getgetAllStudentsFromClass(@PathParam("class_id") int class_id) {
+    	System.out.println("calling classes");
+    	return new TeacherStudentResource();
+    }
+
     @Path("/{class_id}/groups")
     public TeacherGroupResource getGroupsResource(@PathParam("class_id") int class_id) {
     	System.out.println("calling classes");

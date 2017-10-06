@@ -9,11 +9,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.dlearn.helsinki.skeleton.model.Group;
+import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.service.GroupService;
+import org.dlearn.helsinki.skeleton.service.StudentService;
 
 @Path("/students")
 public class StudentAccessResource {
-    GroupService groupService = new GroupService();
 	
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -27,12 +28,10 @@ public class StudentAccessResource {
         return new StudentClassResource();
     }
     
-    /*
-    @Path("/{studentID}/groups")
-    @GET
+    @Path("/{studentId}")
+	@GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Group> getAllGroupsTheStudentIsIn(@PathParam("studentID") int studentID) {
-        return groupService.getAllGroupsTheStudentIsIn(studentID);
-    } 
-    */ 
+	public StudentResource getStudentInfo() {
+		return new StudentResource();
+    }	
 }

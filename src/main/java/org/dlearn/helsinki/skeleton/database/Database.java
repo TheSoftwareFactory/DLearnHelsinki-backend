@@ -304,8 +304,66 @@ public class Database extends AbstractDataSource {
 	    } catch (SQLException e) {
 	    	System.out.println(e.getMessage());
 	    }		
-		return  students;
+		return students;
 	}
+
+	public Student getStudent(int studentID) {
+		Student student = null;
+	
+		try(Connection dbConnection = getDBConnection()) {
+	        String statement = "Select username, pwd, gender, age FROM public.\"Students\" WHERE _id = ?";
+	        //prepare statement with student_id
+	        try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+	        	select.setInt(1, studentID);
+	            // execute query
+	            try(ResultSet result = select.executeQuery()) {
+	            	if(result.next()) { 
+	            		student = new Student();
+	               		student.set_id(studentID);
+	               		student.setAge(result.getInt("age"));
+	               		student.setUsername(result.getString("username"));
+	               		student.setPassword(result.getString("pwd"));
+	               		student.setGender(result.getString("gender"));
+	            	}
+	            }
+	        }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }		
+		return student;
+	}
+
+	public List<Student> getAllStudentsFromClass(int class_id) {
+		List<Student> students = null;
+	
+		try(Connection dbConnection = getDBConnection()) {
+	        String statement = "Select std._id, username, pwd, gender, age "
+	        		+ "FROM public.\"Students\" AS std INNER JOIN public.\"Student_Classes\" AS cls "
+	        		+ "ON (std._id = cls.student_id) "
+	        		+ "WHERE (cls.class_id = ?);";
+	        //prepare statement with student_id
+	        try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+	        	select.setInt(1, class_id);
+	            // execute query
+	            try(ResultSet result = select.executeQuery()) {
+	            	students = new ArrayList<Student>();
+	            	while(result.next()) { 
+	            		Student student = new Student();
+	               		student.set_id(result.getInt("_id"));
+	               		student.setAge(result.getInt("age"));
+	               		student.setUsername(result.getString("username"));
+	               		student.setPassword(result.getString("pwd"));
+	               		student.setGender(result.getString("gender"));
+	               		students.add(student);
+                	}
+                }
+            }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }		
+		return students;
+	}
+	
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
