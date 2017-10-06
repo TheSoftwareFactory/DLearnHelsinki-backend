@@ -7,7 +7,6 @@ public class Student {
 
     public int _id;
     public String username;
-    public String pwd;
     public String gender;
     public int age;
 
@@ -15,18 +14,15 @@ public class Student {
         super();
     }
 
-    public Student(int _id, String username, String pwd, String gender, int age) {
-		super();
-		this._id = _id;
-		this.username = username;
-		this.pwd = pwd;
-		this.gender = gender;
-		this.age = age;
-	}
+    public Student(int _id, String username, String gender, int age) {
+        super();
+        this._id = _id;
+        this.username = username;
+        this.gender = gender;
+        this.age = age;
+    }
 
-
-
-	public int get_id() {
+    public int get_id() {
         return _id;
     }
 
@@ -41,15 +37,6 @@ public class Student {
 
     public Student setUsername(String username) {
         this.username = username;
-        return this;
-    }
-
-    public String getPassword() {
-        return pwd;
-    }
-
-    public Student setPassword(String password) {
-        this.pwd = password;
         return this;
     }
     
@@ -69,6 +56,5 @@ public class Student {
     
     public String getGender() {
         return gender;
-    }    
-    
+    }
 }

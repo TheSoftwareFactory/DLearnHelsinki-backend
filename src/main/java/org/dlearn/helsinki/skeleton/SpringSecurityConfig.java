@@ -2,15 +2,14 @@ package org.dlearn.helsinki.skeleton;
 
 import javax.servlet.http.HttpServletRequest;
 import org.dlearn.helsinki.skeleton.database.Database;
+import org.dlearn.helsinki.skeleton.model.Student;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -19,19 +18,24 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
+        auth.jdbcAuthentication()
+            .dataSource(db)
+            .usersByUsernameQuery("select * from ("
+                        + "select username as username, pwd, 'true' as enabled from public.\"Students\""
+                        + " union "
+                        + "select username as username, pwd, 'true' as enabled from public.\"Teachers\""
+                    + ") A where username=?")
+            .authoritiesByUsernameQuery("select * from ("
+                        + "select username as username, 'ROLE_STUDENT' as role from public.\"Students\""
+                        + " union "
+                        + "select username as username, 'ROLE_TEACHER' as role from public.\"Teachers\""
+                    + ") A where username=?")
+            .passwordEncoder(new BCryptPasswordEncoder(16))
+            .and()
+            .inMemoryAuthentication()
             .withUser("teacher").password("password").roles("TEACHER")
             .and()
             .withUser("student").password("password").roles("STUDENT");
-        /*auth.jdbcAuthentication()
-            .dataSource(db)
-            .withDefaultSchema()
-            .usersByUsernameQuery("select username,password, enabled from users where username=?")
-            .authoritiesByUsernameQuery("select username, role from user_roles where username=?")
-            .passwordEncoder(new BCryptPasswordEncoder(16))
-            .withUser("teacher").password("password").roles("TEACHER")
-            .and()
-            .withUser("student").password("password").roles("STUDENT");*/
     }
     
     @Override
@@ -46,8 +50,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .authorizeRequests()
             .antMatchers("/webapi").authenticated()
-            .antMatchers("/webapi/students/**").hasRole("TEACHER")
-            //.antMatchers("/webapi/student/**").hasRole("TEACHER")
+            .antMatchers("/webapi/students/**").hasAnyRole("TEACHER", "STUDENT")
             .antMatchers("/webapi/teachers/**").hasRole("TEACHER")
             .anyRequest().authenticated()
             .and()
