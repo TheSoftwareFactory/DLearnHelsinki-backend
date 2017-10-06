@@ -27,15 +27,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.jdbcAuthentication()
             .dataSource(db)
             .usersByUsernameQuery("select * from ("
-                        + "select trim(both from username::varchar) as username, trim(both from pwd::varchar), 'true' as enabled from public.\"Students\""
+                        + "select username as username, pwd, 'true' as enabled from public.\"Students\""
                         + " union "
-                        + "select trim(both from username::varchar) as username, trim(both from pwd::varchar), 'true' as enabled from public.\"Teachers\""
-                    + ") A where username::varchar=?")
+                        + "select username as username, pwd, 'true' as enabled from public.\"Teachers\""
+                    + ") A where username=?")
             .authoritiesByUsernameQuery("select * from ("
-                        + "select trim(both from username::varchar) as username, 'ROLE_STUDENT' as role from public.\"Students\""
+                        + "select username as username, 'ROLE_STUDENT' as role from public.\"Students\""
                         + " union "
-                        + "select trim(both from username::varchar) as username, 'ROLE_TEACHER' as role from public.\"Teachers\""
-                    + ") A where username::varchar=?")
+                        + "select username as username, 'ROLE_TEACHER' as role from public.\"Teachers\""
+                    + ") A where username=?")
             .passwordEncoder(new BCryptPasswordEncoder(16))
             .and()
             .inMemoryAuthentication()
