@@ -7,7 +7,6 @@ import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.Student;
 
 public class GroupService {
-	
 	Database db = new Database();
 	
 	public List<Group> getAllGroupsTheStudentIsIn(int studentID) {
