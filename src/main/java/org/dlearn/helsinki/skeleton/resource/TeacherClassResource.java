@@ -40,5 +40,10 @@ public class TeacherClassResource {
     	System.out.println("calling class groups");
     	return new TeacherGroupResource();
     }
-
+    
+    @Path("/{class_id}/groups")
+    public TeacherGroupResource getGroupsResource(@PathParam("class_id") int class_id) {
+    	System.out.println("calling classes");
+    	return new  TeacherGroupResource();
+    }
 }
