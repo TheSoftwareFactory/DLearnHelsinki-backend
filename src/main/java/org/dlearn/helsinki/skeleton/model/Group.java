@@ -35,7 +35,7 @@ public class Group {
 		return class_id;
 	}
 
-	public void setStudent_id(int student_id) {
+	public void setClass_id(int student_id) {
 		this.class_id = student_id;
 	}
 	
