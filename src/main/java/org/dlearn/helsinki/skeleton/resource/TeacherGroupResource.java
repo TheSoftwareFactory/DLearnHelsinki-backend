@@ -14,11 +14,13 @@ public class TeacherGroupResource {
 	final static GroupService groupService = new GroupService();
 	
     //@Path("/")
-    @GET
+    /*
+	@GET
     public List<Group> getAllGroupsFromClass(@PathParam("class_id") int class_id) {
     	System.out.println("fetching all groups from the class");
     	return groupService.getAllGroupsFromClass(class_id);
     }
+    */
     
     @Path("/{group_id}")
     @GET
