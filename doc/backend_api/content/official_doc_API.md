@@ -8,7 +8,7 @@ and remove different students and spidergraphs.
 
 End points available for teacher.
 
-### List students in one class (TESTING)
+### List students in one class (TODO) check student api branch
 
 Lists all students inside one specified class.
 
