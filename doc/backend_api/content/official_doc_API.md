@@ -8,7 +8,7 @@ and remove different students and spidergraphs.
 
 End points available for teacher.
 
-### List students in one class (TESTING)
+### List students in one class (TESTING) branch average-group
 
 Lists all students inside one specified class.
 
@@ -58,43 +58,55 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/
 #### Example response
 
 ```json
-[
-  {
-    "_id" : 1,
-    "name" : "Grp1",
-    "students" : [
-      {
-        "_id" : 1,
-        "username" : "Meikäläinen",
-        "age" : 10,
-        "gender" : "male"
-      },
-      {
-        "_id" : 1,
-        "username" : "Meikäläinen",
-        "age" : 10,
-        "gender" : "male"
-      }
-    ]
-  },
-  {
-    "_id" : 2,
-    "name" : "Grp2",
-    "students" : [
-      {
-        "_id" : 1,
-        "username" : "Meikäläinen",
-        "age" : 10,
-        "gender" : "male"
-      },
-      {
-        "_id" : 1,
-        "username" : "Meikäläinen",
-        "age" : 10,
-        "gender" : "male"
-      }
-    ]
-  }
+[  
+   {  
+      "_id":1,
+      "name":"first group",
+      "students":[  
+         {  
+            "_id":2,
+            "username":"pzaragoza",
+            "gender":"male",
+            "age":10
+         },
+         {  
+            "_id":1,
+            "username":"nhlad",
+            "gender":"male",
+            "age":12
+         },
+         {  
+            "_id":3,
+            "username":"kbroflovski",
+            "gender":"male",
+            "age":10
+         }
+      ]
+   },
+   {  
+      "_id":2,
+      "name":"second group",
+      "students":[  
+         {  
+            "_id":4,
+            "username":"smarsh",
+            "gender":"male",
+            "age":9
+         },
+         {  
+            "_id":6,
+            "username":"ecartman",
+            "gender":"male",
+            "age":10
+         },
+         {  
+            "_id":5,
+            "username":"kmccormick",
+            "gender":"male",
+            "age":9
+         }
+      ]
+   }
 ]
 ```
 
