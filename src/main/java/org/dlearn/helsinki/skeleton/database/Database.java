@@ -100,6 +100,30 @@ public class Database extends AbstractDataSource {
         return questions;
     }
 
+    public Question postQuestion(Question question) throws SQLException {
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "INSERT INTO public.\"Questions\" (question, min_answer, max_answer) "
+                       + "VALUES (?, ?, ?) RETURNING _id";
+            try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
+                insert.setString(1, question.question);
+                insert.setInt(2, question.min_answer);
+                insert.setInt(3, question.max_answer);
+                // execute query
+                try(ResultSet result = insert.executeQuery()) {
+                    if (result.next()) {
+                        question.set_id(result.getInt("_id"));
+                    } else {
+                        System.out.println("Inserting question didn't return ID of it.");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return question;
+    }
+
     public void postSurveyQuestions(List<Question> questions, Survey survey) {
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -168,7 +192,7 @@ public class Database extends AbstractDataSource {
 	// Input  : the survey_id, the student_id
 	// Output : returns a list of surveys available to the student
 	public List<Survey> getSurveysFromClassAsStudent(int student_id, int class_id) throws SQLException{
-		// TODO Auto-generated method stub
+		//SELECT * FROM public."Surveys",public."Students",public."Student_Classes" WHERE public."Students"._id = public."Student_Classes".class_id AND public."Student_Classes".class_id = public."Surveys".class_id AND public."Student_Classes".class_id = 1 AND public."Students"._id = 1
 		return null;
 	}
 	
@@ -243,6 +267,8 @@ public class Database extends AbstractDataSource {
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
+	
+	
     private static Connection getDBConnection() {
         Connection dbConnection = null;
         try {
@@ -283,5 +309,58 @@ public class Database extends AbstractDataSource {
     public Connection getConnection(String username, String password) throws SQLException {
         throw new SQLException("Not supported");
     }
+
+    // Inserts an answer into the database
+	public void putAnswerToQuestion(Answer answer) {
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "INSERT INTO public.\"Answers\" "
+            		+ "(question_id, student_id, answer, survey_id)"
+            		+ "VALUES (?, ?, ?, ?) "
+            		+ "ON CONFLICT (question_id,student_id,survey_id) DO UPDATE SET answer = ?";
+            try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
+                insert.setInt(1, answer.question_id); 
+                insert.setInt(2, answer.student_id);
+                insert.setInt(3, answer.answer);
+                insert.setInt(4, answer.survey_id);
+                insert.setInt(5, answer.answer);
+                // execute query
+                insert.executeQuery();
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+
+        }
+		
+	}
+
+	public List<Answer> getAnswersFromStudentSurvey(int student_id, int survey_id) {
+		ArrayList<Answer> answers = new ArrayList<Answer>();
+		try(Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "Select student_id, survey_id, question_id, answer FROM \"Answers\" WHERE"
+            		+ " survey_id = ? AND student_id = ?";
+            //prepare statement with survey_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+                select.setInt(1, survey_id);
+                select.setInt(2, student_id);
+
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                    while (result.next()) {
+                    	Answer answer = new Answer();
+                    	answer.student_id = result.getInt(1);
+                    	answer.survey_id = result.getInt(2);
+                    	answer.setQuestion_id(result.getInt(3));
+                    	answer.setAnswer(result.getInt(4));
+                    	answers.add(answer);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+		return answers;
+	}
 
 }

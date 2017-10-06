@@ -2,8 +2,8 @@ package org.dlearn.helsinki.skeleton.model;
 
 public class Answer {
 
-	public int _id;
-	public int questionnaire_id;
+	public int survey_id;
+	public int question_id;
 	public int student_id;
 	public int answer;
 
@@ -11,19 +11,19 @@ public class Answer {
 		super();
 	}
 	
-	public Answer(int _id, int questionnaire_id, int student_id, int answer) {
+	public Answer(int survey_id, int questionnaire_id, int student_id, int answer) {
 		super();
-		this._id = _id;
-		this.questionnaire_id = questionnaire_id;
+		this.survey_id = survey_id;
+		this.question_id = questionnaire_id;
 		this.student_id = student_id;
 		this.answer = answer;
 	}
 	
 	public int getQuestion_id() {
-		return questionnaire_id;
+		return question_id;
 	}
 	public void setQuestion_id(int questionnaire_id) {
-		this.questionnaire_id = questionnaire_id;
+		this.question_id = questionnaire_id;
 	}
 	public int getStudent_id() {
 		return student_id;
