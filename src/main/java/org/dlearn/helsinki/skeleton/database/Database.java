@@ -206,8 +206,36 @@ public class Database extends AbstractDataSource {
                     while (result.next()) {
                     	Group group = new Group();
                     	group.set_id(result.getInt(1));
-                    	group.setStudent_id(result.getInt(2));
+                    	group.setClass_id(result.getInt(2));
                     	group.setName(result.getString(1));
+                    	groups.add(group);
+                    }
+                }
+            }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }		
+		return groups;
+		//*/
+	}	
+
+	public List<Group> getAllGroupsFromClass(int class_id) {
+		System.out.println("Getting groups for the class " + Integer.toString(class_id));
+		ArrayList<Group> groups = null;
+
+		try(Connection dbConnection = getDBConnection()) {
+			 String statement = "Select name, _id, class_id FROM public.\"Groups\" WHERE (class_id = ?);";
+            //prepare statement with student_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+            	select.setInt(1, class_id);
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                	groups = new ArrayList<Group>();
+                    while (result.next()) {
+                    	Group group = new Group();
+                    	group.set_id(result.getInt("_id"));
+                    	group.setClass_id(result.getInt("class_id"));
+                    	group.setName(result.getString("name"));
                     	groups.add(group);
                     }
                 }
@@ -218,53 +246,59 @@ public class Database extends AbstractDataSource {
 		return groups;
 	}
 
-	public Student getStudent(int studentID) {
-		Student student = null;
+	public Group getGroupFromClass(int class_id, int group_id) {
+		System.out.println("Getting group class " + Integer.toString(class_id));
+		Group group = null;
 
 		try(Connection dbConnection = getDBConnection()) {
-            String statement = "Select username, pwd, gender, age FROM public.\"Students\" WHERE _id = ?";
+			 String statement = "Select name FROM public.\"Groups\" WHERE (class_id = ?) and (_id = ?);";
             //prepare statement with student_id
             try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
-            	select.setInt(1, studentID);
+            	select.setInt(1, class_id);
+            	select.setInt(2, group_id);
                 // execute query
                 try(ResultSet result = select.executeQuery()) {
-                	if(result.next()) { 
-                		student = new Student();
-                   		student.set_id(studentID);
-                   		student.setAge(result.getInt("age"));
-                   		student.setUsername(result.getString("username"));
-                   		student.setPassword(result.getString("pwd"));
-                   		student.setGender(result.getString("gender"));
-                	}
+                    if(result.next()) {
+                    	group = new Group(group_id, result.getString("name"), class_id); 
+                    }
                 }
             }
 	    } catch (SQLException e) {
 	    	System.out.println(e.getMessage());
 	    }		
-		return student;
+		return group;
 	}
 	
-	public List<Student> getAllStudentsFromClass(int class_id) {
-		List<Student> students = null;
+	public List<Student> getAllStudentsFromClassAndGroup(int class_id, int group_id) {
+		System.out.println("Getting groups for the class " + Integer.toString(group_id));
+		ArrayList<Student> students = null;
 
 		try(Connection dbConnection = getDBConnection()) {
-            String statement = "Select std._id, username, pwd, gender, age FROM "
-            		+ "public.\"Students\" AS std INNER JOIN public.\"Student_Classes\" AS cls ON (std._id = cls.student_id) WHERE (cls.class_id = ?);";
+			// String statement = "Select std._id, username, pwd, gender, age "
+			// 		+ "FROM public.\"Student_Classes\" as cls "
+			// 		+ "INNER JOIN public.\"Groups\" as gr ON (cls._id = gr.class_id) "
+			// 		+ "INNER JOIN public.\"Students\" as std ON (cls.student_id = std._id)"
+			// 		+ "WHERE (gr._id = ?);";
+			String statement = "Select std._id, username, pwd, gender, age "
+			 		+ "FROM public.\"Student_Classes\" as cls " 
+			 		+ "INNER JOIN public.\"Students\" as std "
+			 		+ "ON (cls.student_id = std._id)"
+			 		+ "WHERE (cls.class_id = ?) AND (cls.group_id = ?)";
             //prepare statement with student_id
             try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
             	select.setInt(1, class_id);
+            	select.setInt(2, group_id);
                 // execute query
                 try(ResultSet result = select.executeQuery()) {
                 	students = new ArrayList<Student>();
-                	while(result.next()) { 
-                		Student student = new Student();
-                   		student.set_id(result.getInt("_id"));
-                   		student.setAge(result.getInt("age"));
-                   		student.setUsername(result.getString("username"));
-                   		student.setPassword(result.getString("pwd"));
-                   		student.setGender(result.getString("gender"));
+                    while (result.next()) {
+                  		Student student = new Student(result.getInt("_id"), 
+                  									  result.getString("username"),
+                  									  result.getString("pwd"),
+                  									  result.getString("gender"),
+                  									  result.getInt("age"));   
                    		students.add(student);
-                	}
+                    }
                 }
             }
 	    } catch (SQLException e) {
@@ -273,7 +307,63 @@ public class Database extends AbstractDataSource {
 		return students;
 	}
 
+	public Student getStudent(int studentID) {
+		Student student = null;
+	
+		try(Connection dbConnection = getDBConnection()) {
+	        String statement = "Select username, pwd, gender, age FROM public.\"Students\" WHERE _id = ?";
+	        //prepare statement with student_id
+	        try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+	        	select.setInt(1, studentID);
+	            // execute query
+	            try(ResultSet result = select.executeQuery()) {
+	            	if(result.next()) { 
+	            		student = new Student();
+	               		student.set_id(studentID);
+	               		student.setAge(result.getInt("age"));
+	               		student.setUsername(result.getString("username"));
+	               		student.setPassword(result.getString("pwd"));
+	               		student.setGender(result.getString("gender"));
+	            	}
+	            }
+	        }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }		
+		return student;
+	}
 
+	public List<Student> getAllStudentsFromClass(int class_id) {
+		List<Student> students = null;
+	
+		try(Connection dbConnection = getDBConnection()) {
+	        String statement = "Select std._id, username, pwd, gender, age "
+	        		+ "FROM public.\"Students\" AS std INNER JOIN public.\"Student_Classes\" AS cls "
+	        		+ "ON (std._id = cls.student_id) "
+	        		+ "WHERE (cls.class_id = ?);";
+	        //prepare statement with student_id
+	        try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+	        	select.setInt(1, class_id);
+	            // execute query
+	            try(ResultSet result = select.executeQuery()) {
+	            	students = new ArrayList<Student>();
+	            	while(result.next()) { 
+	            		Student student = new Student();
+	               		student.set_id(result.getInt("_id"));
+	               		student.setAge(result.getInt("age"));
+	               		student.setUsername(result.getString("username"));
+	               		student.setPassword(result.getString("pwd"));
+	               		student.setGender(result.getString("gender"));
+	               		students.add(student);
+                	}
+                }
+            }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }		
+		return students;
+	}
+	
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
@@ -381,7 +471,4 @@ public class Database extends AbstractDataSource {
         }
 		return answers;
 	}
-
-
 }
-
