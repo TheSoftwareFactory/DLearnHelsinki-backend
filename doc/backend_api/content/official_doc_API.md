@@ -28,6 +28,7 @@ $ curl --request POST localhost:8080/webapi/teachers/1/create_student
 ```json
 {
   "groud_id" : 1,
+  "class_id" : 1,
   "student" : {
     "username" : "LegoLass",
     "pwd" : "hunter2",

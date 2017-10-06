@@ -339,17 +339,27 @@ public class Database extends AbstractDataSource {
         return student.student;
     }
     
-    public void addStudentToGroup(Student student, int group_id) {
+    public void addStudentToGroup(Student student, int class_id, int group_id) {
         try (Connection dbConnection = getDBConnection()) {
+            try(PreparedStatement insert = dbConnection.prepareStatement("SELECT class_id FROM public.\"Groups\" WHERE group_id=?")) {
+                insert.setInt(1, group_id);
+                try(ResultSet result = insert.executeQuery()) {
+                    result.first();
+                    int real_class_id = result.getInt(1);
+                    if (class_id != real_class_id) {
+                        throw new SQLException("Class id's don't match: " + class_id + " != " + real_class_id);
+                    }
+                }
+            }
             String statement = "INSERT INTO public.\"Student_Classes\" (student_id, class_id, group_id) "
                     + "VALUES (?,?,?)";
             try (PreparedStatement insert = dbConnection.prepareStatement(statement)) {
                 insert.setInt(1, student._id);
-                insert.setInt(2, 1);
+                insert.setInt(2, class_id);
                 insert.setInt(3, group_id);
                 
                 // execute query
-                insert.executeBatch();
+                insert.execute();
             }
         } catch (SQLException e) {
             System.out.println("SQL Error(addStudentToGroup): " + e.getMessage());

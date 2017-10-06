@@ -11,7 +11,7 @@ public class CreateNewStudentService {
     public Student createNewStudent(NewStudent newStudent) {
         // TODO: Check that age is positive, password isn't too short.
         Student student = db.createStudent(newStudent);
-        db.addStudentToGroup(student, newStudent.group_id);
+        db.addStudentToGroup(student, newStudent.group_id, newStudent.class_id);
         return student;
     }
 
