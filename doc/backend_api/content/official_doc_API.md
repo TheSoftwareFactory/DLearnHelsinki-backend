@@ -27,10 +27,13 @@ $ curl --request POST localhost:8080/webapi/teachers/1/create_student
 
 ```json
 {
-  "username" : "LegoLass",
-  "pwd" : "hunter2",
-  "age" : 13,
-  "gender" : "dragon"
+  "groud_id" : 1,
+  "student" : {
+    "username" : "LegoLass",
+    "pwd" : "hunter2",
+    "age" : 13,
+    "gender" : "dragon"
+  }
 }
 ```
 
@@ -39,7 +42,6 @@ $ curl --request POST localhost:8080/webapi/teachers/1/create_student
 {
   "_id" : 1,
   "username" : "LegoLass",
-  "pwd" : "$2a$06$1Uu5wzUXEmkDB4UkV7NEEufNWcEENbZ9lCWetGm1G2GbHa4TDyoGK",
   "age" : 13,
   "gender" : "dragon"
 }

@@ -20,8 +20,8 @@ public class StudentResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Student> getStudents(@PathParam("student_id") int student_id) {
         return Lists.newArrayList(
-            new Student(student_id, "username", "password", null, student_id),
-            new Student(student_id + 1, "username2", "password2", null, student_id)
+            new Student(student_id, "username", null, student_id),
+            new Student(student_id + 1, "username2", null, student_id)
         );
     }
 }

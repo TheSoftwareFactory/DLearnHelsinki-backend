@@ -14,6 +14,7 @@ import javax.sql.rowset.serial.SerialArray;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
 import org.dlearn.helsinki.skeleton.model.Group;
+import org.dlearn.helsinki.skeleton.model.NewStudent;
 import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.Survey;
@@ -298,7 +299,6 @@ public class Database extends AbstractDataSource {
                     while (result.next()) {
                   		Student student = new Student(result.getInt("_id"), 
                   									  result.getString("username"),
-                  									  result.getString("pwd"),
                   									  result.getString("gender"),
                   									  result.getInt("age"));   
                    		students.add(student);
@@ -313,22 +313,21 @@ public class Database extends AbstractDataSource {
         
     private final PasswordEncoder hasher = new BCryptPasswordEncoder(16);
 
-    public Student createStudent(Student student) {
-        student.pwd = hasher.encode(student.pwd);
+    public Student createStudent(NewStudent student) {
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Students\" (username, pwd, gender, age) "
                     + "VALUES (?,?,?,?) RETURNING _id";
             try (PreparedStatement insert = dbConnection.prepareStatement(statement)) {
-                insert.setString(1, student.username);
-                insert.setString(2, student.pwd);
-                insert.setString(3, student.gender);
-                insert.setInt(4, student.age);
+                insert.setString(1, student.student.username);
+                insert.setString(2, hasher.encode(student.password));
+                insert.setString(3, student.student.gender);
+                insert.setInt(4, student.student.age);
 
                 // execute query
                 try (ResultSet result = insert.executeQuery()) {
                     if (result.next()) {
-                        student.set_id(result.getInt("_id"));
+                        student.student._id = result.getInt("_id");
                     } else {
                         System.out.println("Inserting survey didn't return ID of it.");
                     }
@@ -337,7 +336,24 @@ public class Database extends AbstractDataSource {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return student;
+        return student.student;
+    }
+    
+    public void addStudentToGroup(Student student, int group_id) {
+        try (Connection dbConnection = getDBConnection()) {
+            String statement = "INSERT INTO public.\"Student_Classes\" (student_id, class_id, group_id) "
+                    + "VALUES (?,?,?)";
+            try (PreparedStatement insert = dbConnection.prepareStatement(statement)) {
+                insert.setInt(1, student._id);
+                insert.setInt(2, 1);
+                insert.setInt(3, group_id);
+                
+                // execute query
+                insert.executeBatch();
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Error(addStudentToGroup): " + e.getMessage());
+        }
     }
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
