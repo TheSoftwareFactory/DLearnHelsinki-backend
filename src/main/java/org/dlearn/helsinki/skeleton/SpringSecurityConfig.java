@@ -22,7 +22,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
             age = 13;
             username = "student";
             pwd = "password";
-            gender = "attack helicopter";
+            gender = "helicopter";
         }});
         auth.jdbcAuthentication()
             .dataSource(db)
