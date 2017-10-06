@@ -17,7 +17,7 @@ import org.dlearn.helsinki.skeleton.model.Teacher;
 import org.dlearn.helsinki.skeleton.service.SurveyService;
 
 
-public class SurveyResource {
+public class TeacherSurveyResource {
 	
 	SurveyService surveyService = new SurveyService();
 	
