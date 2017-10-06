@@ -16,10 +16,7 @@ import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.GroupAnswer;
 import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.model.Student;
-<<<<<<< HEAD
 import org.dlearn.helsinki.skeleton.model.StudentGroup;
-=======
->>>>>>> master
 import org.dlearn.helsinki.skeleton.model.Survey;
 import org.springframework.jdbc.datasource.AbstractDataSource;
 
