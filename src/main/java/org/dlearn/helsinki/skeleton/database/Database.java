@@ -314,13 +314,14 @@ public class Database extends AbstractDataSource {
     private final PasswordEncoder hasher = new BCryptPasswordEncoder(16);
 
     public Student createStudent(Student student) {
+        student.pwd = hasher.encode(student.pwd);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Students\" (username, pwd, gender, age) "
                     + "VALUES (?,?,?,?) RETURNING _id";
             try (PreparedStatement insert = dbConnection.prepareStatement(statement)) {
                 insert.setString(1, student.username);
-                insert.setString(2, hasher.encode(student.pwd));
+                insert.setString(2, student.pwd);
                 insert.setString(3, student.gender);
                 insert.setInt(4, student.age);
 

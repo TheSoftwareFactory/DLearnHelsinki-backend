@@ -18,12 +18,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        db.createStudent(new Student() {{
-            age = 13;
-            username = "student";
-            pwd = "password";
-            gender = "helicopter";
-        }});
         auth.jdbcAuthentication()
             .dataSource(db)
             .usersByUsernameQuery("select * from ("
@@ -39,9 +33,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
             .passwordEncoder(new BCryptPasswordEncoder(16))
             .and()
             .inMemoryAuthentication()
-            .withUser("teacher").password("password").roles("TEACHER");
-            //.and()
-            //.withUser("student").password("password").roles("STUDENT");
+            .withUser("teacher").password("password").roles("TEACHER")
+            .and()
+            .withUser("student").password("password").roles("STUDENT");
     }
     
     @Override
