@@ -262,13 +262,13 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1/answers
 Retrieves surveys for a teacher, for one class, on one survey
 
 ```endpoint
-GET teachers/{teacher_id}/classes/{class_id}/surveys/{survey_id}
+GET teachers/{teacher_id}/classes/{class_id}/surveys/
 ```
 
 #### Example request
 
 ```curl
-$ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1
+$ curl localhost:8080/webapi/teachers/1/classes/1/surveys/
 ```
 
 #### Example response
