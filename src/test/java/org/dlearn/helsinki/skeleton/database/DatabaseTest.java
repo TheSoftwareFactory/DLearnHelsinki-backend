@@ -1,6 +1,5 @@
 package org.dlearn.helsinki.skeleton.database;
 
-import java.sql.Connection;
 import java.util.Arrays;
 import java.util.List;
 import org.dlearn.helsinki.skeleton.model.Question;

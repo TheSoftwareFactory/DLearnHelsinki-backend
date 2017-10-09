@@ -1,17 +1,12 @@
 package org.dlearn.helsinki.skeleton.resource;
 
-import java.util.List;
-
+import java.util.Optional;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import org.dlearn.helsinki.skeleton.model.Group;
-import org.dlearn.helsinki.skeleton.model.Student;
-import org.dlearn.helsinki.skeleton.service.GroupService;
-import org.dlearn.helsinki.skeleton.service.StudentService;
+import org.dlearn.helsinki.skeleton.service.SecurityService;
 
 @Path("/students")
 public class StudentAccessResource {
@@ -24,14 +19,20 @@ public class StudentAccessResource {
 
     
     @Path("/{student_id}/classes")
-    public StudentClassResource getGroups() {
-        return new StudentClassResource();
+    public Optional<StudentClassResource> getGroups(@PathParam("student_id") int student_id) {
+        if (SecurityService.hasStudentId(student_id)) {
+            return Optional.of(new StudentClassResource());
+        }
+        return Optional.empty();
     }
     
-    @Path("/{studentId}")
-	@GET
+    @Path("/{student_id}")
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
-	public StudentResource getStudentInfo() {
-		return new StudentResource();
+    public Optional<StudentResource> getStudentInfo(@PathParam("student_id") int student_id) {
+        if (SecurityService.hasStudentId(student_id)) {
+            return Optional.of(new StudentResource());
+        }
+        return Optional.empty();
     }	
 }

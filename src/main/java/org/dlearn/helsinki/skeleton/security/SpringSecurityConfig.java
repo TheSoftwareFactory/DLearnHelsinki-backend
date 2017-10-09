@@ -1,8 +1,7 @@
-package org.dlearn.helsinki.skeleton;
+package org.dlearn.helsinki.skeleton.security;
 
 import javax.servlet.http.HttpServletRequest;
 import org.dlearn.helsinki.skeleton.database.Database;
-import org.dlearn.helsinki.skeleton.model.Student;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,7 +17,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication()
+        auth.inMemoryAuthentication()
+            .withUser("teacher").password("password").roles("TEACHER")
+            .and()
+            .withUser("student").password("password").roles("STUDENT")
+            .and().and()
+            .jdbcAuthentication()
             .dataSource(db)
             .usersByUsernameQuery("select * from ("
                         + "select username as username, pwd, 'true' as enabled from public.\"Students\""
@@ -30,12 +34,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                         + " union "
                         + "select username as username, 'ROLE_TEACHER' as role from public.\"Teachers\""
                     + ") A where username=?")
-            .passwordEncoder(new BCryptPasswordEncoder(16))
-            .and()
-            .inMemoryAuthentication()
-            .withUser("teacher").password("password").roles("TEACHER")
-            .and()
-            .withUser("student").password("password").roles("STUDENT");
+            .passwordEncoder(new BCryptPasswordEncoder(16));
     }
     
     @Override
@@ -49,10 +48,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
             })
             .and()
             .authorizeRequests()
+            .antMatchers("/").authenticated()
             .antMatchers("/webapi").authenticated()
             .antMatchers("/webapi/students/**").hasAnyRole("TEACHER", "STUDENT")
-            .antMatchers("/webapi/teachers/**").hasRole("TEACHER")
-            .anyRequest().authenticated()
+            .antMatchers("/webapi/teachers/**").hasAnyRole("TEACHER")
+//            .anyRequest().denyAll()
             .and()
             .httpBasic();
     }

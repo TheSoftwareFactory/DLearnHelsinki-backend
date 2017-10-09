@@ -1,4 +1,4 @@
-package org.dlearn.helsinki.skeleton;
+package org.dlearn.helsinki.skeleton.security;
 
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 

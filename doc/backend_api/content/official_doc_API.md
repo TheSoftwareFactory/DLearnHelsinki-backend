@@ -40,12 +40,14 @@ $ curl --request POST localhost:8080/webapi/teachers/1/create_student
 
 #### Example response
 
+```json
 {
   "_id" : 1,
   "username" : "LegoLass",
   "age" : 13,
   "gender" : "dragon"
 }
+```
 
 ### List students in one class (TODO) check student api branch
 
@@ -304,7 +306,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1
 
 ```json
 {
-  
+
 }
 ```
 

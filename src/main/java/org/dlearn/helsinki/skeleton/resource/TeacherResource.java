@@ -14,7 +14,6 @@ import jersey.repackaged.com.google.common.collect.Lists;
 import org.dlearn.helsinki.skeleton.model.NewStudent;
 
 import org.dlearn.helsinki.skeleton.model.Student;
-import org.dlearn.helsinki.skeleton.model.Survey;
 import org.dlearn.helsinki.skeleton.model.Teacher;
 import org.dlearn.helsinki.skeleton.service.CreateNewStudentService;
 
