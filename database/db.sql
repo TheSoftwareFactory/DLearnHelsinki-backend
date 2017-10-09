@@ -114,7 +114,8 @@ CREATE TABLE "Questions" (
     question character varying(600),
     min_answer integer,
     max_answer integer,
-    _id integer NOT NULL
+    _id integer NOT NULL,
+    theme_id integer
 );
 
 
@@ -278,6 +279,36 @@ ALTER SEQUENCE "Teachers__id_seq" OWNED BY "Teachers"._id;
 
 
 --
+-- Name: Themes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE "Themes" (
+    _id integer NOT NULL,
+    title character varying(50) NOT NULL,
+    description character varying(256)
+);
+
+
+--
+-- Name: Themes__id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE "Themes__id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: Themes__id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE "Themes__id_seq" OWNED BY "Themes"._id;
+
+
+--
 -- Name: Classes _id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -327,6 +358,13 @@ ALTER TABLE ONLY "Teachers" ALTER COLUMN _id SET DEFAULT nextval('"Teachers__id_
 
 
 --
+-- Name: Themes _id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "Themes" ALTER COLUMN _id SET DEFAULT nextval('"Themes__id_seq"'::regclass);
+
+
+--
 -- Name: Answers Answers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -364,6 +402,14 @@ ALTER TABLE ONLY "Students"
 
 ALTER TABLE ONLY "Surveys"
     ADD CONSTRAINT "Surveys_pkey" PRIMARY KEY (_id);
+
+
+--
+-- Name: Themes Themes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "Themes"
+    ADD CONSTRAINT "Themes_pkey" PRIMARY KEY (_id);
 
 
 --

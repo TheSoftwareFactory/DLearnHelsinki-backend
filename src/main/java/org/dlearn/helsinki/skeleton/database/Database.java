@@ -188,6 +188,7 @@ public class Database extends AbstractDataSource {
 	// Input  : the survey_id, the student_id
 	// Output : returns a list of surveys available to the student
 	public List<Survey> getSurveysFromClassAsStudent(int student_id, int class_id) throws SQLException{
+		// TODO link class with student_classes and remove class_id form student_classes
 		//SELECT * FROM public."Surveys",public."Students",public."Student_Classes" WHERE public."Students"._id = public."Student_Classes".class_id AND public."Student_Classes".class_id = public."Surveys".class_id AND public."Student_Classes".class_id = 1 AND public."Students"._id = 1
 		return null;
 	}
@@ -274,11 +275,7 @@ public class Database extends AbstractDataSource {
 		ArrayList<Student> students = null;
 
 		try(Connection dbConnection = getDBConnection()) {
-			// String statement = "Select std._id, username, pwd, gender, age "
-			// 		+ "FROM public.\"Student_Classes\" as cls "
-			// 		+ "INNER JOIN public.\"Groups\" as gr ON (cls._id = gr.class_id) "
-			// 		+ "INNER JOIN public.\"Students\" as std ON (cls.student_id = std._id)"
-			// 		+ "WHERE (gr._id = ?);";
+			// TODO update request to remove class_id
 			String statement = "Select std._id, username, pwd, gender, age "
 			 		+ "FROM public.\"Student_Classes\" as cls " 
 			 		+ "INNER JOIN public.\"Students\" as std "
