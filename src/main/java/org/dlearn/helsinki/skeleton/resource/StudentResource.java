@@ -15,12 +15,12 @@ import org.dlearn.helsinki.skeleton.service.GroupService;
 import org.dlearn.helsinki.skeleton.service.StudentService;
 
 public class StudentResource {
-	static final StudentService studentService = new StudentService(); 	
+    static final StudentService studentService = new StudentService(); 	
 	
-	@GET
-	//@Path("/")
+    @GET
+    //@Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-	public Student getStudentInfo(@PathParam("studentId") int student_id) {
-		return studentService.getStudentNoPassword(student_id);
-    }	
+    public Student getStudentInfo(@PathParam("studentId") int student_id) {
+        return studentService.getStudent(student_id);
+    }
 }

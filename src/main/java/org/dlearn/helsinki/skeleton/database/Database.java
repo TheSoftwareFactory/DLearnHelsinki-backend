@@ -1,5 +1,6 @@
 package org.dlearn.helsinki.skeleton.database;
 
+import java.sql.Array;
 import java.sql.Connection;
 
 import java.sql.Date;
@@ -8,14 +9,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import javax.sql.rowset.serial.SerialArray;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
 import org.dlearn.helsinki.skeleton.model.Group;
+import org.dlearn.helsinki.skeleton.model.NewStudent;
+import org.dlearn.helsinki.skeleton.model.GroupAnswer;
 import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.model.Student;
+import org.dlearn.helsinki.skeleton.model.StudentGroup;
 import org.dlearn.helsinki.skeleton.model.Survey;
 import org.springframework.jdbc.datasource.AbstractDataSource;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class Database extends AbstractDataSource {
 
@@ -168,7 +176,6 @@ public class Database extends AbstractDataSource {
                     	question.setMin_answer(result.getInt(3));
                     	question.setMax_answer(result.getInt(4));
                     	questions.add(question);
-                    	System.out.println(question.getQuestion());
                     }
                 }
             }
@@ -291,7 +298,6 @@ public class Database extends AbstractDataSource {
                     while (result.next()) {
                   		Student student = new Student(result.getInt("_id"), 
                   									  result.getString("username"),
-                  									  result.getString("pwd"),
                   									  result.getString("gender"),
                   									  result.getInt("age"));   
                    		students.add(student);
@@ -303,32 +309,86 @@ public class Database extends AbstractDataSource {
 	    }		
 		return students;
 	}
+        
+    private final PasswordEncoder hasher = new BCryptPasswordEncoder(16);
 
-	public Student getStudent(int studentID) {
-		Student student = null;
-	
-		try(Connection dbConnection = getDBConnection()) {
-	        String statement = "Select username, pwd, gender, age FROM public.\"Students\" WHERE _id = ?";
-	        //prepare statement with student_id
-	        try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
-	        	select.setInt(1, studentID);
-	            // execute query
-	            try(ResultSet result = select.executeQuery()) {
-	            	if(result.next()) { 
-	            		student = new Student();
-	               		student.set_id(studentID);
-	               		student.setAge(result.getInt("age"));
-	               		student.setUsername(result.getString("username"));
-	               		student.setPassword(result.getString("pwd"));
-	               		student.setGender(result.getString("gender"));
-	            	}
-	            }
-	        }
-	    } catch (SQLException e) {
-	    	System.out.println(e.getMessage());
-	    }		
-		return student;
-	}
+    public Student createStudent(NewStudent student) {
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "INSERT INTO public.\"Students\" (username, pwd, gender, age) "
+                    + "VALUES (?,?,?,?) RETURNING _id";
+            try (PreparedStatement insert = dbConnection.prepareStatement(statement)) {
+                insert.setString(1, student.student.username);
+                insert.setString(2, hasher.encode(student.password));
+                insert.setString(3, student.student.gender);
+                insert.setInt(4, student.student.age);
+
+                // execute query
+                try (ResultSet result = insert.executeQuery()) {
+                    if (result.next()) {
+                        student.student._id = result.getInt("_id");
+                    } else {
+                        System.out.println("Inserting survey didn't return ID of it.");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return student.student;
+    }
+    
+    public void addStudentToGroup(Student student, int class_id, int group_id) {
+        try (Connection dbConnection = getDBConnection()) {
+            try(PreparedStatement insert = dbConnection.prepareStatement("SELECT class_id FROM public.\"Groups\" WHERE group_id=?")) {
+                insert.setInt(1, group_id);
+                try(ResultSet result = insert.executeQuery()) {
+                    result.first();
+                    int real_class_id = result.getInt(1);
+                    if (class_id != real_class_id) {
+                        throw new SQLException("Class id's don't match: " + class_id + " != " + real_class_id);
+                    }
+                }
+            }
+            String statement = "INSERT INTO public.\"Student_Classes\" (student_id, class_id, group_id) "
+                    + "VALUES (?,?,?)";
+            try (PreparedStatement insert = dbConnection.prepareStatement(statement)) {
+                insert.setInt(1, student._id);
+                insert.setInt(2, class_id);
+                insert.setInt(3, group_id);
+                
+                // execute query
+                insert.execute();
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Error(addStudentToGroup): " + e.getMessage());
+        }
+    }
+
+    public Student getStudent(int studentID) {
+            Student student = null;
+
+            try(Connection dbConnection = getDBConnection()) {
+            String statement = "Select username, pwd, gender, age FROM public.\"Students\" WHERE _id = ?";
+            //prepare statement with student_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+                    select.setInt(1, studentID);
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                    if(result.next()) { 
+                            student = new Student();
+                            student.set_id(studentID);
+                            student.setAge(result.getInt("age"));
+                            student.setUsername(result.getString("username"));
+                            student.setGender(result.getString("gender"));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }		
+            return student;
+    }
 
 	public List<Student> getAllStudentsFromClass(int class_id) {
 		List<Student> students = null;
@@ -349,7 +409,6 @@ public class Database extends AbstractDataSource {
 	               		student.set_id(result.getInt("_id"));
 	               		student.setAge(result.getInt("age"));
 	               		student.setUsername(result.getString("username"));
-	               		student.setPassword(result.getString("pwd"));
 	               		student.setGender(result.getString("gender"));
 	               		students.add(student);
                 	}
@@ -468,4 +527,92 @@ public class Database extends AbstractDataSource {
         }
 		return answers;
 	}
+
+	public List<GroupAnswer> getAverageAnswersFromGroup(int class_id, int group_id, int survey_id) {
+		ArrayList<GroupAnswer> answers = new ArrayList<GroupAnswer>();
+		try(Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "SELECT question_id,avg(answer) FROM public.\"Answers\", public.\"Student_Classes\" WHERE \"Answers\".student_id = \"Student_Classes\".student_id AND \"Student_Classes\".group_id = ? AND \"Answers\".survey_id = ? GROUP BY question_id";
+            //prepare statement with survey_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+                select.setInt(1, group_id);
+                select.setInt(2, survey_id);
+
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                    while (result.next()) {
+                    	GroupAnswer answer = new GroupAnswer();
+                    	answer.setQuestion_id(result.getInt(1));
+                    	answer.setAnswer(result.getFloat(2));
+                    	answer.setGroup_id(group_id);
+                    	answer.setSurvey_id(survey_id);
+                    	System.out.println("Average answer : " + answer.getAnswer());
+                    	answers.add(answer);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+		return answers;
+	}
+
+	public List<StudentGroup> getGroupsWithStudents(int class_id) {
+		ArrayList<StudentGroup> studentGroups = new ArrayList<StudentGroup>();
+		try(Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "SELECT \"Groups\"._id,\"Groups\".name,\"Students\"._id,\"Students\".username,\"Students\".gender,\"Students\".age "
+            		+ "FROM \"Students\",\"Groups\",\"Student_Classes\" "
+            		+ "WHERE \"Groups\"._id = \"Student_Classes\".group_id "
+            		+ "AND \"Student_Classes\".student_id = \"Students\"._id "
+            		+ "AND \"Student_Classes\".class_id = ?";
+            //prepare statement with survey_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+                select.setInt(1, class_id);
+
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                	ArrayList<Integer> group_ids = new ArrayList<>();
+                    while (result.next()) {
+                    	if(group_ids.contains(result.getInt(1))){
+                    		// add Student to Group
+                    		for(StudentGroup group : studentGroups){
+                    			if(group._id == result.getInt(1)){
+                    				// add Student to Group
+                            		Student student = new Student();
+                            		student.set_id(result.getInt(3));
+                            		student.setUsername(result.getString(4));
+                            		student.gender = result.getString(5);
+                            		student.age = result.getInt(6);
+                            		group.students.add(student);
+                    			}
+                    		}
+                    		//TODO
+                    	}else{
+                    		// update group_id list
+                    		group_ids.add(result.getInt(1));
+                    		// add Group
+                    		StudentGroup group = new StudentGroup();
+                    		group._id = result.getInt(1);
+                    		group.name = result.getString(2);
+                    		
+                    		// add Student to Group
+                    		Student student = new Student();
+                    		student.set_id(result.getInt(3));
+                    		student.setUsername(result.getString(4));
+                    		student.gender = result.getString(5);
+                    		student.age = result.getInt(6);
+                    		group.students.add(student);
+                    		
+                    		studentGroups.add(group);
+                    	}
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+		return studentGroups;
+	}
+
 }

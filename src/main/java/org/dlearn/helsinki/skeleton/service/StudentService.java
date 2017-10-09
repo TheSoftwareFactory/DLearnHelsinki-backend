@@ -7,9 +7,9 @@ import org.dlearn.helsinki.skeleton.model.Student;
 
 
 public class StudentService {	
-	static final Database db = new Database();
+    static final Database db = new Database();
 
-	public Student getStudentNoPassword(int student_id) {
-		return db.getStudent(student_id).setPassword(null);
-	}
+    public Student getStudent(int student_id) {
+        return db.getStudent(student_id);
+    }
 }
