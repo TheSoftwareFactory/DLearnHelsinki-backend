@@ -9,18 +9,19 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.dlearn.helsinki.skeleton.model.GroupAnswer;
+import org.dlearn.helsinki.skeleton.model.GroupThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.service.TeacherGroupSurveyService;
 
 public class TeacherGroupSurveyResource {
-
+    
     TeacherGroupSurveyService teacherGroupSurveyAnswerService = new TeacherGroupSurveyService();
 
     // simple GET with group_id and survey to get survey info
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{survey_id}/answers")
-    public List<GroupAnswer> getAnswersFromSurvey(
+    public List<GroupThemeAverage> getAnswersFromSurvey(
             @PathParam("class_id") int class_id,
             @PathParam("group_id") int group_id,
             @PathParam("survey_id") int survey_id) {

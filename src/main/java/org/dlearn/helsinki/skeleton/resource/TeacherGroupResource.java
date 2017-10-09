@@ -63,4 +63,5 @@ public class TeacherGroupResource {
                 .println("fetching all students from the class and the group");
         return groupService.getAllStudentsFromClassAndGroup(class_id, group_id);
     }
+
 }

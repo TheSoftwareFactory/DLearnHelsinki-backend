@@ -16,6 +16,7 @@ import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.NewStudent;
 import org.dlearn.helsinki.skeleton.model.GroupAnswer;
 import org.dlearn.helsinki.skeleton.model.NewTeacher;
+import org.dlearn.helsinki.skeleton.model.GroupThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.model.Researcher;
 import org.dlearn.helsinki.skeleton.model.Student;
@@ -697,12 +698,25 @@ public class Database extends AbstractDataSource {
         return answers;
     }
 
-    public List<GroupAnswer> getAverageAnswersFromGroup(int class_id,
-            int group_id, int survey_id) {
-        ArrayList<GroupAnswer> answers = new ArrayList<GroupAnswer>();
-        try (Connection dbConnection = getDBConnection()) {
+	/*
+	 * "_id" : 5
+"name"(of theme) : "title"
+"description" : "blabla"
+"answer" : 3.3333
+	 */
+	public List<GroupThemeAverage> getAverageAnswersFromGroup(int class_id, int group_id, int survey_id) {
+		ArrayList<GroupThemeAverage> answers = new ArrayList<GroupThemeAverage>();
+		try(Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "SELECT question_id,avg(answer) FROM public.\"Answers\", public.\"Student_Classes\" WHERE \"Answers\".student_id = \"Student_Classes\".student_id AND \"Student_Classes\".group_id = ? AND \"Answers\".survey_id = ? GROUP BY question_id";
+            String statement = "SELECT avg(answer),\"Themes\".title,\"Themes\".description,\"Themes\"._id,\"Surveys\".start_date "
+            		+ "FROM public.\"Surveys\",public.\"Answers\", public.\"Student_Classes\", public.\"Themes\", public.\"Questions\" "
+            		+ "WHERE \"Questions\"._id = question_id "
+            		+ "AND \"Questions\".theme_id = \"Themes\"._id "
+            		+ "AND \"Answers\".student_id = \"Student_Classes\".student_id "
+            		+ "AND \"Surveys\"._id = \"Answers\".survey_id "
+            		+ "AND \"Student_Classes\".group_id = ? "
+            		+ "AND \"Answers\".survey_id = ? "
+            		+ "GROUP BY \"Themes\"._id,answer,start_date";
             //prepare statement with survey_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
@@ -712,14 +726,17 @@ public class Database extends AbstractDataSource {
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     while (result.next()) {
-                        GroupAnswer answer = new GroupAnswer();
-                        answer.setQuestion_id(result.getInt(1));
-                        answer.setAnswer(result.getFloat(2));
-                        answer.setGroup_id(group_id);
-                        answer.setSurvey_id(survey_id);
-                        System.out.println(
-                                "Average answer : " + answer.getAnswer());
-                        answers.add(answer);
+                    	GroupThemeAverage answer = new GroupThemeAverage();
+                    	//answer.setQuestion_id(result.getInt(1));
+                    	answer.setAnswer(result.getFloat(1));
+                    	answer.setTheme_title(result.getString(2));
+                    	answer.setDescription(result.getString(3));
+                    	answer.setTheme_id(result.getInt(4));
+                    	answer.setStart_date(result.getString(5));
+                    	answer.setGroup_id(group_id);
+                    	answer.setSurvey_id(survey_id);
+                    	System.out.println("Average answer : " + answer.getAnswer());
+                    	answers.add(answer);
                     }
                 }
             }
