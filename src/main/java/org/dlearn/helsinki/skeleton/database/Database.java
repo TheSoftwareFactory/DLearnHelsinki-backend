@@ -521,36 +521,37 @@ public class Database extends AbstractDataSource {
         return student;
     }
 
-    public List<Student> getAllStudentsFromClass(int class_id) {
-        List<Student> students = null;
-
-        try (Connection dbConnection = getDBConnection()) {
-            String statement = "Select std._id, username, pwd, gender, age "
-                    + "FROM public.\"Students\" AS std INNER JOIN public.\"Student_Classes\" AS cls "
-                    + "ON (std._id = cls.student_id) "
-                    + "WHERE (cls.class_id = ?);";
-            //prepare statement with student_id
-            try (PreparedStatement select = dbConnection
-                    .prepareStatement(statement)) {
-                select.setInt(1, class_id);
-                // execute query
-                try (ResultSet result = select.executeQuery()) {
-                    students = new ArrayList<>();
-                    while (result.next()) {
-                        Student student = new Student();
-                        student.set_id(result.getInt("_id"));
-                        student.setAge(result.getInt("age"));
-                        student.setUsername(result.getString("username"));
-                        student.setGender(result.getString("gender"));
-                        students.add(student);
-                    }
+	public List<Student> getAllStudentsFromClass(int class_id) {
+		List<Student> students = null;
+		//SQL rewritten for new database
+		try(Connection dbConnection = getDBConnection()) {
+	        String statement = "Select std._id, username, pwd, gender, age "
+	        		+ "FROM public.\"Groups\" AS gr INNER JOIN  public.\"Student_Classes\" as cls "
+	        		+ "ON (gr._id = cls.group_id) "
+	        		+ "INNER JOIN public.\"Students\" AS st "
+	        		+ "ON (st._id = cls.student_id) "
+	        		+ "WHERE (gr.class_id = ?);";
+	        //prepare statement with student_id
+	        try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+	        	select.setInt(1, class_id);
+	            // execute query
+	            try(ResultSet result = select.executeQuery()) {
+	            	students = new ArrayList<Student>();
+	            	while(result.next()) { 
+	            		Student student = new Student();
+	               		student.set_id(result.getInt("_id"));
+	               		student.setAge(result.getInt("age"));
+	               		student.setUsername(result.getString("username"));
+	               		student.setGender(result.getString("gender"));
+	               		students.add(student);
+                	}
                 }
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return students;
-    }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }		
+		return students;
+	}
 
     public Optional<Student> getStudentFromUsername(String username_) {
         Optional<Student> student = Optional.empty();
@@ -631,6 +632,27 @@ public class Database extends AbstractDataSource {
         }
         return researcher;
     }
+    
+	public boolean doesStudentUsernameExistInDatabase(Student student) {
+		boolean exists = false;
+		try(Connection dbConnection = getDBConnection()) {
+	        String statement = "Select username FROM public.\"Students\" as std WHERE std.username = ?";
+	        //prepare statement with student_id
+	        try(PreparedStatement select = dbConnection.
+	        		prepareStatement(statement)) {
+	        	select.setString(1, student.getUsername());
+	            // execute query
+	            try(ResultSet result = select.executeQuery()) {
+	            	if(result.next()) {
+	            		exists = true;
+                	}
+                }
+            }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }
+		return exists;
+	}
     /////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////
