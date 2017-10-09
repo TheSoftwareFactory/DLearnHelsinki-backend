@@ -755,7 +755,7 @@ public class Database extends AbstractDataSource {
             		+ "AND \"Surveys\"._id = \"Answers\".survey_id "
             		+ "AND \"Student_Classes\".group_id = ? "
             		+ "AND \"Answers\".survey_id = ? "
-            		+ "GROUP BY \"Themes\"._id,answer,start_date";
+            		+ "GROUP BY \"Themes\"._id,start_date";
             //prepare statement with survey_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
