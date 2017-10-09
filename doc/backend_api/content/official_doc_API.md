@@ -47,7 +47,7 @@ $ curl --request POST localhost:8080/webapi/teachers/1/create_student
   "gender" : "dragon"
 }
 
-### List students in one class (TODO) check student api branch
+### List students in one class (TESTING)
 
 Lists all students inside one specified class.
 
