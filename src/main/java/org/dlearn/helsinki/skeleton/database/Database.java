@@ -737,6 +737,12 @@ public class Database extends AbstractDataSource {
         return answers;
     }
 
+	/*
+	 * "_id" : 5
+"name"(of theme) : "title"
+"description" : "blabla"
+"answer" : 3.3333
+	 */
 	public List<GroupThemeAverage> getAverageAnswersFromGroup(int class_id, int group_id, int survey_id) {
 		ArrayList<GroupThemeAverage> answers = new ArrayList<GroupThemeAverage>();
 		try(Connection dbConnection = getDBConnection()) {
@@ -749,7 +755,7 @@ public class Database extends AbstractDataSource {
             		+ "AND \"Surveys\"._id = \"Answers\".survey_id "
             		+ "AND \"Student_Classes\".group_id = ? "
             		+ "AND \"Answers\".survey_id = ? "
-            		+ "GROUP BY \"Themes\"._id,start_date";
+            		+ "GROUP BY \"Themes\"._id,answer,start_date";
             //prepare statement with survey_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {

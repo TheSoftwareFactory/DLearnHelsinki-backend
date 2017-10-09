@@ -10,7 +10,7 @@ import org.dlearn.helsinki.skeleton.model.Question;
 public class TeacherGroupSurveyService {
 
     Database db = new Database();
-
+    
 	public List<GroupThemeAverage> getAverageAnswersFromGroup(int class_id, int group_id, int survey_id) {
 		return db.getAverageAnswersFromGroup(class_id,group_id,survey_id);
 	}
