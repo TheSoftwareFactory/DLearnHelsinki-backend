@@ -110,6 +110,50 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/
 ]
 ```
 
+### List theme averages in a class (DONE)
+
+#### Example request
+
+```curl
+$ curl localhost:8080/webapi/teachers/1/classes/1/surveys/27/answers
+```
+
+#### Example response
+
+```json
+[  
+   {  
+      "answer":3.8888888,
+      "class_id":1,
+      "description":"These questions ask about the ideas brought by the student during the exercise.",
+      "start_date":"1970-01-01",
+      "survey_id":27,
+      "theme_id":1,
+      "theme_title":"Ideas and problem solving"
+   },
+   {  
+      "answer":3.5,
+      "class_id":1,
+      "description":"These questions ask about the opinions brought by the student during the exercise.",
+      "start_date":"1970-01-01",
+      "survey_id":27,
+      "theme_id":2,
+      "theme_title":"Opinions and arguments"
+   },
+   {  
+      "answer":2.851852,
+      "class_id":1,
+      "description":"These questions are about the persistence of the excercise.",
+      "start_date":"1970-01-01",
+      "survey_id":27,
+      "theme_id":3,
+      "theme_title":"Persistence"
+   },
+   ...
+]
+```
+
+
 ### List of students in a group (TESTING)
 
 ```endpoint
