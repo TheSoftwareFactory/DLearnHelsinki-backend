@@ -9,15 +9,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.dlearn.helsinki.skeleton.model.Survey;
-import org.dlearn.helsinki.skeleton.service.SurveyService;
+import org.dlearn.helsinki.skeleton.service.TeacherClassSurveyService;
 
 public class StudentSurveyResource {
 
-    SurveyService surveyService = new SurveyService();
-
-    // request students/{student_id}/classes/{student_id}/surveys/
-    // returns all the surveys from teacher based on the student_id. a sort of history
-    // TODO implement to answer to history request
+	// TODO make a new service?
+	TeacherClassSurveyService surveyService = new TeacherClassSurveyService();
+	
+	
+	// request students/{student_id}/classes/{student_id}/surveys/
+	// returns all the surveys from teacher based on the student_id. a sort of history
+	// TODO implement to answer to history request
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Survey> getSurveys(@PathParam("student_id") int student_id,
