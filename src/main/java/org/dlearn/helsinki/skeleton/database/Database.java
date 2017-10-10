@@ -858,7 +858,6 @@ public class Database extends AbstractDataSource {
             try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
                 select.setInt(1, student_id);
                 select.setInt(2, survey_id);
-                System.out.println("student theme average");
 
                 // execute query
                 try(ResultSet result = select.executeQuery()) {

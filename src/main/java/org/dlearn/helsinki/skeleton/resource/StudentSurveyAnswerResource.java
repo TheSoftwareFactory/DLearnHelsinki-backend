@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
 import org.dlearn.helsinki.skeleton.model.Question;
+import org.dlearn.helsinki.skeleton.model.StudentThemeAverage;
 import org.dlearn.helsinki.skeleton.service.StudentSurveyAnswerService;
 import org.dlearn.helsinki.skeleton.service.StudentSurveyQuestionService;
 
@@ -36,11 +37,12 @@ public class StudentSurveyAnswerResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Answer> getSurveyAnswers(
+    public List<StudentThemeAverage> getSurveyAnswers(
             @PathParam("student_id") int student_id,
             @PathParam("survey_id") int survey_id) {
         //return surveyService.getSurveysFromTeacherId(teacher_id);
-        return studentSurveyAnswerService.getAnswers(student_id, survey_id);
+        //return surveyService.getSurveysFromTeacherId(teacher_id);
+        return studentSurveyAnswerService.getStudentThemeAverage(student_id,survey_id);
     }
 
 }

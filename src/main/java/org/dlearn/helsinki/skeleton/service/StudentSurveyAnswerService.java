@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.dlearn.helsinki.skeleton.database.Database;
 import org.dlearn.helsinki.skeleton.model.Answer;
+import org.dlearn.helsinki.skeleton.model.StudentThemeAverage;
 
 public class StudentSurveyAnswerService {
 
@@ -21,5 +22,10 @@ public class StudentSurveyAnswerService {
         // TODO Auto-generated method stub
         return db.getAnswersFromStudentSurvey(student_id, survey_id);
     }
+
+	public List<StudentThemeAverage> getStudentThemeAverage(int student_id, int survey_id) {
+		// TODO Auto-generated method stub
+		return db.getStudentThemeAverage(survey_id, student_id);
+	}
 
 }
