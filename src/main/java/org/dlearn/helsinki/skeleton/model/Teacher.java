@@ -4,7 +4,6 @@ public class Teacher {
 
     public int _id;
     public String username;
-    public String pwd;
 
     public Teacher() {
         super();
@@ -14,7 +13,6 @@ public class Teacher {
         super();
         this._id = _id;
         this.username = username;
-        this.pwd = password;
     }
 
     public int get_id() {
@@ -31,13 +29,5 @@ public class Teacher {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return pwd;
-    }
-
-    public void setPassword(String password) {
-        this.pwd = password;
     }
 }

@@ -22,11 +22,10 @@ public class StudentAccessResource {
         return new StudentClassResource();
     }
 
-    @Path("/{student_id}")
+    @Path("/{studentId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public StudentResource getStudentInfo(
-            @PathParam("student_id") int student_id) {
+    public StudentResource getStudentInfo() {
         return new StudentResource();
     }
 }
