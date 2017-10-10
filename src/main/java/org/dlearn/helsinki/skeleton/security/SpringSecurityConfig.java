@@ -2,14 +2,11 @@ package org.dlearn.helsinki.skeleton.security;
 
 import javax.servlet.http.HttpServletRequest;
 import org.dlearn.helsinki.skeleton.database.Database;
-import org.dlearn.helsinki.skeleton.model.Student;
-import org.dlearn.helsinki.skeleton.security.Hasher;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
@@ -20,10 +17,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth)
             throws Exception {
-        auth.inMemoryAuthentication().withUser("teacher").password("password")
-                .roles("TEACHER").and().withUser("student").password("password")
-                .roles("STUDENT").and().and().jdbcAuthentication()
-                .dataSource(db)
+        addTestAccounts(auth);
+        auth.jdbcAuthentication().dataSource(db)
                 .usersByUsernameQuery("select * from ("
                         + "select username as username, pwd, 'true' as enabled from public.\"Students\""
                         + " union "
@@ -34,10 +29,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                         + " union "
                         + "select username as username, 'ROLE_TEACHER' as role from public.\"Teachers\""
                         + ") A where username=?")
-                .passwordEncoder(Hasher.getHasher()).and()
-                .inMemoryAuthentication().withUser("teacher")
-                .password("password").roles("TEACHER").and().withUser("student")
-                .password("password").roles("STUDENT");
+                .passwordEncoder(Hasher.getHasher());
+    }
+
+    private void addTestAccounts(AuthenticationManagerBuilder auth)
+            throws Exception {
+        auth.inMemoryAuthentication().withUser("teacher").password("password")
+                .roles("TEACHER").and().withUser("student").password("password")
+                .roles("STUDENT");
     }
 
     @Override
