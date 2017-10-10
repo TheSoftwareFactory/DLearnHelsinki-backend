@@ -3,46 +3,44 @@ package org.dlearn.helsinki.skeleton.service;
 import java.util.Optional;
 import java.util.function.Function;
 import org.dlearn.helsinki.skeleton.database.Database;
-import org.dlearn.helsinki.skeleton.security.AccessException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class SecurityService {
+
     private final static Database DB = new Database();
-    
-    public void ensureCorrectStudentId(int student_id) throws Exception {
-        if (!hasStudentId(student_id)) {
-            throw new AccessException("Couldn't authorize the student");
-        }
+
+    public boolean isTheStudent(int student_id) {
+        return getStudentId()
+                .map(id -> id == student_id)
+                .orElse(false);
     }
-    
-    public void ensureCorrectTeacherId(int teacher_id) throws Exception {
-        if (!hasTeacherId(teacher_id)) {
-            throw new AccessException("Couldn't authorize the teacher");
-        }
+
+    public boolean isTheTeacher(int teacher_id) {
+        return getTeacherId()
+                .map(id -> id == teacher_id)
+                .orElse(false);
     }
-    
-    public boolean hasStudentId(int student_id) {
-        return hasId(student_id,
-                name -> DB.getStudentFromUsername(name)
+
+    public Optional<Integer> getStudentId() {
+        return getId(name
+                -> DB.getStudentFromUsername(name)
                         .map(s -> s._id));
     }
-    
-    public boolean hasTeacherId(int teacher_id) {
-        return hasId(teacher_id,
-                name -> DB.getTeacherFromUsername(name)
-                        .map(t -> t._id));
+
+    public Optional<Integer> getTeacherId() {
+        return getId(name
+                -> DB.getTeacherFromUsername(name)
+                        .map(s -> s._id));
     }
-    
-    private static boolean hasId(int id, Function<String, Optional<Integer>> getIdFromName) {
+
+    private static Optional<Integer> getId(Function<String, Optional<Integer>> getIdFromName) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             return getIdFromName
-                    .apply(authentication.getName())
-                    .map(n -> n == id)
-                    .orElse(false);
+                    .apply(authentication.getName());
         }
-        return false;
+        return Optional.empty();
     }
 }
