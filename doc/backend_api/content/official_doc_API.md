@@ -49,6 +49,41 @@ $ curl --request POST localhost:8080/webapi/teachers/1/create_student
 }
 ```
 
+### Create new teacher
+
+Creates new teacher account
+
+```endpoint
+POST teachers/{teacher_id}/create_teacher
+```
+
+#### Example request
+
+```curl
+$ curl --request POST localhost:8080/webapi/teachers/1/create_teacher
+  -d @data.json
+```
+
+#### Example request body
+
+```json
+{
+  "password" : "kekkonen",
+  "teacher" : {
+    "username" : "MarttiM",
+  }
+}
+```
+
+#### Example response
+
+```json
+{
+  "_id" : 1,
+  "username" : "marttim",
+}
+```
+
 ### List students in one class (TODO) check student api branch
 
 Lists all students inside one specified class.
