@@ -11,7 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
+<<<<<<< 8f9a9653c5dcdf3ca9659915330c7a7dc9d81eba
 import org.dlearn.helsinki.skeleton.model.ClassThemeAverage;
+=======
+>>>>>>> db is working
 import org.dlearn.helsinki.skeleton.model.Classes;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.NewStudent;
@@ -655,33 +658,33 @@ public class Database extends AbstractDataSource {
 		return exists;
 	}
 
-public List<Classes> getAllClassesOfTeacher(int teacher_id) {
-	List<Classes> classes = null;
-	
-	try(Connection dbConnection = getDBConnection()) {
-        String statement = "Select _id, name "
-        		+ "FROM public.\"Classes\" as cls "
-        		+ "WHERE (cls.teacher_id = ?);";
-        //prepare statement with student_id
-        try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
-        	select.setInt(1, teacher_id);
-            // execute query
-            try(ResultSet result = select.executeQuery()) {
-            	classes = new ArrayList<Classes>();
-            	while(result.next()) { 
-            		Classes newClass = new Classes();
-            		newClass.set_id(result.getInt("_id"));
-            		newClass.setName(result.getString("name"));
-            		newClass.setTeacher_id(teacher_id);
-            		classes.add(newClass);
-            	}
+	public List<Classes> getAllClassesOfTeacher(int teacher_id) {
+		List<Classes> classes = null;
+		
+		try(Connection dbConnection = getDBConnection()) {
+	        String statement = "Select _id, name"
+	        		+ "FROM public.\"Classes\" as cls"
+	        		+ "WHERE (cls.teacher_id = ?);";
+	        //prepare statement with student_id
+	        try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+	        	select.setInt(1, teacher_id);
+	            // execute query
+	            try(ResultSet result = select.executeQuery()) {
+	            	classes = new ArrayList<Classes>();
+	            	while(result.next()) { 
+	            		Classes newClass = new Classes();
+	            		newClass.set_id(result.getInt("_id"));
+	            		newClass.setName(result.getString("name"));
+	            		newClass.setTeacher_id(teacher_id);
+	            		classes.add(newClass);
+                	}
+                }
             }
-        }
-    } catch (SQLException e) {
-    	System.out.println(e.getMessage());
-    }	
-	return classes;		
-}
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }	
+		return classes;		
+	}
 	
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
@@ -705,12 +708,13 @@ public List<Classes> getAllClassesOfTeacher(int teacher_id) {
         }
         try {
             String dbUrl = System.getenv("JDBC_DATABASE_URL");
-            if (dbUrl == null) { // local # TODO fix
-                System.out.println("JDBC env empty, on local");
-                dbConnection = DriverManager.getConnection(DB_CONNECTION,
-                        DB_USER, DB_PASSWORD);
-            } else { // production
-                dbConnection = DriverManager.getConnection(dbUrl);
+            if(dbUrl == null){ // local # TODO fix
+            	System.out.println("JDBC env empty, on local");
+                dbConnection = DriverManager.getConnection(
+                        DB_CONNECTION, DB_USER, DB_PASSWORD);
+            }else { // production
+            	//System.out.println("Connecting to " + dbUrl);
+            	dbConnection = DriverManager.getConnection(dbUrl);
             }
         } catch (SQLException e) {
             System.out.println("CREATING CONNECTION FAILED HORRIBLY "
