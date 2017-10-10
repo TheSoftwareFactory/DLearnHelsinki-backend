@@ -39,21 +39,21 @@ public class Student {
         this.username = username;
         return this;
     }
-    
+
     public Student setAge(int age) {
         this.age = age;
         return this;
     }
-    
+
     public int getAge() {
         return age;
     }
-    
+
     public Student setGender(String gender) {
         this.gender = gender;
         return this;
     }
-    
+
     public String getGender() {
         return gender;
     }

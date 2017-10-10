@@ -2,16 +2,14 @@ package org.dlearn.helsinki.skeleton.model;
 
 public class Teacher {
 
-	public int _id;
+    public int _id;
     public String username;
 
     public Teacher() {
         super();
     }
 
-
-    public Teacher(int _id, String username,
-            String password) {
+    public Teacher(int _id, String username, String password) {
         super();
         this._id = _id;
         this.username = username;

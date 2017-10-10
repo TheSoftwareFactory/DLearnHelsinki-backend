@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class Hasher {
     private final static PasswordEncoder HASHER = new BCryptPasswordEncoder(16);
+
     public static PasswordEncoder getHasher() {
         return HASHER;
     }
