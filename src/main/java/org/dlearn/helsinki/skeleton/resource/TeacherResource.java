@@ -12,11 +12,13 @@ import javax.ws.rs.core.MediaType;
 
 import jersey.repackaged.com.google.common.collect.Lists;
 import org.dlearn.helsinki.skeleton.model.NewStudent;
+import org.dlearn.helsinki.skeleton.model.NewTeacher;
 
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.Survey;
 import org.dlearn.helsinki.skeleton.model.Teacher;
 import org.dlearn.helsinki.skeleton.service.CreateNewStudentService;
+import org.dlearn.helsinki.skeleton.service.CreateNewTeacherService;
 
 @Path("/teachers")
 public class TeacherResource {
@@ -58,5 +60,16 @@ public class TeacherResource {
     public Student createNewStudent(@PathParam("teacher_id") int teacher_id, NewStudent student) {
         return createNewStudentService.createNewStudent(student);
     }
+    
+    CreateNewTeacherService createNewTeacherService = new CreateNewTeacherService();
+
+    @POST
+    @Path("/{teacher_id}/create_teacher")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Teacher createNewTeacher(@PathParam("teacher_id") int teacher_id, NewTeacher teacher) {
+        return createNewTeacherService.createNewTeacher(teacher);
+    }
+
 
 }

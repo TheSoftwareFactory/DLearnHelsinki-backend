@@ -17,10 +17,13 @@ import org.dlearn.helsinki.skeleton.model.Answer;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.NewStudent;
 import org.dlearn.helsinki.skeleton.model.GroupAnswer;
+import org.dlearn.helsinki.skeleton.model.NewTeacher;
 import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.StudentGroup;
 import org.dlearn.helsinki.skeleton.model.Survey;
+import org.dlearn.helsinki.skeleton.model.Teacher;
+import org.dlearn.helsinki.skeleton.security.Hasher;
 import org.springframework.jdbc.datasource.AbstractDataSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -309,8 +312,6 @@ public class Database extends AbstractDataSource {
 	    }		
 		return students;
 	}
-        
-    private final PasswordEncoder hasher = new BCryptPasswordEncoder(16);
 
     public Student createStudent(NewStudent student) {
         try (Connection dbConnection = getDBConnection()) {
@@ -319,7 +320,7 @@ public class Database extends AbstractDataSource {
                     + "VALUES (?,?,?,?) RETURNING _id";
             try (PreparedStatement insert = dbConnection.prepareStatement(statement)) {
                 insert.setString(1, student.student.username);
-                insert.setString(2, hasher.encode(student.password));
+                insert.setString(2, Hasher.getHasher().encode(student.password));
                 insert.setString(3, student.student.gender);
                 insert.setInt(4, student.student.age);
 
@@ -328,7 +329,7 @@ public class Database extends AbstractDataSource {
                     if (result.next()) {
                         student.student._id = result.getInt("_id");
                     } else {
-                        System.out.println("Inserting survey didn't return ID of it.");
+                        System.out.println("Inserting student didn't return ID of it.");
                     }
                 }
             }
@@ -336,6 +337,30 @@ public class Database extends AbstractDataSource {
             System.out.println(e.getMessage());
         }
         return student.student;
+    }
+    
+    public Teacher createTeacher(NewTeacher teacher) {
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "INSERT INTO public.\"Teachers\" (username, pwd) "
+                    + "VALUES (?,?,?,?) RETURNING _id";
+            try (PreparedStatement insert = dbConnection.prepareStatement(statement)) {
+                insert.setString(1, teacher.teacher.username);
+                insert.setString(2, Hasher.getHasher().encode(teacher.password));
+
+                // execute query
+                try (ResultSet result = insert.executeQuery()) {
+                    if (result.next()) {
+                        teacher.teacher._id = result.getInt("_id");
+                    } else {
+                        System.out.println("Inserting teacher didn't return ID of it.");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return teacher.teacher;
     }
     
     public void addStudentToGroup(Student student, int class_id, int group_id) {

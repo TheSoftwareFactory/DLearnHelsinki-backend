@@ -3,6 +3,7 @@ package org.dlearn.helsinki.skeleton;
 import javax.servlet.http.HttpServletRequest;
 import org.dlearn.helsinki.skeleton.database.Database;
 import org.dlearn.helsinki.skeleton.model.Student;
+import org.dlearn.helsinki.skeleton.security.Hasher;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,7 +31,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                         + " union "
                         + "select username as username, 'ROLE_TEACHER' as role from public.\"Teachers\""
                     + ") A where username=?")
-            .passwordEncoder(new BCryptPasswordEncoder(16))
+            .passwordEncoder(Hasher.getHasher())
             .and()
             .inMemoryAuthentication()
             .withUser("teacher").password("password").roles("TEACHER")
