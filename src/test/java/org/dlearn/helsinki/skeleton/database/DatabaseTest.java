@@ -12,24 +12,32 @@ public class DatabaseTest {
 
     @Test
     public void testPostingSurveyQuestions() throws Exception {
-        Survey survey = new Survey(){{
-            title = "The salt of life";
-            description = "What can you learn from nothing?";
-            open = true;
-        }};
+        Survey survey = new Survey() {
+            {
+                title = "The salt of life";
+                description = "What can you learn from nothing?";
+                open = true;
+            }
+        };
         db.postSurvey(survey);
-        List<Question> questions = Arrays.asList(db.postQuestion(new Question(){{
-            question = "Do you like trains?";
-            min_answer = 7;
-            max_answer = 42;
-        }}));
+        List<Question> questions = Arrays
+                .asList(db.postQuestion(new Question() {
+                    {
+                        question = "Do you like trains?";
+                        min_answer = 7;
+                        max_answer = 42;
+                    }
+                }));
         db.postSurveyQuestions(questions, survey);
         List<Question> questionsFromDb = db.getQuestionsFromSurvey(survey._id);
-        
+
         assertEquals(1, questionsFromDb.size());
-        assertEquals(questions.get(0).question, questionsFromDb.get(0).question.trim());
-        assertEquals(questions.get(0).min_answer, questionsFromDb.get(0).min_answer);
-        assertEquals(questions.get(0).max_answer, questionsFromDb.get(0).max_answer);
+        assertEquals(questions.get(0).question,
+                questionsFromDb.get(0).question.trim());
+        assertEquals(questions.get(0).min_answer,
+                questionsFromDb.get(0).min_answer);
+        assertEquals(questions.get(0).max_answer,
+                questionsFromDb.get(0).max_answer);
     }
-    
+
 }

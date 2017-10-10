@@ -8,8 +8,8 @@ import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.service.StudentService;
 
 public class StudentResource {
-    static final StudentService studentService = new StudentService(); 	
-	
+    static final StudentService studentService = new StudentService();
+
     @GET
     //@Path("/")
     @Produces(MediaType.APPLICATION_JSON)

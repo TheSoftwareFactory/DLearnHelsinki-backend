@@ -14,26 +14,29 @@ import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.service.AnswerService;
 
 public class AnswerResource {
-	
-	AnswerService answerService = new AnswerService();
 
-	// GET all answers
-	// TODO implement method in AnswerService
+    AnswerService answerService = new AnswerService();
+
+    // GET all answers
+    // TODO implement method in AnswerService
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Answer> getStudentAnswers(@PathParam("survey_id") int survey_id) {
-    	System.out.println("fetching survey questions");
+    public List<Answer> getStudentAnswers(
+            @PathParam("survey_id") int survey_id) {
+        System.out.println("fetching survey questions");
         return answerService.getAnswers(survey_id);
     }
-	// POST all the answers
+
+    // POST all the answers
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String postStudentAnswers(@PathParam("survey_id") int survey_id, List<Answer> answers) {
-    	System.out.println("fetching survey questions");
-        answerService.postAnswers(answers,survey_id);
+    public String postStudentAnswers(@PathParam("survey_id") int survey_id,
+            List<Answer> answers) {
+        System.out.println("fetching survey questions");
+        answerService.postAnswers(answers, survey_id);
         return "";
     }
-	// GET one answer
-	// POST one answer
+    // GET one answer
+    // POST one answer
 }
