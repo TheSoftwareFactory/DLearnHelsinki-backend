@@ -26,26 +26,25 @@ public class TeacherResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Teacher> getTeachers() {
-        return Lists.newArrayList(
-        		new Teacher(1, "username2", "password"),
-            new Teacher(2, "username1", "password")
-        );
+        return Lists.newArrayList(new Teacher(1, "username2", "password"),
+                new Teacher(2, "username1", "password"));
     }
-	
+
     // Request webapi/teachers/1
     // Returns a teacher based on the id given.
     @GET
     @Path("/{teacher_id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Teacher getTeacherFromId(@PathParam("teacher_id") int teacher_id) {
-        return new Teacher(teacher_id, "username "+teacher_id, "password");
+        return new Teacher(teacher_id, "username " + teacher_id, "password");
     }
-    
-	// Request webapi/teachers/1/surveys
-	// Returns a teacher based on the id given.
+
+    // Request webapi/teachers/1/surveys
+    // Returns a teacher based on the id given.
     @Path("/{teacher_id}/classes")
-    public TeacherClassResource getClassesFromId(@PathParam("teacher_id") int teacher_id) {
-    	System.out.println("calling classes");
+    public TeacherClassResource getClassesFromId(
+            @PathParam("teacher_id") int teacher_id) {
+        System.out.println("calling classes");
         return new TeacherClassResource();
     }
 
@@ -55,7 +54,8 @@ public class TeacherResource {
     @Path("/{teacher_id}/create_student")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Student createNewStudent(@PathParam("teacher_id") int teacher_id, NewStudent student) {
+    public Student createNewStudent(@PathParam("teacher_id") int teacher_id,
+            NewStudent student) {
         return createNewStudentService.createNewStudent(student);
     }
 
