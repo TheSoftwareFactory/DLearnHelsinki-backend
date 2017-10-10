@@ -16,8 +16,7 @@ import org.dlearn.helsinki.skeleton.model.NewTeacher;
 
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.Teacher;
-import org.dlearn.helsinki.skeleton.service.CreateNewStudentService;
-import org.dlearn.helsinki.skeleton.service.CreateNewTeacherService;
+import org.dlearn.helsinki.skeleton.service.CreateNewUserService;
 
 @Path("/teachers")
 public class TeacherResource {
@@ -49,7 +48,7 @@ public class TeacherResource {
         return new TeacherClassResource();
     }
 
-    CreateNewStudentService createNewStudentService = new CreateNewStudentService();
+    CreateNewUserService createNewUserService = new CreateNewUserService();
 
     @POST
     @Path("/{teacher_id}/create_student")
@@ -57,10 +56,8 @@ public class TeacherResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Student createNewStudent(@PathParam("teacher_id") int teacher_id,
             NewStudent student) {
-        return createNewStudentService.createNewStudent(student);
+        return createNewUserService.createNewStudent(student);
     }
-
-    CreateNewTeacherService createNewTeacherService = new CreateNewTeacherService();
 
     @POST
     @Path("/{teacher_id}/create_teacher")
@@ -68,7 +65,7 @@ public class TeacherResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Teacher createNewTeacher(@PathParam("teacher_id") int teacher_id,
             NewTeacher teacher) {
-        return createNewTeacherService.createNewTeacher(teacher);
+        return createNewUserService.createNewTeacher(teacher);
     }
 
 }

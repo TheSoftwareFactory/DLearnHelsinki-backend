@@ -328,8 +328,6 @@ public class Database extends AbstractDataSource {
         return students;
     }
 
-    private final PasswordEncoder hasher = new BCryptPasswordEncoder(16);
-
     public Student createStudent(NewStudent student) {
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
