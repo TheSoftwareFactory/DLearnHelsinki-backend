@@ -39,11 +39,9 @@ public class TeacherClassResource {
         System.out.println("calling class groups");
         return new TeacherGroupResource();
     }
-
+    
     @Path("/{class_id}/students")
-    public TeacherStudentResource getgetAllStudentsFromClass(
-            @PathParam("class_id") int class_id) {
-        System.out.println("calling classes");
-        return new TeacherStudentResource();
+    public TeacherClassStudentResource getClassStudent(){
+    	return new TeacherClassStudentResource();
     }
 }

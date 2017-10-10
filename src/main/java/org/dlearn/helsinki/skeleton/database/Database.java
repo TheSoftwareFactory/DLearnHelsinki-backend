@@ -22,6 +22,7 @@ import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.model.Researcher;
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.StudentGroup;
+import org.dlearn.helsinki.skeleton.model.StudentThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Survey;
 import org.dlearn.helsinki.skeleton.model.Teacher;
 import org.dlearn.helsinki.skeleton.security.Hasher;
@@ -816,7 +817,6 @@ public class Database extends AbstractDataSource {
             		+ "GROUP BY \"Themes\"._id,start_date";
             //prepare statement with survey_id
             try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
-            	System.out.println("class_id : " + class_id + " survey_id" + survey_id);
                 select.setInt(1, class_id);
                 select.setInt(2, survey_id);
 
@@ -832,7 +832,46 @@ public class Database extends AbstractDataSource {
                     	answer.setStart_date(result.getString(5));
                     	answer.setClass_id(class_id);
                     	answer.setSurvey_id(survey_id);
-                    	System.out.println("Average answer : " + answer.getAnswer());
+                    	answers.add(answer);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+		return answers;
+	}
+
+	public List<StudentThemeAverage> getStudentThemeAverage(int survey_id, int student_id) {
+		ArrayList<StudentThemeAverage> answers = new ArrayList<StudentThemeAverage>();
+		try(Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "SELECT avg(answer),\"Themes\".title,\"Themes\".description,\"Themes\"._id,\"Surveys\".start_date "
+            		+ "FROM public.\"Surveys\",public.\"Answers\", public.\"Student_Classes\",public.\"Groups\", public.\"Themes\", public.\"Questions\" "
+            		+ "WHERE \"Questions\"._id = question_id "
+            		+ "AND \"Questions\".theme_id = \"Themes\"._id "
+            		+ "AND \"Answers\".student_id = ? "
+            		+ "AND \"Surveys\"._id = \"Answers\".survey_id "
+            		+ "AND \"Answers\".survey_id = ? "
+            		+ "GROUP BY \"Themes\"._id,start_date";
+            //prepare statement with survey_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+                select.setInt(1, student_id);
+                select.setInt(2, survey_id);
+                System.out.println("student theme average");
+
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                    while (result.next()) {
+                    	StudentThemeAverage answer = new StudentThemeAverage();
+                    	//answer.setQuestion_id(result.getInt(1));
+                    	answer.setAnswer(result.getFloat(1));
+                    	answer.setTheme_title(result.getString(2));
+                    	answer.setDescription(result.getString(3));
+                    	answer.setTheme_id(result.getInt(4));
+                    	answer.setStart_date(result.getString(5));
+                    	answer.setStudent_id(student_id);
+                    	answer.setSurvey_id(survey_id);
                     	answers.add(answer);
                     }
                 }
