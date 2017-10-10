@@ -12,7 +12,7 @@ import org.dlearn.helsinki.skeleton.service.TeacherStudentService;
 
 public class TeacherStudentResource {
 	
-	static final TeacherStudentService teacherStudentService = new TeacherStudentService();
+    static final TeacherStudentService teacherStudentService = new TeacherStudentService();
         
     //@Path("/")
     @GET

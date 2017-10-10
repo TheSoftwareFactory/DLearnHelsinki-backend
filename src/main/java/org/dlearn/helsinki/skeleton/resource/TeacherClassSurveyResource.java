@@ -28,24 +28,21 @@ public class TeacherClassSurveyResource {
 	// TODO implement to answer to history request
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Survey> getSurveys(@PathParam("teacher_id") int teacher_id,@PathParam("class_id") int class_id) {
-        return surveyService.getSurveysFromClassAsTeacher(teacher_id, class_id);
+    public List<Survey> getSurveys(@PathParam("teacher_id") int teacher_id) {
+        //return surveyService.getSurveysFromTeacherId(teacher_id);
+        return Lists.newArrayList(
+                new Survey(),
+                new Survey()
+            );
     }
-
+	
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Survey postSurvey(@PathParam("teacher_id") int teacher_id, @PathParam("class_id") int class_id, Survey survey) {
+    public void postSurvey(@PathParam("teacher_id") int teacher_id, @PathParam("class_id") int class_id, Survey survey) {
 		survey.teacher_id = teacher_id; 
 		survey.class_id = class_id;
 		System.out.println(survey.getTitle());
-		return surveyService.postSurvey(survey);
-    }
-    
-    @POST //(update to close)
-    @Path("/{survey_id}")
-    //@Consumes(MediaType.APPLICATION_JSON)
-    public void closeSurvey(@PathParam("teacher_id") int teacher_id, @PathParam("class_id") int class_id, @PathParam("survey_id") int survey_id){
-    	surveyService.closeSurvey(teacher_id,class_id,survey_id);
+		surveyService.postSurvey(survey);
     }
     
     @GET
