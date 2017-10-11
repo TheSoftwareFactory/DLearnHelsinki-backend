@@ -47,7 +47,7 @@ $ curl --request POST localhost:8080/webapi/teachers/1/create_student
   "gender" : "dragon"
 }
 
-### List students in one class (TODO) check student api branch
+### List students in one class (TESTING) 
 
 Lists all students inside one specified class.
 
@@ -80,7 +80,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/students/
 ]
 ```
 
-### List of all groups in one specified class (TESTING)
+### List of all groups in one specified class (DONE)
 
 This request allows you to retrieve a detailed list of all students in their respective groups, in one class
 
@@ -193,7 +193,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/surveys/27/answers
 ```
 
 
-### List of students in a group (TESTING)
+### List of students in a group (TODO)
 
 ```endpoint
 GET teachers/{teacher_id}/classes/{class_id}/groups/{group_id}/students
@@ -225,7 +225,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/students
 ```
 
 
-### List individual students (TESTING)
+### List individual students (TODO)
 
 This is how you can get a specific student by their id.
 
@@ -250,7 +250,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/students/1
 }
 ```
 
-### Retrieve a student's result (TODO)
+### Retrieve a student's result (DONE)
 
 Returns a single result for a specified survey.
 
@@ -264,20 +264,45 @@ Retrieve information about an existing spidegraph.
 #### Example request
 
 ```curl
-$ curl localhost:8080/webapi/teachers/1/classes/1/students/1/surveys/1/answers
+$ curl localhost:8080/webapi/teachers/1/classes/1/students/1/surveys/27/answers
 ```
 
 #### Example response
 
-<!--TODO: Actual response-->
-
 ```json
-{
-
-}
+[  
+   {  
+      "answer":4.6666665,
+      "description":"These questions ask about the responsibilities of the student during the exercise.",
+      "start_date":"1970-01-01",
+      "student_id":1,
+      "survey_id":27,
+      "theme_id":4,
+      "theme_title":"Responsibility"
+   },
+   {  
+      "answer":3.6666667,
+      "description":"These questions are about the persistence of the excercise.",
+      "start_date":"1970-01-01",
+      "student_id":1,
+      "survey_id":27,
+      "theme_id":3,
+      "theme_title":"Persistence"
+   },
+   {  
+      "answer":3.0,
+      "description":"These questions ask about the opinions brought by the student during the exercise.",
+      "start_date":"1970-01-01",
+      "student_id":1,
+      "survey_id":27,
+      "theme_id":2,
+      "theme_title":"Opinions and arguments"
+   },
+  ...
+]
 ```
 
-### Retrieve a group's results (TODO)
+### Retrieve a group's results (DONE)
 
 Returns a single result for a specified survey for a specified group.
 
@@ -291,21 +316,43 @@ Retrieve information about an existing spidegraph.
 #### Example request
 
 ```curl
-$ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/surveys/1/answers
+$ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/surveys/27/answers
 ```
 
 #### Example response
 
-<!--TODO: Actual response-->
-
 ```json
 
-  {
-      "survey_id": 1,
-      "question_id": 1,
-      "group_id": 1,
-      "answer": 4
-  }
+[  
+   {  
+      "answer":4.3333335,
+      "description":"These questions ask about the ideas brought by the student during the exercise.",
+      "group_id":1,
+      "start_date":"1970-01-01",
+      "survey_id":27,
+      "theme_id":1,
+      "theme_title":"Ideas and problem solving"
+   },
+   {  
+      "answer":3.0,
+      "description":"These questions ask about the opinions brought by the student during the exercise.",
+      "group_id":1,
+      "start_date":"1970-01-01",
+      "survey_id":27,
+      "theme_id":2,
+      "theme_title":"Opinions and arguments"
+   },
+   {  
+      "answer":2.3333333,
+      "description":"These questions are about the persistence of the excercise.",
+      "group_id":1,
+      "start_date":"1970-01-01",
+      "survey_id":27,
+      "theme_id":3,
+      "theme_title":"Persistence"
+   },
+   ...
+]
 
 ```
 
@@ -323,7 +370,7 @@ Retrieve information about an existing spidegraph.
 #### Example request
 
 ```curl
-$ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1/answers
+$ curl localhost:8080/webapi/teachers/1/classes/1/surveys/27/answers
 ```
 
 #### Example response
@@ -331,16 +378,40 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1/answers
 <!--TODO: Actual response-->
 
 ```json
-  {
-      "survey_id": 1,
-      "question_id": 1,
-      "class_id": 1,
-      "answer": 6
-  }
+[  
+   {  
+      "answer":3.7407408,
+      "class_id":1,
+      "description":"These questions ask about the ideas brought by the student during the exercise.",
+      "start_date":"1970-01-01",
+      "survey_id":27,
+      "theme_id":1,
+      "theme_title":"Ideas and problem solving"
+   },
+   {  
+      "answer":3.2777777,
+      "class_id":1,
+      "description":"These questions ask about the opinions brought by the student during the exercise.",
+      "start_date":"1970-01-01",
+      "survey_id":27,
+      "theme_id":2,
+      "theme_title":"Opinions and arguments"
+   },
+   {  
+      "answer":2.7037036,
+      "class_id":1,
+      "description":"These questions are about the persistence of the excercise.",
+      "start_date":"1970-01-01",
+      "survey_id":27,
+      "theme_id":3,
+      "theme_title":"Persistence"
+   },
+   ...
+]
 ```
 
 
-### List surveys (TODO)
+### List surveys for one class (DONE)
 
 Retrieves surveys for a teacher, for one class, on one survey
 
@@ -356,12 +427,20 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/surveys/
 
 #### Example response
 
-<!--TODO: Actual response-->
-
 ```json
-{
-
-}
+[  
+   {  
+      "_id":27,
+      "title":"MR F of survey",
+      "description":"arrested development",
+      "start_date":"1970-01-01",
+      "end_date":"2017-10-11",
+      "teacher_id":1,
+      "class_id":1,
+      "open":false
+   },
+   ...
+]
 ```
 
 ### Add/Open new survey (DONE)
@@ -402,48 +481,30 @@ $ curl --request POST localhost:8080/webapi/teachers/1/classes/1/surveys
 This will create a survey even if another survey is currently open.
 
 
-### Get list of All surveys for one class (TODO)
+### Close specific survey of a class (TODO)
 
 Adds new survey
 
 ```endpoint
-GET teachers/{teacher_id}/classes/{class_id}/surveys
+POST teachers/{teacher_id}/classes/{class_id}/surveys/{survey_id}
 ```
 
 #### Example request
 
 ```curl
-$ curl localhost:8080/webapi/teachers/1/classes/1/surveys
+$ curl localhost:8080/webapi/teachers/1/classes/1/surveys/28
   -d @data.json
 ```
 
 #### Example response
 
-<!--TODO: Actual response-->
 ```json
-[
-  {
-    "_id" : 1,
-    "teacher_id" : 1,
-    "class_id" : 1,
-    "title" : "Math survey",
-    "description" : "survey for the exercie 3 page 40",
-    "start_date" : "2007-04-05T13:30Z",
-    "end_date" : "2007-04-05T13:30Z",
-    "open" : true
-  },
-  {
-    "_id" : 2,
-    "teacher_id" : 1,
-    "class_id" : 1,
-    "title" : "Physic survey",
-    "description" : "survey for the exercie 5 page 13",
-    "start_date" : "2007-04-05T13:30Z",
-    "end_date" : "2007-04-05T13:30Z",
-    "open" : false
-  },
-]
+
 ```
+
+#### Note
+
+No response except a standard code 200 HTTP response.
 
 
 
