@@ -194,13 +194,61 @@ public class Database extends AbstractDataSource {
         return questions;
     }
 
-    // Method : postSutdentAnswersForSurvey
-    // Takes the survey_id, the student_id
-    public void postStudentAnswersForSurvey(List<Answer> answers, int survey_id,
-            int student_id) {
-        // TODO Auto-generated method stub
-    }
+	// Method : postSutdentAnswersForSurvey
+	// Takes the survey_id, the student_id
+	public void postStudentAnswersForSurvey(List<Answer> answers, int survey_id, int student_id) {
+		// TODO Auto-generated method stub
+	}
+	
+	// Method : getSurveysFromClassAsStudent
+	// Input  : the survey_id, the student_id
+	// Output : returns a list of surveys available to the student
+	public List<Survey> getSurveysFromClassAsStudent(int student_id, int class_id) throws SQLException{
+		// TODO link class with student_classes and remove class_id form student_classes
+		//SELECT * FROM public."Surveys",public."Students",public."Student_Classes" WHERE public."Students"._id = public."Student_Classes".class_id AND public."Student_Classes".class_id = public."Surveys".class_id AND public."Student_Classes".class_id = 1 AND public."Students"._id = 1
+		return null;
+	}
+	
+	// Method : getSurveysFromClassAsStudent
+	// Input  : the survey_id, the student_id
+	// Output : returns a list of surveys available to the student
+	public List<Survey> getSurveysFromClassAsTeacher(int teacher_id, int class_id) throws SQLException{
+		//SELECT * FROM public."Surveys",public."Students",public."Student_Classes" WHERE public."Students"._id = public."Student_Classes".class_id AND public."Student_Classes".class_id = public."Surveys".class_id AND public."Student_Classes".class_id = 1 AND public."Students"._id = 1
+		ArrayList<Survey> surveys = new ArrayList<Survey>();
 
+		try(Connection dbConnection = getDBConnection()) {
+            String statement = "SELECT _id,title,description,start_date,end_date,open "
+            		+ "FROM public.\"Surveys\" "
+            		+ "WHERE class_id = ? AND teacher_id = ?";
+            //prepare statement with student_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+            	select.setInt(1, class_id);
+            	select.setInt(2, teacher_id);
+            	System.out.println("survey list");
+            	
+            	// execute query
+                try(ResultSet result = select.executeQuery()) {
+                    while (result.next()) {
+                    	Survey survey = new Survey();
+                    	survey.set_id(result.getInt(1));
+                    	survey.setTitle(result.getString(2));
+                    	survey.setDescription(result.getString(3));
+                    	survey.setStart_date(result.getDate(4).toString());
+                    	result.getDate(5);
+                    	if(!result.wasNull()){
+                        	survey.setEnd_date(result.getDate(5).toString());	
+                    	}
+                    	survey.setOpen(result.getBoolean(6));
+                    	surveys.add(survey);
+                    }
+                }
+            }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }		
+		return surveys;
+	}
+	
     public List<Survey> getSurveys() {
         List<Survey> survey = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
@@ -232,16 +280,6 @@ public class Database extends AbstractDataSource {
             System.out.println(e.getMessage());
         }
         return survey;
-    }
-
-    // Method : getSurveysFromClassAsStudent
-    // Input  : the survey_id, the student_id
-    // Output : returns a list of surveys available to the student
-    public List<Survey> getSurveysFromClassAsStudent(int student_id,
-            int class_id) throws SQLException {
-        // TODO link class with student_classes and remove class_id form student_classes
-        //SELECT * FROM public."Surveys",public."Students",public."Student_Classes" WHERE public."Students"._id = public."Student_Classes".class_id AND public."Student_Classes".class_id = public."Surveys".class_id AND public."Student_Classes".class_id = 1 AND public."Students"._id = 1
-        return null;
     }
 
     public List<Group> getAllGroupsForStudent(int studentID) {

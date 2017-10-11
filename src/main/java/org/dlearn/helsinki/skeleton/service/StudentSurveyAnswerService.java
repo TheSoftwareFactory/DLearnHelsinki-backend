@@ -19,12 +19,10 @@ public class StudentSurveyAnswerService {
     }
 
     public List<Answer> getAnswers(int student_id, int survey_id) {
-        // TODO Auto-generated method stub
-        return db.getAnswersFromStudentSurvey(student_id, survey_id);
+            return db.getAnswersFromStudentSurvey(student_id, survey_id);
     }
 
 	public List<StudentThemeAverage> getStudentThemeAverage(int student_id, int survey_id) {
-		// TODO Auto-generated method stub
 		return db.getStudentThemeAverage(survey_id, student_id);
 	}
 
