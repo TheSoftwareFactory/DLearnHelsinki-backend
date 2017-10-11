@@ -28,11 +28,24 @@ public class TeacherClassSurveyService {
         return new Survey();
 	}
 
+	///*
 	public List<Survey> getSurveysFromClass(int student_id, int class_id) {
         System.out.println("Calling getSurveysFromClass(as Student)");
         try {
         	// fetching list of surveys and returning
         	return db.getSurveysFromClassAsStudent(student_id, class_id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+		return new ArrayList<Survey>();
+	}
+	//*/
+	
+	public List<Survey> getSurveysFromClassAsTeacher(int teacher_id, int class_id) {
+        System.out.println("Calling getSurveysFromClass(as Teacher)");
+        try {
+        	// fetching list of surveys and returning
+        	return db.getSurveysFromClassAsTeacher(teacher_id, class_id);
         } catch (SQLException e) {
             e.printStackTrace();
         }

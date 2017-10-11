@@ -236,8 +236,6 @@ public class Database extends AbstractDataSource {
                         	survey.setEnd_date(result.getDate(5).toString());	
                     	}
                     	survey.setOpen(result.getBoolean(6));
-                    	survey.setClass_id(class_id);
-                    	survey.setTeacher_id(teacher_id);
                     	surveys.add(survey);
                     }
                 }

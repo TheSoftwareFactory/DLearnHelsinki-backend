@@ -28,12 +28,8 @@ public class TeacherClassSurveyResource {
 	// TODO implement to answer to history request
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Survey> getSurveys(@PathParam("teacher_id") int teacher_id) {
-        //return surveyService.getSurveysFromTeacherId(teacher_id);
-        return Lists.newArrayList(
-                new Survey(),
-                new Survey()
-            );
+    public List<Survey> getSurveys(@PathParam("teacher_id") int teacher_id,@PathParam("class_id") int class_id) {
+        return surveyService.getSurveysFromClassAsTeacher(teacher_id, class_id);
     }
 	
     @POST
