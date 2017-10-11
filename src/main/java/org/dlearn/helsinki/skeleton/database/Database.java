@@ -17,6 +17,7 @@ import org.dlearn.helsinki.skeleton.model.NewStudent;
 import org.dlearn.helsinki.skeleton.model.GroupAnswer;
 import org.dlearn.helsinki.skeleton.model.NewTeacher;
 import org.dlearn.helsinki.skeleton.model.Question;
+import org.dlearn.helsinki.skeleton.model.Researcher;
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.StudentGroup;
 import org.dlearn.helsinki.skeleton.model.Survey;
@@ -195,6 +196,39 @@ public class Database extends AbstractDataSource {
     public void postStudentAnswersForSurvey(List<Answer> answers, int survey_id,
             int student_id) {
         // TODO Auto-generated method stub
+    }
+
+    public List<Survey> getSurveys() {
+        List<Survey> survey = new ArrayList<>();
+        try (Connection dbConnection = getDBConnection()) {
+            String statement = "SELECT _id, title, class_id, start_date, end_date, teacher_id, description, open FROM public.\"Surveys\"";
+            //prepare statement with student_id
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(statement)) {
+                // execute query
+                try (ResultSet result = select.executeQuery()) {
+                    while (result.next()) {
+                        survey.add(new Survey() {
+                            {
+                                this._id = result.getInt("_id");
+                                this.title = result.getString("title");
+                                this.class_id = result.getInt("class_id");
+                                this.start_date = result
+                                        .getString("start_date");
+                                this.end_date = result.getString("end_date");
+                                this.teacher_id = result.getInt("teacher_id");
+                                this.description = result
+                                        .getString("description");
+                                this.open = result.getBoolean("open");
+                            }
+                        });
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return survey;
     }
 
     // Method : getSurveysFromClassAsStudent
@@ -470,20 +504,20 @@ public class Database extends AbstractDataSource {
         return students;
     }
 
-    public Optional<Student> getStudentFromUsername(String username) {
+    public Optional<Student> getStudentFromUsername(String username_) {
         Optional<Student> student = Optional.empty();
         try (Connection dbConnection = getDBConnection()) {
             String statement = "Select _id, gender, age FROM public.\"Students\" WHERE username = ?";
             //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
-                select.setString(1, username);
+                select.setString(1, username_);
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     if (result.next()) {
                         student = Optional.of(new Student() {
                             {
-                                this.username = username;
+                                this.username = username_;
                                 _id = result.getInt("_id");
                                 age = result.getInt("age");
                                 gender = result.getString("gender");
@@ -498,20 +532,20 @@ public class Database extends AbstractDataSource {
         return student;
     }
 
-    public Optional<Teacher> getTeacherFromUsername(String username) {
-        Optional<Teacher> student = Optional.empty();
+    public Optional<Teacher> getTeacherFromUsername(String username_) {
+        Optional<Teacher> teacher = Optional.empty();
         try (Connection dbConnection = getDBConnection()) {
             String statement = "Select _id FROM public.\"Teachers\" WHERE username = ?";
             //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
-                select.setString(1, username);
+                select.setString(1, username_);
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     if (result.next()) {
-                        student = Optional.of(new Teacher() {
+                        teacher = Optional.of(new Teacher() {
                             {
-                                this.username = username;
+                                this.username = username_;
                                 _id = result.getInt("_id");
                             }
                         });
@@ -521,7 +555,33 @@ public class Database extends AbstractDataSource {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return student;
+        return teacher;
+    }
+
+    public Optional<Researcher> getResearcherFromUsername(String username_) {
+        Optional<Researcher> researcher = Optional.empty();
+        try (Connection dbConnection = getDBConnection()) {
+            String statement = "Select _id FROM public.\"Researchers\" WHERE username = ?";
+            //prepare statement with student_id
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(statement)) {
+                select.setString(1, username_);
+                // execute query
+                try (ResultSet result = select.executeQuery()) {
+                    if (result.next()) {
+                        researcher = Optional.of(new Researcher() {
+                            {
+                                this.username = username_;
+                                id = result.getInt("_id");
+                            }
+                        });
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return researcher;
     }
     /////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////

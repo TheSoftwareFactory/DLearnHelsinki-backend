@@ -12,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 
 import jersey.repackaged.com.google.common.collect.Lists;
 import org.dlearn.helsinki.skeleton.model.NewStudent;
-import org.dlearn.helsinki.skeleton.model.NewTeacher;
 
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.Teacher;
@@ -48,7 +47,7 @@ public class TeacherResource {
         return new TeacherClassResource();
     }
 
-    CreateNewUserService createNewUserService = new CreateNewUserService();
+    private final CreateNewUserService createNewUserService = new CreateNewUserService();
 
     @POST
     @Path("/{teacher_id}/create_student")
@@ -57,15 +56,6 @@ public class TeacherResource {
     public Student createNewStudent(@PathParam("teacher_id") int teacher_id,
             NewStudent student) {
         return createNewUserService.createNewStudent(student);
-    }
-
-    @POST
-    @Path("/{teacher_id}/create_teacher")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Teacher createNewTeacher(@PathParam("teacher_id") int teacher_id,
-            NewTeacher teacher) {
-        return createNewUserService.createNewTeacher(teacher);
     }
 
 }

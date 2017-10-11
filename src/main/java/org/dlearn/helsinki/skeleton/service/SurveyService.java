@@ -1,6 +1,5 @@
 package org.dlearn.helsinki.skeleton.service;
 
-import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,5 +36,9 @@ public class SurveyService {
             e.printStackTrace();
         }
         return new ArrayList<Survey>();
+    }
+
+    public List<Survey> getAllSurveys() {
+        return db.getSurveys();
     }
 }

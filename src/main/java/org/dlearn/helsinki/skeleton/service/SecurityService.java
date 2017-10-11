@@ -3,6 +3,7 @@ package org.dlearn.helsinki.skeleton.service;
 import java.util.Optional;
 import java.util.function.Function;
 import org.dlearn.helsinki.skeleton.database.Database;
+import org.dlearn.helsinki.skeleton.model.Researcher;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,15 +21,21 @@ public class SecurityService {
     }
 
     public Optional<Integer> getStudentId() {
-        return getId(name -> DB.getStudentFromUsername(name).map(s -> s._id));
+        return getFromSession(
+                name -> DB.getStudentFromUsername(name).map(s -> s._id));
     }
 
     public Optional<Integer> getTeacherId() {
-        return getId(name -> DB.getTeacherFromUsername(name).map(s -> s._id));
+        return getFromSession(
+                name -> DB.getTeacherFromUsername(name).map(s -> s._id));
     }
 
-    private static Optional<Integer> getId(
-            Function<String, Optional<Integer>> getIdFromName) {
+    public Optional<Researcher> getResearcher() {
+        return getFromSession(DB::getResearcherFromUsername);
+    }
+
+    private static <T> Optional<T> getFromSession(
+            Function<String, Optional<T>> getIdFromName) {
         Authentication authentication = SecurityContextHolder.getContext()
                 .getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
