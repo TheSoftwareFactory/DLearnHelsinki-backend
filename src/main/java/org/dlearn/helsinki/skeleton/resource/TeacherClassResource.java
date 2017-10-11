@@ -17,19 +17,7 @@ import org.dlearn.helsinki.skeleton.service.StudentService;
 
 import jersey.repackaged.com.google.common.collect.Lists;
 
-public class TeacherClassResource {
-<<<<<<< 8f9a9653c5dcdf3ca9659915330c7a7dc9d81eba
-
-    // request teachers/{teacher_id}/classes
-    // returns the teacher's classes based on the teacher_id.
-    // TODO implement to answer to request with the classes of the teacher.
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Classes> getClasses(@PathParam("teacher_id") int teacher_id) {
-        //return surveyService.getSurveysFromTeacherId(teacher_id);
-        return Lists.newArrayList(new Classes(), new Classes());
-=======
-	
+public class TeacherClassResource {	
 	// request teachers/{teacher_id}/classes
 	// returns the teacher's classes based on the teacher_id.
 	// TODO implement to answer to request with the classes of the teacher.
@@ -38,8 +26,8 @@ public class TeacherClassResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<ClassWithAllGroups> getClasses(@PathParam("teacher_id") int teacher_id) {
+    	System.out.println("producing list of classes with groups");
         return classService.getAllClassesWithGroups(teacher_id);
->>>>>>> db is working
     }
 
     @Path("/{class_id}/surveys")
@@ -62,6 +50,7 @@ public class TeacherClassResource {
     	System.out.println("calling classes");
     	return new TeacherStudentResource();
     }
+<<<<<<< 723bf27e520494b88eaecd3cb8fd99e93cd5304b
     */
 
     @Path("/{class_id}/students")

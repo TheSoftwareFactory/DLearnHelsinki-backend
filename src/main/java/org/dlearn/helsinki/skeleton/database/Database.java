@@ -11,10 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
-<<<<<<< 8f9a9653c5dcdf3ca9659915330c7a7dc9d81eba
 import org.dlearn.helsinki.skeleton.model.ClassThemeAverage;
-=======
->>>>>>> db is working
 import org.dlearn.helsinki.skeleton.model.Classes;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.NewStudent;
@@ -662,8 +659,8 @@ public class Database extends AbstractDataSource {
 		List<Classes> classes = null;
 		
 		try(Connection dbConnection = getDBConnection()) {
-	        String statement = "Select _id, name"
-	        		+ "FROM public.\"Classes\" as cls"
+	        String statement = "Select _id, name "
+	        		+ "FROM public.\"Classes\" as cls "
 	        		+ "WHERE (cls.teacher_id = ?);";
 	        //prepare statement with student_id
 	        try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
