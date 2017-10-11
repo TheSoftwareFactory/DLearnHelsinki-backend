@@ -4,6 +4,112 @@ This is our high-quality API. You can use this API to request
 and remove different students and spidergraphs.
 
 
+## Researcher role
+
+Endpoints available for researchers
+
+### Get researcher information
+
+Get researcher information
+
+#### Example request
+
+```endpoint
+GET researcher
+```
+
+#### Example request
+
+```curl
+$ curl localhost:8080/webapi/researcher
+```
+
+#### Example response
+
+```json
+{
+  "id" : 1,
+  "username" : "dr.jekyl"
+}
+```
+
+### Create new teacher
+
+Creates new teacher account
+
+```endpoint
+POST researcher/create_teacher
+```
+
+#### Example request
+
+```curl
+$ curl --request POST localhost:8080/webapi/researcher/create_teacher
+  -d @data.json
+```
+
+#### Example request body
+
+```json
+{
+  "password" : "kekkonen",
+  "teacher" : {
+    "username" : "MarttiM",
+  }
+}
+```
+
+#### Example response
+
+```json
+{
+  "_id" : 1,
+  "username" : "marttim",
+}
+```
+
+### Get all Surveys
+
+Gets all surveys
+
+```endpoint
+GET researcher/surveys
+```
+
+#### Example request
+
+```curl
+$ curl localhost:8080/webapi/researcher/surveys
+  -d @data.json
+```
+
+#### Example response
+
+```json
+[
+  {
+    "_id" : 1,
+    "teacher_id" : 1,
+    "class_id" : 1,
+    "title" : "Math survey",
+    "description" : "survey for the exercie 3 page 40",
+    "start_date" : "2007-04-05T13:30Z",
+    "end_date" : "2007-04-05T13:30Z",
+    "open" : true
+  },
+  {
+    "_id" : 2,
+    "teacher_id" : 1,
+    "class_id" : 1,
+    "title" : "Physic survey",
+    "description" : "survey for the exercie 5 page 13",
+    "start_date" : "2007-04-05T13:30Z",
+    "end_date" : "2007-04-05T13:30Z",
+    "open" : false
+  },
+]
+```
+
 ## Teacher role
 
 End points available for teacher.
@@ -46,41 +152,6 @@ $ curl --request POST localhost:8080/webapi/teachers/1/create_student
   "username" : "LegoLass",
   "age" : 13,
   "gender" : "dragon"
-}
-```
-
-### Create new teacher
-
-Creates new teacher account
-
-```endpoint
-POST teachers/{teacher_id}/create_teacher
-```
-
-#### Example request
-
-```curl
-$ curl --request POST localhost:8080/webapi/teachers/1/create_teacher
-  -d @data.json
-```
-
-#### Example request body
-
-```json
-{
-  "password" : "kekkonen",
-  "teacher" : {
-    "username" : "MarttiM",
-  }
-}
-```
-
-#### Example response
-
-```json
-{
-  "_id" : 1,
-  "username" : "marttim",
 }
 ```
 

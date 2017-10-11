@@ -23,11 +23,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                         + "select username as username, pwd, 'true' as enabled from public.\"Students\""
                         + " union "
                         + "select username as username, pwd, 'true' as enabled from public.\"Teachers\""
+                        + " union "
+                        + "select username as username, pwd, 'true' as enabled from public.\"Researchers\""
                         + ") A where username=?")
                 .authoritiesByUsernameQuery("select * from ("
                         + "select username as username, 'ROLE_STUDENT' as role from public.\"Students\""
                         + " union "
                         + "select username as username, 'ROLE_TEACHER' as role from public.\"Teachers\""
+                        + " union "
+                        + "select username as username, 'ROLE_RESEARCHER' as role from public.\"Researchers\""
                         + ") A where username=?")
                 .passwordEncoder(Hasher.getHasher());
     }
@@ -36,7 +40,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
             throws Exception {
         auth.inMemoryAuthentication().withUser("teacher").password("password")
                 .roles("TEACHER").and().withUser("student").password("password")
-                .roles("STUDENT");
+                .roles("STUDENT").and().withUser("researcher")
+                .password("password").roles("RESEARCHER", "TEACHER");
     }
 
     @Override
@@ -50,7 +55,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/webapi").authenticated()
                 .antMatchers("/webapi/students/**")
                 .hasAnyRole("TEACHER", "STUDENT")
-                .antMatchers("/webapi/teachers/**").hasAnyRole("TEACHER").and()
-                .httpBasic();
+                .antMatchers("/webapi/teachers/**").hasAnyRole("TEACHER")
+                .antMatchers("/webapi/researcher/**").hasAnyRole("RESEARCHER")
+                .and().httpBasic();
     }
 }
