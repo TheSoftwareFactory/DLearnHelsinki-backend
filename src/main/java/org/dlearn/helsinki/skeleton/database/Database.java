@@ -236,6 +236,8 @@ public class Database extends AbstractDataSource {
                         	survey.setEnd_date(result.getDate(5).toString());	
                     	}
                     	survey.setOpen(result.getBoolean(6));
+                    	survey.setClass_id(class_id);
+                    	survey.setTeacher_id(teacher_id);
                     	surveys.add(survey);
                     }
                 }
@@ -836,27 +838,6 @@ public class Database extends AbstractDataSource {
         return studentGroups;
     }
 
-	public void closeSurvey(int teacher_id, int class_id, int survey_id) {
-		try (Connection dbConnection = getDBConnection()) {
-            // Set up batch of statements
-            String statement = "UPDATE public.\"Surveys\" "
-            		+ "SET (open,end_date) = (false,now())"
-            		+ "WHERE teacher_id = ? "
-            		+ "AND _id = ? "
-            		+ "AND class_id = ?";
-            try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
-                insert.setInt(1, teacher_id); 
-                insert.setInt(2, survey_id);
-                insert.setInt(3, class_id);
-                // execute query
-                insert.executeUpdate();
-            }
-        } catch (SQLException e) {
-            System.out.println("error caught : " + e.getMessage());
-
-        }		
-	}
-
 	public List<ClassThemeAverage> getClassThemeAverage(int class_id, int survey_id) {
 		ArrayList<ClassThemeAverage> answers = new ArrayList<ClassThemeAverage>();
 		try(Connection dbConnection = getDBConnection()) {
@@ -935,6 +916,28 @@ public class Database extends AbstractDataSource {
             System.out.println(e.getMessage());
         }
 		return answers;
+	}
+
+	public void closeSurvey(int teacher_id, int class_id, int survey_id) {
+		try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+			System.out.println("query written");
+            String statement = "UPDATE public.\"Surveys\" "
+            		+ "SET (open,end_date) = (false,now())"
+            		+ "WHERE teacher_id = ? "
+            		+ "AND _id = ? "
+            		+ "AND class_id = ?";
+            try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
+                insert.setInt(1, teacher_id); 
+                insert.setInt(2, survey_id);
+                insert.setInt(3, class_id);
+                // execute query
+                insert.executeUpdate();
+            }
+        } catch (SQLException e) {
+            System.out.println("error caught : " + e.getMessage());
+
+        }		
 	}
 
 }

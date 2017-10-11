@@ -22,6 +22,8 @@ public class TeacherClassSurveyService {
             List<Question> questions = db.getQuestions();
             // Posting new survey_questions
             db.postSurveyQuestions(questions, survey);
+            survey.open = true;
+            return survey;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -54,5 +56,10 @@ public class TeacherClassSurveyService {
 	
 	public List<ClassThemeAverage> getClassThemeAverage(int class_id, int survey_id) {
 		return db.getClassThemeAverage(class_id,survey_id);
+	}
+
+	public void closeSurvey(int teacher_id, int class_id, int survey_id) {
+		db.closeSurvey(teacher_id,class_id,survey_id);
+		
 	}
 }

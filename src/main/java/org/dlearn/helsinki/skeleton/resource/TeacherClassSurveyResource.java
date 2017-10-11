@@ -34,11 +34,18 @@ public class TeacherClassSurveyResource {
 	
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void postSurvey(@PathParam("teacher_id") int teacher_id, @PathParam("class_id") int class_id, Survey survey) {
+    public Survey postSurvey(@PathParam("teacher_id") int teacher_id, @PathParam("class_id") int class_id, Survey survey) {
 		survey.teacher_id = teacher_id; 
 		survey.class_id = class_id;
 		System.out.println(survey.getTitle());
-		surveyService.postSurvey(survey);
+		return surveyService.postSurvey(survey);
+    }
+    
+    @POST //(update to close)
+    @Path("/{survey_id}")
+    //@Consumes(MediaType.APPLICATION_JSON)
+    public void closeSurvey(@PathParam("teacher_id") int teacher_id, @PathParam("class_id") int class_id, @PathParam("survey_id") int survey_id){
+    	surveyService.closeSurvey(teacher_id,class_id,survey_id);
     }
     
     @GET
