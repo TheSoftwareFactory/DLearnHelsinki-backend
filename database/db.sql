@@ -208,6 +208,7 @@ ALTER SEQUENCE "Students__id_seq" OWNED BY "Students"._id;
 CREATE TABLE "Researchers" (
     _id integer NOT NULL,
     username character varying(35),
+    pwd character varying(100),
 );
 
 
