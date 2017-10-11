@@ -28,9 +28,10 @@ public class TeacherClassResource {
     }
 
     @Path("/{class_id}/surveys")
-    public TeacherClassSurveyResource getSurveyResource(@PathParam("class_id") int class_id) {
-    	System.out.println("calling class surveys");
-    	return new TeacherClassSurveyResource();
+    public TeacherClassSurveyResource getSurveyResource(
+            @PathParam("class_id") int class_id) {
+        System.out.println("calling class surveys");
+        return new TeacherClassSurveyResource();
     }
 
     @Path("/{class_id}/groups")
@@ -39,9 +40,17 @@ public class TeacherClassResource {
         System.out.println("calling class groups");
         return new TeacherGroupResource();
     }
-    
+
+    //@Path("/{class_id}/students")
+    /*
+    public TeacherStudentResource getgetAllStudentsFromClass(@PathParam("class_id") int class_id) {
+    	System.out.println("calling classes");
+    	return new TeacherStudentResource();
+    }
+    */
+
     @Path("/{class_id}/students")
-    public TeacherClassStudentResource getClassStudent(){
-    	return new TeacherClassStudentResource();
+    public TeacherClassStudentResource getClassStudent() {
+        return new TeacherClassStudentResource();
     }
 }

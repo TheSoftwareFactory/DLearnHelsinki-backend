@@ -52,9 +52,10 @@ public class Database extends AbstractDataSource {
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Surveys\" (title, class_id, start_date, teacher_id, description, open) "
-                       + "VALUES (?,?,now(),?,?,True) RETURNING _id";
-            try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
-                insert.setString(1, survey.title); 
+                    + "VALUES (?,?,now(),?,?,True) RETURNING _id";
+            try (PreparedStatement insert = dbConnection
+                    .prepareStatement(statement)) {
+                insert.setString(1, survey.title);
                 insert.setInt(2, survey.getClass_id());
                 //insert.setDate(3, new Date(0));
                 insert.setInt(3, survey.getTeacher_id());
@@ -73,14 +74,14 @@ public class Database extends AbstractDataSource {
             System.out.println(e.getMessage());
 
         }
-		return survey;
-	}
-	
-	// TODO finish getQuestions method
-	public List<Question> getQuestions() {
-		
-		ArrayList<Question> questions = new ArrayList<Question>();
-		try(Connection dbConnection = getDBConnection()) {
+        return survey;
+    }
+
+    // TODO finish getQuestions method
+    public List<Question> getQuestions() {
+
+        ArrayList<Question> questions = new ArrayList<Question>();
+        try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "Select * FROM public.\"Questions\"";
             try (PreparedStatement select = dbConnection
@@ -164,6 +165,7 @@ public class Database extends AbstractDataSource {
     public List<Question> getQuestionsFromSurvey(int survey_id) {
         System.out.println("Getting the questions from the survey.");
         ArrayList<Question> questions = new ArrayList<>();
+        
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "Select _id, question, min_answer, max_answer FROM \"Questions\", \"Survey_questions\" WHERE"
@@ -191,62 +193,66 @@ public class Database extends AbstractDataSource {
         return questions;
     }
 
-	// Method : postSutdentAnswersForSurvey
-	// Takes the survey_id, the student_id
-	public void postStudentAnswersForSurvey(List<Answer> answers, int survey_id, int student_id) {
-		// TODO Auto-generated method stub
-	}
-	
-	// Method : getSurveysFromClassAsStudent
-	// Input  : the survey_id, the student_id
-	// Output : returns a list of surveys available to the student
-	public List<Survey> getSurveysFromClassAsStudent(int student_id, int class_id) throws SQLException{
-		// TODO link class with student_classes and remove class_id form student_classes
-		//SELECT * FROM public."Surveys",public."Students",public."Student_Classes" WHERE public."Students"._id = public."Student_Classes".class_id AND public."Student_Classes".class_id = public."Surveys".class_id AND public."Student_Classes".class_id = 1 AND public."Students"._id = 1
-		return null;
-	}
-	
-	// Method : getSurveysFromClassAsStudent
-	// Input  : the survey_id, the student_id
-	// Output : returns a list of surveys available to the student
-	public List<Survey> getSurveysFromClassAsTeacher(int teacher_id, int class_id) throws SQLException{
-		//SELECT * FROM public."Surveys",public."Students",public."Student_Classes" WHERE public."Students"._id = public."Student_Classes".class_id AND public."Student_Classes".class_id = public."Surveys".class_id AND public."Student_Classes".class_id = 1 AND public."Students"._id = 1
-		ArrayList<Survey> surveys = new ArrayList<Survey>();
+    // Method : postSutdentAnswersForSurvey
+    // Takes the survey_id, the student_id
+    public void postStudentAnswersForSurvey(List<Answer> answers, int survey_id,
+            int student_id) {
+        // TODO Auto-generated method stub
+    }
 
-		try(Connection dbConnection = getDBConnection()) {
+    // Method : getSurveysFromClassAsStudent
+    // Input  : the survey_id, the student_id
+    // Output : returns a list of surveys available to the student
+    public List<Survey> getSurveysFromClassAsStudent(int student_id,
+            int class_id) throws SQLException {
+        // TODO link class with student_classes and remove class_id form student_classes
+        //SELECT * FROM public."Surveys",public."Students",public."Student_Classes" WHERE public."Students"._id = public."Student_Classes".class_id AND public."Student_Classes".class_id = public."Surveys".class_id AND public."Student_Classes".class_id = 1 AND public."Students"._id = 1
+        return null;
+    }
+
+    // Method : getSurveysFromClassAsStudent
+    // Input  : the survey_id, the student_id
+    // Output : returns a list of surveys available to the student
+    public List<Survey> getSurveysFromClassAsTeacher(int teacher_id,
+            int class_id) throws SQLException {
+        //SELECT * FROM public."Surveys",public."Students",public."Student_Classes" WHERE public."Students"._id = public."Student_Classes".class_id AND public."Student_Classes".class_id = public."Surveys".class_id AND public."Student_Classes".class_id = 1 AND public."Students"._id = 1
+        ArrayList<Survey> surveys = new ArrayList<Survey>();
+
+        try (Connection dbConnection = getDBConnection()) {
             String statement = "SELECT _id,title,description,start_date,end_date,open "
-            		+ "FROM public.\"Surveys\" "
-            		+ "WHERE class_id = ? AND teacher_id = ?";
+                    + "FROM public.\"Surveys\" "
+                    + "WHERE class_id = ? AND teacher_id = ?";
             //prepare statement with student_id
-            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
-            	select.setInt(1, class_id);
-            	select.setInt(2, teacher_id);
-            	System.out.println("survey list");
-            	
-            	// execute query
-                try(ResultSet result = select.executeQuery()) {
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(statement)) {
+                select.setInt(1, class_id);
+                select.setInt(2, teacher_id);
+                System.out.println("survey list");
+
+                // execute query
+                try (ResultSet result = select.executeQuery()) {
                     while (result.next()) {
-                    	Survey survey = new Survey();
-                    	survey.set_id(result.getInt(1));
-                    	survey.setTitle(result.getString(2));
-                    	survey.setDescription(result.getString(3));
-                    	survey.setStart_date(result.getDate(4).toString());
-                    	result.getDate(5);
-                    	if(!result.wasNull()){
-                        	survey.setEnd_date(result.getDate(5).toString());	
-                    	}
-                    	survey.setOpen(result.getBoolean(6));
-                    	survey.setClass_id(class_id);
-                    	survey.setTeacher_id(teacher_id);
-                    	surveys.add(survey);
+                        Survey survey = new Survey();
+                        survey.set_id(result.getInt(1));
+                        survey.setTitle(result.getString(2));
+                        survey.setDescription(result.getString(3));
+                        survey.setStart_date(result.getDate(4).toString());
+                        result.getDate(5);
+                        if (!result.wasNull()) {
+                            survey.setEnd_date(result.getDate(5).toString());
+                        }
+                        survey.setOpen(result.getBoolean(6));
+                        survey.setClass_id(class_id);
+                        survey.setTeacher_id(teacher_id);
+                        surveys.add(survey);
                     }
                 }
             }
-	    } catch (SQLException e) {
-	    	System.out.println(e.getMessage());
-	    }		
-		return surveys;
-	}
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }		
+            return surveys;
+    }
 	
     public List<Survey> getSurveys() {
         List<Survey> survey = new ArrayList<>();
@@ -457,7 +463,7 @@ public class Database extends AbstractDataSource {
         }
         return teacher.teacher;
     }
-
+    
     public void addStudentToGroup(Student student, int class_id, int group_id) {
         try (Connection dbConnection = getDBConnection()) {
             try (PreparedStatement insert = dbConnection.prepareStatement(
@@ -737,19 +743,20 @@ public class Database extends AbstractDataSource {
         return answers;
     }
 
-	public List<GroupThemeAverage> getAverageAnswersFromGroup(int class_id, int group_id, int survey_id) {
-		ArrayList<GroupThemeAverage> answers = new ArrayList<GroupThemeAverage>();
-		try(Connection dbConnection = getDBConnection()) {
+    public List<GroupThemeAverage> getAverageAnswersFromGroup(int class_id,
+            int group_id, int survey_id) {
+        ArrayList<GroupThemeAverage> answers = new ArrayList<GroupThemeAverage>();
+        try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "SELECT avg(answer),\"Themes\".title,\"Themes\".description,\"Themes\"._id,\"Surveys\".start_date "
-            		+ "FROM public.\"Surveys\",public.\"Answers\", public.\"Student_Classes\", public.\"Themes\", public.\"Questions\" "
-            		+ "WHERE \"Questions\"._id = question_id "
-            		+ "AND \"Questions\".theme_id = \"Themes\"._id "
-            		+ "AND \"Answers\".student_id = \"Student_Classes\".student_id "
-            		+ "AND \"Surveys\"._id = \"Answers\".survey_id "
-            		+ "AND \"Student_Classes\".group_id = ? "
-            		+ "AND \"Answers\".survey_id = ? "
-            		+ "GROUP BY \"Themes\"._id,start_date";
+                    + "FROM public.\"Surveys\",public.\"Answers\", public.\"Student_Classes\", public.\"Themes\", public.\"Questions\" "
+                    + "WHERE \"Questions\"._id = question_id "
+                    + "AND \"Questions\".theme_id = \"Themes\"._id "
+                    + "AND \"Answers\".student_id = \"Student_Classes\".student_id "
+                    + "AND \"Surveys\"._id = \"Answers\".survey_id "
+                    + "AND \"Student_Classes\".group_id = ? "
+                    + "AND \"Answers\".survey_id = ? "
+                    + "GROUP BY \"Themes\"._id,start_date";
             //prepare statement with survey_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
@@ -759,17 +766,18 @@ public class Database extends AbstractDataSource {
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     while (result.next()) {
-                    	GroupThemeAverage answer = new GroupThemeAverage();
-                    	//answer.setQuestion_id(result.getInt(1));
-                    	answer.setAnswer(result.getFloat(1));
-                    	answer.setTheme_title(result.getString(2));
-                    	answer.setDescription(result.getString(3));
-                    	answer.setTheme_id(result.getInt(4));
-                    	answer.setStart_date(result.getString(5));
-                    	answer.setGroup_id(group_id);
-                    	answer.setSurvey_id(survey_id);
-                    	System.out.println("Average answer : " + answer.getAnswer());
-                    	answers.add(answer);
+                        GroupThemeAverage answer = new GroupThemeAverage();
+                        //answer.setQuestion_id(result.getInt(1));
+                        answer.setAnswer(result.getFloat(1));
+                        answer.setTheme_title(result.getString(2));
+                        answer.setDescription(result.getString(3));
+                        answer.setTheme_id(result.getInt(4));
+                        answer.setStart_date(result.getString(5));
+                        answer.setGroup_id(group_id);
+                        answer.setSurvey_id(survey_id);
+                        System.out.println(
+                                "Average answer : " + answer.getAnswer());
+                        answers.add(answer);
                     }
                 }
             }
@@ -838,96 +846,100 @@ public class Database extends AbstractDataSource {
         return studentGroups;
     }
 
-	public List<ClassThemeAverage> getClassThemeAverage(int class_id, int survey_id) {
-		ArrayList<ClassThemeAverage> answers = new ArrayList<ClassThemeAverage>();
-		try(Connection dbConnection = getDBConnection()) {
+    public List<ClassThemeAverage> getClassThemeAverage(int class_id,
+            int survey_id) {
+        ArrayList<ClassThemeAverage> answers = new ArrayList<ClassThemeAverage>();
+        try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "SELECT avg(answer),\"Themes\".title,\"Themes\".description,\"Themes\"._id,\"Surveys\".start_date "
-            		+ "FROM public.\"Surveys\",public.\"Answers\", public.\"Student_Classes\",public.\"Groups\", public.\"Themes\", public.\"Questions\" "
-            		+ "WHERE \"Questions\"._id = question_id "
-            		+ "AND \"Questions\".theme_id = \"Themes\"._id "
-            		+ "AND \"Answers\".student_id = \"Student_Classes\".student_id "
-            		+ "AND \"Surveys\"._id = \"Answers\".survey_id "
-            		+ "AND \"Student_Classes\".group_id = \"Groups\"._id "
-            		+ "AND \"Groups\".class_id = ? "
-            		+ "AND \"Answers\".survey_id = ? "
-            		+ "GROUP BY \"Themes\"._id,start_date";
+                    + "FROM public.\"Surveys\",public.\"Answers\", public.\"Student_Classes\",public.\"Groups\", public.\"Themes\", public.\"Questions\" "
+                    + "WHERE \"Questions\"._id = question_id "
+                    + "AND \"Questions\".theme_id = \"Themes\"._id "
+                    + "AND \"Answers\".student_id = \"Student_Classes\".student_id "
+                    + "AND \"Surveys\"._id = \"Answers\".survey_id "
+                    + "AND \"Student_Classes\".group_id = \"Groups\"._id "
+                    + "AND \"Groups\".class_id = ? "
+                    + "AND \"Answers\".survey_id = ? "
+                    + "GROUP BY \"Themes\"._id,start_date";
             //prepare statement with survey_id
-            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(statement)) {
                 select.setInt(1, class_id);
                 select.setInt(2, survey_id);
 
                 // execute query
-                try(ResultSet result = select.executeQuery()) {
+                try (ResultSet result = select.executeQuery()) {
                     while (result.next()) {
-                    	ClassThemeAverage answer = new ClassThemeAverage();
-                    	//answer.setQuestion_id(result.getInt(1));
-                    	answer.setAnswer(result.getFloat(1));
-                    	answer.setTheme_title(result.getString(2));
-                    	answer.setDescription(result.getString(3));
-                    	answer.setTheme_id(result.getInt(4));
-                    	answer.setStart_date(result.getString(5));
-                    	answer.setClass_id(class_id);
-                    	answer.setSurvey_id(survey_id);
-                    	answers.add(answer);
+                        ClassThemeAverage answer = new ClassThemeAverage();
+                        //answer.setQuestion_id(result.getInt(1));
+                        answer.setAnswer(result.getFloat(1));
+                        answer.setTheme_title(result.getString(2));
+                        answer.setDescription(result.getString(3));
+                        answer.setTheme_id(result.getInt(4));
+                        answer.setStart_date(result.getString(5));
+                        answer.setClass_id(class_id);
+                        answer.setSurvey_id(survey_id);
+                        answers.add(answer);
                     }
                 }
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-		return answers;
-	}
+        return answers;
+    }
 
-	public List<StudentThemeAverage> getStudentThemeAverage(int survey_id, int student_id) {
-		ArrayList<StudentThemeAverage> answers = new ArrayList<StudentThemeAverage>();
-		try(Connection dbConnection = getDBConnection()) {
+    public List<StudentThemeAverage> getStudentThemeAverage(int survey_id,
+            int student_id) {
+        ArrayList<StudentThemeAverage> answers = new ArrayList<StudentThemeAverage>();
+        try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "SELECT avg(answer),\"Themes\".title,\"Themes\".description,\"Themes\"._id,\"Surveys\".start_date "
-            		+ "FROM public.\"Surveys\",public.\"Answers\", public.\"Student_Classes\",public.\"Groups\", public.\"Themes\", public.\"Questions\" "
-            		+ "WHERE \"Questions\"._id = question_id "
-            		+ "AND \"Questions\".theme_id = \"Themes\"._id "
-            		+ "AND \"Answers\".student_id = ? "
-            		+ "AND \"Surveys\"._id = \"Answers\".survey_id "
-            		+ "AND \"Answers\".survey_id = ? "
-            		+ "GROUP BY \"Themes\"._id,start_date";
+                    + "FROM public.\"Surveys\",public.\"Answers\", public.\"Student_Classes\",public.\"Groups\", public.\"Themes\", public.\"Questions\" "
+                    + "WHERE \"Questions\"._id = question_id "
+                    + "AND \"Questions\".theme_id = \"Themes\"._id "
+                    + "AND \"Answers\".student_id = ? "
+                    + "AND \"Surveys\"._id = \"Answers\".survey_id "
+                    + "AND \"Answers\".survey_id = ? "
+                    + "GROUP BY \"Themes\"._id,start_date";
             //prepare statement with survey_id
-            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(statement)) {
                 select.setInt(1, student_id);
                 select.setInt(2, survey_id);
 
                 // execute query
-                try(ResultSet result = select.executeQuery()) {
+                try (ResultSet result = select.executeQuery()) {
                     while (result.next()) {
-                    	StudentThemeAverage answer = new StudentThemeAverage();
-                    	//answer.setQuestion_id(result.getInt(1));
-                    	answer.setAnswer(result.getFloat(1));
-                    	answer.setTheme_title(result.getString(2));
-                    	answer.setDescription(result.getString(3));
-                    	answer.setTheme_id(result.getInt(4));
-                    	answer.setStart_date(result.getString(5));
-                    	answer.setStudent_id(student_id);
-                    	answer.setSurvey_id(survey_id);
-                    	answers.add(answer);
+                        StudentThemeAverage answer = new StudentThemeAverage();
+                        //answer.setQuestion_id(result.getInt(1));
+                        answer.setAnswer(result.getFloat(1));
+                        answer.setTheme_title(result.getString(2));
+                        answer.setDescription(result.getString(3));
+                        answer.setTheme_id(result.getInt(4));
+                        answer.setStart_date(result.getString(5));
+                        answer.setStudent_id(student_id);
+                        answer.setSurvey_id(survey_id);
+                        answers.add(answer);
                     }
                 }
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-		return answers;
-	}
+        return answers;
+    }
 
-	public void closeSurvey(int teacher_id, int class_id, int survey_id) {
-		try (Connection dbConnection = getDBConnection()) {
+    public void closeSurvey(int teacher_id, int class_id, int survey_id) {
+        try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "UPDATE public.\"Surveys\" "
-            		+ "SET (open,end_date) = (false,now())"
-            		+ "WHERE teacher_id = ? "
-            		+ "AND _id = ? "
-            		+ "AND class_id = ?";
-            try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
-                insert.setInt(1, teacher_id); 
+                    + "SET (open,end_date) = (false,now())"
+                    + "WHERE teacher_id = ? " + "AND _id = ? "
+                    + "AND class_id = ?";
+            try (PreparedStatement insert = dbConnection
+                    .prepareStatement(statement)) {
+                insert.setInt(1, teacher_id);
                 insert.setInt(2, survey_id);
                 insert.setInt(3, class_id);
                 // execute query
@@ -936,7 +948,7 @@ public class Database extends AbstractDataSource {
         } catch (SQLException e) {
             System.out.println("error caught : " + e.getMessage());
 
-        }		
-	}
+        }
+    }
 
 }

@@ -13,7 +13,7 @@ import org.dlearn.helsinki.skeleton.service.TeacherStudentService;
 public class TeacherStudentResource {
 	
     static final TeacherStudentService teacherStudentService = new TeacherStudentService();
-        
+    
     //@Path("/")
     @GET
     public List<Student> getAllStudentsFromClass(
@@ -30,8 +30,8 @@ public class TeacherStudentResource {
         System.out.println("fetching students' list from class");
         return teacherStudentService.getStudent(student_id);
     }
-    
+
     // TODO implement answer for individual students
     //@Path("/{student_id}/survey/{survey_id}/answers")
-    
+
 }

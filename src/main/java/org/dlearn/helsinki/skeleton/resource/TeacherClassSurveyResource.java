@@ -17,41 +17,44 @@ import org.dlearn.helsinki.skeleton.model.Survey;
 import org.dlearn.helsinki.skeleton.model.Teacher;
 import org.dlearn.helsinki.skeleton.service.TeacherClassSurveyService;
 
-
 public class TeacherClassSurveyResource {
-	
-	TeacherClassSurveyService surveyService = new TeacherClassSurveyService();
-	
-	
-	// request teachers/{teacher_id}/surveys/
-	// returns all the surveys from teacher based on the teacher_id. a sort of history
-	// TODO implement to answer to history request
+
+    TeacherClassSurveyService surveyService = new TeacherClassSurveyService();
+
+    // request teachers/{teacher_id}/surveys/
+    // returns all the surveys from teacher based on the teacher_id. a sort of history
+    // TODO implement to answer to history request
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Survey> getSurveys(@PathParam("teacher_id") int teacher_id,@PathParam("class_id") int class_id) {
+    public List<Survey> getSurveys(@PathParam("teacher_id") int teacher_id,
+            @PathParam("class_id") int class_id) {
         return surveyService.getSurveysFromClassAsTeacher(teacher_id, class_id);
     }
-	
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Survey postSurvey(@PathParam("teacher_id") int teacher_id, @PathParam("class_id") int class_id, Survey survey) {
-		survey.teacher_id = teacher_id; 
-		survey.class_id = class_id;
-		System.out.println(survey.getTitle());
-		return surveyService.postSurvey(survey);
+    public Survey postSurvey(@PathParam("teacher_id") int teacher_id,
+            @PathParam("class_id") int class_id, Survey survey) {
+        survey.teacher_id = teacher_id;
+        survey.class_id = class_id;
+        System.out.println(survey.getTitle());
+        return surveyService.postSurvey(survey);
     }
-    
+
     @POST //(update to close)
     @Path("/{survey_id}")
     //@Consumes(MediaType.APPLICATION_JSON)
-    public void closeSurvey(@PathParam("teacher_id") int teacher_id, @PathParam("class_id") int class_id, @PathParam("survey_id") int survey_id){
-    	surveyService.closeSurvey(teacher_id,class_id,survey_id);
+    public void closeSurvey(@PathParam("teacher_id") int teacher_id,
+            @PathParam("class_id") int class_id,
+            @PathParam("survey_id") int survey_id) {
+        surveyService.closeSurvey(teacher_id, class_id, survey_id);
     }
-    
+
     @GET
     @Path("/{survey_id}/answers")
-    public List<ClassThemeAverage> getClassAverage(@PathParam("class_id") int class_id,
-    										@PathParam("survey_id") int survey_id){
-    	return surveyService.getClassThemeAverage(class_id,survey_id);
+    public List<ClassThemeAverage> getClassAverage(
+            @PathParam("class_id") int class_id,
+            @PathParam("survey_id") int survey_id) {
+        return surveyService.getClassThemeAverage(class_id, survey_id);
     }
 }

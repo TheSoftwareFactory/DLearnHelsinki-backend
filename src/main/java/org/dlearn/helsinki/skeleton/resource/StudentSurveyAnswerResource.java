@@ -41,7 +41,8 @@ public class StudentSurveyAnswerResource {
             @PathParam("student_id") int student_id,
             @PathParam("survey_id") int survey_id) {
         //return surveyService.getSurveysFromTeacherId(teacher_id);
-        return studentSurveyAnswerService.getStudentThemeAverage(student_id,survey_id);
+        return studentSurveyAnswerService.getStudentThemeAverage(student_id,
+                survey_id);
     }
 
 }
