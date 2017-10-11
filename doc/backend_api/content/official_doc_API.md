@@ -40,12 +40,49 @@ $ curl --request POST localhost:8080/webapi/teachers/1/create_student
 
 #### Example response
 
+```json
 {
   "_id" : 1,
   "username" : "LegoLass",
   "age" : 13,
   "gender" : "dragon"
 }
+```
+
+### Create new teacher
+
+Creates new teacher account
+
+```endpoint
+POST teachers/{teacher_id}/create_teacher
+```
+
+#### Example request
+
+```curl
+$ curl --request POST localhost:8080/webapi/teachers/1/create_teacher
+  -d @data.json
+```
+
+#### Example request body
+
+```json
+{
+  "password" : "kekkonen",
+  "teacher" : {
+    "username" : "MarttiM",
+  }
+}
+```
+
+#### Example response
+
+```json
+{
+  "_id" : 1,
+  "username" : "marttim",
+}
+```
 
 ### List students in one class (TODO) check student api branch
 
@@ -304,7 +341,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1
 
 ```json
 {
-  
+
 }
 ```
 

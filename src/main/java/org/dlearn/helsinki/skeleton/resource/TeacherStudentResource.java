@@ -10,21 +10,22 @@ import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.service.TeacherStudentService;
 
 public class TeacherStudentResource {
-	static final TeacherStudentService teacherStudentService = new TeacherStudentService();
-	
+    static final TeacherStudentService teacherStudentService = new TeacherStudentService();
+
     //@Path("/")
     @GET
-    public List<Student> getAllStudentsFromClass(@PathParam("class_id") int class_id) {
-    	System.out.println("fetching students' list from class");
-    	return teacherStudentService.getAllStudentsFromClass(class_id);
+    public List<Student> getAllStudentsFromClass(
+            @PathParam("class_id") int class_id) {
+        System.out.println("fetching students' list from class");
+        return teacherStudentService.getAllStudentsFromClass(class_id);
     }
-    
+
     @Path("/{student_id}")
     @GET
-    public Student getStudentFromClass(@PathParam("class_id") int class_id, 
-    										 @PathParam("student_id") int student_id,
-    										 @PathParam("teacher_id") int teacher_id) {
-    	System.out.println("fetching students' list from class");
-    	return teacherStudentService.getStudent(student_id);
+    public Student getStudentFromClass(@PathParam("class_id") int class_id,
+            @PathParam("student_id") int student_id,
+            @PathParam("teacher_id") int teacher_id) {
+        System.out.println("fetching students' list from class");
+        return teacherStudentService.getStudent(student_id);
     }
 }
