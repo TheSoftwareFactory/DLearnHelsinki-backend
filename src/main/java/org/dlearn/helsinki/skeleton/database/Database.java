@@ -921,7 +921,6 @@ public class Database extends AbstractDataSource {
 	public void closeSurvey(int teacher_id, int class_id, int survey_id) {
 		try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-			System.out.println("query written");
             String statement = "UPDATE public.\"Surveys\" "
             		+ "SET (open,end_date) = (false,now())"
             		+ "WHERE teacher_id = ? "
