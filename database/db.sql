@@ -202,6 +202,35 @@ ALTER SEQUENCE "Students__id_seq" OWNED BY "Students"._id;
 
 
 --
+-- Name: Researchers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE "Researchers" (
+    _id integer NOT NULL,
+    username character varying(35),
+);
+
+
+--
+-- Name: Researchers__id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE "Researchers__id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: Students__id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE "Researchers__id_seq" OWNED BY "Researchers"._id;
+
+
+--
 -- Name: Survey_questions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -342,6 +371,12 @@ ALTER TABLE ONLY "Student_Classes" ALTER COLUMN _id SET DEFAULT nextval('"Studen
 
 ALTER TABLE ONLY "Students" ALTER COLUMN _id SET DEFAULT nextval('"Students__id_seq"'::regclass);
 
+--
+-- Name: Researchers _id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "Researchers" ALTER COLUMN _id SET DEFAULT nextval('"Researchers__id_seq"'::regclass);
+
 
 --
 -- Name: Surveys _id; Type: DEFAULT; Schema: public; Owner: -
@@ -394,6 +429,14 @@ ALTER TABLE ONLY "Student_Classes"
 
 ALTER TABLE ONLY "Students"
     ADD CONSTRAINT "Students_pkey" PRIMARY KEY (_id);
+
+
+--
+-- Name: Researchers Researchers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "Researchers"
+    ADD CONSTRAINT "Researchers_pkey" PRIMARY KEY (_id);
 
 
 --
@@ -515,4 +558,3 @@ ALTER TABLE ONLY "Survey_questions"
 --
 -- PostgreSQL database dump complete
 --
-
