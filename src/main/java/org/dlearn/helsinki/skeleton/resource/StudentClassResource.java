@@ -12,6 +12,7 @@ import org.dlearn.helsinki.skeleton.model.Classes;
 
 import jersey.repackaged.com.google.common.collect.Lists;
 
+// Called by StudentAccess Students/1/classes
 public class StudentClassResource {
 
     // request teachers/{teacher_id}/classes
