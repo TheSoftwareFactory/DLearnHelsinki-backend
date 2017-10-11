@@ -2,7 +2,6 @@ package org.dlearn.helsinki.skeleton.database;
 
 import java.sql.Connection;
 
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -53,14 +52,13 @@ public class Database extends AbstractDataSource {
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Surveys\" (title, class_id, start_date, teacher_id, description, open) "
-                    + "VALUES (?,?,?,?,?,True) RETURNING _id";
-            try (PreparedStatement insert = dbConnection
-                    .prepareStatement(statement)) {
-                insert.setString(1, survey.title);
+                       + "VALUES (?,?,now(),?,?,True) RETURNING _id";
+            try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
+                insert.setString(1, survey.title); 
                 insert.setInt(2, survey.getClass_id());
-                insert.setDate(3, new Date(0));
-                insert.setInt(4, survey.getTeacher_id());
-                insert.setString(5, survey.description);
+                //insert.setDate(3, new Date(0));
+                insert.setInt(3, survey.getTeacher_id());
+                insert.setString(4, survey.description);
                 // execute query
                 try (ResultSet result = insert.executeQuery()) {
                     if (result.next()) {
@@ -75,15 +73,14 @@ public class Database extends AbstractDataSource {
             System.out.println(e.getMessage());
 
         }
-        //TODO remove
-        //survey.set_id(4); 
-        return survey;
-    }
-
-    // TODO finish getQuestions method
-    public List<Question> getQuestions() {
-        ArrayList<Question> questions = new ArrayList<>();
-        try (Connection dbConnection = getDBConnection()) {
+		return survey;
+	}
+	
+	// TODO finish getQuestions method
+	public List<Question> getQuestions() {
+		
+		ArrayList<Question> questions = new ArrayList<Question>();
+		try(Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "Select * FROM public.\"Questions\"";
             try (PreparedStatement select = dbConnection
@@ -239,6 +236,8 @@ public class Database extends AbstractDataSource {
                         	survey.setEnd_date(result.getDate(5).toString());	
                     	}
                     	survey.setOpen(result.getBoolean(6));
+                    	survey.setClass_id(class_id);
+                    	survey.setTeacher_id(teacher_id);
                     	surveys.add(survey);
                     }
                 }
@@ -917,6 +916,28 @@ public class Database extends AbstractDataSource {
             System.out.println(e.getMessage());
         }
 		return answers;
+	}
+
+	public void closeSurvey(int teacher_id, int class_id, int survey_id) {
+		try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+			System.out.println("query written");
+            String statement = "UPDATE public.\"Surveys\" "
+            		+ "SET (open,end_date) = (false,now())"
+            		+ "WHERE teacher_id = ? "
+            		+ "AND _id = ? "
+            		+ "AND class_id = ?";
+            try(PreparedStatement insert = dbConnection.prepareStatement(statement)) {
+                insert.setInt(1, teacher_id); 
+                insert.setInt(2, survey_id);
+                insert.setInt(3, class_id);
+                // execute query
+                insert.executeUpdate();
+            }
+        } catch (SQLException e) {
+            System.out.println("error caught : " + e.getMessage());
+
+        }		
 	}
 
 }
