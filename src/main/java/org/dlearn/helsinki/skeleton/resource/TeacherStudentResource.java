@@ -11,9 +11,9 @@ import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.service.TeacherStudentService;
 
 public class TeacherStudentResource {
-	
+
     static final TeacherStudentService teacherStudentService = new TeacherStudentService();
-    
+
     //@Path("/")
     @GET
     public List<Student> getAllStudentsFromClass(

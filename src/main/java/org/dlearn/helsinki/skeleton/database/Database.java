@@ -165,7 +165,7 @@ public class Database extends AbstractDataSource {
     public List<Question> getQuestionsFromSurvey(int survey_id) {
         System.out.println("Getting the questions from the survey.");
         ArrayList<Question> questions = new ArrayList<>();
-        
+
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "Select _id, question, min_answer, max_answer FROM \"Questions\", \"Survey_questions\" WHERE"
@@ -250,10 +250,10 @@ public class Database extends AbstractDataSource {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-        }		
-            return surveys;
+        }
+        return surveys;
     }
-	
+
     public List<Survey> getSurveys() {
         List<Survey> survey = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
@@ -463,7 +463,7 @@ public class Database extends AbstractDataSource {
         }
         return teacher.teacher;
     }
-    
+
     public void addStudentToGroup(Student student, int class_id, int group_id) {
         try (Connection dbConnection = getDBConnection()) {
             try (PreparedStatement insert = dbConnection.prepareStatement(

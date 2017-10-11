@@ -16,7 +16,7 @@ import org.dlearn.helsinki.skeleton.service.TeacherGroupSurveyService;
 public class TeacherGroupSurveyResource {
 
     TeacherGroupSurveyService teacherGroupSurveyAnswerService = new TeacherGroupSurveyService();
-    
+
     // simple GET with group_id and survey to get survey info
     @GET
     @Produces(MediaType.APPLICATION_JSON)
