@@ -385,6 +385,7 @@ public class Database extends AbstractDataSource {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            return null;
         }
         return student.student;
     }
@@ -412,6 +413,7 @@ public class Database extends AbstractDataSource {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            return null;
         }
         return teacher.teacher;
     }
