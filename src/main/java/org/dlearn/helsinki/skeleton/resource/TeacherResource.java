@@ -1,18 +1,22 @@
 package org.dlearn.helsinki.skeleton.resource;
 
 import java.util.List;
+import javax.ws.rs.Consumes;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import jersey.repackaged.com.google.common.collect.Lists;
+import org.dlearn.helsinki.skeleton.model.NewStudent;
 
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.Survey;
 import org.dlearn.helsinki.skeleton.model.Teacher;
+import org.dlearn.helsinki.skeleton.service.CreateNewStudentService;
 
 @Path("/teachers")
 public class TeacherResource {
@@ -43,6 +47,16 @@ public class TeacherResource {
     public TeacherClassResource getClassesFromId(@PathParam("teacher_id") int teacher_id) {
     	System.out.println("calling classes");
         return new TeacherClassResource();
+    }
+
+    CreateNewStudentService createNewStudentService = new CreateNewStudentService();
+
+    @POST
+    @Path("/{teacher_id}/create_student")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Student createNewStudent(@PathParam("teacher_id") int teacher_id, NewStudent student) {
+        return createNewStudentService.createNewStudent(student);
     }
 
 }

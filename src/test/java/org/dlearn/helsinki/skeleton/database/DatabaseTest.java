@@ -8,10 +8,6 @@ import org.dlearn.helsinki.skeleton.model.Survey;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author aopkarja
- */
 public class DatabaseTest {
     private final Database db = new Database();
 

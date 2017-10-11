@@ -11,10 +11,10 @@ public class Answer {
 		super();
 	}
 	
-	public Answer(int survey_id, int questionnaire_id, int student_id, int answer) {
+	public Answer(int survey_id, int question_id, int student_id, int answer) {
 		super();
 		this.survey_id = survey_id;
-		this.question_id = questionnaire_id;
+		this.question_id = question_id;
 		this.student_id = student_id;
 		this.answer = answer;
 	}

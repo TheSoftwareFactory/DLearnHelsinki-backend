@@ -8,7 +8,46 @@ and remove different students and spidergraphs.
 
 End points available for teacher.
 
-### List students in one class (TESTING) branch average-group
+### Create new student
+
+Creates new student account
+
+```endpoint
+POST teachers/{teacher_id}/create_student
+```
+
+#### Example request
+
+```curl
+$ curl --request POST localhost:8080/webapi/teachers/1/create_student
+  -d @data.json
+```
+
+#### Example request body
+
+```json
+{
+  "groud_id" : 1,
+  "class_id" : 1,
+  "password" : "hunter2",
+  "student" : {
+    "username" : "LegoLass",
+    "age" : 13,
+    "gender" : "dragon"
+  }
+}
+```
+
+#### Example response
+
+{
+  "_id" : 1,
+  "username" : "LegoLass",
+  "age" : 13,
+  "gender" : "dragon"
+}
+
+### List students in one class (TODO) check student api branch
 
 Lists all students inside one specified class.
 
@@ -169,7 +208,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/students
 #### Example response
 
 ```json
-[        
+[
   {
     "_id" : 3,
     "lastname" : "Thomas",
@@ -321,7 +360,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/surveys/
 
 ```json
 {
-  
+
 }
 ```
 
