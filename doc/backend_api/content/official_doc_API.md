@@ -8,7 +8,7 @@ and remove different students and spidergraphs.
 
 End points available for teacher.
 
-### Create new student
+### Create new student (DONE) Delma
 
 Creates new student account
 
@@ -47,7 +47,7 @@ $ curl --request POST localhost:8080/webapi/teachers/1/create_student
   "gender" : "dragon"
 }
 
-### List students in one class (TESTING) 
+### List students in one class (TESTING) rework by Denis
 
 Lists all students inside one specified class.
 
@@ -481,7 +481,7 @@ $ curl --request POST localhost:8080/webapi/teachers/1/classes/1/surveys
 This will create a survey even if another survey is currently open.
 
 
-### Close specific survey of a class (TODO)
+### Close specific survey of a class (DONE)
 
 Adds new survey
 
@@ -561,32 +561,39 @@ $ curl localhost:8080/webapi/students/1/classes/1/surveys/1/answers
 
 #### Example response
 
-<!--TODO: Actual response-->
-
 ```json
-[
-    {
-        "survey_id": 27,
-        "question_id": 1,
-        "student_id": 1,
-        "answer": 4
-    },
-    {
-        "survey_id": 27,
-        "question_id": 2,
-        "student_id": 1,
-        "answer": 4
-    },
-    {
-        "survey_id": 27,
-        "question_id": 3,
-        "student_id": 1,
-        "answer": 4
-    }
+[  
+   {  
+      "answer":3.6666667,
+      "description":"These questions ask about the responsibilities of the student during the exercise.",
+      "start_date":"1970-01-01",
+      "student_id":1,
+      "survey_id":27,
+      "theme_id":4,
+      "theme_title":"Responsibility"
+   },
+   {  
+      "answer":5.0,
+      "description":"These questions are about the persistence of the excercise.",
+      "start_date":"1970-01-01",
+      "student_id":1,
+      "survey_id":27,
+      "theme_id":3,
+      "theme_title":"Persistence"
+   },
+   {  
+      "answer":5.0,
+      "description":"These questions ask about the opinions brought by the student during the exercise.",
+      "start_date":"1970-01-01",
+      "student_id":1,
+      "survey_id":27,
+      "theme_id":2,
+      "theme_title":"Opinions and arguments"
+   }
 ]
 ```
 
-### Retrieve all the surveys (TODO)
+### Retrieve all the surveys (DONE)
 
 Returns all the survey for one class. Can be used to find the open survey
 
@@ -603,27 +610,27 @@ $ curl localhost:8080/webapi/students/1/classes/1/surveys
 #### Example response
 
 ```json
-[
-  {
-    "_id" : 1,
-    "teacher_id" : 1,
-    "class_id" : 1,
-    "title" : "Math survey",
-    "description" : "survey for the exercie 3 page 40",
-    "start_date" : "2007-04-05T13:30Z",
-    "end_date" : "2007-04-05T13:30Z",
-    "open" : true
-  },
-  {
-    "_id" : 2,
-    "teacher_id" : 1,
-    "class_id" : 1,
-    "title" : "Physic survey",
-    "description" : "survey for the exercie 5 page 13",
-    "start_date" : "2007-04-05T13:30Z",
-    "end_date" : "2007-04-05T13:30Z",
-    "open" : false
-  },
+[  
+   {  
+      "_id":27,
+      "title":"MR F of survey",
+      "description":"arrested development",
+      "start_date":"1970-01-01",
+      "end_date":"2017-10-11",
+      "teacher_id":1,
+      "class_id":1,
+      "open":false
+   },
+   {  
+      "_id":28,
+      "title":"test_2",
+      "description":"arrested_development",
+      "start_date":"1970-01-01",
+      "end_date":"",
+      "teacher_id":1,
+      "class_id":1,
+      "open":true
+   }
 ]
 ```
 
@@ -655,7 +662,7 @@ $ curl localhost:8080/webapi/students/1/classes/1/surveys/1/questions
     "question" : "I took enough responsibility of the group work.",
     "min_answer" : 1,
     "max_answer" : 7
-  },
+  }
 ]
 ```
 
