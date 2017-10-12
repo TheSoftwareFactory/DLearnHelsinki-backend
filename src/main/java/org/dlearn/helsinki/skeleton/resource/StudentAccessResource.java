@@ -23,7 +23,6 @@ public class StudentAccessResource {
     }
 
     @Path("/{studentId}")
-    @GET
     @Produces(MediaType.APPLICATION_JSON)
     public StudentResource getStudentInfo() {
         return new StudentResource();
