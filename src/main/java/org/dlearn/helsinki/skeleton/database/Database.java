@@ -468,7 +468,7 @@ public class Database extends AbstractDataSource {
     public void addStudentToGroup(Student student, int class_id, int group_id) {
         try (Connection dbConnection = getDBConnection()) {
             try (PreparedStatement insert = dbConnection.prepareStatement(
-                    "SELECT class_id FROM public.\"Groups\" WHERE group_id=?")) {
+                    "SELECT class_id FROM public.\"Groups\" WHERE _id=?")) {
                 insert.setInt(1, group_id);
                 try (ResultSet result = insert.executeQuery()) {
                     result.first();

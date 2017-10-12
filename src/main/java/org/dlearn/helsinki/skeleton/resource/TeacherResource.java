@@ -11,6 +11,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import jersey.repackaged.com.google.common.collect.Lists;
 
@@ -61,7 +62,8 @@ public class TeacherResource {
     	try {
     		createdStudent = createNewUserService.createNewStudent(student);
     	} catch(StudentExistsException e) {
-    		throw new WebApplicationException(e);
+    		String errMess = "The student username is invalid or already exists in database. Choose another.";
+    		throw new WebApplicationException();
     	}
         return createdStudent;
     }
