@@ -950,5 +950,93 @@ public class Database extends AbstractDataSource {
 
         }
     }
+    
+    public List<StudentThemeAverage> getStudentLifeTimeAverage(int student_id, int class_id){
+    	ArrayList<StudentThemeAverage> answers = new ArrayList<StudentThemeAverage>();
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String select_averages = "SELECT avg(answer),\"Themes\".title,\"Themes\".description,\"Themes\"._id,\"Surveys\".start_date,\"Surveys\"._id,\"Surveys\".title,\"Surveys\".description,\"Surveys\".start_date,\"Surveys\".end_date "
+            		+ "FROM public.\"Surveys\",public.\"Answers\", public.\"Student_Classes\",public.\"Groups\", public.\"Themes\", public.\"Questions\" "
+            		+ "WHERE \"Questions\"._id = question_id "
+            		+ "AND \"Questions\".theme_id = \"Themes\"._id "
+            		+ "AND \"Answers\".student_id = ? "
+            		+ "AND \"Groups\".class_id = ?"
+            		+ "AND \"Surveys\"._id = \"Answers\".survey_id "
+            		+ "GROUP BY \"Surveys\"._id,\"Themes\"._id,start_date "
+            		+ "ORDER BY start_date DESC";
+        	String select_total_average = "SELECT theme_id,avg(average_answer) "
+        			+ "FROM (" + select_averages + ") "
+        			+ "AS Averages GROUP BY theme_id";
+            //prepare statement with survey_id
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(select_averages)) {
+                select.setInt(1, student_id);
+                select.setInt(2, class_id);
 
+                // execute query
+                try (ResultSet result = select.executeQuery()) {
+                    while (result.next()) {
+                        StudentThemeAverage answer = new StudentThemeAverage();
+                        answer.setAnswer(result.getFloat(1));
+                        answer.setTheme_title(result.getString(2));
+                        answer.setDescription(result.getString(3));
+                        answer.setTheme_id(result.getInt(4));
+                        answer.setStart_date(result.getString(5));
+                        answer.setStudent_id(student_id);
+                        answer.setSurvey_id(-1);
+                        answers.add(answer);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return answers;
+    }
+
+    public List<StudentThemeAverage> getStudentHistory(int student_id, int class_id){
+    	ArrayList<StudentThemeAverage> answers = new ArrayList<StudentThemeAverage>();
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String select_averages = "SELECT avg(answer),\"Themes\".title,\"Themes\".description,\"Themes\"._id,\"Surveys\".start_date,\"Surveys\"._id,\"Surveys\".title,\"Surveys\".description,\"Surveys\".start_date,\"Surveys\".end_date "
+            		+ "FROM public.\"Surveys\",public.\"Answers\", public.\"Student_Classes\",public.\"Groups\", public.\"Themes\", public.\"Questions\" "
+            		+ "WHERE \"Questions\"._id = question_id "
+            		+ "AND \"Questions\".theme_id = \"Themes\"._id "
+            		+ "AND \"Answers\".student_id = ? "
+            		+ "AND \"Groups\".class_id = ?"
+            		+ "AND \"Surveys\"._id = \"Answers\".survey_id "
+            		+ "GROUP BY \"Surveys\"._id,\"Themes\"._id,start_date "
+            		+ "ORDER BY start_date DESC";
+        	String select_total_average = "SELECT theme_id,avg(average_answer) "
+        			+ "FROM (" + select_averages + ") "
+        			+ "AS Averages GROUP BY theme_id";
+            //prepare statement with survey_id
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(select_averages)) {
+                select.setInt(1, student_id);
+                select.setInt(2, class_id);
+
+                // execute query
+                try (ResultSet result = select.executeQuery()) {
+                	ArrayList<Integer> if_list = new ArrayList<Integer>();
+                    while (result.next()) {
+                        StudentThemeAverage answer = new StudentThemeAverage();
+                        //answer.setQuestion_id(result.getInt(1));
+                        answer.setAnswer(result.getFloat(1));
+                        answer.setTheme_title(result.getString(2));
+                        answer.setDescription(result.getString(3));
+                        answer.setTheme_id(result.getInt(4));
+                        answer.setStart_date(result.getString(5));
+                        answer.setStudent_id(student_id);
+                        //answer.setSurvey_id(survey_id);
+                        answers.add(answer);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return answers;
+    	
+    }
 }

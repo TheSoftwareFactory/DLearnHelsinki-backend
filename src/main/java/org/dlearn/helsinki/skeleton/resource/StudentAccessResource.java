@@ -5,15 +5,19 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
+import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.service.SecurityService;
 
 @Path("/students")
 public class StudentAccessResource {
 
+	private final SecurityService security = new SecurityService();
+	
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String checkLogin() {
-        return "logged in";
+    @Produces(MediaType.APPLICATION_JSON)
+    public Student checkLogin() {
+    	return security.getStudent().orElse(null);
     }
 
     @Path("/{student_id}/classes")
