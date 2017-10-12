@@ -1,14 +1,15 @@
 package org.dlearn.helsinki.skeleton.model;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Survey {
 
     public int _id;
     public String title;
     public String description;
-    public String start_date;
-    public String end_date;
+    public Timestamp start_date;
+    public Timestamp end_date;
     public int teacher_id;
     public int class_id;
     public boolean open;
@@ -17,8 +18,8 @@ public class Survey {
         super();
     }
 
-    public Survey(int _id, String title, String description, String start_date,
-            String end_date, int teacher_id, int class_id, boolean open) {
+    public Survey(int _id, String title, String description, Timestamp start_date,
+    		Timestamp end_date, int teacher_id, int class_id, boolean open) {
         super();
         this._id = _id;
         this.title = title;
@@ -46,19 +47,19 @@ public class Survey {
         this.title = title;
     }
 
-    public String getStart_date() {
+    public Timestamp getStart_date() {
         return start_date;
     }
 
-    public void setStart_date(String start_date) {
+    public void setStart_date(Timestamp start_date) {
         this.start_date = start_date;
     }
 
-    public String getEnd_date() {
+    public Timestamp getEnd_date() {
         return end_date;
     }
 
-    public void setEnd_date(String end_date) {
+    public void setEnd_date(Timestamp end_date) {
         this.end_date = end_date;
     }
 
