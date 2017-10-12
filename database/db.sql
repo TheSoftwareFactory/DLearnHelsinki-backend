@@ -139,6 +139,36 @@ ALTER SEQUENCE "Questions__id_seq" OWNED BY "Questions"._id;
 
 
 --
+-- Name: Researchers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE "Researchers" (
+    _id integer NOT NULL,
+    username character varying(35),
+    pwd character varying(100)
+);
+
+
+--
+-- Name: Researchers__id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE "Researchers__id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: Researchers__id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE "Researchers__id_seq" OWNED BY "Researchers"._id;
+
+
+--
 -- Name: Student_Classes; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -146,7 +176,8 @@ CREATE TABLE "Student_Classes" (
     _id integer NOT NULL,
     student_id integer,
     class_id integer,
-    group_id integer
+    group_id integer,
+    creation_date timestamp with time zone DEFAULT now()
 );
 
 
@@ -176,7 +207,7 @@ ALTER SEQUENCE "Student_Classes__id_seq" OWNED BY "Student_Classes"._id;
 CREATE TABLE "Students" (
     _id integer NOT NULL,
     username character varying(35),
-    pwd character varying(100),
+    pwd character varying(55),
     gender character varying(15),
     age integer
 );
@@ -202,36 +233,6 @@ ALTER SEQUENCE "Students__id_seq" OWNED BY "Students"._id;
 
 
 --
--- Name: Researchers; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE "Researchers" (
-    _id integer NOT NULL,
-    username character varying(35),
-    pwd character varying(100),
-);
-
-
---
--- Name: Researchers__id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE "Researchers__id_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: Students__id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE "Researchers__id_seq" OWNED BY "Researchers"._id;
-
-
---
 -- Name: Survey_questions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -247,8 +248,8 @@ CREATE TABLE "Survey_questions" (
 
 CREATE TABLE "Surveys" (
     title character varying(60),
-    start_date date,
-    end_date date,
+    start_date timestamp(6) with time zone,
+    end_date timestamp(6) with time zone,
     teacher_id integer,
     _id integer NOT NULL,
     open boolean,
@@ -284,7 +285,7 @@ CREATE TABLE "Teachers" (
     lastname character varying(40),
     firstname character varying(40),
     username character varying(40),
-    pwd character varying(100),
+    pwd character varying(40),
     _id integer NOT NULL
 );
 
@@ -360,6 +361,13 @@ ALTER TABLE ONLY "Questions" ALTER COLUMN _id SET DEFAULT nextval('"Questions__i
 
 
 --
+-- Name: Researchers _id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "Researchers" ALTER COLUMN _id SET DEFAULT nextval('"Researchers__id_seq"'::regclass);
+
+
+--
 -- Name: Student_Classes _id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -371,12 +379,6 @@ ALTER TABLE ONLY "Student_Classes" ALTER COLUMN _id SET DEFAULT nextval('"Studen
 --
 
 ALTER TABLE ONLY "Students" ALTER COLUMN _id SET DEFAULT nextval('"Students__id_seq"'::regclass);
-
---
--- Name: Researchers _id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY "Researchers" ALTER COLUMN _id SET DEFAULT nextval('"Researchers__id_seq"'::regclass);
 
 
 --
@@ -417,6 +419,14 @@ ALTER TABLE ONLY "Classes"
 
 
 --
+-- Name: Researchers Researchers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "Researchers"
+    ADD CONSTRAINT "Researchers_pkey" PRIMARY KEY (_id);
+
+
+--
 -- Name: Student_Classes Student_Classes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -430,14 +440,6 @@ ALTER TABLE ONLY "Student_Classes"
 
 ALTER TABLE ONLY "Students"
     ADD CONSTRAINT "Students_pkey" PRIMARY KEY (_id);
-
-
---
--- Name: Researchers Researchers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY "Researchers"
-    ADD CONSTRAINT "Researchers_pkey" PRIMARY KEY (_id);
 
 
 --
@@ -557,5 +559,14 @@ ALTER TABLE ONLY "Survey_questions"
 
 
 --
+-- Name: public; Type: ACL; Schema: -; Owner: -
+--
+
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres WITH GRANT OPTION;
+
+
+--
 -- PostgreSQL database dump complete
 --
+
