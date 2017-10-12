@@ -16,7 +16,7 @@ public class CreateNewUserService {
         // TODO: Check that age is positive, password isn't too short.
     	if(!db.doesStudentUsernameExistInDatabase(newStudent.student)) {
             student = db.createStudent(newStudent);
-            db.addStudentToGroup(student, newStudent.group_id, newStudent.class_id);
+            db.addStudentToGroup(student, newStudent.class_id, newStudent.group_id);
     	} else {
     		throw new StudentExistsException();
     	};
