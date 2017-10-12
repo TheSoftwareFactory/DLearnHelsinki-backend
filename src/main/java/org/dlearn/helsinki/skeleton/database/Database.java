@@ -45,10 +45,6 @@ public class Database extends AbstractDataSource {
     }
 
     // Survey postSurvey : returns the survey that was posted on the database.
-    // TODO return id
-    /*
-        
-     */
     public Survey postSurvey(Survey survey) throws SQLException {
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -78,7 +74,6 @@ public class Database extends AbstractDataSource {
         return survey;
     }
 
-    // TODO finish getQuestions method
     public List<Question> getQuestions() {
 
         ArrayList<Question> questions = new ArrayList<Question>();
@@ -198,7 +193,7 @@ public class Database extends AbstractDataSource {
     // Takes the survey_id, the student_id
     public void postStudentAnswersForSurvey(List<Answer> answers, int survey_id,
             int student_id) {
-        // TODO Auto-generated method stub
+        // TODO implement but currently it's easier for front-end to send one at a time...
     }
 
     // Method : getSurveysFromClassAsStudent
@@ -237,10 +232,10 @@ public class Database extends AbstractDataSource {
                         survey.set_id(result.getInt(1));
                         survey.setTitle(result.getString(2));
                         survey.setDescription(result.getString(3));
-                        survey.setStart_date(result.getDate(4).toString());
-                        result.getDate(5);
+                        survey.setStart_date(result.getTimestamp(4));
+                        result.getTimestamp(5);
                         if (!result.wasNull()) {
-                            survey.setEnd_date(result.getDate(5).toString());
+                            survey.setEnd_date(result.getTimestamp(5));
                         }
                         survey.setOpen(result.getBoolean(6));
                         survey.setClass_id(class_id);
@@ -271,8 +266,8 @@ public class Database extends AbstractDataSource {
                                 this.title = result.getString("title");
                                 this.class_id = result.getInt("class_id");
                                 this.start_date = result
-                                        .getString("start_date");
-                                this.end_date = result.getString("end_date");
+                                        .getTimestamp("start_date");
+                                this.end_date = result.getTimestamp("end_date");
                                 this.teacher_id = result.getInt("teacher_id");
                                 this.description = result
                                         .getString("description");
@@ -738,13 +733,12 @@ public class Database extends AbstractDataSource {
         }
         try {
             String dbUrl = System.getenv("JDBC_DATABASE_URL");
-            if(dbUrl == null){ // local # TODO fix
-            	System.out.println("JDBC env empty, on local");
-                dbConnection = DriverManager.getConnection(
-                        DB_CONNECTION, DB_USER, DB_PASSWORD);
-            }else { // production
-            	//System.out.println("Connecting to " + dbUrl);
-            	dbConnection = DriverManager.getConnection(dbUrl);
+            if (dbUrl == null) {
+                System.out.println("JDBC env empty, on local");
+                dbConnection = DriverManager.getConnection(DB_CONNECTION,
+                        DB_USER, DB_PASSWORD);
+            } else { // production
+                dbConnection = DriverManager.getConnection(dbUrl);
             }
         } catch (SQLException e) {
             System.out.println("CREATING CONNECTION FAILED HORRIBLY "
@@ -904,7 +898,6 @@ public class Database extends AbstractDataSource {
                                     group.students.add(student);
                                 }
                             }
-                            //TODO
                         } else {
                             // update group_id list
                             group_ids.add(result.getInt(1));
