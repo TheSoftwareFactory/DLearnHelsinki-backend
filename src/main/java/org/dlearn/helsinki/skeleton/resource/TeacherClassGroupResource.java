@@ -2,6 +2,7 @@ package org.dlearn.helsinki.skeleton.resource;
 
 import java.util.List;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -12,12 +13,10 @@ import org.dlearn.helsinki.skeleton.model.StudentGroup;
 import org.dlearn.helsinki.skeleton.service.TeacherGroupService;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.Student;
-import org.dlearn.helsinki.skeleton.service.GroupService;
 
-public class TeacherGroupResource {
+public class TeacherClassGroupResource {
 
-    TeacherGroupService teacherGroupService = new TeacherGroupService();
-    final static GroupService groupService = new GroupService();
+	final static TeacherGroupService teacherGroupService = new TeacherGroupService();
 
     // simple GET to retrieve all the groups in the class
     @GET
@@ -48,20 +47,30 @@ public class TeacherGroupResource {
 
     @Path("/{group_id}")
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     public Group getGroupFromClass(@PathParam("class_id") int class_id,
             @PathParam("group_id") int group_id) {
         System.out.println("fetching a group from the class");
-        return groupService.getGroupFromClass(class_id, group_id);
+        return teacherGroupService.getGroupFromClass(class_id, group_id);
+    }
+    
+    @Path("/{group_id}")
+    @DELETE
+    public void deleteGroupFromClass(@PathParam("class_id") int class_id,
+            @PathParam("group_id") int group_id) {
+        System.out.println("deleting a group from the class");
+        teacherGroupService.deleteGroupFromClass(class_id, group_id);
     }
 
     @Path("/{group_id}/students")
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     public List<Student> getStudentsFromClassAndGroup(
             @PathParam("class_id") int class_id,
             @PathParam("group_id") int group_id) {
         System.out
                 .println("fetching all students from the class and the group");
-        return groupService.getAllStudentsFromClassAndGroup(class_id, group_id);
+        return teacherGroupService.getAllStudentsFromClassAndGroup(class_id, group_id);
     }
 
 }

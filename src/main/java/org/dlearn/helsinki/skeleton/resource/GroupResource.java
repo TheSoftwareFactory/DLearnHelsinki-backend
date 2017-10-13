@@ -11,7 +11,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.Student;
-import org.dlearn.helsinki.skeleton.service.GroupService;
 
 import jersey.repackaged.com.google.common.collect.Lists;
 
