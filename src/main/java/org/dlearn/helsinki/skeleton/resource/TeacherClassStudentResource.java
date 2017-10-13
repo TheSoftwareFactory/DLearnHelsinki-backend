@@ -34,8 +34,8 @@ public class TeacherClassStudentResource {
         return service.getStudentThemeAverage(survey_id, student_id);
     }
     
-    @Path("/{student_id}/move_to_group/{group_id}")
     @POST
+    @Path("/{student_id}/move_to_group/{group_id}")
     public void change_group(@PathParam("class_id") int class_id, @PathParam("student_id") int student_id, @PathParam("group_id") int group_id) {
         MOVE_TO_GROUP.moveStudentToGroup(class_id, student_id, group_id);
     }
