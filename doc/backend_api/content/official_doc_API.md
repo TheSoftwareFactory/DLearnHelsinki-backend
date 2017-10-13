@@ -663,7 +663,7 @@ $ curl localhost:8080/webapi/students/1/classes/1/surveys/1/answers
 ]
 ```
 
-### Retrieve all the surveys (DONE)
+### Retrieve all the surveys (TODO)
 
 Returns all the survey for one class. Can be used to find the open survey
 
