@@ -267,9 +267,9 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/students
 ```
 
 
-### List individual students (TODO)
+### List the information of individual student (TESTING)
 
-This is how you can get a specific student by their id.
+This is how you can get a specific student information by their id.
 
 ```endpoint
 GET teachers/{teacher_id}/classes/{class_id}/students/{student_id}
