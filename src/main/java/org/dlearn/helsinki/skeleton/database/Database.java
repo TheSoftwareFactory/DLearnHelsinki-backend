@@ -526,7 +526,7 @@ public class Database extends AbstractDataSource {
 		List<Student> students = null;
 		//SQL rewritten for new database
 		try(Connection dbConnection = getDBConnection()) {
-	        String statement = "Select std._id, username, pwd, gender, age "
+	        String statement = "Select st._id, username, pwd, gender, age "
 	        		+ "FROM public.\"Groups\" AS gr INNER JOIN  public.\"Student_Classes\" as cls "
 	        		+ "ON (gr._id = cls.group_id) "
 	        		+ "INNER JOIN public.\"Students\" AS st "
