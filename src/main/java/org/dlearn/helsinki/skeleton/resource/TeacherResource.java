@@ -16,11 +16,14 @@ import javax.ws.rs.core.Response;
 import jersey.repackaged.com.google.common.collect.Lists;
 
 import org.dlearn.helsinki.skeleton.exceptions.StudentExistsException;
+import org.dlearn.helsinki.skeleton.model.ChangePasswordStudent;
 import org.dlearn.helsinki.skeleton.model.NewStudent;
 
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.Teacher;
+import org.dlearn.helsinki.skeleton.service.ChangePasswordService;
 import org.dlearn.helsinki.skeleton.service.CreateNewUserService;
+import org.dlearn.helsinki.skeleton.service.SecurityService;
 
 @Path("/teachers")
 public class TeacherResource {
@@ -58,14 +61,23 @@ public class TeacherResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Student createNewStudent(@PathParam("teacher_id") int teacher_id, NewStudent student) {
-    	Student createdStudent = null;
     	try {
-    		createdStudent = createNewUserService.createNewStudent(student);
+            return createNewUserService.createNewStudent(student);
     	} catch(StudentExistsException e) {
-    		String errMess = "The student username is invalid or already exists in database. Choose another.";
-    		throw new WebApplicationException();
+            throw new WebApplicationException("The student username is invalid or already exists in database. Choose another.", 400);
     	}
-        return createdStudent;
     }
 
+    private final ChangePasswordService change_password = new ChangePasswordService();
+    private final SecurityService security = new SecurityService();
+
+    @POST
+    @Path("/{teacher_id}/change_student_password")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Student changeStudentPassword(@PathParam("teacher_id") int teacher_id, ChangePasswordStudent student) {
+        return security.getTeacher()
+            .map(t -> change_password.changeStudentPassword(student))
+            .orElse(null);
+    }
 }
