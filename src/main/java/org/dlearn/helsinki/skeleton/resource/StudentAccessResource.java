@@ -8,9 +8,11 @@ import javax.ws.rs.core.MediaType;
 
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.service.SecurityService;
+import org.dlearn.helsinki.skeleton.service.StudentService;
 
 @Path("/students")
 public class StudentAccessResource {
+	static final StudentService studentService = new StudentService();
 
 	private final SecurityService security = new SecurityService();
 	
@@ -30,10 +32,10 @@ public class StudentAccessResource {
     	}
     }
 
-    @Path("/{studentId}")
-    @GET
+    @Path("/{student_id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public StudentResource getStudentInfo() {
-        return new StudentResource();
+    public Student getStudentInfo(@PathParam("student_id") int student_id) {
+        //return new StudentResource();
+    	return studentService.getStudent(student_id);
     }
 }

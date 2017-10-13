@@ -7,7 +7,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.dlearn.helsinki.skeleton.model.NewStudent;
 
@@ -62,6 +64,16 @@ public class TeacherResource {
     	}else{
     		return null;
     	}
+    /*
+        	Student createdStudent = null;
+    	try {
+    		createdStudent = createNewUserService.createNewStudent(student);
+    	} catch(StudentExistsException e) {
+    		String errMess = "The student username is invalid or already exists in database. Choose another.";
+    		throw new WebApplicationException();
+    	}
+        return createdStudent;
+    */
     }
 
 }
