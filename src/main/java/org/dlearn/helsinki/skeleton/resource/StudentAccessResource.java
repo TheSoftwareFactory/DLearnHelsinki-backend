@@ -23,7 +23,11 @@ public class StudentAccessResource {
     @Path("/{student_id}/classes")
     public StudentClassResource getGroups(
             @PathParam("student_id") int student_id) {
-        return new StudentClassResource();
+    	if(security.isTheStudent(student_id)){
+    		return new StudentClassResource();
+    	}else{
+    		return null;
+    	}
     }
 
     @Path("/{studentId}")
