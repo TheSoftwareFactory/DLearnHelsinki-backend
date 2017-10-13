@@ -683,6 +683,39 @@ public class Database extends AbstractDataSource {
 		return classes;		
 	}
 	
+	public List<Classes> getAllClassesStundentIsIn(int student_id) {
+		List<Classes> classes = null;
+		
+		try(Connection dbConnection = getDBConnection()) {
+	        String statement = "Select cls._id, cls.name, cls.teacher_id "
+	        		+ "FROM public.\"Groups\" as gr "
+	        		+ "INNER JOIN public.\"Student_Classes\" as st_cls "
+	        		+ "ON st_cls.group_id = gr._id "
+	        		//+ "INNER JOIN public.\"Students\" as st_cls "
+	        		//+ "ON st_cls.group_id = gr.class_id"
+	        		+ "INNER JOIN public.\"Classes\" as cls "
+	        		+ "ON cls._id = gr.class_id "
+	        		+ "WHERE (st_cls.student_id = ?);";
+	        //prepare statement with student_id
+	        try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+	        	select.setInt(1, student_id);
+	            // execute query
+	            try(ResultSet result = select.executeQuery()) {
+	            	classes = new ArrayList<Classes>();
+	            	while(result.next()) { 
+	            		Classes newClass = new Classes();
+	            		newClass.set_id(result.getInt("_id"));
+	            		newClass.setName(result.getString("name"));
+	            		newClass.setTeacher_id(result.getInt("teacher_id"));
+	            		classes.add(newClass);
+                	}
+                }
+            }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }	
+		return classes;		
+	}
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
