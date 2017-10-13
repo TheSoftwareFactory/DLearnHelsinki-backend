@@ -571,7 +571,7 @@ GET /students/{student_id}
 #### Example request
 
 ```curl
-$ curl localhost:8080/webapi/students/{student_id}
+$ curl localhost:8080/webapi/students/1
 ```
 
 #### Example response
@@ -583,6 +583,34 @@ $ curl localhost:8080/webapi/students/{student_id}
   "firstname" : "Matti",
   "username" : "iloinen tanssiva aurinko"
 }
+```
+### Retrieve all the classes (TESTING)
+
+The student can get a list of classes he is in.
+
+```endpoint
+GET /students/{student_id}/classes
+```
+#### Example request
+
+```curl
+$ curl localhost:8080/webapi/students/1/classes
+```
+#### Example response
+
+```json
+  [
+    {
+      "_id":1,
+      "name":"{First Class}",
+      "teacher_id":1
+    },
+    {
+      "_id":2,
+      "name":"{Second Class}",
+      "teacher_id":1
+    }
+  ]
 ```
 
 ### Retrieve a student's result for specific survey (DONE)
