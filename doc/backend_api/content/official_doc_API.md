@@ -586,7 +586,7 @@ $ curl localhost:8080/webapi/students/1
 ```
 ### Retrieve all the classes (TESTING)
 
-The student can get a list of classes he is in.
+The student can get a list of all classes he is in.
 
 ```endpoint
 GET /students/{student_id}/classes
