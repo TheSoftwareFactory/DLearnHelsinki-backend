@@ -276,6 +276,23 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/students
 ]
 ```
 
+### Move student to group
+
+```endpoint
+POST teachers/{teacher_id}/classes/{class_id}/students/{student_id}/move_to_group/{group_id}
+```
+
+#### Example request
+
+```curl
+$ curl --request POST localhost:8080/webapi/teachers/1/classes/1/students/1/move_to_group/2
+```
+
+#### Example response
+
+```json
+{}
+```
 
 ### List individual students (TODO)
 
