@@ -79,6 +79,48 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/students/
   }
 ]
 ```
+### List of all classes and groups(TESTING)
+
+This request allows you to retrieve a list of all classes and their respective groups for a particular teacher.
+
+```endpoint
+GET teachers/{teacher_id}/classes/
+```
+#### Example request
+
+```curl
+$ curl localhost:8080/webapi/teachers/1/classes/
+```
+#### Example response
+
+```json
+[
+  {
+    "_id":1,
+    "groups":
+            [
+              {
+                "_id":1,
+                "name":"{Alpha}",
+                "class_id":1
+              },
+              {
+                "_id":2,
+                "name":"{Beta}",
+                "class_id":1
+              }
+            ],
+    "name":"{First Class}",
+    "teacher_id":1
+  },
+  {
+    "_id":2,
+    "groups":[],
+    "name":"{Second Class}",
+    "teacher_id":1
+  }
+]
+```
 
 ### List of all groups in one specified class (DONE)
 
