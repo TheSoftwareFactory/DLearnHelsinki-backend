@@ -5,10 +5,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
+import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.service.SecurityService;
+import org.dlearn.helsinki.skeleton.service.StudentService;
 
 @Path("/students")
 public class StudentAccessResource {
+	static final StudentService studentService = new StudentService();
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -22,10 +26,10 @@ public class StudentAccessResource {
         return new StudentClassResource();
     }
 
-    @Path("/{studentId}")
-    @GET
+    @Path("/{student_id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public StudentResource getStudentInfo() {
-        return new StudentResource();
+    public Student getStudentInfo(@PathParam("student_id") int student_id) {
+        //return new StudentResource();
+    	return studentService.getStudent(student_id);
     }
 }

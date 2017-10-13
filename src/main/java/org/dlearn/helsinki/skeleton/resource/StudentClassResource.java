@@ -9,12 +9,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.dlearn.helsinki.skeleton.model.Classes;
+import org.dlearn.helsinki.skeleton.service.StudentService;
 
 import jersey.repackaged.com.google.common.collect.Lists;
 
 // Called by StudentAccess Students/1/classes
 public class StudentClassResource {
-
     // request teachers/{teacher_id}/classes
     // returns the teacher's classes based on the teacher_id.
     // TODO implement to answer to request with the classes of the teacher.
@@ -28,7 +28,7 @@ public class StudentClassResource {
     @Path("/{class_id}/surveys")
     public StudentSurveyResource getStudentSurveyResource(
             @PathParam("class_id") int class_id) {
-        System.out.println("calling classes");
+        //System.out.println("calling classes");
         return new StudentSurveyResource();
     }
 }

@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
 import org.dlearn.helsinki.skeleton.model.ClassThemeAverage;
+import org.dlearn.helsinki.skeleton.model.Classes;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.NewStudent;
 import org.dlearn.helsinki.skeleton.model.GroupAnswer;
@@ -467,7 +468,7 @@ public class Database extends AbstractDataSource {
     public void addStudentToGroup(Student student, int class_id, int group_id) {
         try (Connection dbConnection = getDBConnection()) {
             try (PreparedStatement insert = dbConnection.prepareStatement(
-                    "SELECT class_id FROM public.\"Groups\" WHERE group_id=?")) {
+                    "SELECT class_id FROM public.\"Groups\" WHERE _id=?")) {
                 insert.setInt(1, group_id);
                 try (ResultSet result = insert.executeQuery()) {
                     result.first();
@@ -521,36 +522,37 @@ public class Database extends AbstractDataSource {
         return student;
     }
 
-    public List<Student> getAllStudentsFromClass(int class_id) {
-        List<Student> students = null;
-
-        try (Connection dbConnection = getDBConnection()) {
-            String statement = "Select std._id, username, pwd, gender, age "
-                    + "FROM public.\"Students\" AS std INNER JOIN public.\"Student_Classes\" AS cls "
-                    + "ON (std._id = cls.student_id) "
-                    + "WHERE (cls.class_id = ?);";
-            //prepare statement with student_id
-            try (PreparedStatement select = dbConnection
-                    .prepareStatement(statement)) {
-                select.setInt(1, class_id);
-                // execute query
-                try (ResultSet result = select.executeQuery()) {
-                    students = new ArrayList<>();
-                    while (result.next()) {
-                        Student student = new Student();
-                        student.set_id(result.getInt("_id"));
-                        student.setAge(result.getInt("age"));
-                        student.setUsername(result.getString("username"));
-                        student.setGender(result.getString("gender"));
-                        students.add(student);
-                    }
+	public List<Student> getAllStudentsFromClass(int class_id) {
+		List<Student> students = null;
+		//SQL rewritten for new database
+		try(Connection dbConnection = getDBConnection()) {
+	        String statement = "Select st._id, username, pwd, gender, age "
+	        		+ "FROM public.\"Groups\" AS gr INNER JOIN  public.\"Student_Classes\" as cls "
+	        		+ "ON (gr._id = cls.group_id) "
+	        		+ "INNER JOIN public.\"Students\" AS st "
+	        		+ "ON (st._id = cls.student_id) "
+	        		+ "WHERE (gr.class_id = ?);";
+	        //prepare statement with student_id
+	        try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+	        	select.setInt(1, class_id);
+	            // execute query
+	            try(ResultSet result = select.executeQuery()) {
+	            	students = new ArrayList<Student>();
+	            	while(result.next()) { 
+	            		Student student = new Student();
+	               		student.set_id(result.getInt("_id"));
+	               		student.setAge(result.getInt("age"));
+	               		student.setUsername(result.getString("username"));
+	               		student.setGender(result.getString("gender"));
+	               		students.add(student);
+                	}
                 }
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return students;
-    }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }		
+		return students;
+	}
 
     public Optional<Student> getStudentFromUsername(String username_) {
         Optional<Student> student = Optional.empty();
@@ -631,19 +633,69 @@ public class Database extends AbstractDataSource {
         }
         return researcher;
     }
-    /////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
+    
+	public boolean doesStudentUsernameExistInDatabase(Student student) {
+		boolean exists = false;
+		try(Connection dbConnection = getDBConnection()) {
+	        String statement = "Select username FROM public.\"Students\" as std WHERE std.username = ?";
+	        //prepare statement with student_id
+	        try(PreparedStatement select = dbConnection.
+	        		prepareStatement(statement)) {
+	        	select.setString(1, student.getUsername());
+	            // execute query
+	            try(ResultSet result = select.executeQuery()) {
+	            	if(result.next()) {
+	            		exists = true;
+                	}
+                }
+            }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }
+		return exists;
+	}
 
+	public List<Classes> getAllClassesOfTeacher(int teacher_id) {
+		List<Classes> classes = null;
+		
+		try(Connection dbConnection = getDBConnection()) {
+	        String statement = "Select _id, name "
+	        		+ "FROM public.\"Classes\" as cls "
+	        		+ "WHERE (cls.teacher_id = ?);";
+	        //prepare statement with student_id
+	        try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+	        	select.setInt(1, teacher_id);
+	            // execute query
+	            try(ResultSet result = select.executeQuery()) {
+	            	classes = new ArrayList<Classes>();
+	            	while(result.next()) { 
+	            		Classes newClass = new Classes();
+	            		newClass.set_id(result.getInt("_id"));
+	            		newClass.setName(result.getString("name"));
+	            		newClass.setTeacher_id(teacher_id);
+	            		classes.add(newClass);
+                	}
+                }
+            }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }	
+		return classes;		
+	}
+	
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+	
     private static Connection getDBConnection() {
         Connection dbConnection = null;
         try {
@@ -653,12 +705,13 @@ public class Database extends AbstractDataSource {
         }
         try {
             String dbUrl = System.getenv("JDBC_DATABASE_URL");
-            if (dbUrl == null) { // local # TODO fix
-                System.out.println("JDBC env empty, on local");
-                dbConnection = DriverManager.getConnection(DB_CONNECTION,
-                        DB_USER, DB_PASSWORD);
-            } else { // production
-                dbConnection = DriverManager.getConnection(dbUrl);
+            if(dbUrl == null){ // local # TODO fix
+            	System.out.println("JDBC env empty, on local");
+                dbConnection = DriverManager.getConnection(
+                        DB_CONNECTION, DB_USER, DB_PASSWORD);
+            }else { // production
+            	//System.out.println("Connecting to " + dbUrl);
+            	dbConnection = DriverManager.getConnection(dbUrl);
             }
         } catch (SQLException e) {
             System.out.println("CREATING CONNECTION FAILED HORRIBLY "
