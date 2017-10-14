@@ -204,7 +204,7 @@ public class Database extends AbstractDataSource {
     	ArrayList<Survey> surveys = new ArrayList<Survey>();
 
         try (Connection dbConnection = getDBConnection()) {
-            String statement = "SELECT _id,title,description,start_date,end_date,open,teacher_id "
+            String statement = "SELECT distinct _id,title,description,start_date,end_date,open,teacher_id "
                     + "FROM public.\"Surveys\",public.\"Answers\" "
                     + "WHERE class_id = ? "
                     + "AND student_id = ? "
