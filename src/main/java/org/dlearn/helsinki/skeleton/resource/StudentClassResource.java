@@ -1,5 +1,6 @@
 package org.dlearn.helsinki.skeleton.resource;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -13,10 +14,15 @@ import org.dlearn.helsinki.skeleton.service.ClassService;
 import org.dlearn.helsinki.skeleton.service.StudentService;
 
 import jersey.repackaged.com.google.common.collect.Lists;
+import org.dlearn.helsinki.skeleton.model.StudentThemeAverage;
+import org.dlearn.helsinki.skeleton.service.ProgressionService;
+import org.dlearn.helsinki.skeleton.service.SecurityService;
 
 // Called by StudentAccess Students/1/classes
 public class StudentClassResource {
-	ClassService classService = new ClassService();
+    private final ClassService classService = new ClassService();
+    private final SecurityService security = new SecurityService();
+    private final ProgressionService progression = new ProgressionService();
     // request teachers/{teacher_id}/classes
     // returns the teacher's classes based on the teacher_id.
     // TODO implement to answer to request with the classes of the teacher.
@@ -32,5 +38,14 @@ public class StudentClassResource {
             @PathParam("class_id") int class_id) {
         //System.out.println("calling classes");
         return new StudentSurveyResource();
+    }
+    
+    @Path("/{class_id}/progression/{amount}")
+    public List<List<StudentThemeAverage>> getProgression(
+            @PathParam("class_id") int class_id,
+            @PathParam("amount") int amount) {
+        return security.getStudent()
+                .map(s -> progression.getStudentClassProgression(class_id, s._id, amount))
+                .orElse(Collections.EMPTY_LIST);
     }
 }

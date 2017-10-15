@@ -49,7 +49,7 @@ public class TeacherClassStudentResource {
             @PathParam("class_id") int class_id,
             @PathParam("student_id") int student_id,
             @PathParam("amount") int amount) {
-        return progression.getStudentProgression(class_id, student_id, amount);
+        return progression.getStudentClassProgression(class_id, student_id, amount);
     }
     
     @GET

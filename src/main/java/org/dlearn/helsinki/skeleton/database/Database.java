@@ -1014,6 +1014,64 @@ public class Database extends AbstractDataSource {
         return answers;
     }
     
+    public List<List<StudentThemeAverage>> getStudentThemeAverageProgression(int student_id, int amount) {
+        List<List<StudentThemeAverage>> progression = new ArrayList<>();
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement
+                    = "SELECT * FROM (\n"
+                    + "    SELECT\n"
+                    + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
+                    + "        avg(an.answer) as average,\n"
+                    + "        su._id as survey_id,\n"
+                    + "        th.title,\n"
+                    + "        th.description,\n"
+                    + "        th._id as theme_id,\n"
+                    + "        su.start_date \n"
+                    + "    FROM public.\"Surveys\" as su,\n"
+                    + "         public.\"Answers\" as an,\n"
+                    + "         public.\"Themes\" as th,\n"
+                    + "         public.\"Questions\" as qu \n"
+                    + "    WHERE qu._id = an.question_id \n"
+                    + "      AND qu.theme_id = th._id \n"
+                    + "      AND an.student_id = ? \n"
+                    + "      AND su._id = an.survey_id \n"
+                    + "    GROUP BY su._id, th._id\n"
+                    + "    ORDER BY su.start_date DESC, th._id\n"
+                    + ") x WHERE x.survey_rank <= ?";
+            //prepare statement with survey_id
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(statement)) {
+                select.setInt(1, student_id);
+                select.setInt(3, amount);
+
+                // execute query
+                try (ResultSet result = select.executeQuery()) {
+                    int last_survey_rank = -2;
+                    while (result.next()) {
+                        StudentThemeAverage answer = new StudentThemeAverage();
+                        answer.setAnswer(result.getFloat("average"));
+                        answer.setTheme_title(result.getString("title"));
+                        answer.setDescription(result.getString("description"));
+                        answer.setTheme_id(result.getInt("theme_id"));
+                        answer.setStart_date(result.getString("start_date"));
+                        answer.setStudent_id(student_id);
+                        answer.setSurvey_id(result.getInt("survey_id"));
+                        int survey_rank = result.getInt("survey_rank") - 1;
+                        if (last_survey_rank == survey_rank) {
+                            progression.get(survey_rank).add(answer);
+                        } else {
+                            progression.add(Lists.newArrayList(answer));
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return progression;
+    }
+    
     public List<List<StudentThemeAverage>> getStudentThemeAverageProgressionInClass(int class_id,
             int student_id, int amount) {
         List<List<StudentThemeAverage>> progression = new ArrayList<>();
@@ -1055,7 +1113,7 @@ public class Database extends AbstractDataSource {
 
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
-                    int last_survey_rank = -1;
+                    int last_survey_rank = -2;
                     while (result.next()) {
                         StudentThemeAverage answer = new StudentThemeAverage();
                         answer.setAnswer(result.getFloat("average"));
@@ -1120,7 +1178,7 @@ public class Database extends AbstractDataSource {
 
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
-                    int last_survey_rank = -1;
+                    int last_survey_rank = -2;
                     while (result.next()) {
                         GroupThemeAverage answer = new GroupThemeAverage();
                         answer.setAnswer(result.getFloat("average"));
