@@ -14,16 +14,22 @@ import org.dlearn.helsinki.skeleton.service.StudentService;
 public class StudentAccessResource {
 	static final StudentService studentService = new StudentService();
 
+	private final SecurityService security = new SecurityService();
+	
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String checkLogin() {
-        return "logged in";
+    @Produces(MediaType.APPLICATION_JSON)
+    public Student checkLogin() {
+    	return security.getStudent().orElse(null);
     }
 
     @Path("/{student_id}/classes")
     public StudentClassResource getGroups(
             @PathParam("student_id") int student_id) {
-        return new StudentClassResource();
+    	if(security.isTheStudent(student_id)){
+    		return new StudentClassResource();
+    	}else{
+    		return null;
+    	}
     }
 
     @Path("/{student_id}")
