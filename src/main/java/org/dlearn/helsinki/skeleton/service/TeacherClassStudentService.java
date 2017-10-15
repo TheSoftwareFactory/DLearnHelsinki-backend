@@ -14,8 +14,4 @@ public class TeacherClassStudentService {
         return DB.getStudentThemeAverage(survey_id, student_id);
     }
 
-    public List<List<StudentThemeAverage>> getStudentProgression(int class_id, int student_id, int amount) {
-        return DB.getStudentThemeAverageProgressionInClass(class_id, student_id, amount);
-    }
-
 }

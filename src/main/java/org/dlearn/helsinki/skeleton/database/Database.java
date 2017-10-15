@@ -463,18 +463,7 @@ public class Database extends AbstractDataSource {
 
     public void addStudentToGroup(Student student, int class_id, int group_id) {
         try (Connection dbConnection = getDBConnection()) {
-            try (PreparedStatement insert = dbConnection.prepareStatement(
-                    "SELECT class_id FROM public.\"Groups\" WHERE _id=?")) {
-                insert.setInt(1, group_id);
-                try (ResultSet result = insert.executeQuery()) {
-                    result.first();
-                    int real_class_id = result.getInt(1);
-                    if (class_id != real_class_id) {
-                        throw new SQLException("Class id's don't match: "
-                                + class_id + " != " + real_class_id);
-                    }
-                }
-            }
+            ensureGroupClassMatch(dbConnection, group_id, class_id);
             String statement = "INSERT INTO public.\"Student_Classes\" (student_id, class_id, group_id) "
                     + "VALUES (?,?,?)";
             try (PreparedStatement insert = dbConnection
@@ -489,6 +478,21 @@ public class Database extends AbstractDataSource {
         } catch (SQLException e) {
             System.out
                     .println("SQL Error(addStudentToGroup): " + e.getMessage());
+        }
+    }
+
+    private void ensureGroupClassMatch(final Connection dbConnection, int group_id, int class_id) throws SQLException {
+        try (PreparedStatement insert = dbConnection.prepareStatement(
+                "SELECT class_id FROM public.\"Groups\" WHERE _id=?")) {
+            insert.setInt(1, group_id);
+            try (ResultSet result = insert.executeQuery()) {
+                result.first();
+                int real_class_id = result.getInt(1);
+                if (class_id != real_class_id) {
+                    throw new SQLException("Class id's don't match: "
+                            + class_id + " != " + real_class_id);
+                }
+            }
         }
     }
 
@@ -1035,10 +1039,13 @@ public class Database extends AbstractDataSource {
                     + "      AND qu.theme_id = th._id \n"
                     + "      AND an.student_id = ? \n"
                     + "      AND su._id = an.survey_id \n"
-                    + "      AND gr.class_id = ?"
+                    + "      AND gr.class_id = ?\n"
+                    // TODO: Restrict this for only current group members
+                    + "      AND sc.student_id = an.student_id\n"
+                    + "      AND sc.class_id = gr.class_id\n"
                     + "    GROUP BY su._id, th._id\n"
                     + "    ORDER BY su.start_date DESC, th._id\n"
-                    + ") x WHERE x.survey_rank <= ?;";
+                    + ") x WHERE x.survey_rank <= ?";
             //prepare statement with survey_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
@@ -1057,6 +1064,72 @@ public class Database extends AbstractDataSource {
                         answer.setTheme_id(result.getInt("theme_id"));
                         answer.setStart_date(result.getString("start_date"));
                         answer.setStudent_id(student_id);
+                        answer.setSurvey_id(result.getInt("survey_id"));
+                        int survey_rank = result.getInt("survey_rank") - 1;
+                        if (last_survey_rank == survey_rank) {
+                            progression.get(survey_rank).add(answer);
+                        } else {
+                            progression.add(Lists.newArrayList(answer));
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return progression;
+    }
+    
+    public List<List<GroupThemeAverage>> getGroupThemeAverageProgression(int class_id,
+            int group_id, int amount) {
+        List<List<GroupThemeAverage>> progression = new ArrayList<>();
+        try (Connection dbConnection = getDBConnection()) {
+            ensureGroupClassMatch(dbConnection, group_id, class_id);
+            // Set up batch of statements
+            String statement
+                    = "SELECT * FROM (\n"
+                    + "	SELECT\n"
+                    + "		DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
+                    + "		avg(an.answer) as average,\n"
+                    + "		su._id as survey_id,\n"
+                    + "		th.title,\n"
+                    + "		th.description,\n"
+                    + "		th._id as theme_id,\n"
+                    + "		su.start_date \n"
+                    + "	FROM public.\"Surveys\" as su,\n"
+                    + "		public.\"Answers\" as an,\n"
+                    + "		public.\"Student_Classes\" as sc,\n"
+                    + "		public.\"Groups\" as gr,\n"
+                    + "		public.\"Themes\" as th,\n"
+                    + "		public.\"Questions\" as qu \n"
+                    + "	WHERE qu._id = an.question_id \n"
+                    + "	  AND qu.theme_id = th._id \n"
+                    + "	  AND su._id = an.survey_id \n"
+                    // TODO: Restrict this for only current group members
+                    + "	  AND sc.student_id = an.student_id\n"
+                    + "   AND sc.group_id = ?\n"
+                    + "	  AND sc.class_id = ?\n"
+                    + "	GROUP BY su._id, th._id\n"
+                    + "	ORDER BY su.start_date DESC, th._id\n"
+                    + ") x WHERE x.survey_rank <= ?";
+            //prepare statement with survey_id
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(statement)) {
+                select.setInt(1, group_id);
+                select.setInt(2, class_id);
+                select.setInt(3, amount);
+
+                // execute query
+                try (ResultSet result = select.executeQuery()) {
+                    int last_survey_rank = -1;
+                    while (result.next()) {
+                        GroupThemeAverage answer = new GroupThemeAverage();
+                        answer.setAnswer(result.getFloat("average"));
+                        answer.setTheme_title(result.getString("title"));
+                        answer.setDescription(result.getString("description"));
+                        answer.setTheme_id(result.getInt("theme_id"));
+                        answer.setStart_date(result.getString("start_date"));
+                        answer.setGroup_id(group_id);
                         answer.setSurvey_id(result.getInt("survey_id"));
                         int survey_rank = result.getInt("survey_rank") - 1;
                         if (last_survey_rank == survey_rank) {

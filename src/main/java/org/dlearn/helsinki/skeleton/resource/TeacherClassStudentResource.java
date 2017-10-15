@@ -8,6 +8,7 @@ import javax.ws.rs.PathParam;
 
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.StudentThemeAverage;
+import org.dlearn.helsinki.skeleton.service.ProgressionService;
 import org.dlearn.helsinki.skeleton.service.TeacherClassStudentService;
 import org.dlearn.helsinki.skeleton.service.TeacherStudentService;
 
@@ -15,6 +16,7 @@ public class TeacherClassStudentResource {
 
     TeacherClassStudentService teacherClassStudent = new TeacherClassStudentService();
     TeacherStudentService teacherStudentService = new TeacherStudentService();
+    private final ProgressionService progression = new ProgressionService();
 
     // GET student info /{student_id}/
 
@@ -47,7 +49,7 @@ public class TeacherClassStudentResource {
             @PathParam("class_id") int class_id,
             @PathParam("student_id") int student_id,
             @PathParam("amount") int amount) {
-        return teacherClassStudent.getStudentProgression(class_id, student_id, amount);
+        return progression.getStudentProgression(class_id, student_id, amount);
     }
     
     @GET
