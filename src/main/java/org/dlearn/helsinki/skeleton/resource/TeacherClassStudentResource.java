@@ -16,7 +16,7 @@ import org.dlearn.helsinki.skeleton.service.TeacherStudentService;
 public class TeacherClassStudentResource {
 
     TeacherClassStudentService service = new TeacherClassStudentService();
-    private static final MoveToGroupService MOVE_TO_GROUP = new MoveToGroupService();
+    private final MoveToGroupService moveToGroup = new MoveToGroupService();
     TeacherStudentService teacherStudentService = new TeacherStudentService();
 
     // GET student info /{student_id}/
@@ -37,7 +37,7 @@ public class TeacherClassStudentResource {
     @POST
     @Path("/{student_id}/move_to_group/{group_id}")
     public void change_group(@PathParam("class_id") int class_id, @PathParam("student_id") int student_id, @PathParam("group_id") int group_id) {
-        MOVE_TO_GROUP.moveStudentToGroup(class_id, student_id, group_id);
+        moveToGroup.moveStudentToGroup(class_id, student_id, group_id);
     }
     
     @GET

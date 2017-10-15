@@ -466,7 +466,7 @@ public class Database extends AbstractDataSource {
                     "SELECT class_id FROM public.\"Groups\" WHERE _id=?")) {
                 insert.setInt(1, group_id);
                 try (ResultSet result = insert.executeQuery()) {
-                    result.first();
+                    result.next();
                     int real_class_id = result.getInt(1);
                     if (class_id != real_class_id) {
                         throw new SQLException("Class id's don't match: "
