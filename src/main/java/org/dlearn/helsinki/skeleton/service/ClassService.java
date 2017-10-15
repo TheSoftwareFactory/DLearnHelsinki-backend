@@ -6,6 +6,7 @@ import java.util.List;
 import org.dlearn.helsinki.skeleton.database.Database;
 import org.dlearn.helsinki.skeleton.model.ClassWithAllGroups;
 import org.dlearn.helsinki.skeleton.model.Classes;
+import org.dlearn.helsinki.skeleton.model.Student;
 
 public class ClassService {
 		
@@ -22,5 +23,9 @@ public class ClassService {
 			classesGroups.add(classWithAllGroups);
 		};
 		return classesGroups;
+	}
+	
+	public List<Classes> getAllClassesStundentIsIn(int student_id) {
+		return db.getAllClassesStundentIsIn(student_id);
 	}
 }
