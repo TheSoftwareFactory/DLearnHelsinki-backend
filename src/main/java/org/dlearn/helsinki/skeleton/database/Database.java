@@ -16,7 +16,6 @@ import org.dlearn.helsinki.skeleton.model.ClassThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Classes;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.NewStudent;
-import org.dlearn.helsinki.skeleton.model.GroupAnswer;
 import org.dlearn.helsinki.skeleton.model.NewTeacher;
 import org.dlearn.helsinki.skeleton.model.GroupThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Question;
@@ -1090,17 +1089,15 @@ public class Database extends AbstractDataSource {
                     + "    FROM public.\"Surveys\" as su,\n"
                     + "         public.\"Answers\" as an,\n"
                     + "         public.\"Student_Classes\" as sc,\n"
-                    + "         public.\"Groups\" as gr,\n"
                     + "         public.\"Themes\" as th,\n"
                     + "         public.\"Questions\" as qu \n"
                     + "    WHERE qu._id = an.question_id \n"
                     + "      AND qu.theme_id = th._id \n"
                     + "      AND an.student_id = ? \n"
                     + "      AND su._id = an.survey_id \n"
-                    + "      AND gr.class_id = ?\n"
                     // TODO: Restrict this for only current group members
                     + "      AND sc.student_id = an.student_id\n"
-                    + "      AND sc.class_id = gr.class_id\n"
+                    + "      AND sc.class_id = ?\n"
                     + "    GROUP BY su._id, th._id\n"
                     + "    ORDER BY su.start_date DESC, th._id\n"
                     + ") x WHERE x.survey_rank <= ?";
@@ -1187,6 +1184,67 @@ public class Database extends AbstractDataSource {
                         answer.setTheme_id(result.getInt("theme_id"));
                         answer.setStart_date(result.getString("start_date"));
                         answer.setGroup_id(group_id);
+                        answer.setSurvey_id(result.getInt("survey_id"));
+                        int survey_rank = result.getInt("survey_rank") - 1;
+                        if (last_survey_rank == survey_rank) {
+                            progression.get(survey_rank).add(answer);
+                        } else {
+                            progression.add(Lists.newArrayList(answer));
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return progression;
+    }
+    
+    public List<List<ClassThemeAverage>> getClassThemeAverageProgression(int class_id, int amount) {
+        List<List<ClassThemeAverage>> progression = new ArrayList<>();
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement
+                    = "SELECT * FROM (\n"
+                    + "    SELECT\n"
+                    + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
+                    + "        avg(an.answer) as average,\n"
+                    + "        su._id as survey_id,\n"
+                    + "        th.title,\n"
+                    + "        th.description,\n"
+                    + "        th._id as theme_id,\n"
+                    + "        su.start_date \n"
+                    + "    FROM public.\"Surveys\" as su,\n"
+                    + "         public.\"Answers\" as an,\n"
+                    + "	        public.\"Student_Classes\" as sc,\n"
+                    + "         public.\"Themes\" as th,\n"
+                    + "	        public.\"Questions\" as qu \n"
+                    + "    WHERE qu._id = an.question_id \n"
+                    + "      AND qu.theme_id = th._id \n"
+                    + "      AND su._id = an.survey_id \n"
+                    // TODO: Restrict this for only current group members
+                    + "      AND sc.student_id = an.student_id\n"
+                    + "      AND sc.class_id = ?\n"
+                    + "    GROUP BY su._id, th._id\n"
+                    + "    ORDER BY su.start_date DESC, th._id\n"
+                    + ") x WHERE x.survey_rank <= ?";
+            //prepare statement with survey_id
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(statement)) {
+                select.setInt(1, class_id);
+                select.setInt(2, amount);
+
+                // execute query
+                try (ResultSet result = select.executeQuery()) {
+                    int last_survey_rank = -2;
+                    while (result.next()) {
+                        ClassThemeAverage answer = new ClassThemeAverage();
+                        answer.setAnswer(result.getFloat("average"));
+                        answer.setTheme_title(result.getString("title"));
+                        answer.setDescription(result.getString("description"));
+                        answer.setTheme_id(result.getInt("theme_id"));
+                        answer.setStart_date(result.getString("start_date"));
+                        answer.setClass_id(class_id);
                         answer.setSurvey_id(result.getInt("survey_id"));
                         int survey_rank = result.getInt("survey_rank") - 1;
                         if (last_survey_rank == survey_rank) {
