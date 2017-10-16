@@ -14,6 +14,7 @@ import java.util.function.Supplier;
 import jersey.repackaged.com.google.common.collect.Lists;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
+import org.dlearn.helsinki.skeleton.model.Average;
 import org.dlearn.helsinki.skeleton.model.ChangePasswordStudent;
 import org.dlearn.helsinki.skeleton.model.ClassThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Classes;
@@ -1211,7 +1212,7 @@ public class Database extends AbstractDataSource {
         return Optional.empty();
     }
 
-    public Optional<List<List<ClassThemeAverage>>> getClassThemeAverageProgression(int class_id, int amount) {
+    public Optional<List<Average<ClassThemeAverage>>> getClassThemeAverageProgression(int class_id, int amount) {
         try {
             return Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
                     + "SELECT * FROM (\n"
@@ -1240,28 +1241,27 @@ public class Database extends AbstractDataSource {
                         select.setInt(1, class_id);
                         select.setInt(2, amount);
                     },
-                    results -> new ArrayList<List<ClassThemeAverage>>() {
-                        {
-                            int last_survey_rank = -2;
-                            for (ResultSet result : results) {
-                                ClassThemeAverage answer = new ClassThemeAverage();
-                                answer.setAnswer(result.getFloat("average"));
-                                answer.setTheme_title(result.getString("title"));
-                                answer.setDescription(result.getString("description"));
-                                answer.setTheme_id(result.getInt("theme_id"));
-                                answer.setStart_date(result.getString("start_date"));
-                                answer.setClass_id(class_id);
-                                answer.setSurvey_id(result.getInt("survey_id"));
-                                int survey_rank = result.getInt("survey_rank") - 1;
-                                if (last_survey_rank == survey_rank) {
-                                    this.get(survey_rank).add(answer);
-                                } else {
-                                    this.add(Lists.newArrayList(answer));
-                                }
+                    results -> new ArrayList<Average<ClassThemeAverage>>() {{
+                        int last_survey_rank = -2;
+                        for (ResultSet result : results) {
+                            ClassThemeAverage answer = new ClassThemeAverage();
+                            answer.setAnswer(result.getFloat("average"));
+                            answer.setTheme_title(result.getString("title"));
+                            answer.setDescription(result.getString("description"));
+                            answer.setTheme_id(result.getInt("theme_id"));
+                            answer.setStart_date(result.getString("start_date"));
+                            answer.setClass_id(class_id);
+                            answer.setSurvey_id(result.getInt("survey_id"));
+                            int survey_rank = result.getInt("survey_rank") - 1;
+                            if (last_survey_rank == survey_rank) {
+                                this.get(survey_rank).step.add(answer);
+                            } else {
+                                this.add(new Average() {{
+                                    this.step = Lists.newArrayList(answer);
+                                }});
                             }
                         }
-                    }
-                ));
+                    }}));
         } catch (SQLException e) {
             System.out.println("Error caught: " + e);
             return Optional.empty();
