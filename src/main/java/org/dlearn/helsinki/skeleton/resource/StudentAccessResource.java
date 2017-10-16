@@ -19,12 +19,14 @@ public class StudentAccessResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Student checkLogin() {
+    	System.out.println("calling checkLogin");
     	return security.getStudent().orElse(null);
     }
 
     @Path("/{student_id}/classes")
-    public StudentClassResource getGroups(
+    public StudentClassResource getClasses(
             @PathParam("student_id") int student_id) {
+    	System.out.println("calling students/classes");
     	if(security.isTheStudent(student_id)){
     		return new StudentClassResource();
     	}else{
@@ -32,6 +34,7 @@ public class StudentAccessResource {
     	}
     }
 
+    @GET
     @Path("/{student_id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Student getStudentInfo(@PathParam("student_id") int student_id) {

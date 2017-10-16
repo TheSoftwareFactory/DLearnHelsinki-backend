@@ -19,7 +19,7 @@ public class StudentClassResource {
 	ClassService classService = new ClassService();
     // request teachers/{teacher_id}/classes
     // returns the teacher's classes based on the teacher_id.
-    // TODO implement to answer to request with the classes of the teacher.
+    // TODO Does not work!!!!! -Pascal (probably the sets in the db method)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Classes> getAllClassesStundentIsIn(@PathParam("student_id") int student_id) {
@@ -28,9 +28,9 @@ public class StudentClassResource {
     }
 
     @Path("/{class_id}/surveys")
-    public StudentSurveyResource getStudentSurveyResource(
+    public StudentClassSurveyResource getStudentSurveyResource(
             @PathParam("class_id") int class_id) {
-        //System.out.println("calling classes");
-        return new StudentSurveyResource();
+        System.out.println("calling classes/surveys");
+        return new StudentClassSurveyResource();
     }
 }
