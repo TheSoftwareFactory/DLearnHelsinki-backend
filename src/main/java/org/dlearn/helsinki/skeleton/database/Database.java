@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import jersey.repackaged.com.google.common.collect.Lists;
@@ -1012,13 +1013,10 @@ public class Database extends AbstractDataSource {
         }
         return answers;
     }
-    
-    public List<List<StudentThemeAverage>> getStudentThemeAverageProgression(int student_id, int amount) {
-        List<List<StudentThemeAverage>> progression = new ArrayList<>();
-        try (Connection dbConnection = getDBConnection()) {
-            // Set up batch of statements
-            String statement
-                    = "SELECT * FROM (\n"
+
+    public Optional<List<List<StudentThemeAverage>>> getStudentThemeAverageProgression(int student_id, int amount) {
+        try {
+            return Optional.of(query("SELECT * FROM (\n"
                     + "    SELECT\n"
                     + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
                     + "        avg(an.answer) as average,\n"
@@ -1037,47 +1035,43 @@ public class Database extends AbstractDataSource {
                     + "      AND su._id = an.survey_id \n"
                     + "    GROUP BY su._id, th._id\n"
                     + "    ORDER BY su.start_date DESC, th._id\n"
-                    + ") x WHERE x.survey_rank <= ?";
-            //prepare statement with survey_id
-            try (PreparedStatement select = dbConnection
-                    .prepareStatement(statement)) {
-                select.setInt(1, student_id);
-                select.setInt(3, amount);
-
-                // execute query
-                try (ResultSet result = select.executeQuery()) {
-                    int last_survey_rank = -2;
-                    while (result.next()) {
-                        StudentThemeAverage answer = new StudentThemeAverage();
-                        answer.setAnswer(result.getFloat("average"));
-                        answer.setTheme_title(result.getString("title"));
-                        answer.setDescription(result.getString("description"));
-                        answer.setTheme_id(result.getInt("theme_id"));
-                        answer.setStart_date(result.getString("start_date"));
-                        answer.setStudent_id(student_id);
-                        answer.setSurvey_id(result.getInt("survey_id"));
-                        int survey_rank = result.getInt("survey_rank") - 1;
-                        if (last_survey_rank == survey_rank) {
-                            progression.get(survey_rank).add(answer);
-                        } else {
-                            progression.add(Lists.newArrayList(answer));
+                    + ") x WHERE x.survey_rank <= ?",
+                    select -> {
+                        select.setInt(1, student_id);
+                        select.setInt(3, amount);
+                    },
+                    results -> new ArrayList<List<StudentThemeAverage>>() {
+                        {
+                            int last_survey_rank = -2;
+                            for (ResultSet result : results) {
+                                StudentThemeAverage answer = new StudentThemeAverage();
+                                answer.setAnswer(result.getFloat("average"));
+                                answer.setTheme_title(result.getString("title"));
+                                answer.setDescription(result.getString("description"));
+                                answer.setTheme_id(result.getInt("theme_id"));
+                                answer.setStart_date(result.getString("start_date"));
+                                answer.setStudent_id(student_id);
+                                answer.setSurvey_id(result.getInt("survey_id"));
+                                int survey_rank = result.getInt("survey_rank") - 1;
+                                if (last_survey_rank == survey_rank) {
+                                    this.get(survey_rank).add(answer);
+                                } else {
+                                    this.add(Lists.newArrayList(answer));
+                                }
+                            }
                         }
                     }
-                }
-            }
+                ));
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error caught: " + e);
         }
-        return progression;
+        return Optional.empty();
     }
-    
-    public List<List<StudentThemeAverage>> getStudentThemeAverageProgressionInClass(int class_id,
+
+    public Optional<List<List<StudentThemeAverage>>> getStudentThemeAverageProgressionInClass(int class_id,
             int student_id, int amount) {
-        List<List<StudentThemeAverage>> progression = new ArrayList<>();
-        try (Connection dbConnection = getDBConnection()) {
-            // Set up batch of statements
-            String statement
-                    = "SELECT * FROM (\n"
+        try {
+            return Optional.of(query("SELECT * FROM (\n"
                     + "    SELECT\n"
                     + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
                     + "        avg(an.answer) as average,\n"
@@ -1095,54 +1089,48 @@ public class Database extends AbstractDataSource {
                     + "      AND qu.theme_id = th._id \n"
                     + "      AND an.student_id = ? \n"
                     + "      AND su._id = an.survey_id \n"
-                    // TODO: Restrict this for only current group members
                     + "      AND sc.student_id = an.student_id\n"
                     + "      AND sc.class_id = ?\n"
                     + "    GROUP BY su._id, th._id\n"
                     + "    ORDER BY su.start_date DESC, th._id\n"
-                    + ") x WHERE x.survey_rank <= ?";
-            //prepare statement with survey_id
-            try (PreparedStatement select = dbConnection
-                    .prepareStatement(statement)) {
-                select.setInt(1, student_id);
-                select.setInt(2, class_id);
-                select.setInt(3, amount);
-
-                // execute query
-                try (ResultSet result = select.executeQuery()) {
-                    int last_survey_rank = -2;
-                    while (result.next()) {
-                        StudentThemeAverage answer = new StudentThemeAverage();
-                        answer.setAnswer(result.getFloat("average"));
-                        answer.setTheme_title(result.getString("title"));
-                        answer.setDescription(result.getString("description"));
-                        answer.setTheme_id(result.getInt("theme_id"));
-                        answer.setStart_date(result.getString("start_date"));
-                        answer.setStudent_id(student_id);
-                        answer.setSurvey_id(result.getInt("survey_id"));
-                        int survey_rank = result.getInt("survey_rank") - 1;
-                        if (last_survey_rank == survey_rank) {
-                            progression.get(survey_rank).add(answer);
-                        } else {
-                            progression.add(Lists.newArrayList(answer));
+                    + ") x WHERE x.survey_rank <= ?",
+                    select -> {
+                        select.setInt(1, student_id);
+                        select.setInt(2, class_id);
+                        select.setInt(3, amount);
+                    },
+                    results -> new ArrayList<List<StudentThemeAverage>>() {
+                        {
+                            int last_survey_rank = -2;
+                            for (ResultSet result : results) {
+                                StudentThemeAverage answer = new StudentThemeAverage();
+                                answer.setAnswer(result.getFloat("average"));
+                                answer.setTheme_title(result.getString("title"));
+                                answer.setDescription(result.getString("description"));
+                                answer.setTheme_id(result.getInt("theme_id"));
+                                answer.setStart_date(result.getString("start_date"));
+                                answer.setStudent_id(student_id);
+                                answer.setSurvey_id(result.getInt("survey_id"));
+                                int survey_rank = result.getInt("survey_rank") - 1;
+                                if (last_survey_rank == survey_rank) {
+                                    this.get(survey_rank).add(answer);
+                                } else {
+                                    this.add(Lists.newArrayList(answer));
+                                }
+                            }
                         }
                     }
-                }
-            }
+                ));
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error caught: " + e);
         }
-        return progression;
+        return Optional.empty();
     }
-    
-    public List<List<GroupThemeAverage>> getGroupThemeAverageProgression(int class_id,
+
+    public Optional<List<List<GroupThemeAverage>>> getGroupThemeAverageProgression(int class_id,
             int group_id, int amount) {
-        List<List<GroupThemeAverage>> progression = new ArrayList<>();
-        try (Connection dbConnection = getDBConnection()) {
-            ensureGroupClassMatch(dbConnection, group_id, class_id);
-            // Set up batch of statements
-            String statement
-                    = "SELECT * FROM (\n"
+        try {
+            return Optional.of(query("SELECT * FROM (\n"
                     + "    SELECT\n"
                     + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
                     + "        avg(an.answer) as average,\n"
@@ -1159,53 +1147,48 @@ public class Database extends AbstractDataSource {
                     + "    WHERE qu._id = an.question_id \n"
                     + "      AND qu.theme_id = th._id \n"
                     + "      AND su._id = an.survey_id \n"
-                    // TODO: Restrict this for only current group members
                     + "      AND sc.student_id = an.student_id\n"
                     + "      AND sc.group_id = ?\n"
                     + "      AND sc.class_id = ?\n"
                     + "    GROUP BY su._id, th._id\n"
                     + "    ORDER BY su.start_date DESC, th._id\n"
-                    + ") x WHERE x.survey_rank <= ?";
-            //prepare statement with survey_id
-            try (PreparedStatement select = dbConnection
-                    .prepareStatement(statement)) {
-                select.setInt(1, group_id);
-                select.setInt(2, class_id);
-                select.setInt(3, amount);
-
-                // execute query
-                try (ResultSet result = select.executeQuery()) {
-                    int last_survey_rank = -2;
-                    while (result.next()) {
-                        GroupThemeAverage answer = new GroupThemeAverage();
-                        answer.setAnswer(result.getFloat("average"));
-                        answer.setTheme_title(result.getString("title"));
-                        answer.setDescription(result.getString("description"));
-                        answer.setTheme_id(result.getInt("theme_id"));
-                        answer.setStart_date(result.getString("start_date"));
-                        answer.setGroup_id(group_id);
-                        answer.setSurvey_id(result.getInt("survey_id"));
-                        int survey_rank = result.getInt("survey_rank") - 1;
-                        if (last_survey_rank == survey_rank) {
-                            progression.get(survey_rank).add(answer);
-                        } else {
-                            progression.add(Lists.newArrayList(answer));
+                    + ") x WHERE x.survey_rank <= ?",
+                    select -> {
+                        select.setInt(1, group_id);
+                        select.setInt(2, class_id);
+                        select.setInt(3, amount);
+                    },
+                    results -> new ArrayList<List<GroupThemeAverage>>() {
+                        {
+                            int last_survey_rank = -2;
+                            for (ResultSet result : results) {
+                                GroupThemeAverage answer = new GroupThemeAverage();
+                                answer.setAnswer(result.getFloat("average"));
+                                answer.setTheme_title(result.getString("title"));
+                                answer.setDescription(result.getString("description"));
+                                answer.setTheme_id(result.getInt("theme_id"));
+                                answer.setStart_date(result.getString("start_date"));
+                                answer.setGroup_id(group_id);
+                                answer.setSurvey_id(result.getInt("survey_id"));
+                                int survey_rank = result.getInt("survey_rank") - 1;
+                                if (last_survey_rank == survey_rank) {
+                                    this.get(survey_rank).add(answer);
+                                } else {
+                                    this.add(Lists.newArrayList(answer));
+                                }
+                            }
                         }
                     }
-                }
-            }
+            ));
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error caught: " + e);
         }
-        return progression;
+        return Optional.empty();
     }
-    
-    public List<List<ClassThemeAverage>> getClassThemeAverageProgression(int class_id, int amount) {
-        List<List<ClassThemeAverage>> progression = new ArrayList<>();
-        try (Connection dbConnection = getDBConnection()) {
-            // Set up batch of statements
-            String statement
-                    = "SELECT * FROM (\n"
+
+    public Optional<List<List<ClassThemeAverage>>> getClassThemeAverageProgression(int class_id, int amount) {
+        try {
+            return Optional.of(query("SELECT * FROM (\n"
                     + "    SELECT\n"
                     + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
                     + "        avg(an.answer) as average,\n"
@@ -1222,43 +1205,41 @@ public class Database extends AbstractDataSource {
                     + "    WHERE qu._id = an.question_id \n"
                     + "      AND qu.theme_id = th._id \n"
                     + "      AND su._id = an.survey_id \n"
-                    // TODO: Restrict this for only current group members
                     + "      AND sc.student_id = an.student_id\n"
                     + "      AND sc.class_id = ?\n"
                     + "    GROUP BY su._id, th._id\n"
                     + "    ORDER BY su.start_date DESC, th._id\n"
-                    + ") x WHERE x.survey_rank <= ?";
-            //prepare statement with survey_id
-            try (PreparedStatement select = dbConnection
-                    .prepareStatement(statement)) {
-                select.setInt(1, class_id);
-                select.setInt(2, amount);
-
-                // execute query
-                try (ResultSet result = select.executeQuery()) {
-                    int last_survey_rank = -2;
-                    while (result.next()) {
-                        ClassThemeAverage answer = new ClassThemeAverage();
-                        answer.setAnswer(result.getFloat("average"));
-                        answer.setTheme_title(result.getString("title"));
-                        answer.setDescription(result.getString("description"));
-                        answer.setTheme_id(result.getInt("theme_id"));
-                        answer.setStart_date(result.getString("start_date"));
-                        answer.setClass_id(class_id);
-                        answer.setSurvey_id(result.getInt("survey_id"));
-                        int survey_rank = result.getInt("survey_rank") - 1;
-                        if (last_survey_rank == survey_rank) {
-                            progression.get(survey_rank).add(answer);
-                        } else {
-                            progression.add(Lists.newArrayList(answer));
+                    + ") x WHERE x.survey_rank <= ?",
+                    select -> {
+                        select.setInt(1, class_id);
+                        select.setInt(2, amount);
+                    },
+                    results -> new ArrayList<List<ClassThemeAverage>>() {
+                        {
+                            int last_survey_rank = -2;
+                            for (ResultSet result : results) {
+                                ClassThemeAverage answer = new ClassThemeAverage();
+                                answer.setAnswer(result.getFloat("average"));
+                                answer.setTheme_title(result.getString("title"));
+                                answer.setDescription(result.getString("description"));
+                                answer.setTheme_id(result.getInt("theme_id"));
+                                answer.setStart_date(result.getString("start_date"));
+                                answer.setClass_id(class_id);
+                                answer.setSurvey_id(result.getInt("survey_id"));
+                                int survey_rank = result.getInt("survey_rank") - 1;
+                                if (last_survey_rank == survey_rank) {
+                                    this.get(survey_rank).add(answer);
+                                } else {
+                                    this.add(Lists.newArrayList(answer));
+                                }
+                            }
                         }
                     }
-                }
-            }
+                ));
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error caught: " + e);
+            return Optional.empty();
         }
-        return progression;
     }
 
     public void closeSurvey(int teacher_id, int class_id, int survey_id) {
@@ -1369,5 +1350,51 @@ public class Database extends AbstractDataSource {
         }
         return answers;
     	
+    }
+
+    interface FailableFunction<I, O, E extends Throwable> {
+
+        O apply(I i) throws E;
+    }
+
+    interface FailableConsumer<I, E extends Throwable> {
+
+        void accept(I i) throws E;
+    }
+
+    class WrapperException extends RuntimeException {
+        private final SQLException exception;
+
+        private WrapperException(SQLException ex) {
+            exception = ex;
+        }
+
+    }
+
+    private <T> T query(String statement, FailableConsumer<PreparedStatement, SQLException> preparer, FailableFunction<Iterable<ResultSet>, T, SQLException> take) throws SQLException {
+        try (Connection dbConnection = getDBConnection()) {
+            try (PreparedStatement select = dbConnection.prepareStatement(statement)) {
+                preparer.accept(select);
+                try (ResultSet result = select.executeQuery()) {
+                    return take.apply(() -> new Iterator<ResultSet>() {
+                        @Override
+                        public boolean hasNext() {
+                            try {
+                                return result.next();
+                            } catch (SQLException ex) {
+                                throw new WrapperException(ex);
+                            }
+                        }
+
+                        @Override
+                        public ResultSet next() {
+                            return result;
+                        }
+                    });
+                } catch (WrapperException ex) {
+                    throw ex.exception;
+                }
+            }
+        }
     }
 }
