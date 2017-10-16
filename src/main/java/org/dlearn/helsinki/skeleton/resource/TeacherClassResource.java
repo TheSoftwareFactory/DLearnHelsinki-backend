@@ -6,6 +6,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 
 import org.dlearn.helsinki.skeleton.model.ClassWithAllGroups;
@@ -31,10 +32,11 @@ public class TeacherClassResource {
     @GET
     @Path("/{class_id}/progression/{amount}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Average<ClassThemeAverage>> getClassAverage(
+    public GenericEntity<List<Average<ClassThemeAverage>>> getClassAverage(
             @PathParam("class_id") int class_id,
             @PathParam("amount") int amount) {
-        return progression.getClassProgression(class_id, amount);
+        List<Average<ClassThemeAverage>> prog = progression.getClassProgression(class_id, amount);
+        return new GenericEntity(prog, prog.getClass());
     }
 
     @Path("/{class_id}/surveys")
