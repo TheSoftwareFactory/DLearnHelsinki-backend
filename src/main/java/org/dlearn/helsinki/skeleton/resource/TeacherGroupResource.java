@@ -42,6 +42,7 @@ public class TeacherGroupResource {
     
     @GET
     @Path("/{group_id}/progression/{amount}")
+    @Produces(MediaType.APPLICATION_JSON)
     public List<List<GroupThemeAverage>> getProgression(
             @PathParam("class_id") int class_id,
             @PathParam("group_id") int group_id,

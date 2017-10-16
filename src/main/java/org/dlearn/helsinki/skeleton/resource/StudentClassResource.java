@@ -41,6 +41,7 @@ public class StudentClassResource {
     }
     
     @Path("/{class_id}/progression/{amount}")
+    @Produces(MediaType.APPLICATION_JSON)
     public List<List<StudentThemeAverage>> getProgression(
             @PathParam("class_id") int class_id,
             @PathParam("amount") int amount) {

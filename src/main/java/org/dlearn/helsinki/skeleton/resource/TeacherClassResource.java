@@ -35,6 +35,7 @@ public class TeacherClassResource {
     
     @GET
     @Path("/{class_id}/progression/{amount}")
+    @Produces(MediaType.APPLICATION_JSON)
     public List<List<ClassThemeAverage>> getClassAverage(
             @PathParam("class_id") int class_id,
             @PathParam("amount") int amount) {

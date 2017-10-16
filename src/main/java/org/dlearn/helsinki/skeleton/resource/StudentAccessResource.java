@@ -27,6 +27,7 @@ public class StudentAccessResource {
     }
     
     @Path("/{student_id}/progression/{amount}")
+    @Produces(MediaType.APPLICATION_JSON)
     public List<List<StudentThemeAverage>> getProgression(
             @PathParam("amount") int amount) {
         return security.getStudent()
