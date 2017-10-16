@@ -32,11 +32,13 @@ public class TeacherClassResource {
     @GET
     @Path("/{class_id}/progression/{amount}")
     @Produces(MediaType.APPLICATION_JSON)
-    public GenericEntity<List<List<ClassThemeAverage>>>getClassAverage(
+    public List<GenericEntity<List<ClassThemeAverage>>>getClassAverage(
             @PathParam("class_id") int class_id,
             @PathParam("amount") int amount) {
-        List<List<ClassThemeAverage>> prog = progression.getClassProgression(class_id, amount);
-        return new GenericEntity<>(prog, prog.getClass());
+        return progression.getClassProgression(class_id, amount)
+                .stream()
+                .map(t -> new GenericEntity<>(t, t.getClass()))
+                .collect(Collectors.toList());
     }
 
     @Path("/{class_id}/surveys")
