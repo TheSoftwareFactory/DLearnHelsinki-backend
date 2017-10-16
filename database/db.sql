@@ -42,7 +42,8 @@ CREATE TABLE "Answers" (
     question_id integer NOT NULL,
     student_id integer NOT NULL,
     answer integer DEFAULT 0,
-    survey_id integer NOT NULL
+    survey_id integer NOT NULL,
+    group_id integer
 );
 
 
@@ -83,7 +84,8 @@ ALTER SEQUENCE "Classes__id_seq" OWNED BY "Classes"._id;
 CREATE TABLE "Groups" (
     name character varying(80),
     _id integer NOT NULL,
-    class_id integer
+    class_id integer,
+    open boolean DEFAULT true
 );
 
 
@@ -139,6 +141,36 @@ ALTER SEQUENCE "Questions__id_seq" OWNED BY "Questions"._id;
 
 
 --
+-- Name: Researchers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE "Researchers" (
+    _id integer NOT NULL,
+    username character varying(35),
+    pwd character varying(100)
+);
+
+
+--
+-- Name: Researchers__id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE "Researchers__id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: Researchers__id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE "Researchers__id_seq" OWNED BY "Researchers"._id;
+
+
+--
 -- Name: Student_Classes; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -146,7 +178,8 @@ CREATE TABLE "Student_Classes" (
     _id integer NOT NULL,
     student_id integer,
     class_id integer,
-    group_id integer
+    group_id integer,
+    creation_date timestamp(6) without time zone DEFAULT now()
 );
 
 
@@ -217,8 +250,8 @@ CREATE TABLE "Survey_questions" (
 
 CREATE TABLE "Surveys" (
     title character varying(60),
-    start_date date,
-    end_date date,
+    start_date timestamp(6) without time zone,
+    end_date timestamp(6) without time zone,
     teacher_id integer,
     _id integer NOT NULL,
     open boolean,
@@ -330,6 +363,13 @@ ALTER TABLE ONLY "Questions" ALTER COLUMN _id SET DEFAULT nextval('"Questions__i
 
 
 --
+-- Name: Researchers _id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "Researchers" ALTER COLUMN _id SET DEFAULT nextval('"Researchers__id_seq"'::regclass);
+
+
+--
 -- Name: Student_Classes _id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -378,6 +418,14 @@ ALTER TABLE ONLY "Answers"
 
 ALTER TABLE ONLY "Classes"
     ADD CONSTRAINT "Classes_pkey" PRIMARY KEY (_id);
+
+
+--
+-- Name: Researchers Researchers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "Researchers"
+    ADD CONSTRAINT "Researchers_pkey" PRIMARY KEY (_id);
 
 
 --

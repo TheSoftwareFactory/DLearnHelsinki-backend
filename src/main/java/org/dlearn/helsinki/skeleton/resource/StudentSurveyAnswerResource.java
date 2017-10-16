@@ -13,29 +13,36 @@ import javax.ws.rs.core.MediaType;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
 import org.dlearn.helsinki.skeleton.model.Question;
+import org.dlearn.helsinki.skeleton.model.StudentThemeAverage;
 import org.dlearn.helsinki.skeleton.service.StudentSurveyAnswerService;
 import org.dlearn.helsinki.skeleton.service.StudentSurveyQuestionService;
 
-public class StudentSurveyAnswerResource{
-	
-	StudentSurveyAnswerService studentSurveyAnswerService = new StudentSurveyAnswerService();
-	
-	// returns all the surveys from teacher based on the student_id. a sort of history
-	// TODO implement to answer to history request.
-	
+public class StudentSurveyAnswerResource {
+
+    StudentSurveyAnswerService studentSurveyAnswerService = new StudentSurveyAnswerService();
+
+    // returns all the surveys from teacher based on the student_id. a sort of history
+    // TODO implement to answer to history request.
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{answer_id}")
-    public void putSurveyAnswers(@PathParam("student_id") int student_id, @PathParam("survey_id") int survey_id, @PathParam("answer_id") int answer_id, Answer answer) {
+    public void putSurveyAnswers(@PathParam("student_id") int student_id,
+            @PathParam("survey_id") int survey_id,
+            @PathParam("answer_id") int answer_id, Answer answer) {
         //return surveyService.getSurveysFromTeacherId(teacher_id);
-        studentSurveyAnswerService.putAnswerToQuestion(student_id,survey_id,answer_id,answer);
+        studentSurveyAnswerService.putAnswerToQuestion(student_id, survey_id,
+                answer_id, answer);
     }
-    
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Answer> getSurveyAnswers(@PathParam("student_id") int student_id, @PathParam("survey_id") int survey_id) {
+    public List<StudentThemeAverage> getSurveyAnswers(
+            @PathParam("student_id") int student_id,
+            @PathParam("survey_id") int survey_id) {
         //return surveyService.getSurveysFromTeacherId(teacher_id);
-        return studentSurveyAnswerService.getAnswers(student_id,survey_id);
+        return studentSurveyAnswerService.getStudentThemeAverage(student_id,
+                survey_id);
     }
 
 }

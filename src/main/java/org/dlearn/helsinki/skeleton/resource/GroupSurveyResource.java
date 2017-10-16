@@ -14,28 +14,29 @@ import org.dlearn.helsinki.skeleton.model.Survey;
 
 public class GroupSurveyResource {
 
-	// TODO get last survey on db
+    // TODO get last survey on db
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Survey getSurvey() {
-        return new Survey(1,null, null, null, null, 1, 0, false);
+        return new Survey(1, null, null, null, null, 1, 0, false);
     }
-    
+
     // TODO implement same as getSurvey()
     @Path("/{survey_id}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Survey getSurveyInfo(@PathParam("survey_id") int survey_id) {
-    	return new Survey();
+        return new Survey();
     }
-    
+
     @Path("/{survey_id}/questions")
-    public QuestionResource getQuestions(@PathParam("survey_id") int survey_id) {
-    	return new QuestionResource();
+    public QuestionResource getQuestions(
+            @PathParam("survey_id") int survey_id) {
+        return new QuestionResource();
     }
-    
+
     @Path("/{survey_id}/answers")
     public AnswerResource getAnswers(@PathParam("survey_id") int survey_id) {
-    	return new AnswerResource();
+        return new AnswerResource();
     }
 }

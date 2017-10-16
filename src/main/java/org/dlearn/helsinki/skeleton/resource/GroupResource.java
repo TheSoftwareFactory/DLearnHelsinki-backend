@@ -16,25 +16,26 @@ import org.dlearn.helsinki.skeleton.service.GroupService;
 import jersey.repackaged.com.google.common.collect.Lists;
 
 public class GroupResource {
-	
-	@GET
+
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Group> getGroups() {
         List<Group> groups = new ArrayList<>();
         groups.add(new Group(3, "name", 1));
         return groups;
     }
-    
+
     @Path("/{group_id}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Group getGroupInfo(@PathParam("group_id") int group_id) {
         return new Group(0, null, 1);
     }
-    
+
     @Path("/{group_id}/surveys")
     @GET
-    public GroupSurveyResource getGroupSurvey(@PathParam("group_id") int group_id) {
+    public GroupSurveyResource getGroupSurvey(
+            @PathParam("group_id") int group_id) {
         return new GroupSurveyResource();
-    }    
+    }
 }
