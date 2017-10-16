@@ -19,6 +19,7 @@ import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.NewStudent;
 import org.dlearn.helsinki.skeleton.model.NewTeacher;
 import org.dlearn.helsinki.skeleton.model.GroupThemeAverage;
+import org.dlearn.helsinki.skeleton.model.ListClassThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.model.Researcher;
 import org.dlearn.helsinki.skeleton.model.Student;
@@ -1209,7 +1210,7 @@ public class Database extends AbstractDataSource {
         return Optional.empty();
     }
 
-    public Optional<List<List<ClassThemeAverage>>> getClassThemeAverageProgression(int class_id, int amount) {
+    public Optional<List<ListClassThemeAverage>> getClassThemeAverageProgression(int class_id, int amount) {
         try {
             return Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
                     + "SELECT * FROM (\n"
@@ -1238,7 +1239,7 @@ public class Database extends AbstractDataSource {
                         select.setInt(1, class_id);
                         select.setInt(2, amount);
                     },
-                    results -> new ArrayList<List<ClassThemeAverage>>() {{
+                    results -> new ArrayList<ListClassThemeAverage>() {{
                         int last_survey_rank = -2;
                         for (ResultSet result : results) {
                             ClassThemeAverage answer = new ClassThemeAverage();
@@ -1251,9 +1252,11 @@ public class Database extends AbstractDataSource {
                             answer.setSurvey_id(result.getInt("survey_id"));
                             int survey_rank = result.getInt("survey_rank") - 1;
                             if (last_survey_rank == survey_rank) {
-                                this.get(survey_rank).add(answer);
+                                this.get(survey_rank).themes.add(answer);
                             } else {
-                                this.add(Lists.newArrayList(answer));
+                                this.add(new ListClassThemeAverage() {{
+                                    this.themes = Lists.newArrayList(answer);
+                                }});
                             }
                         }
                     }}));
