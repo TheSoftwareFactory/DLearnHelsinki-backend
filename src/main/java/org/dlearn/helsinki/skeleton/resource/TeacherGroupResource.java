@@ -12,6 +12,7 @@ import org.dlearn.helsinki.skeleton.model.StudentGroup;
 import org.dlearn.helsinki.skeleton.service.TeacherGroupService;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.GroupThemeAverage;
+import org.dlearn.helsinki.skeleton.model.ListGroupThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.service.GroupService;
 import org.dlearn.helsinki.skeleton.service.ProgressionService;
@@ -43,7 +44,7 @@ public class TeacherGroupResource {
     @GET
     @Path("/{group_id}/progression/{amount}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<List<GroupThemeAverage>> getProgression(
+    public List<ListGroupThemeAverage> getProgression(
             @PathParam("class_id") int class_id,
             @PathParam("group_id") int group_id,
             @PathParam("amount") int amount) {

@@ -7,6 +7,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import org.dlearn.helsinki.skeleton.model.ListStudentThemeAverage;
 
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.StudentThemeAverage;
@@ -28,7 +29,7 @@ public class StudentAccessResource {
     
     @Path("/{student_id}/progression/{amount}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<List<StudentThemeAverage>> getProgression(
+    public List<ListStudentThemeAverage> getProgression(
             @PathParam("amount") int amount) {
         return security.getStudent()
                 .map(s -> progression.getStudentProgression(s._id, amount))

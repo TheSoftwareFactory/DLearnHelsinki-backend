@@ -1,18 +1,15 @@
 package org.dlearn.helsinki.skeleton.resource;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 
 import org.dlearn.helsinki.skeleton.model.ClassWithAllGroups;
 import org.dlearn.helsinki.skeleton.service.ClassService;
-import org.dlearn.helsinki.skeleton.model.ClassThemeAverage;
 import org.dlearn.helsinki.skeleton.model.ListClassThemeAverage;
 import org.dlearn.helsinki.skeleton.service.ProgressionService;
 

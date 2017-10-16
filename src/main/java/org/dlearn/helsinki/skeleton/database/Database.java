@@ -20,6 +20,8 @@ import org.dlearn.helsinki.skeleton.model.NewStudent;
 import org.dlearn.helsinki.skeleton.model.NewTeacher;
 import org.dlearn.helsinki.skeleton.model.GroupThemeAverage;
 import org.dlearn.helsinki.skeleton.model.ListClassThemeAverage;
+import org.dlearn.helsinki.skeleton.model.ListGroupThemeAverage;
+import org.dlearn.helsinki.skeleton.model.ListStudentThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.model.Researcher;
 import org.dlearn.helsinki.skeleton.model.Student;
@@ -1035,7 +1037,7 @@ public class Database extends AbstractDataSource {
         return answers;
     }
 
-    public Optional<List<List<StudentThemeAverage>>> getStudentThemeAverageProgression(int student_id, int amount) {
+    public Optional<List<ListStudentThemeAverage>> getStudentThemeAverageProgression(int student_id, int amount) {
         try {
             return Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
                     + "SELECT * FROM (\n"
@@ -1062,7 +1064,7 @@ public class Database extends AbstractDataSource {
                         select.setInt(1, student_id);
                         select.setInt(3, amount);
                     },
-                    results -> new ArrayList<List<StudentThemeAverage>>() {
+                    results -> new ArrayList<ListStudentThemeAverage>() {
                         {
                             int last_survey_rank = -2;
                             for (ResultSet result : results) {
@@ -1076,9 +1078,12 @@ public class Database extends AbstractDataSource {
                                 answer.setSurvey_id(result.getInt("survey_id"));
                                 int survey_rank = result.getInt("survey_rank") - 1;
                                 if (last_survey_rank == survey_rank) {
-                                    this.get(survey_rank).add(answer);
+                                    this.get(survey_rank).themes.add(answer);
                                 } else {
-                                    this.add(Lists.newArrayList(answer));
+                                    last_survey_rank = survey_rank;
+                                    this.add(new ListStudentThemeAverage() {{
+                                        this.themes = Lists.newArrayList(answer);
+                                    }});
                                 }
                             }
                         }
@@ -1090,7 +1095,7 @@ public class Database extends AbstractDataSource {
         return Optional.empty();
     }
 
-    public Optional<List<List<StudentThemeAverage>>> getStudentThemeAverageProgressionInClass(int class_id,
+    public Optional<List<ListStudentThemeAverage>> getStudentThemeAverageProgressionInClass(int class_id,
             int student_id, int amount) {
         try {
             return Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
@@ -1122,7 +1127,7 @@ public class Database extends AbstractDataSource {
                         select.setInt(2, class_id);
                         select.setInt(3, amount);
                     },
-                    results -> new ArrayList<List<StudentThemeAverage>>() {
+                    results -> new ArrayList<ListStudentThemeAverage>() {
                         {
                             int last_survey_rank = -2;
                             for (ResultSet result : results) {
@@ -1136,9 +1141,12 @@ public class Database extends AbstractDataSource {
                                 answer.setSurvey_id(result.getInt("survey_id"));
                                 int survey_rank = result.getInt("survey_rank") - 1;
                                 if (last_survey_rank == survey_rank) {
-                                    this.get(survey_rank).add(answer);
+                                    this.get(survey_rank).themes.add(answer);
                                 } else {
-                                    this.add(Lists.newArrayList(answer));
+                                    last_survey_rank = survey_rank;
+                                    this.add(new ListStudentThemeAverage() {{
+                                        this.themes = Lists.newArrayList(answer);
+                                    }});
                                 }
                             }
                         }
@@ -1150,7 +1158,7 @@ public class Database extends AbstractDataSource {
         return Optional.empty();
     }
 
-    public Optional<List<List<GroupThemeAverage>>> getGroupThemeAverageProgression(int class_id,
+    public Optional<List<ListGroupThemeAverage>> getGroupThemeAverageProgression(int class_id,
             int group_id, int amount) {
         try {
             return Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
@@ -1182,7 +1190,7 @@ public class Database extends AbstractDataSource {
                         select.setInt(2, class_id);
                         select.setInt(3, amount);
                     },
-                    results -> new ArrayList<List<GroupThemeAverage>>() {
+                    results -> new ArrayList<ListGroupThemeAverage>() {
                         {
                             int last_survey_rank = -2;
                             for (ResultSet result : results) {
@@ -1196,9 +1204,12 @@ public class Database extends AbstractDataSource {
                                 answer.setSurvey_id(result.getInt("survey_id"));
                                 int survey_rank = result.getInt("survey_rank") - 1;
                                 if (last_survey_rank == survey_rank) {
-                                    this.get(survey_rank).add(answer);
+                                    this.get(survey_rank).themes.add(answer);
                                 } else {
-                                    this.add(Lists.newArrayList(answer));
+                                    last_survey_rank = survey_rank;
+                                    this.add(new ListGroupThemeAverage() {{
+                                        this.themes = Lists.newArrayList(answer);
+                                    }});
                                 }
                             }
                         }
@@ -1254,6 +1265,7 @@ public class Database extends AbstractDataSource {
                             if (last_survey_rank == survey_rank) {
                                 this.get(survey_rank).themes.add(answer);
                             } else {
+                                last_survey_rank = survey_rank;
                                 this.add(new ListClassThemeAverage() {{
                                     this.themes = Lists.newArrayList(answer);
                                 }});

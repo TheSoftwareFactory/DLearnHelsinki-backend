@@ -14,6 +14,7 @@ import org.dlearn.helsinki.skeleton.service.ClassService;
 import org.dlearn.helsinki.skeleton.service.StudentService;
 
 import jersey.repackaged.com.google.common.collect.Lists;
+import org.dlearn.helsinki.skeleton.model.ListStudentThemeAverage;
 import org.dlearn.helsinki.skeleton.model.StudentThemeAverage;
 import org.dlearn.helsinki.skeleton.service.ProgressionService;
 import org.dlearn.helsinki.skeleton.service.SecurityService;
@@ -42,7 +43,7 @@ public class StudentClassResource {
     
     @Path("/{class_id}/progression/{amount}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<List<StudentThemeAverage>> getProgression(
+    public List<ListStudentThemeAverage> getProgression(
             @PathParam("class_id") int class_id,
             @PathParam("amount") int amount) {
         return security.getStudent()
