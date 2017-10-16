@@ -12,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.dlearn.helsinki.skeleton.model.ClassWithAllGroups;
 import org.dlearn.helsinki.skeleton.service.ClassService;
-import org.dlearn.helsinki.skeleton.model.Average;
 import org.dlearn.helsinki.skeleton.model.ClassThemeAverage;
 import org.dlearn.helsinki.skeleton.service.ProgressionService;
 
@@ -33,13 +32,11 @@ public class TeacherClassResource {
     @GET
     @Path("/{class_id}/progression/{amount}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<GenericEntity<Average<ClassThemeAverage>>>getClassAverage(
+    public GenericEntity<List<List<ClassThemeAverage>>>getClassAverage(
             @PathParam("class_id") int class_id,
             @PathParam("amount") int amount) {
-        return progression.getClassProgression(class_id, amount)
-                .stream()
-                .map(t -> new GenericEntity<>(t, t.getClass()))
-                .collect(Collectors.toList());
+        List<List<ClassThemeAverage>> prog = progression.getClassProgression(class_id, amount);
+        return new GenericEntity<>(prog, prog.getClass());
     }
 
     @Path("/{class_id}/surveys")
