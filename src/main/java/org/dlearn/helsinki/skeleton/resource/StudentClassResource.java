@@ -41,6 +41,7 @@ public class StudentClassResource {
         return new StudentSurveyResource();
     }
     
+    @GET
     @Path("/{class_id}/progression/{amount}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<ListStudentThemeAverage> getProgression(

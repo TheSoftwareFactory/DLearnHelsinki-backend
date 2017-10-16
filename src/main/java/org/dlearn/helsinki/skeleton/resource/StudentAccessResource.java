@@ -27,6 +27,7 @@ public class StudentAccessResource {
     	return security.getStudent().orElse(null);
     }
     
+    @GET
     @Path("/{student_id}/progression/{amount}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<ListStudentThemeAverage> getProgression(
