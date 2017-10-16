@@ -9,12 +9,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.dlearn.helsinki.skeleton.model.Survey;
+import org.dlearn.helsinki.skeleton.service.StudentClassSurveyService;
 import org.dlearn.helsinki.skeleton.service.TeacherClassSurveyService;
 
-public class StudentSurveyResource {
+public class StudentClassSurveyResource {
 
     // TODO make a new service?
-    TeacherClassSurveyService surveyService = new TeacherClassSurveyService();
+    StudentClassSurveyService surveyService = new StudentClassSurveyService();
 
     // request students/{student_id}/classes/{student_id}/surveys/
     // returns all the surveys from teacher based on the student_id. a sort of history

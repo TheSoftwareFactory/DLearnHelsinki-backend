@@ -202,9 +202,44 @@ public class Database extends AbstractDataSource {
     // Output : returns a list of surveys available to the student
     public List<Survey> getSurveysFromClassAsStudent(int student_id,
             int class_id) throws SQLException {
-        // TODO link class with student_classes and remove class_id form student_classes
-        //SELECT * FROM public."Surveys",public."Students",public."Student_Classes" WHERE public."Students"._id = public."Student_Classes".class_id AND public."Student_Classes".class_id = public."Surveys".class_id AND public."Student_Classes".class_id = 1 AND public."Students"._id = 1
-        return null;
+    	ArrayList<Survey> surveys = new ArrayList<Survey>();
+
+        try (Connection dbConnection = getDBConnection()) {
+            String statement = "SELECT distinct _id,title,description,start_date,end_date,open,teacher_id "
+                    + "FROM public.\"Surveys\",public.\"Answers\" "
+                    + "WHERE class_id = ? "
+                    + "AND student_id = ? "
+                    + "AND public.\"Surveys\"._id = public.\"Answers\".survey_id";
+            //prepare statement with student_id
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(statement)) {
+                select.setInt(1, class_id);
+                select.setInt(2, student_id);
+                System.out.println("survey list");
+
+                // execute query
+                try (ResultSet result = select.executeQuery()) {
+                    while (result.next()) {
+                        Survey survey = new Survey();
+                        survey.set_id(result.getInt(1));
+                        survey.setTitle(result.getString(2));
+                        survey.setDescription(result.getString(3));
+                        survey.setStart_date(result.getTimestamp(4));
+                        result.getTimestamp(5);
+                        if (!result.wasNull()) {
+                            survey.setEnd_date(result.getTimestamp(5));
+                        }
+                        survey.setOpen(result.getBoolean(6));
+                        survey.setClass_id(class_id);
+                        survey.setTeacher_id(result.getInt(7));
+                        surveys.add(survey);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return surveys;
     }
 
     // Method : getSurveysFromClassAsStudent
