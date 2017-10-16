@@ -9,20 +9,22 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
+import org.dlearn.helsinki.skeleton.exceptions.StudentExistsException;
+import org.dlearn.helsinki.skeleton.model.ChangePasswordStudent;
 import org.dlearn.helsinki.skeleton.model.NewStudent;
 
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.Teacher;
+import org.dlearn.helsinki.skeleton.service.ChangePasswordService;
 import org.dlearn.helsinki.skeleton.service.CreateNewUserService;
 import org.dlearn.helsinki.skeleton.service.SecurityService;
 
 @Path("/teachers")
 public class TeacherResource {
 
-	private final CreateNewUserService createNewUserService = new CreateNewUserService();
-	private final SecurityService security = new SecurityService();
+    private final CreateNewUserService createNewUserService = new CreateNewUserService();
+    private final ChangePasswordService change_password = new ChangePasswordService();
+    private final SecurityService security = new SecurityService();
     // Request webapi/teachers/
     // Returns the teacher's info based on log credentials
     @GET
@@ -59,21 +61,20 @@ public class TeacherResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Student createNewStudent(@PathParam("teacher_id") int teacher_id,
             NewStudent student) {
-    	if(security.isTheTeacher(teacher_id)){
-    		return createNewUserService.createNewStudent(student);
-    	}else{
-    		return null;
-    	}
-    /*
-        	Student createdStudent = null;
-    	try {
-    		createdStudent = createNewUserService.createNewStudent(student);
-    	} catch(StudentExistsException e) {
-    		String errMess = "The student username is invalid or already exists in database. Choose another.";
-    		throw new WebApplicationException();
-    	}
-        return createdStudent;
-    */
+        try {
+            return createNewUserService.createNewStudent(student);
+        } catch(StudentExistsException e) {
+            throw new WebApplicationException("The student username is invalid or already exists in database. Choose another.", 400);
+        }
     }
 
+    @POST
+    @Path("/{teacher_id}/change_student_password")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Student changeStudentPassword(@PathParam("teacher_id") int teacher_id, ChangePasswordStudent student) {
+        return security.getTeacher()
+            .map(t -> change_password.changeStudentPassword(student))
+            .orElse(null);
+    }
 }
