@@ -1062,7 +1062,7 @@ public class Database extends AbstractDataSource {
                     + ") x WHERE x.survey_rank <= ?",
                     select -> {
                         select.setInt(1, student_id);
-                        select.setInt(3, amount);
+                        select.setInt(2, amount);
                     },
                     results -> new ArrayList<ListStudentThemeAverage>() {
                         {
@@ -1177,6 +1177,7 @@ public class Database extends AbstractDataSource {
                     + "         public.\"Themes\" as th,\n"
                     + "	        public.\"Questions\" as qu \n"
                     + "    WHERE qu._id = an.question_id \n"
+                    // TODO: Take only students that are in the group
                     + "      AND qu.theme_id = th._id \n"
                     + "      AND su._id = an.survey_id \n"
                     + "      AND sc.student_id = an.student_id\n"
