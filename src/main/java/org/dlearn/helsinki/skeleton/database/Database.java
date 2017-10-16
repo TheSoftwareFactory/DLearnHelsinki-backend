@@ -9,15 +9,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import jersey.repackaged.com.google.common.collect.Lists;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
+import org.dlearn.helsinki.skeleton.model.ChangePasswordStudent;
 import org.dlearn.helsinki.skeleton.model.ClassThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Classes;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.NewStudent;
-import org.dlearn.helsinki.skeleton.model.GroupAnswer;
 import org.dlearn.helsinki.skeleton.model.NewTeacher;
 import org.dlearn.helsinki.skeleton.model.GroupThemeAverage;
+import org.dlearn.helsinki.skeleton.model.ListClassThemeAverage;
+import org.dlearn.helsinki.skeleton.model.ListGroupThemeAverage;
+import org.dlearn.helsinki.skeleton.model.ListStudentThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.model.Researcher;
 import org.dlearn.helsinki.skeleton.model.Student;
@@ -201,9 +205,44 @@ public class Database extends AbstractDataSource {
     // Output : returns a list of surveys available to the student
     public List<Survey> getSurveysFromClassAsStudent(int student_id,
             int class_id) throws SQLException {
-        // TODO link class with student_classes and remove class_id form student_classes
-        //SELECT * FROM public."Surveys",public."Students",public."Student_Classes" WHERE public."Students"._id = public."Student_Classes".class_id AND public."Student_Classes".class_id = public."Surveys".class_id AND public."Student_Classes".class_id = 1 AND public."Students"._id = 1
-        return null;
+    	ArrayList<Survey> surveys = new ArrayList<Survey>();
+
+        try (Connection dbConnection = getDBConnection()) {
+            String statement = "SELECT distinct _id,title,description,start_date,end_date,open,teacher_id "
+                    + "FROM public.\"Surveys\",public.\"Answers\" "
+                    + "WHERE class_id = ? "
+                    + "AND student_id = ? "
+                    + "AND public.\"Surveys\"._id = public.\"Answers\".survey_id";
+            //prepare statement with student_id
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(statement)) {
+                select.setInt(1, class_id);
+                select.setInt(2, student_id);
+                System.out.println("survey list");
+
+                // execute query
+                try (ResultSet result = select.executeQuery()) {
+                    while (result.next()) {
+                        Survey survey = new Survey();
+                        survey.set_id(result.getInt(1));
+                        survey.setTitle(result.getString(2));
+                        survey.setDescription(result.getString(3));
+                        survey.setStart_date(result.getTimestamp(4));
+                        result.getTimestamp(5);
+                        if (!result.wasNull()) {
+                            survey.setEnd_date(result.getTimestamp(5));
+                        }
+                        survey.setOpen(result.getBoolean(6));
+                        survey.setClass_id(class_id);
+                        survey.setTeacher_id(result.getInt(7));
+                        surveys.add(survey);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return surveys;
     }
 
     // Method : getSurveysFromClassAsStudent
@@ -459,21 +498,30 @@ public class Database extends AbstractDataSource {
         }
         return teacher.teacher;
     }
+    
+    public Optional<Student> changeStudentPassword(ChangePasswordStudent student) {
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "UPDATE public.\"Students\" SET pwd = ? WHERE _id = ?";
+            try (PreparedStatement insert = dbConnection
+                    .prepareStatement(statement)) {
+                insert.setString(1,
+                        Hasher.getHasher().encode(student.password));
+                insert.setInt(2, student.student_id);
+
+                // execute query
+                insert.execute();
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return Optional.empty();
+        }
+        return Optional.ofNullable(getStudent(student.student_id));
+    }
 
     public void addStudentToGroup(Student student, int class_id, int group_id) {
         try (Connection dbConnection = getDBConnection()) {
-            try (PreparedStatement insert = dbConnection.prepareStatement(
-                    "SELECT class_id FROM public.\"Groups\" WHERE _id=?")) {
-                insert.setInt(1, group_id);
-                try (ResultSet result = insert.executeQuery()) {
-                    result.next();
-                    int real_class_id = result.getInt(1);
-                    if (class_id != real_class_id) {
-                        throw new SQLException("Class id's don't match: "
-                                + class_id + " != " + real_class_id);
-                    }
-                }
-            }
+            ensureGroupClassMatch(dbConnection, group_id, class_id);
             String statement = "INSERT INTO public.\"Student_Classes\" (student_id, class_id, group_id) "
                     + "VALUES (?,?,?)";
             try (PreparedStatement insert = dbConnection
@@ -488,6 +536,21 @@ public class Database extends AbstractDataSource {
         } catch (SQLException e) {
             System.out
                     .println("SQL Error(addStudentToGroup): " + e.getMessage());
+        }
+    }
+
+    private void ensureGroupClassMatch(final Connection dbConnection, int group_id, int class_id) throws SQLException {
+        try (PreparedStatement insert = dbConnection.prepareStatement(
+                "SELECT class_id FROM public.\"Groups\" WHERE _id=?")) {
+            insert.setInt(1, group_id);
+            try (ResultSet result = insert.executeQuery()) {
+                result.next();
+                int real_class_id = result.getInt(1);
+                if (class_id != real_class_id) {
+                    throw new SQLException("Class id's don't match: "
+                            + class_id + " != " + real_class_id);
+                }
+            }
         }
     }
 
@@ -1009,6 +1072,248 @@ public class Database extends AbstractDataSource {
         return answers;
     }
 
+    public Optional<List<ListStudentThemeAverage>> getStudentThemeAverageProgression(int student_id, int amount) {
+        try {
+            return Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
+                    + "SELECT * FROM (\n"
+                    + "    SELECT\n"
+                    + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
+                    + "        avg(an.answer) as average,\n"
+                    + "        su._id as survey_id,\n"
+                    + "        th.title,\n"
+                    + "        th.description,\n"
+                    + "        th._id as theme_id,\n"
+                    + "        su.start_date \n"
+                    + "    FROM public.\"Surveys\" as su,\n"
+                    + "         public.\"Answers\" as an,\n"
+                    + "         public.\"Themes\" as th,\n"
+                    + "         public.\"Questions\" as qu \n"
+                    + "    WHERE qu._id = an.question_id \n"
+                    + "      AND qu.theme_id = th._id \n"
+                    + "      AND an.student_id = ? \n"
+                    + "      AND su._id = an.survey_id \n"
+                    + "    GROUP BY su._id, th._id\n"
+                    + "    ORDER BY su.start_date DESC, th._id\n"
+                    + ") x WHERE x.survey_rank <= ?",
+                    select -> {
+                        select.setInt(1, student_id);
+                        select.setInt(2, amount);
+                    },
+                    results -> new ArrayList<ListStudentThemeAverage>() {
+                        {
+                            int last_survey_rank = -2;
+                            for (ResultSet result : results) {
+                                StudentThemeAverage answer = new StudentThemeAverage();
+                                answer.setAnswer(result.getFloat("average"));
+                                answer.setTheme_title(result.getString("title"));
+                                answer.setDescription(result.getString("description"));
+                                answer.setTheme_id(result.getInt("theme_id"));
+                                answer.setStart_date(result.getString("start_date"));
+                                answer.setStudent_id(student_id);
+                                answer.setSurvey_id(result.getInt("survey_id"));
+                                int survey_rank = result.getInt("survey_rank") - 1;
+                                if (last_survey_rank == survey_rank) {
+                                    this.get(survey_rank).themes.add(answer);
+                                } else {
+                                    last_survey_rank = survey_rank;
+                                    this.add(new ListStudentThemeAverage() {{
+                                        this.themes = Lists.newArrayList(answer);
+                                    }});
+                                }
+                            }
+                        }
+                    }
+                ));
+        } catch (SQLException e) {
+            System.out.println("Error caught: " + e);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<List<ListStudentThemeAverage>> getStudentThemeAverageProgressionInClass(int class_id,
+            int student_id, int amount) {
+        try {
+            return Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
+                    + "SELECT * FROM (\n"
+                    + "    SELECT\n"
+                    + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
+                    + "        avg(an.answer) as average,\n"
+                    + "        su._id as survey_id,\n"
+                    + "        th.title,\n"
+                    + "        th.description,\n"
+                    + "        th._id as theme_id,\n"
+                    + "        su.start_date \n"
+                    + "    FROM public.\"Surveys\" as su,\n"
+                    + "         public.\"Answers\" as an,\n"
+                    + "         public.\"Student_Classes\" as sc,\n"
+                    + "         public.\"Themes\" as th,\n"
+                    + "         public.\"Questions\" as qu \n"
+                    + "    WHERE qu._id = an.question_id \n"
+                    + "      AND qu.theme_id = th._id \n"
+                    + "      AND an.student_id = ? \n"
+                    + "      AND su._id = an.survey_id \n"
+                    + "      AND sc.student_id = an.student_id\n"
+                    + "      AND sc.class_id = ?\n"
+                    + "    GROUP BY su._id, th._id\n"
+                    + "    ORDER BY su.start_date DESC, th._id\n"
+                    + ") x WHERE x.survey_rank <= ?",
+                    select -> {
+                        select.setInt(1, student_id);
+                        select.setInt(2, class_id);
+                        select.setInt(3, amount);
+                    },
+                    results -> new ArrayList<ListStudentThemeAverage>() {
+                        {
+                            int last_survey_rank = -2;
+                            for (ResultSet result : results) {
+                                StudentThemeAverage answer = new StudentThemeAverage();
+                                answer.setAnswer(result.getFloat("average"));
+                                answer.setTheme_title(result.getString("title"));
+                                answer.setDescription(result.getString("description"));
+                                answer.setTheme_id(result.getInt("theme_id"));
+                                answer.setStart_date(result.getString("start_date"));
+                                answer.setStudent_id(student_id);
+                                answer.setSurvey_id(result.getInt("survey_id"));
+                                int survey_rank = result.getInt("survey_rank") - 1;
+                                if (last_survey_rank == survey_rank) {
+                                    this.get(survey_rank).themes.add(answer);
+                                } else {
+                                    last_survey_rank = survey_rank;
+                                    this.add(new ListStudentThemeAverage() {{
+                                        this.themes = Lists.newArrayList(answer);
+                                    }});
+                                }
+                            }
+                        }
+                    }
+                ));
+        } catch (SQLException e) {
+            System.out.println("Error caught: " + e);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<List<ListGroupThemeAverage>> getGroupThemeAverageProgression(int class_id,
+            int group_id, int amount) {
+        try {
+            return Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
+                    + "SELECT * FROM (\n"
+                    + "    SELECT\n"
+                    + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
+                    + "        avg(an.answer) as average,\n"
+                    + "        su._id as survey_id,\n"
+                    + "        th.title,\n"
+                    + "        th.description,\n"
+                    + "        th._id as theme_id,\n"
+                    + "        su.start_date \n"
+                    + "    FROM public.\"Surveys\" as su,\n"
+                    + "         public.\"Answers\" as an,\n"
+                    + "	        public.\"Student_Classes\" as sc,\n"
+                    + "         public.\"Themes\" as th,\n"
+                    + "	        public.\"Questions\" as qu \n"
+                    + "    WHERE qu._id = an.question_id \n"
+                    // TODO: Take only students that are in the group
+                    + "      AND qu.theme_id = th._id \n"
+                    + "      AND su._id = an.survey_id \n"
+                    + "      AND sc.student_id = an.student_id\n"
+                    + "      AND sc.group_id = ?\n"
+                    + "      AND sc.class_id = ?\n"
+                    + "    GROUP BY su._id, th._id\n"
+                    + "    ORDER BY su.start_date DESC, th._id\n"
+                    + ") x WHERE x.survey_rank <= ?",
+                    select -> {
+                        select.setInt(1, group_id);
+                        select.setInt(2, class_id);
+                        select.setInt(3, amount);
+                    },
+                    results -> new ArrayList<ListGroupThemeAverage>() {
+                        {
+                            int last_survey_rank = -2;
+                            for (ResultSet result : results) {
+                                GroupThemeAverage answer = new GroupThemeAverage();
+                                answer.setAnswer(result.getFloat("average"));
+                                answer.setTheme_title(result.getString("title"));
+                                answer.setDescription(result.getString("description"));
+                                answer.setTheme_id(result.getInt("theme_id"));
+                                answer.setStart_date(result.getString("start_date"));
+                                answer.setGroup_id(group_id);
+                                answer.setSurvey_id(result.getInt("survey_id"));
+                                int survey_rank = result.getInt("survey_rank") - 1;
+                                if (last_survey_rank == survey_rank) {
+                                    this.get(survey_rank).themes.add(answer);
+                                } else {
+                                    last_survey_rank = survey_rank;
+                                    this.add(new ListGroupThemeAverage() {{
+                                        this.themes = Lists.newArrayList(answer);
+                                    }});
+                                }
+                            }
+                        }
+                    }
+            ));
+        } catch (SQLException e) {
+            System.out.println("Error caught: " + e);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<List<ListClassThemeAverage>> getClassThemeAverageProgression(int class_id, int amount) {
+        try {
+            return Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
+                    + "SELECT * FROM (\n"
+                    + "    SELECT\n"
+                    + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
+                    + "        avg(an.answer) as average,\n"
+                    + "        su._id as survey_id,\n"
+                    + "        th.title,\n"
+                    + "        th.description,\n"
+                    + "        th._id as theme_id,\n"
+                    + "        su.start_date \n"
+                    + "    FROM public.\"Surveys\" as su,\n"
+                    + "         public.\"Answers\" as an,\n"
+                    + "	        public.\"Student_Classes\" as sc,\n"
+                    + "         public.\"Themes\" as th,\n"
+                    + "	        public.\"Questions\" as qu \n"
+                    + "    WHERE qu._id = an.question_id \n"
+                    + "      AND qu.theme_id = th._id \n"
+                    + "      AND su._id = an.survey_id \n"
+                    + "      AND sc.student_id = an.student_id\n"
+                    + "      AND sc.class_id = ?\n"
+                    + "    GROUP BY su._id, th._id\n"
+                    + "    ORDER BY su.start_date DESC, th._id\n"
+                    + ") x WHERE x.survey_rank <= ?",
+                    select -> {
+                        select.setInt(1, class_id);
+                        select.setInt(2, amount);
+                    },
+                    results -> new ArrayList<ListClassThemeAverage>() {{
+                        int last_survey_rank = -2;
+                        for (ResultSet result : results) {
+                            ClassThemeAverage answer = new ClassThemeAverage();
+                            answer.setAnswer(result.getFloat("average"));
+                            answer.setTheme_title(result.getString("title"));
+                            answer.setDescription(result.getString("description"));
+                            answer.setTheme_id(result.getInt("theme_id"));
+                            answer.setStart_date(result.getString("start_date"));
+                            answer.setClass_id(class_id);
+                            answer.setSurvey_id(result.getInt("survey_id"));
+                            int survey_rank = result.getInt("survey_rank") - 1;
+                            if (last_survey_rank == survey_rank) {
+                                this.get(survey_rank).themes.add(answer);
+                            } else {
+                                last_survey_rank = survey_rank;
+                                this.add(new ListClassThemeAverage() {{
+                                    this.themes = Lists.newArrayList(answer);
+                                }});
+                            }
+                        }
+                    }}));
+        } catch (SQLException e) {
+            System.out.println("Error caught: " + e);
+            return Optional.empty();
+        }
+    }
+
     public void closeSurvey(int teacher_id, int class_id, int survey_id) {
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -1118,4 +1423,5 @@ public class Database extends AbstractDataSource {
         return answers;
     	
     }
+    
 }

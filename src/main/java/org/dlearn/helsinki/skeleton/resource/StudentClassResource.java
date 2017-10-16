@@ -1,5 +1,6 @@
 package org.dlearn.helsinki.skeleton.resource;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -13,13 +14,19 @@ import org.dlearn.helsinki.skeleton.service.ClassService;
 import org.dlearn.helsinki.skeleton.service.StudentService;
 
 import jersey.repackaged.com.google.common.collect.Lists;
+import org.dlearn.helsinki.skeleton.model.ListStudentThemeAverage;
+import org.dlearn.helsinki.skeleton.model.StudentThemeAverage;
+import org.dlearn.helsinki.skeleton.service.ProgressionService;
+import org.dlearn.helsinki.skeleton.service.SecurityService;
 
 // Called by StudentAccess Students/1/classes
 public class StudentClassResource {
-	ClassService classService = new ClassService();
+    private final ClassService classService = new ClassService();
+    private final SecurityService security = new SecurityService();
+    private final ProgressionService progression = new ProgressionService();
     // request teachers/{teacher_id}/classes
     // returns the teacher's classes based on the teacher_id.
-    // TODO implement to answer to request with the classes of the teacher.
+    // TODO Does not work!!!!! -Pascal (probably the sets in the db method)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Classes> getAllClassesStundentIsIn(@PathParam("student_id") int student_id) {
@@ -28,9 +35,20 @@ public class StudentClassResource {
     }
 
     @Path("/{class_id}/surveys")
-    public StudentSurveyResource getStudentSurveyResource(
+    public StudentClassSurveyResource getStudentSurveyResource(
             @PathParam("class_id") int class_id) {
-        //System.out.println("calling classes");
-        return new StudentSurveyResource();
+        System.out.println("calling classes/surveys");
+        return new StudentClassSurveyResource();
+    }
+    
+    @GET
+    @Path("/{class_id}/progression/{amount}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<ListStudentThemeAverage> getProgression(
+            @PathParam("class_id") int class_id,
+            @PathParam("amount") int amount) {
+        return security.getStudent()
+                .map(s -> progression.getStudentClassProgression(class_id, s._id, amount))
+                .orElse(Collections.EMPTY_LIST);
     }
 }

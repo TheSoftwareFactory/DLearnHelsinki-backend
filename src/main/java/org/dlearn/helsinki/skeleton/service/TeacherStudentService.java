@@ -3,7 +3,6 @@ package org.dlearn.helsinki.skeleton.service;
 import java.util.List;
 
 import org.dlearn.helsinki.skeleton.database.Database;
-import org.dlearn.helsinki.skeleton.model.ClassThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Student;
 
 public class TeacherStudentService {

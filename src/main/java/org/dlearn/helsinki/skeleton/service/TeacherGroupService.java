@@ -7,11 +7,10 @@ import org.dlearn.helsinki.skeleton.model.StudentGroup;
 
 public class TeacherGroupService {
 
-    Database db = new Database();
+    private static final Database DB = new Database();
 
     public List<StudentGroup> getGroupsWithStudents(int class_id) {
-        // TODO Auto-generated method stub
-        return db.getGroupsWithStudents(class_id);
+        return DB.getGroupsWithStudents(class_id);
     }
 
 }
