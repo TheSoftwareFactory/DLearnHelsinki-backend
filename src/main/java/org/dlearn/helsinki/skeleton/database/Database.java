@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import jersey.repackaged.com.google.common.collect.Lists;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
@@ -1016,7 +1017,8 @@ public class Database extends AbstractDataSource {
 
     public Optional<List<List<StudentThemeAverage>>> getStudentThemeAverageProgression(int student_id, int amount) {
         try {
-            return Optional.of(query("SELECT * FROM (\n"
+            return Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
+                    + "SELECT * FROM (\n"
                     + "    SELECT\n"
                     + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
                     + "        avg(an.answer) as average,\n"
@@ -1071,7 +1073,8 @@ public class Database extends AbstractDataSource {
     public Optional<List<List<StudentThemeAverage>>> getStudentThemeAverageProgressionInClass(int class_id,
             int student_id, int amount) {
         try {
-            return Optional.of(query("SELECT * FROM (\n"
+            return Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
+                    + "SELECT * FROM (\n"
                     + "    SELECT\n"
                     + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
                     + "        avg(an.answer) as average,\n"
@@ -1130,7 +1133,8 @@ public class Database extends AbstractDataSource {
     public Optional<List<List<GroupThemeAverage>>> getGroupThemeAverageProgression(int class_id,
             int group_id, int amount) {
         try {
-            return Optional.of(query("SELECT * FROM (\n"
+            return Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
+                    + "SELECT * FROM (\n"
                     + "    SELECT\n"
                     + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
                     + "        avg(an.answer) as average,\n"
@@ -1188,7 +1192,8 @@ public class Database extends AbstractDataSource {
 
     public Optional<List<List<ClassThemeAverage>>> getClassThemeAverageProgression(int class_id, int amount) {
         try {
-            return Optional.of(query("SELECT * FROM (\n"
+            return Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
+                    + "SELECT * FROM (\n"
                     + "    SELECT\n"
                     + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
                     + "        avg(an.answer) as average,\n"
@@ -1351,50 +1356,5 @@ public class Database extends AbstractDataSource {
         return answers;
     	
     }
-
-    interface FailableFunction<I, O, E extends Throwable> {
-
-        O apply(I i) throws E;
-    }
-
-    interface FailableConsumer<I, E extends Throwable> {
-
-        void accept(I i) throws E;
-    }
-
-    class WrapperException extends RuntimeException {
-        private final SQLException exception;
-
-        private WrapperException(SQLException ex) {
-            exception = ex;
-        }
-
-    }
-
-    private <T> T query(String statement, FailableConsumer<PreparedStatement, SQLException> preparer, FailableFunction<Iterable<ResultSet>, T, SQLException> take) throws SQLException {
-        try (Connection dbConnection = getDBConnection()) {
-            try (PreparedStatement select = dbConnection.prepareStatement(statement)) {
-                preparer.accept(select);
-                try (ResultSet result = select.executeQuery()) {
-                    return take.apply(() -> new Iterator<ResultSet>() {
-                        @Override
-                        public boolean hasNext() {
-                            try {
-                                return result.next();
-                            } catch (SQLException ex) {
-                                throw new WrapperException(ex);
-                            }
-                        }
-
-                        @Override
-                        public ResultSet next() {
-                            return result;
-                        }
-                    });
-                } catch (WrapperException ex) {
-                    throw ex.exception;
-                }
-            }
-        }
-    }
+    
 }
