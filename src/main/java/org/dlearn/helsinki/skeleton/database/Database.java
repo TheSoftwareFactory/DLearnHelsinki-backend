@@ -14,6 +14,7 @@ import java.util.function.Supplier;
 import jersey.repackaged.com.google.common.collect.Lists;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
+import org.dlearn.helsinki.skeleton.model.ChangePasswordStudent;
 import org.dlearn.helsinki.skeleton.model.ClassThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Classes;
 import org.dlearn.helsinki.skeleton.model.Group;
@@ -460,6 +461,26 @@ public class Database extends AbstractDataSource {
             return null;
         }
         return teacher.teacher;
+    }
+    
+    public Optional<Student> changeStudentPassword(ChangePasswordStudent student) {
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "UPDATE public.\"Students\" SET pwd = ? WHERE _id = ?";
+            try (PreparedStatement insert = dbConnection
+                    .prepareStatement(statement)) {
+                insert.setString(1,
+                        Hasher.getHasher().encode(student.password));
+                insert.setInt(2, student.student_id);
+
+                // execute query
+                insert.execute();
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return Optional.empty();
+        }
+        return Optional.ofNullable(getStudent(student.student_id));
     }
 
     public void addStudentToGroup(Student student, int class_id, int group_id) {
