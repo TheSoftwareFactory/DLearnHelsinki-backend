@@ -209,15 +209,12 @@ public class Database extends AbstractDataSource {
 
         try (Connection dbConnection = getDBConnection()) {
             String statement = "SELECT distinct _id,title,description,start_date,end_date,open,teacher_id "
-                    + "FROM public.\"Surveys\",public.\"Answers\" "
-                    + "WHERE class_id = ? "
-                    + "AND student_id = ? "
-                    + "AND public.\"Surveys\"._id = public.\"Answers\".survey_id";
+                    + "FROM public.\"Surveys\" "
+                    + "WHERE class_id = ? ";
             //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
                 select.setInt(1, class_id);
-                select.setInt(2, student_id);
                 System.out.println("survey list");
 
                 // execute query
