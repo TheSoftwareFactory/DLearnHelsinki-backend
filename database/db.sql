@@ -42,7 +42,8 @@ CREATE TABLE "Answers" (
     question_id integer NOT NULL,
     student_id integer NOT NULL,
     answer integer DEFAULT 0,
-    survey_id integer NOT NULL
+    survey_id integer NOT NULL,
+    group_id integer
 );
 
 
@@ -83,7 +84,8 @@ ALTER SEQUENCE "Classes__id_seq" OWNED BY "Classes"._id;
 CREATE TABLE "Groups" (
     name character varying(80),
     _id integer NOT NULL,
-    class_id integer
+    class_id integer,
+    open boolean DEFAULT true
 );
 
 
@@ -177,7 +179,7 @@ CREATE TABLE "Student_Classes" (
     student_id integer,
     class_id integer,
     group_id integer,
-    creation_date timestamp with time zone DEFAULT now()
+    creation_date timestamp(6) without time zone DEFAULT now()
 );
 
 
@@ -207,7 +209,7 @@ ALTER SEQUENCE "Student_Classes__id_seq" OWNED BY "Student_Classes"._id;
 CREATE TABLE "Students" (
     _id integer NOT NULL,
     username character varying(35),
-    pwd character varying(55),
+    pwd character varying(100),
     gender character varying(15),
     age integer
 );
@@ -248,8 +250,8 @@ CREATE TABLE "Survey_questions" (
 
 CREATE TABLE "Surveys" (
     title character varying(60),
-    start_date timestamp(6) with time zone,
-    end_date timestamp(6) with time zone,
+    start_date timestamp(6) without time zone,
+    end_date timestamp(6) without time zone,
     teacher_id integer,
     _id integer NOT NULL,
     open boolean,
@@ -285,7 +287,7 @@ CREATE TABLE "Teachers" (
     lastname character varying(40),
     firstname character varying(40),
     username character varying(40),
-    pwd character varying(40),
+    pwd character varying(100),
     _id integer NOT NULL
 );
 
@@ -556,14 +558,6 @@ ALTER TABLE ONLY "Survey_questions"
 
 ALTER TABLE ONLY "Survey_questions"
     ADD CONSTRAINT survey_question FOREIGN KEY (survey_id) REFERENCES "Surveys"(_id);
-
-
---
--- Name: public; Type: ACL; Schema: -; Owner: -
---
-
-REVOKE ALL ON SCHEMA public FROM postgres;
-GRANT ALL ON SCHEMA public TO postgres WITH GRANT OPTION;
 
 
 --

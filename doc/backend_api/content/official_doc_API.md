@@ -155,6 +155,39 @@ $ curl --request POST localhost:8080/webapi/teachers/1/create_student
 }
 ```
 
+### Change student password
+
+```endpoint
+POST teachers/{teacher_id}/change_student_password
+```
+
+#### Example request
+
+```curl
+$ curl --request POST localhost:8080/webapi/teachers/1/change_student_password
+  -d @data.json
+```
+
+#### Example request body
+
+```json
+{
+  "student_id" : 1,
+  "password" : "DontUseThisPassword",
+}
+```
+
+#### Example response
+
+```json
+{
+  "_id" : 1,
+  "username" : "LegoLass",
+  "age" : 13,
+  "gender" : "dragon"
+}
+```
+
 ### List students in one class (TODO) check student api branch
 
 Lists all students inside one specified class.
@@ -329,6 +362,69 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/students/1/surveys/1/answers
 }
 ```
 
+### Retrieve student's progression
+
+```endpoint
+GET teachers/{teacher_id}/classes/{class_id}/students/{student_id}/progression/{amount}
+```
+
+#### Example request
+
+```curl
+$ curl localhost:8080/webapi/teachers/1/classes/1/students/1/progression/2
+```
+
+#### Example response
+
+```json
+[
+  {
+    "themes" : [
+      {
+        "answer" : 3.0,
+        "description" : "These questions are about respect and the sustainability of the work.",
+        "start_date" : "2017-10-13 10:13:09.972716+00",
+        "student_id" : 1,
+        "survey_id" : 53,
+        "theme_id" : 5,
+        "theme_title" : "Sustainable work - respect"
+      },
+      {
+        "answer" : 3.1,
+        "description" : "These questions are about the persistence of the excercise.",
+        "start_date" : "2017-10-13 10:13:09.972716+00",
+        "student_id" : 1,
+        "survey_id" : 53,
+        "theme_id" : 3,
+        "theme_title" : "Persistence"
+      },
+    ],
+  },
+  {
+    "themes" : [
+      {
+        "answer" : 3.2,
+        "description" : "These questions are about respect and the sustainability of the work.",
+        "start_date" : "2017-11-09 10:12:03.972716+00",
+        "student_id" : 1,
+        "survey_id" : 85,
+        "theme_id" : 5,
+        "theme_title" : "Sustainable work - respect"
+      },
+      {
+        "answer" : 2.9,
+        "description" : "These questions are about the persistence of the excercise.",
+        "start_date" : "2017-11-09 10:12:03.972716+00",
+        "student_id" : 1,
+        "survey_id" : 85,
+        "theme_id" : 3,
+        "theme_title" : "Persistence"
+      },
+    ]
+  }
+]
+```
+
 ### Retrieve a group's results (TODO)
 
 Returns a single result for a specified survey for a specified group.
@@ -361,6 +457,69 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/surveys/1/answers
 
 ```
 
+### Retrieve group's progression
+
+```endpoint
+GET teachers/{teacher_id}/classes/{class_id}/groups/{group_id}/progression/{amount}
+```
+
+#### Example request
+
+```curl
+$ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/progression/2
+```
+
+#### Example response
+
+```json
+[
+  {
+    "themes" : [
+      {
+        "answer" : 2.3,
+        "description" : "These questions are about respect and the sustainability of the work.",
+        "start_date" : "2017-10-13 10:13:09.972716+00",
+        "group_id" : 1,
+        "survey_id" : 53,
+        "theme_id" : 5,
+        "theme_title" : "Sustainable work - respect"
+      },
+      {
+        "answer" : 3.9,
+        "description" : "These questions are about the persistence of the excercise.",
+        "start_date" : "2017-10-13 10:13:09.972716+00",
+        "group_id" : 1,
+        "survey_id" : 53,
+        "theme_id" : 3,
+        "theme_title" : "Persistence"
+      },
+    ],
+  },
+  {
+    "themes" : [
+      {
+        "answer" : 2.1,
+        "description" : "These questions are about respect and the sustainability of the work.",
+        "start_date" : "2017-11-09 10:12:03.972716+00",
+        "group_id" : 1,
+        "survey_id" : 85,
+        "theme_id" : 5,
+        "theme_title" : "Sustainable work - respect"
+      },
+      {
+        "answer" : 3.5,
+        "description" : "These questions are about the persistence of the excercise.",
+        "start_date" : "2017-11-09 10:12:03.972716+00",
+        "group_id" : 1,
+        "survey_id" : 85,
+        "theme_id" : 3,
+        "theme_title" : "Persistence"
+      },
+    ]
+  }
+]
+```
+
 ### Retrieve a class's results (DONE)
 
 Returns a single result for a specified survey for a specified class.
@@ -391,6 +550,68 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1/answers
   }
 ```
 
+### Retrieve classes progression
+
+```endpoint
+GET teachers/{teacher_id}/classes/{class_id}/progression/{amount}
+```
+
+#### Example request
+
+```curl
+$ curl localhost:8080/webapi/teachers/1/classes/1/progression/2
+```
+
+#### Example response
+
+```json
+[
+  {
+    "themes" : [
+      {
+        "answer" : 4.2,
+        "description" : "These questions are about respect and the sustainability of the work.",
+        "start_date" : "2017-10-13 10:13:09.972716+00",
+        "class_id" : 1,
+        "survey_id" : 53,
+        "theme_id" : 5,
+        "theme_title" : "Sustainable work - respect"
+      },
+      {
+        "answer" : 1.1,
+        "description" : "These questions are about the persistence of the excercise.",
+        "start_date" : "2017-10-13 10:13:09.972716+00",
+        "class_id" : 1,
+        "survey_id" : 53,
+        "theme_id" : 3,
+        "theme_title" : "Persistence"
+      },
+    ],
+  },
+  {
+    "themes" : [
+      {
+        "answer" : 4.3,
+        "description" : "These questions are about respect and the sustainability of the work.",
+        "start_date" : "2017-11-09 10:12:03.972716+00",
+        "class_id" : 1,
+        "survey_id" : 85,
+        "theme_id" : 5,
+        "theme_title" : "Sustainable work - respect"
+      },
+      {
+        "answer" : 1.4,
+        "description" : "These questions are about the persistence of the excercise.",
+        "start_date" : "2017-11-09 10:12:03.972716+00",
+        "class_id" : 1,
+        "survey_id" : 85,
+        "theme_id" : 3,
+        "theme_title" : "Persistence"
+      },
+    ]
+  }
+]
+```
 
 ### List surveys (TODO)
 
@@ -577,6 +798,69 @@ $ curl localhost:8080/webapi/students/1/classes/1/surveys/1/answers
 ]
 ```
 
+### Retrieve student's progression
+
+```endpoint
+GET students/{student_id}/progression/{amount}
+```
+
+#### Example request
+
+```curl
+$ curl localhost:8080/webapi/students/1/progression/2
+```
+
+#### Example response
+
+```json
+[
+  {
+    "themes" : [
+      {
+        "answer" : 3.0,
+        "description" : "These questions are about respect and the sustainability of the work.",
+        "start_date" : "2017-10-13 10:13:09.972716+00",
+        "student_id" : 1,
+        "survey_id" : 53,
+        "theme_id" : 5,
+        "theme_title" : "Sustainable work - respect"
+      },
+      {
+        "answer" : 3.1,
+        "description" : "These questions are about the persistence of the excercise.",
+        "start_date" : "2017-10-13 10:13:09.972716+00",
+        "student_id" : 1,
+        "survey_id" : 53,
+        "theme_id" : 3,
+        "theme_title" : "Persistence"
+      },
+    ],
+  },
+  {
+    "themes" : [
+      {
+        "answer" : 3.2,
+        "description" : "These questions are about respect and the sustainability of the work.",
+        "start_date" : "2017-11-09 10:12:03.972716+00",
+        "student_id" : 1,
+        "survey_id" : 85,
+        "theme_id" : 5,
+        "theme_title" : "Sustainable work - respect"
+      },
+      {
+        "answer" : 2.9,
+        "description" : "These questions are about the persistence of the excercise.",
+        "start_date" : "2017-11-09 10:12:03.972716+00",
+        "student_id" : 1,
+        "survey_id" : 85,
+        "theme_id" : 3,
+        "theme_title" : "Persistence"
+      },
+    ]
+  }
+]
+```
+
 ### Retrieve all the surveys (TODO)
 
 Returns all the survey for one class. Can be used to find the open survey
@@ -615,6 +899,47 @@ $ curl localhost:8080/webapi/students/1/classes/1/surveys
     "end_date" : "2007-04-05T13:30Z",
     "open" : false
   },
+]
+```
+
+### Retrieve student's progression in a class
+
+```endpoint
+GET students/{student_id}/classes/{class_id}/progression/{amount}
+```
+
+#### Example request
+
+```curl
+$ curl localhost:8080/webapi/students/1/classes/1/progression/2
+```
+
+#### Example response
+
+```json
+[
+  {
+    "themes" : [
+      {
+        "answer" : 3.0,
+        "description" : "These questions are about respect and the sustainability of the work.",
+        "start_date" : "2017-10-13 10:13:09.972716+00",
+        "student_id" : 1,
+        "survey_id" : 53,
+        "theme_id" : 5,
+        "theme_title" : "Sustainable work - respect"
+      },
+      {
+        "answer" : 3.1,
+        "description" : "These questions are about the persistence of the excercise.",
+        "start_date" : "2017-10-13 10:13:09.972716+00",
+        "student_id" : 1,
+        "survey_id" : 53,
+        "theme_id" : 3,
+        "theme_title" : "Persistence"
+      },
+    ],
+  }
 ]
 ```
 

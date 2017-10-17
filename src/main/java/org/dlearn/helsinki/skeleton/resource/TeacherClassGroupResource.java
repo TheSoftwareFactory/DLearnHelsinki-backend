@@ -15,11 +15,17 @@ import javax.ws.rs.core.MediaType;
 import org.dlearn.helsinki.skeleton.model.StudentGroup;
 import org.dlearn.helsinki.skeleton.service.TeacherGroupService;
 import org.dlearn.helsinki.skeleton.model.Group;
+import org.dlearn.helsinki.skeleton.model.GroupThemeAverage;
+import org.dlearn.helsinki.skeleton.model.ListGroupThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Student;
+import org.dlearn.helsinki.skeleton.service.ProgressionService;
+
 
 public class TeacherClassGroupResource {
 
-	final static TeacherGroupService teacherGroupService = new TeacherGroupService();
+    private final TeacherGroupService teacherGroupService = new TeacherGroupService();
+    private final ProgressionService progression = new ProgressionService();
+
 
     // simple GET to retrieve all the groups in the class
     @GET
@@ -47,6 +53,17 @@ public class TeacherClassGroupResource {
             @PathParam("group_id") int group_id) {
         System.out.println("calling group survey");
         return new TeacherGroupSurveyResource();
+    }
+    
+    @GET
+    @Path("/{group_id}/progression/{amount}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<ListGroupThemeAverage> getProgression(
+            @PathParam("class_id") int class_id,
+            @PathParam("group_id") int group_id,
+            @PathParam("amount") int amount) {
+        return progression.getGroupProgression(class_id, group_id,
+                amount);
     }
 
     //@Path("/")

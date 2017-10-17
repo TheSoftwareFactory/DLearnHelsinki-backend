@@ -10,34 +10,33 @@ import org.dlearn.helsinki.skeleton.model.StudentGroup;
 
 public class TeacherGroupService {
 
-    Database db = new Database();
+    private static final Database DB = new Database();
 
     public List<StudentGroup> getGroupsWithStudents(int class_id) {
-        // TODO Auto-generated method stub
-        return db.getGroupsWithStudents(class_id);
+        return DB.getGroupsWithStudents(class_id);
     }
     
     public List<Group> getAllGroupsTheStudentIsIn(int studentID) {
-        return db.getAllGroupsForStudent(studentID);
+        return DB.getAllGroupsForStudent(studentID);
     }
 
     public List<Group> getAllGroupsFromClass(int class_id) {
-        return db.getAllGroupsFromClass(class_id);
+        return DB.getAllGroupsFromClass(class_id);
     }
 
     public Group getGroupFromClass(int class_id, int group_id) {
-        return db.getGroupFromClass(class_id, group_id);
+        return DB.getGroupFromClass(class_id, group_id);
     }
 
     public List<Student> getAllStudentsFromClassAndGroup(int class_id,
             int group_id) {
-        return db.getAllStudentsFromClassAndGroup(class_id, group_id);
+        return DB.getAllStudentsFromClassAndGroup(class_id, group_id);
     }
     
     public void deleteGroupFromClass(int class_id, int group_id) {
     	// TODO We need to change the database structure so that deletion won't ruin history and integrity.
-    	if (db.isGroupEmpty(group_id)) {
-    		db.deleteGroupFromClass(class_id, group_id);
+    	if (DB.isGroupEmpty(group_id)) {
+    		DB.deleteGroupFromClass(class_id, group_id);
     	} else {
     		throw new GroupNotEmptyException();
     	}
@@ -49,7 +48,7 @@ public class TeacherGroupService {
     		//updating
     		groupSample.setClass_id(class_id);
     		groupSample.set_id(group_id);
-    		group = db.updateGroupName(groupSample);
+    		group = DB.updateGroupName(groupSample);
     	//};
     	return group;
     }

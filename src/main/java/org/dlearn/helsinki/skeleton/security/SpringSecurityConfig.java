@@ -17,7 +17,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth)
             throws Exception {
-        addTestAccounts(auth);
         auth.jdbcAuthentication().dataSource(db)
                 .usersByUsernameQuery("select * from ("
                         + "select username as username, pwd, 'true' as enabled from public.\"Students\""
@@ -34,14 +33,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                         + "select username as username, 'ROLE_RESEARCHER' as role from public.\"Researchers\""
                         + ") A where username=?")
                 .passwordEncoder(Hasher.getHasher());
-    }
-
-    private void addTestAccounts(AuthenticationManagerBuilder auth)
-            throws Exception {
-        auth.inMemoryAuthentication().withUser("teacher").password("password")
-                .roles("TEACHER").and().withUser("student").password("password")
-                .roles("STUDENT").and().withUser("researcher")
-                .password("password").roles("RESEARCHER", "TEACHER");
     }
 
     @Override
