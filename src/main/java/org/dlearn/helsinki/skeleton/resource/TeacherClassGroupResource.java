@@ -2,8 +2,11 @@ package org.dlearn.helsinki.skeleton.resource;
 
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -25,6 +28,16 @@ public class TeacherClassGroupResource {
             @PathParam("class_id") int class_id) {
         return teacherGroupService.getGroupsWithStudents(class_id);
     }
+    
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Group getStudentsInGroups(@PathParam("class_id") int class_id,
+    											  @PathParam("group_id") int group_id,
+    											  Group group){
+    	return teacherGroupService.insertGroupInClass(class_id, group_id, group);
+    }
+
 
     // simple GET with group id to retrieve a specific group
 
@@ -60,6 +73,17 @@ public class TeacherClassGroupResource {
             @PathParam("group_id") int group_id) {
         System.out.println("deleting a group from the class");
         teacherGroupService.deleteGroupFromClass(class_id, group_id);
+    }
+    
+    @Path("/{group_id}")
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Group updateGroupInClass(@PathParam("class_id") int class_id,
+    							 	@PathParam("group_id") int group_id,
+    							 	Group group) {
+    	// TODO check the teacher has access to this group and class
+        return teacherGroupService.updateGroupInClass(class_id, group_id, group);
     }
 
     @Path("/{group_id}/students")

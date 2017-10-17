@@ -3,6 +3,7 @@ package org.dlearn.helsinki.skeleton.service;
 import java.util.List;
 
 import org.dlearn.helsinki.skeleton.database.Database;
+import org.dlearn.helsinki.skeleton.exceptions.GroupNotEmptyException;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.StudentGroup;
@@ -34,7 +35,27 @@ public class TeacherGroupService {
     }
     
     public void deleteGroupFromClass(int class_id, int group_id) {
-    	//db.deleteGroupFromClass(class_id, group_id);
-    	// TODO We need to change the database structure so that deletion wont ruing history and integrity.
+    	// TODO We need to change the database structure so that deletion won't ruin history and integrity.
+    	if (db.isGroupEmpty(group_id)) {
+    		db.deleteGroupFromClass(class_id, group_id);
+    	} else {
+    		throw new GroupNotEmptyException();
+    	}
     }
+    
+    public Group updateGroupInClass(int class_id, int group_id, Group groupSample) {
+    	Group group = null;
+    	//if (db.doesGroupExistInDatabase(group_id)) {
+    		//updating
+    		groupSample.setClass_id(class_id);
+    		groupSample.set_id(group_id);
+    		group = db.updateGroupName(groupSample);
+    	//};
+    	return group;
+    }
+
+	public Group insertGroupInClass(int class_id, int group_id, Group group) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

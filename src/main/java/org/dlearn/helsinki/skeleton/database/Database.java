@@ -716,6 +716,71 @@ public class Database extends AbstractDataSource {
 	    }	
 		return classes;		
 	}
+	
+	public void deleteGroupFromClass(int class_id, int group_id) {
+		try(Connection dbConnection = getDBConnection()) {
+	        String statement1 = "DELETE FROM public.\"Groups\" WHERE (class_id = ?) AND (_id = ?);" +
+	        					"DELETE FROM public.\"Student_Classes\" WHERE (group_id = ?)";
+	        try(PreparedStatement select = dbConnection.
+	        		prepareStatement(statement1)) {
+	        	select.setInt(1, class_id);
+	        	select.setInt(2, group_id);
+	        	select.setInt(3, group_id);
+	            // execute query
+	            select.executeQuery();
+            };
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }
+	}
+	
+	public boolean doesGroupExistInDatabase(int group_id) {
+		boolean exists = false;
+		try(Connection dbConnection = getDBConnection()) {
+	        String statement = "Select username FROM public.\"Groups\" as std WHERE std.username = ?";
+	        //prepare statement with student_id
+	        try(PreparedStatement select = dbConnection.
+	        		prepareStatement(statement)) {
+	        	select.setInt(1, group_id);
+	            // execute query
+	            try(ResultSet result = select.executeQuery()) {
+	            	if(result.next()) {
+	            		exists = true;
+                	}
+                }
+            }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }
+		return exists;
+	}
+	
+
+	public Group updateGroupName(Group group) {
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "UPDATE public.\"Groups\" "+ 
+            		"SET name = ? WHERE (_id = ?) and (class_id = ?);";
+            try (PreparedStatement insert = dbConnection
+                    .prepareStatement(statement)) {
+                insert.setString(1, group.getName());
+                insert.setInt(2, group.get_id() );
+                insert.setInt(3, group.getStudent_id());
+                // execute query
+                int count = insert.executeUpdate();
+                if (count == 0) {
+                	// update unsuccessful
+                	return null;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+        return group;
+	}
+
+	
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
@@ -1036,5 +1101,4 @@ public class Database extends AbstractDataSource {
 
         }
     }
-
 }
