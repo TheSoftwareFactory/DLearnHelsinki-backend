@@ -319,24 +319,29 @@ public class Database extends AbstractDataSource {
         return survey;
     }
 
-    public List<Group> getAllGroupsForStudent(int studentID) {
-        System.out.println("Getting groups for the student "
-                + Integer.toString(studentID));
+    public List<Group> getAllGroupsForStudent(int class_id, int student_id) {
         ArrayList<Group> groups = new ArrayList<>();
 
         try (Connection dbConnection = getDBConnection()) {
-            String statement = "Select _id, name, student_id, teacher_id FROM public.\"Groups\" WHERE student_id = ?";
+            String statement = ""
+                    + "SELECT sc.group_id, g.name"
+                    + "  FROM public.\"Student_Classes\" as sc,"
+                    + "       public.\"Groups\" as g"
+                    + "  WHERE sc.group_id = g.group_id"
+                    + "    AND student_id = ?"
+                    + "    AND class_id = ?";
             //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
-                select.setInt(1, studentID);
+                select.setInt(1, student_id);
+                select.setInt(2, class_id);
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     while (result.next()) {
                         Group group = new Group();
-                        group.set_id(result.getInt(1));
-                        group.setClass_id(result.getInt(2));
-                        group.setName(result.getString(1));
+                        group.set_id(result.getInt("group_id"));
+                        group.setClass_id(class_id);
+                        group.setName(result.getString("name"));
                         groups.add(group);
                     }
                 }
@@ -345,7 +350,6 @@ public class Database extends AbstractDataSource {
             System.out.println(e.getMessage());
         }
         return groups;
-        //*/
     }
 
     public List<Group> getAllGroupsFromClass(int class_id) {
@@ -516,7 +520,7 @@ public class Database extends AbstractDataSource {
         return Optional.ofNullable(getStudent(student.student_id));
     }
 
-    public void addStudentToGroup(Student student, int class_id, int group_id) {
+    public boolean addStudentToGroup(Student student, int class_id, int group_id) {
         try (Connection dbConnection = getDBConnection()) {
             ensureGroupClassMatch(dbConnection, group_id, class_id);
             String statement = "INSERT INTO public.\"Student_Classes\" (student_id, class_id, group_id) "
@@ -529,10 +533,11 @@ public class Database extends AbstractDataSource {
 
                 // execute query
                 insert.execute();
+                return true;
             }
         } catch (SQLException e) {
-            System.out
-                    .println("SQL Error(addStudentToGroup): " + e.getMessage());
+            System.out.println("SQL Error(addStudentToGroup): " + e.getMessage());
+            return false;
         }
     }
 
