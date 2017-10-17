@@ -209,10 +209,9 @@ public class Database extends AbstractDataSource {
 
         try (Connection dbConnection = getDBConnection()) {
             String statement = "SELECT distinct _id,title,description,start_date,end_date,open,teacher_id "
-                    + "FROM public.\"Surveys\",public.\"Answers\" "
+                    + "FROM public.\"Surveys\" "
                     + "WHERE class_id = ? "
-                    + "AND student_id = ? "
-                    + "AND public.\"Surveys\"._id = public.\"Answers\".survey_id";
+                    + "AND student_id = ? ";
             //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
