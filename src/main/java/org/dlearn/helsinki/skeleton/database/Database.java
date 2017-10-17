@@ -328,8 +328,9 @@ public class Database extends AbstractDataSource {
                     + "  FROM public.\"Student_Classes\" as sc,"
                     + "       public.\"Groups\" as g"
                     + "  WHERE sc.group_id = g._id"
-                    + "    AND student_id = ?"
-                    + "    AND class_id = ?";
+                    + "    AND sc.class_id = g.class_id"
+                    + "    AND sc.student_id = ?"
+                    + "    AND sc.class_id = ?";
             //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
