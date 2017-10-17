@@ -772,15 +772,13 @@ public class Database extends AbstractDataSource {
 		return classes;		
 	}
 	
-	public void deleteGroupFromClass(int class_id, int group_id) {
+	public void closeGroup(int group_id) {
 		try(Connection dbConnection = getDBConnection()) {
-	        String statement1 = "DELETE FROM public.\"Groups\" WHERE (class_id = ?) AND (_id = ?);" +
-	        					"DELETE FROM public.\"Student_Classes\" WHERE (group_id = ?)";
+	        String update_statement = "UPDATE public.\"Groups\" "
+	        						+ "SET (open = false) " 
+	        						+ "WHERE (_id = ?);" ;
 	        try(PreparedStatement select = dbConnection.
-	        		prepareStatement(statement1)) {
-	        	select.setInt(1, class_id);
-	        	select.setInt(2, group_id);
-	        	select.setInt(3, group_id);
+	        		prepareStatement(update_statement)) {
 	            // execute query
 	            select.executeQuery();
             };
@@ -1486,8 +1484,48 @@ public class Database extends AbstractDataSource {
     	
     }
 
-	public boolean isGroupEmpty(int group_id) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean isGroupEmpty(int class_id, int group_id) {
+		// If group is closed, it is empty.
+		boolean empty = false;
+		try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String select_open = "SELECT open "
+            		+ "FROM public.\"Groups\" "
+            		+ "WHERE _id = ?; " ;   
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(select_open)) {
+                select.setInt(1, group_id);
+                // execute query
+                try (ResultSet result = select.executeQuery()) {
+                    if (result.next()) {
+                    	empty = result.getBoolean("open");
+                    };
+                }
+            };
+            if (empty) {
+                String select_students = "SELECT COUNT(student_id), creation_date"
+                		+ "FROM public.\"Student_Classes\" "
+                		+ "WHERE group_id = ? "
+                		+ "GROUP BY student_id  "
+                		+ "ORDER BY creation_date DESC;";   
+                try (PreparedStatement select = dbConnection
+                        .prepareStatement(select_students)) {
+                    select.setInt(1, group_id);
+                    // execute query
+                    int count = 0;
+                    try (ResultSet result = select.executeQuery()) {
+                        if (result.next()) {
+                        	count = result.getInt(1);
+                        };
+                        if (count != 0) {
+                        	empty = false;
+                        };
+                    }
+                }
+            };
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+		return empty;
 	}
  }

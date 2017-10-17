@@ -35,8 +35,9 @@ public class TeacherGroupService {
     
     public void deleteGroupFromClass(int class_id, int group_id) {
     	// TODO We need to change the database structure so that deletion won't ruin history and integrity.
-    	if (DB.isGroupEmpty(group_id)) {
-    		DB.deleteGroupFromClass(class_id, group_id);
+    	if (DB.isGroupEmpty(class_id, group_id)) {
+    		System.out.println("Closing group");
+    		DB.closeGroup(group_id);
     	} else {
     		throw new GroupNotEmptyException();
     	}
