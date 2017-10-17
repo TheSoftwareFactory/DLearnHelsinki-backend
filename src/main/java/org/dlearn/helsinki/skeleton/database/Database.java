@@ -8,7 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 import jersey.repackaged.com.google.common.collect.Lists;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
@@ -934,14 +937,22 @@ public class Database extends AbstractDataSource {
     }
 
     public List<StudentGroup> getGroupsWithStudents(int class_id) {
-        ArrayList<StudentGroup> studentGroups = new ArrayList<StudentGroup>();
+        Map<Integer, StudentGroup> studentGroups = new TreeMap<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "SELECT \"Groups\"._id,\"Groups\".name,\"Students\"._id,\"Students\".username,\"Students\".gender,\"Students\".age "
-                    + "FROM \"Students\",\"Groups\",\"Student_Classes\" "
-                    + "WHERE \"Groups\"._id = \"Student_Classes\".group_id "
-                    + "AND \"Student_Classes\".student_id = \"Students\"._id "
-                    + "AND \"Student_Classes\".class_id = ?";
+            String statement = ""
+                    + "SELECT g._id as group_id,"
+                    + "       g.name as group_name,"
+                    + "       s._id as student_id,"
+                    + "       s.username,"
+                    + "       s.gender,"
+                    + "       s.age"
+                    + "  FROM public.\"Students\" as s,"
+                    + "       public.\"Groups\" as g,"
+                    + "       public.\"Student_Classes\" as sc"
+                    + " WHERE g._id = sc.group_id"
+                    + "   AND sc.student_id = s._id "
+                    + "   AND sc.class_id = ?";
             //prepare statement with survey_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
@@ -949,46 +960,37 @@ public class Database extends AbstractDataSource {
 
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
-                    ArrayList<Integer> group_ids = new ArrayList<>();
                     while (result.next()) {
-                        if (group_ids.contains(result.getInt(1))) {
-                            // add Student to Group
-                            for (StudentGroup group : studentGroups) {
-                                if (group._id == result.getInt(1)) {
-                                    // add Student to Group
-                                    Student student = new Student();
-                                    student.set_id(result.getInt(3));
-                                    student.setUsername(result.getString(4));
-                                    student.gender = result.getString(5);
-                                    student.age = result.getInt(6);
-                                    group.students.add(student);
+                        String group_name = result.getString("group_name");
+                        int student_id = result.getInt("student_id");
+                        String _username = result.getString("username");
+                        String _gender = result.getString("gender");
+                        int _age = result.getInt("age");
+                        // add Student to Group
+                        studentGroups.compute(result.getInt("group_id"),
+                            (group_id, group) -> {
+                                if (group == null) {
+                                    group = new StudentGroup();
+                                    group._id = group_id;
+                                    group.name = group_name;
                                 }
-                            }
-                        } else {
-                            // update group_id list
-                            group_ids.add(result.getInt(1));
-                            // add Group
-                            StudentGroup group = new StudentGroup();
-                            group._id = result.getInt(1);
-                            group.name = result.getString(2);
-
-                            // add Student to Group
-                            Student student = new Student();
-                            student.set_id(result.getInt(3));
-                            student.setUsername(result.getString(4));
-                            student.gender = result.getString(5);
-                            student.age = result.getInt(6);
-                            group.students.add(student);
-
-                            studentGroups.add(group);
-                        }
+                                group.students.add(new Student() {
+                                    {
+                                        this._id = student_id;
+                                        this.username = _username;
+                                        this.gender = _gender;
+                                        this.age = _age;
+                                    }
+                                });
+                                return group;
+                            });
                     }
                 }
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return studentGroups;
+        return studentGroups.values().stream().collect(Collectors.toList());
     }
 
     public List<ClassThemeAverage> getClassThemeAverage(int class_id,
