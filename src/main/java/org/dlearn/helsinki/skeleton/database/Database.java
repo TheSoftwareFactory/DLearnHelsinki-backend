@@ -327,7 +327,7 @@ public class Database extends AbstractDataSource {
                     + "SELECT sc.group_id, g.name"
                     + "  FROM public.\"Student_Classes\" as sc,"
                     + "       public.\"Groups\" as g"
-                    + "  WHERE sc.group_id = g.group_id"
+                    + "  WHERE sc.group_id = g._id"
                     + "    AND student_id = ?"
                     + "    AND class_id = ?";
             //prepare statement with student_id
