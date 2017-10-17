@@ -321,13 +321,47 @@ public class Database extends AbstractDataSource {
         }
         return survey;
     }
+    
+    public Optional<Group> getGroupForStudent(int class_id, int student_id) {
+        try (Connection dbConnection = getDBConnection()) {
+            String statement = ""
+                    + "SELECT sc.group_id, g.name"
+                    + "  FROM public.\"Student_Classes\" as sc,"
+                    + "       public.\"Groups\" as g"
+                    + "  WHERE sc.group_id = g._id"
+                    + "    AND sc.class_id = g.class_id"
+                    + "    AND sc.student_id = ?"
+                    + "    AND sc.class_id = ?"
+                    + "  SORTED BY sc.creation_date DESC"
+                    + "  LIMIT 1";
+            //prepare statement with student_id
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(statement)) {
+                select.setInt(1, student_id);
+                select.setInt(2, class_id);
+                // execute query
+                try (ResultSet result = select.executeQuery()) {
+                    while (result.next()) {
+                        return Optional.of(new Group() {{
+                            this.set_id(result.getInt("group_id"));
+                            this.setClass_id(class_id);
+                            this.setName(result.getString("name"));
+                        }});
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return Optional.empty();
+    }
 
-    public List<Group> getAllGroupsForStudent(int class_id, int student_id) {
+    public List<Group> getAllGroupsForStudent(int student_id) {
         ArrayList<Group> groups = new ArrayList<>();
 
         try (Connection dbConnection = getDBConnection()) {
             String statement = ""
-                    + "SELECT sc.group_id, g.name"
+                    + "SELECT sc.group_id, g.name, g.class_id"
                     + "  FROM public.\"Student_Classes\" as sc,"
                     + "       public.\"Groups\" as g"
                     + "  WHERE sc.group_id = g._id"
@@ -338,13 +372,12 @@ public class Database extends AbstractDataSource {
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
                 select.setInt(1, student_id);
-                select.setInt(2, class_id);
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     while (result.next()) {
                         Group group = new Group();
                         group.set_id(result.getInt("group_id"));
-                        group.setClass_id(class_id);
+                        group.setClass_id(result.getInt("class_id"));
                         group.setName(result.getString("name"));
                         groups.add(group);
                     }
@@ -951,7 +984,7 @@ public class Database extends AbstractDataSource {
                     + "       public.\"Groups\" as g,"
                     + "       public.\"Student_Classes\" as sc"
                     + " WHERE g._id = sc.group_id"
-                    + "   AND sc.student_id = s._id "
+                    + "   AND sc.student_id = s._id"
                     + "   AND sc.class_id = ?";
             //prepare statement with survey_id
             try (PreparedStatement select = dbConnection

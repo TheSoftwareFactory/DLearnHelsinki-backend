@@ -45,11 +45,11 @@ public class TeacherClassStudentResource {
     @POST
     @Path("/{student_id}/move_to_group/{group_id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Group> change_group(@PathParam("class_id") int class_id, @PathParam("student_id") int student_id, @PathParam("group_id") int group_id) {
+    public Group change_group(@PathParam("class_id") int class_id, @PathParam("student_id") int student_id, @PathParam("group_id") int group_id) {
         if (moveToGroup.moveStudentToGroup(class_id, student_id, group_id)) {            
-            return group.getAllGroupsTheStudentIsIn(class_id, student_id);
+            return group.getTheGroupStudentIsIn(class_id, student_id).orElse(null);
         } else {
-            return Collections.EMPTY_LIST;
+            return null;
         }
     }
 
