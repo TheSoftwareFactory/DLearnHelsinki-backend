@@ -332,7 +332,7 @@ public class Database extends AbstractDataSource {
                     + "    AND sc.class_id = g.class_id"
                     + "    AND sc.student_id = ?"
                     + "    AND sc.class_id = ?"
-                    + "  SORTED BY sc.creation_date DESC"
+                    + "  ORDER BY sc.creation_date DESC"
                     + "  LIMIT 1";
             //prepare statement with student_id
             try (PreparedStatement select = dbConnection
