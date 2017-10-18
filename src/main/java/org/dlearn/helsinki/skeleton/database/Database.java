@@ -775,12 +775,13 @@ public class Database extends AbstractDataSource {
 	public void closeGroup(int group_id) {
 		try(Connection dbConnection = getDBConnection()) {
 	        String update_statement = "UPDATE public.\"Groups\" "
-	        						+ "SET (open = false) " 
+	        						+ "SET open = false " 
 	        						+ "WHERE (_id = ?);" ;
-	        try(PreparedStatement select = dbConnection.
+	        try(PreparedStatement update = dbConnection.
 	        		prepareStatement(update_statement)) {
+	        	update.setInt(1, group_id);
 	            // execute query
-	            select.executeQuery();
+	            update.executeQuery();
             };
 	    } catch (SQLException e) {
 	    	System.out.println(e.getMessage());
@@ -1484,9 +1485,9 @@ public class Database extends AbstractDataSource {
     	
     }
 
-	public boolean isGroupEmpty(int class_id, int group_id) {
+	public boolean canGroupBeClosed(int group_id) {
 		// If group is closed, it is empty.
-		boolean empty = false;
+		boolean canBeClosed = false;
 		try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String select_open = "SELECT open "
@@ -1498,16 +1499,22 @@ public class Database extends AbstractDataSource {
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     if (result.next()) {
-                    	empty = result.getBoolean("open");
+                    	canBeClosed = result.getBoolean("open"); // Already closed group can be closed.
                     };
                 }
             };
-            if (empty) {
-                String select_students = "SELECT COUNT(student_id), creation_date"
-                		+ "FROM public.\"Student_Classes\" "
-                		+ "WHERE group_id = ? "
-                		+ "GROUP BY student_id  "
-                		+ "ORDER BY creation_date DESC;";   
+            if (canBeClosed) {
+            	//TODO rewrite sql request  
+                String select_students = "SELECT COUNT(t1.group_id) "
+                		+ "FROM public.\"Student_Classes\" AS t1 " 
+                		+ "INNER JOIN ("
+                		+ "		SELECT student_id, class_id, MAX(creation_date) as maxdate "
+                		+ "		FROM public.\"Student_Classes\" "
+                		+ "		GROUP BY student_id, class_id) AS t2 "
+                		+ "ON t1.student_id = t2.student_id "
+                		+ "	AND t1.class_id = t2.class_id "
+                		+ "	AND t1.creation_date = t2.maxdate "
+                		+ "WHERE t1.group_id = ?;" ;
                 try (PreparedStatement select = dbConnection
                         .prepareStatement(select_students)) {
                     select.setInt(1, group_id);
@@ -1518,7 +1525,7 @@ public class Database extends AbstractDataSource {
                         	count = result.getInt(1);
                         };
                         if (count != 0) {
-                        	empty = false;
+                        	canBeClosed = false;
                         };
                     }
                 }
@@ -1526,6 +1533,6 @@ public class Database extends AbstractDataSource {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-		return empty;
+		return canBeClosed;
 	}
  }

@@ -3,7 +3,7 @@ package org.dlearn.helsinki.skeleton.service;
 import java.util.List;
 
 import org.dlearn.helsinki.skeleton.database.Database;
-import org.dlearn.helsinki.skeleton.exceptions.GroupNotEmptyException;
+import org.dlearn.helsinki.skeleton.exceptions.GroupCannotBeClosedException;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.StudentGroup;
@@ -34,12 +34,11 @@ public class TeacherGroupService {
     }
     
     public void deleteGroupFromClass(int class_id, int group_id) {
-    	// TODO We need to change the database structure so that deletion won't ruin history and integrity.
-    	if (DB.isGroupEmpty(class_id, group_id)) {
+    	if (DB.canGroupBeClosed(group_id)) {
     		System.out.println("Closing group");
     		DB.closeGroup(group_id);
     	} else {
-    		throw new GroupNotEmptyException();
+    		throw new GroupCannotBeClosedException();
     	}
     }
     
