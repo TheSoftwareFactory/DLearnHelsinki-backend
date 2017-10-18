@@ -615,7 +615,7 @@ public class Database extends AbstractDataSource {
         Student student = null;
 
         try (Connection dbConnection = getDBConnection()) {
-            String statement = "Select username, pwd, gender, age FROM public.\"Students\" WHERE _id = ?";
+            String statement = "Select username, gender, age FROM public.\"Students\" WHERE _id = ?";
             //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
@@ -644,7 +644,7 @@ public class Database extends AbstractDataSource {
         List<Student> students = null;
         //SQL rewritten for new database
         try(Connection dbConnection = getDBConnection()) {
-            String statement = "Select st._id, username, pwd, gender, age "
+            String statement = "Select st._id, username, gender, age "
                             + "FROM public.\"Groups\" AS gr INNER JOIN  public.\"Student_Classes\" as cls "
                             + "ON (gr._id = cls.group_id) "
                             + "INNER JOIN public.\"Students\" AS st "
