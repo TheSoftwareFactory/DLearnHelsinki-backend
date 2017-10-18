@@ -1,5 +1,7 @@
 package org.dlearn.helsinki.skeleton.database;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 
 import java.sql.DriverManager;
@@ -11,8 +13,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.sql.DataSource;
 import jersey.repackaged.com.google.common.collect.Lists;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
 import org.dlearn.helsinki.skeleton.model.ChangePasswordStudent;
@@ -35,7 +41,28 @@ import org.dlearn.helsinki.skeleton.model.Teacher;
 import org.dlearn.helsinki.skeleton.security.Hasher;
 import org.springframework.jdbc.datasource.AbstractDataSource;
 
+
 public class Database extends AbstractDataSource {
+    
+    private static BasicDataSource datasource;
+    
+    static {
+        try {
+            URI dbUri = new URI(System.getenv("DATABASE_URL"));
+            String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
+            datasource = new BasicDataSource();
+            
+            if (dbUri.getUserInfo() != null) {
+                datasource.setUsername(dbUri.getUserInfo().split(":")[0]);
+                datasource.setPassword(dbUri.getUserInfo().split(":")[1]);
+            }
+            datasource.setDriverClassName("org.postgresql.Driver");
+            datasource.setUrl(dbUrl);
+            datasource.setInitialSize(1);
+        } catch (URISyntaxException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
     private static final String DB_DRIVER = "org.postgresql.Driver";
 
@@ -834,27 +861,31 @@ public class Database extends AbstractDataSource {
 /////////////////////////////////////////////////////////
 	
     private static Connection getDBConnection() {
-        Connection dbConnection = null;
         try {
-            Class.forName(DB_DRIVER);
-        } catch (ClassNotFoundException e) {
-            System.out.println(e.getMessage());
+            return datasource.getConnection();
+//        Connection dbConnection = null;
+//        try {
+//            Class.forName(DB_DRIVER);
+//        } catch (ClassNotFoundException e) {
+//            System.out.println(e.getMessage());
+//        }
+//        try {
+//            String dbUrl = System.getenv("JDBC_DATABASE_URL");
+//            if (dbUrl == null) {
+//                System.out.println("JDBC env empty, on local");
+//                dbConnection = DriverManager.getConnection(DB_CONNECTION,
+//                        DB_USER, DB_PASSWORD);
+//            } else { // production
+//                dbConnection = DriverManager.getConnection(dbUrl);
+//            }
+//        } catch (SQLException e) {
+//            System.out.println("CREATING CONNECTION FAILED HORRIBLY "
+//                    + e.getMessage() + " (fix pls)");
+//        }
+//        return dbConnection;
+        } catch (SQLException ex) {
+            return null;
         }
-        try {
-            String dbUrl = System.getenv("JDBC_DATABASE_URL");
-            if (dbUrl == null) {
-                System.out.println("JDBC env empty, on local");
-                dbConnection = DriverManager.getConnection(DB_CONNECTION,
-                        DB_USER, DB_PASSWORD);
-            } else { // production
-                dbConnection = DriverManager.getConnection(dbUrl);
-            }
-        } catch (SQLException e) {
-            System.out.println("CREATING CONNECTION FAILED HORRIBLY "
-                    + e.getMessage() + " (fix pls)");
-        }
-        return dbConnection;
-
     }
 
     @SuppressWarnings("unused")
