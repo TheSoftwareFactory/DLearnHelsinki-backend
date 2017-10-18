@@ -324,7 +324,11 @@ $ curl --request POST localhost:8080/webapi/teachers/1/classes/1/students/1/move
 #### Example response
 
 ```json
-{}
+{
+  "_id" : 2,
+  "name" : "second group",
+  "class_id" : 0
+}
 ```
 
 ### List individual students (TODO)
