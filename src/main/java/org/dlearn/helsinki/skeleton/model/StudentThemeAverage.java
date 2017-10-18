@@ -83,4 +83,8 @@ public class StudentThemeAverage {
         this.answer = answer;
     }
 
+    @Override
+    public String toString() {
+        return "StudentThemeAverage { survey_id = "+survey_id+", start_date = "+start_date+", theme_id = "+theme_id+", theme_title = "+theme_title+", description = "+description+", student_id = "+student_id+", answer = "+answer+" }";
+    }
 }
