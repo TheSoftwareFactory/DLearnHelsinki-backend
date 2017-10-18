@@ -21,6 +21,6 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
     </servlet-mapping>
     <context-param>
         <param-name>log4jConfiguration</param-name>
-        <param-value>log4j2.xml</param-value>
+        <param-value>/WEB-INF/log4j2.xml</param-value>
     </context-param>
 </web-app>
