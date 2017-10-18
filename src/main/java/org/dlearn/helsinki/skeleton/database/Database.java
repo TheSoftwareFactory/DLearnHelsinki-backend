@@ -44,13 +44,12 @@ import org.springframework.jdbc.datasource.AbstractDataSource;
 
 public class Database extends AbstractDataSource {
     
-    private static BasicDataSource datasource;
+    private static final BasicDataSource datasource = new BasicDataSource();;
     
     static {
         try {
             URI dbUri = new URI(System.getenv("DATABASE_URL"));
             String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
-            datasource = new BasicDataSource();
             
             if (dbUri.getUserInfo() != null) {
                 datasource.setUsername(dbUri.getUserInfo().split(":")[0]);
@@ -863,26 +862,6 @@ public class Database extends AbstractDataSource {
     private static Connection getDBConnection() {
         try {
             return datasource.getConnection();
-//        Connection dbConnection = null;
-//        try {
-//            Class.forName(DB_DRIVER);
-//        } catch (ClassNotFoundException e) {
-//            System.out.println(e.getMessage());
-//        }
-//        try {
-//            String dbUrl = System.getenv("JDBC_DATABASE_URL");
-//            if (dbUrl == null) {
-//                System.out.println("JDBC env empty, on local");
-//                dbConnection = DriverManager.getConnection(DB_CONNECTION,
-//                        DB_USER, DB_PASSWORD);
-//            } else { // production
-//                dbConnection = DriverManager.getConnection(dbUrl);
-//            }
-//        } catch (SQLException e) {
-//            System.out.println("CREATING CONNECTION FAILED HORRIBLY "
-//                    + e.getMessage() + " (fix pls)");
-//        }
-//        return dbConnection;
         } catch (SQLException ex) {
             return null;
         }
