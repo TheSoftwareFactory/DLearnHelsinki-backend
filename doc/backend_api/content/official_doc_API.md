@@ -114,7 +114,7 @@ $ curl localhost:8080/webapi/researcher/surveys
 
 End points available for teacher.
 
-### Create new student
+### Create new student (DONE) Delma
 
 Creates new student account
 
@@ -188,7 +188,7 @@ $ curl --request POST localhost:8080/webapi/teachers/1/change_student_password
 }
 ```
 
-### List students in one class (TODO) check student api branch
+### List students in one class (TESTING) rework by Denis
 
 Lists all students inside one specified class.
 
@@ -220,8 +220,50 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/students/
   }
 ]
 ```
+### List of all classes and groups(TESTING)
 
-### List of all groups in one specified class (TESTING)
+This request allows you to retrieve a list of all classes and their respective groups for a particular teacher.
+
+```endpoint
+GET teachers/{teacher_id}/classes/
+```
+#### Example request
+
+```curl
+$ curl localhost:8080/webapi/teachers/1/classes/
+```
+#### Example response
+
+```json
+[
+  {
+    "_id":1,
+    "groups":
+            [
+              {
+                "_id":1,
+                "name":"{Alpha}",
+                "class_id":1
+              },
+              {
+                "_id":2,
+                "name":"{Beta}",
+                "class_id":1
+              }
+            ],
+    "name":"{First Class}",
+    "teacher_id":1
+  },
+  {
+    "_id":2,
+    "groups":[],
+    "name":"{Second Class}",
+    "teacher_id":1
+  }
+]
+```
+
+### List of all groups in one specified class (DONE)
 
 This request allows you to retrieve a detailed list of all students in their respective groups, in one class
 
@@ -238,47 +280,103 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/
 #### Example response
 
 ```json
-[
-  {
-    "_id" : 1,
-    "name" : "Grp1",
-    "students" : [
-      {
-        "_id" : 1,
-        "username" : "Meikäläinen",
-        "age" : 10,
-        "gender" : "male"
-      },
-      {
-        "_id" : 1,
-        "username" : "Meikäläinen",
-        "age" : 10,
-        "gender" : "male"
-      }
-    ]
-  },
-  {
-    "_id" : 2,
-    "name" : "Grp2",
-    "students" : [
-      {
-        "_id" : 1,
-        "username" : "Meikäläinen",
-        "age" : 10,
-        "gender" : "male"
-      },
-      {
-        "_id" : 1,
-        "username" : "Meikäläinen",
-        "age" : 10,
-        "gender" : "male"
-      }
-    ]
-  }
+[  
+   {  
+      "_id":1,
+      "name":"first group",
+      "students":[  
+         {  
+            "_id":2,
+            "username":"pzaragoza",
+            "gender":"male",
+            "age":10
+         },
+         {  
+            "_id":1,
+            "username":"nhlad",
+            "gender":"male",
+            "age":12
+         },
+         {  
+            "_id":3,
+            "username":"kbroflovski",
+            "gender":"male",
+            "age":10
+         }
+      ]
+   },
+   {  
+      "_id":2,
+      "name":"second group",
+      "students":[  
+         {  
+            "_id":4,
+            "username":"smarsh",
+            "gender":"male",
+            "age":9
+         },
+         {  
+            "_id":6,
+            "username":"ecartman",
+            "gender":"male",
+            "age":10
+         },
+         {  
+            "_id":5,
+            "username":"kmccormick",
+            "gender":"male",
+            "age":9
+         }
+      ]
+   }
 ]
 ```
 
-### List of students in a group (TESTING)
+### List theme averages in a class (DONE)
+
+#### Example request
+
+```curl
+$ curl localhost:8080/webapi/teachers/1/classes/1/surveys/27/answers
+```
+
+#### Example response
+
+```json
+[  
+   {  
+      "answer":3.8888888,
+      "class_id":1,
+      "description":"These questions ask about the ideas brought by the student during the exercise.",
+      "start_date":"1970-01-01",
+      "survey_id":27,
+      "theme_id":1,
+      "theme_title":"Ideas and problem solving"
+   },
+   {  
+      "answer":3.5,
+      "class_id":1,
+      "description":"These questions ask about the opinions brought by the student during the exercise.",
+      "start_date":"1970-01-01",
+      "survey_id":27,
+      "theme_id":2,
+      "theme_title":"Opinions and arguments"
+   },
+   {  
+      "answer":2.851852,
+      "class_id":1,
+      "description":"These questions are about the persistence of the excercise.",
+      "start_date":"1970-01-01",
+      "survey_id":27,
+      "theme_id":3,
+      "theme_title":"Persistence"
+   },
+   ...
+]
+```
+
+
+### List of students in a group (TODO)
 
 ```endpoint
 GET teachers/{teacher_id}/classes/{class_id}/groups/{group_id}/students
@@ -309,10 +407,31 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/students
 ]
 ```
 
+### Move student to group
 
-### List individual students (TODO)
+```endpoint
+POST teachers/{teacher_id}/classes/{class_id}/students/{student_id}/move_to_group/{group_id}
+```
 
-This is how you can get a specific student by their id.
+#### Example request
+
+```curl
+$ curl --request POST localhost:8080/webapi/teachers/1/classes/1/students/1/move_to_group/2
+```
+
+#### Example response
+
+```json
+{
+  "_id" : 2,
+  "name" : "second group",
+  "class_id" : 0
+}
+```
+
+### List the information of individual student (TESTING)
+
+This is how you can get a specific student information by their id.
 
 ```endpoint
 GET teachers/{teacher_id}/classes/{class_id}/students/{student_id}
@@ -335,7 +454,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/students/1
 }
 ```
 
-### Retrieve a student's result (TODO)
+### Retrieve a student's result (DONE)
 
 Returns a single result for a specified survey.
 
@@ -349,17 +468,41 @@ Retrieve information about an existing spidegraph.
 #### Example request
 
 ```curl
-$ curl localhost:8080/webapi/teachers/1/classes/1/students/1/surveys/1/answers
+$ curl localhost:8080/webapi/teachers/1/classes/1/students/1/surveys/27/answers
 ```
 
 #### Example response
 
-<!--TODO: Actual response-->
-
 ```json
-{
-
-}
+[  
+   {  
+      "answer":4.6666665,
+      "description":"These questions ask about the responsibilities of the student during the exercise.",
+      "start_date":"1970-01-01",
+      "student_id":1,
+      "survey_id":27,
+      "theme_id":4,
+      "theme_title":"Responsibility"
+   },
+   {  
+      "answer":3.6666667,
+      "description":"These questions are about the persistence of the excercise.",
+      "start_date":"1970-01-01",
+      "student_id":1,
+      "survey_id":27,
+      "theme_id":3,
+      "theme_title":"Persistence"
+   },
+   {  
+      "answer":3.0,
+      "description":"These questions ask about the opinions brought by the student during the exercise.",
+      "start_date":"1970-01-01",
+      "student_id":1,
+      "survey_id":27,
+      "theme_id":2,
+      "theme_title":"Opinions and arguments"
+   },
+]
 ```
 
 ### Retrieve student's progression
@@ -425,7 +568,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/students/1/progression/2
 ]
 ```
 
-### Retrieve a group's results (TODO)
+### Retrieve a group's results (DONE)
 
 Returns a single result for a specified survey for a specified group.
 
@@ -439,21 +582,43 @@ Retrieve information about an existing spidegraph.
 #### Example request
 
 ```curl
-$ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/surveys/1/answers
+$ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/surveys/27/answers
 ```
 
 #### Example response
 
-<!--TODO: Actual response-->
-
 ```json
 
-  {
-      "survey_id": 1,
-      "question_id": 1,
-      "group_id": 1,
-      "answer": 4
-  }
+[  
+   {  
+      "answer":4.3333335,
+      "description":"These questions ask about the ideas brought by the student during the exercise.",
+      "group_id":1,
+      "start_date":"1970-01-01",
+      "survey_id":27,
+      "theme_id":1,
+      "theme_title":"Ideas and problem solving"
+   },
+   {  
+      "answer":3.0,
+      "description":"These questions ask about the opinions brought by the student during the exercise.",
+      "group_id":1,
+      "start_date":"1970-01-01",
+      "survey_id":27,
+      "theme_id":2,
+      "theme_title":"Opinions and arguments"
+   },
+   {  
+      "answer":2.3333333,
+      "description":"These questions are about the persistence of the excercise.",
+      "group_id":1,
+      "start_date":"1970-01-01",
+      "survey_id":27,
+      "theme_id":3,
+      "theme_title":"Persistence"
+   },
+   ...
+]
 
 ```
 
@@ -534,7 +699,7 @@ Retrieve information about an existing spidegraph.
 #### Example request
 
 ```curl
-$ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1/answers
+$ curl localhost:8080/webapi/teachers/1/classes/1/surveys/27/answers
 ```
 
 #### Example response
@@ -542,12 +707,35 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1/answers
 <!--TODO: Actual response-->
 
 ```json
-  {
-      "survey_id": 1,
-      "question_id": 1,
-      "class_id": 1,
-      "answer": 6
-  }
+[  
+   {  
+      "answer":3.7407408,
+      "class_id":1,
+      "description":"These questions ask about the ideas brought by the student during the exercise.",
+      "start_date":"1970-01-01",
+      "survey_id":27,
+      "theme_id":1,
+      "theme_title":"Ideas and problem solving"
+   },
+   {  
+      "answer":3.2777777,
+      "class_id":1,
+      "description":"These questions ask about the opinions brought by the student during the exercise.",
+      "start_date":"1970-01-01",
+      "survey_id":27,
+      "theme_id":2,
+      "theme_title":"Opinions and arguments"
+   },
+   {  
+      "answer":2.7037036,
+      "class_id":1,
+      "description":"These questions are about the persistence of the excercise.",
+      "start_date":"1970-01-01",
+      "survey_id":27,
+      "theme_id":3,
+      "theme_title":"Persistence"
+   },
+]
 ```
 
 ### Retrieve classes progression
@@ -613,28 +801,35 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/progression/2
 ]
 ```
 
-### List surveys (TODO)
+### List surveys for one class (DONE)
 
 Retrieves surveys for a teacher, for one class, on one survey
 
 ```endpoint
-GET teachers/{teacher_id}/classes/{class_id}/surveys/{survey_id}
+GET teachers/{teacher_id}/classes/{class_id}/surveys/
 ```
 
 #### Example request
 
 ```curl
-$ curl localhost:8080/webapi/teachers/1/classes/1/surveys/1
+$ curl localhost:8080/webapi/teachers/1/classes/1/surveys/
 ```
 
 #### Example response
 
-<!--TODO: Actual response-->
-
 ```json
-{
-
-}
+[  
+   {  
+      "_id":27,
+      "title":"MR F of survey",
+      "description":"arrested development",
+      "start_date":"1970-01-01",
+      "end_date":"2017-10-11",
+      "teacher_id":1,
+      "class_id":1,
+      "open":false
+   },
+]
 ```
 
 ### Add/Open new survey (DONE)
@@ -675,48 +870,30 @@ $ curl --request POST localhost:8080/webapi/teachers/1/classes/1/surveys
 This will create a survey even if another survey is currently open.
 
 
-### Get list of All surveys for one class (TODO)
+### Close specific survey of a class (DONE)
 
 Adds new survey
 
 ```endpoint
-GET teachers/{teacher_id}/classes/{class_id}/surveys
+POST teachers/{teacher_id}/classes/{class_id}/surveys/{survey_id}
 ```
 
 #### Example request
 
 ```curl
-$ curl localhost:8080/webapi/teachers/1/classes/1/surveys
+$ curl localhost:8080/webapi/teachers/1/classes/1/surveys/28
   -d @data.json
 ```
 
 #### Example response
 
-<!--TODO: Actual response-->
 ```json
-[
-  {
-    "_id" : 1,
-    "teacher_id" : 1,
-    "class_id" : 1,
-    "title" : "Math survey",
-    "description" : "survey for the exercie 3 page 40",
-    "start_date" : "2007-04-05T13:30Z",
-    "end_date" : "2007-04-05T13:30Z",
-    "open" : true
-  },
-  {
-    "_id" : 2,
-    "teacher_id" : 1,
-    "class_id" : 1,
-    "title" : "Physic survey",
-    "description" : "survey for the exercie 5 page 13",
-    "start_date" : "2007-04-05T13:30Z",
-    "end_date" : "2007-04-05T13:30Z",
-    "open" : false
-  },
-]
+
 ```
+
+#### Note
+
+No response except a standard code 200 HTTP response.
 
 
 
@@ -730,7 +907,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/surveys
 
 Endpoints available for student.
 
-### List information (TESTING, on branch student_id_api)
+### List information (TESTING)
 
 This is how student can get their own information.
 
@@ -741,7 +918,7 @@ GET /students/{student_id}
 #### Example request
 
 ```curl
-$ curl localhost:8080/webapi/students/{student_id}
+$ curl localhost:8080/webapi/students/1
 ```
 
 #### Example response
@@ -753,6 +930,34 @@ $ curl localhost:8080/webapi/students/{student_id}
   "firstname" : "Matti",
   "username" : "iloinen tanssiva aurinko"
 }
+```
+### Retrieve all the classes (TESTING)
+
+The student can get a list of all classes he is in.
+
+```endpoint
+GET /students/{student_id}/classes
+```
+#### Example request
+
+```curl
+$ curl localhost:8080/webapi/students/1/classes
+```
+#### Example response
+
+```json
+  [
+    {
+      "_id":1,
+      "name":"{First Class}",
+      "teacher_id":1
+    },
+    {
+      "_id":2,
+      "name":"{Second Class}",
+      "teacher_id":1
+    }
+  ]
 ```
 
 ### Retrieve a student's result for specific survey (DONE)
@@ -773,28 +978,35 @@ $ curl localhost:8080/webapi/students/1/classes/1/surveys/1/answers
 
 #### Example response
 
-<!--TODO: Actual response-->
-
 ```json
-[
-    {
-        "survey_id": 27,
-        "question_id": 1,
-        "student_id": 1,
-        "answer": 4
-    },
-    {
-        "survey_id": 27,
-        "question_id": 2,
-        "student_id": 1,
-        "answer": 4
-    },
-    {
-        "survey_id": 27,
-        "question_id": 3,
-        "student_id": 1,
-        "answer": 4
-    }
+[  
+   {  
+      "answer":3.6666667,
+      "description":"These questions ask about the responsibilities of the student during the exercise.",
+      "start_date":"1970-01-01",
+      "student_id":1,
+      "survey_id":27,
+      "theme_id":4,
+      "theme_title":"Responsibility"
+   },
+   {  
+      "answer":5.0,
+      "description":"These questions are about the persistence of the excercise.",
+      "start_date":"1970-01-01",
+      "student_id":1,
+      "survey_id":27,
+      "theme_id":3,
+      "theme_title":"Persistence"
+   },
+   {  
+      "answer":5.0,
+      "description":"These questions ask about the opinions brought by the student during the exercise.",
+      "start_date":"1970-01-01",
+      "student_id":1,
+      "survey_id":27,
+      "theme_id":2,
+      "theme_title":"Opinions and arguments"
+   }
 ]
 ```
 
@@ -878,27 +1090,27 @@ $ curl localhost:8080/webapi/students/1/classes/1/surveys
 #### Example response
 
 ```json
-[
-  {
-    "_id" : 1,
-    "teacher_id" : 1,
-    "class_id" : 1,
-    "title" : "Math survey",
-    "description" : "survey for the exercie 3 page 40",
-    "start_date" : "2007-04-05T13:30Z",
-    "end_date" : "2007-04-05T13:30Z",
-    "open" : true
-  },
-  {
-    "_id" : 2,
-    "teacher_id" : 1,
-    "class_id" : 1,
-    "title" : "Physic survey",
-    "description" : "survey for the exercie 5 page 13",
-    "start_date" : "2007-04-05T13:30Z",
-    "end_date" : "2007-04-05T13:30Z",
-    "open" : false
-  },
+[  
+   {  
+      "_id":27,
+      "title":"MR F of survey",
+      "description":"arrested development",
+      "start_date":"1970-01-01",
+      "end_date":"2017-10-11",
+      "teacher_id":1,
+      "class_id":1,
+      "open":false
+   },
+   {  
+      "_id":28,
+      "title":"test_2",
+      "description":"arrested_development",
+      "start_date":"1970-01-01",
+      "end_date":"",
+      "teacher_id":1,
+      "class_id":1,
+      "open":true
+   }
 ]
 ```
 
@@ -971,7 +1183,7 @@ $ curl localhost:8080/webapi/students/1/classes/1/surveys/1/questions
     "question" : "I took enough responsibility of the group work.",
     "min_answer" : 1,
     "max_answer" : 7
-  },
+  }
 ]
 ```
 
