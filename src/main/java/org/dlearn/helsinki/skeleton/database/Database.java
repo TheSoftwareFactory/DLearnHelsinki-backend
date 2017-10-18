@@ -974,18 +974,23 @@ public class Database extends AbstractDataSource {
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = ""
-                    + "SELECT g._id as group_id,"
-                    + "       g.name as group_name,"
-                    + "       s._id as student_id,"
-                    + "       s.username,"
-                    + "       s.gender,"
-                    + "       s.age"
-                    + "  FROM public.\"Students\" as s,"
-                    + "       public.\"Groups\" as g,"
-                    + "       public.\"Student_Classes\" as sc"
-                    + " WHERE g._id = sc.group_id"
-                    + "   AND sc.student_id = s._id"
-                    + "   AND sc.class_id = ?";
+                    + "SELECT g._id as group_id,\n"
+                    + "       g.name as group_name,\n"
+                    + "       s._id as student_id,\n"
+                    + "       s.username,\n"
+                    + "       s.gender,\n"
+                    + "       s.age\n"
+                    + "  FROM public.\"Students\" as s,\n"
+                    + "       public.\"Groups\" as g,\n"
+                    + "       public.\"Student_Classes\" as sc\n"
+                    + " WHERE g._id = sc.group_id\n"
+                    + "   AND sc.student_id = s._id\n"
+                    + "   AND sc.class_id = ?\n"
+                    + "   AND sc._id = (SELECT sc2._id\n"
+                    + "                   FROM public.\"Student_Classes\" as sc2\n"
+                    + "                  WHERE sc.student_id = sc2.student_id\n"
+                    + "                 ORDER BY sc2.creation_time DESC\n"
+                    + "                 LIMIT 1)";
             //prepare statement with survey_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
@@ -1003,18 +1008,17 @@ public class Database extends AbstractDataSource {
                         studentGroups.compute(result.getInt("group_id"),
                             (group_id, group) -> {
                                 if (group == null) {
-                                    group = new StudentGroup();
-                                    group._id = group_id;
-                                    group.name = group_name;
+                                    group = new StudentGroup(){{
+                                        this._id = group_id;
+                                        this.name = group_name;
+                                    }};
                                 }
-                                group.students.add(new Student() {
-                                    {
-                                        this._id = student_id;
-                                        this.username = _username;
-                                        this.gender = _gender;
-                                        this.age = _age;
-                                    }
-                                });
+                                group.students.add(new Student() {{
+                                    this._id = student_id;
+                                    this.username = _username;
+                                    this.gender = _gender;
+                                    this.age = _age;
+                                }});
                                 return group;
                             });
                     }
