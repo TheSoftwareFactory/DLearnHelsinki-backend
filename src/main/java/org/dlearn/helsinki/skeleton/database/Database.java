@@ -451,11 +451,18 @@ public class Database extends AbstractDataSource {
 
         try (Connection dbConnection = getDBConnection()) {
             // TODO update request to remove class_id
-            String statement = "Select std._id, username, pwd, gender, age "
-                    + "FROM public.\"Student_Classes\" as cls "
-                    + "INNER JOIN public.\"Students\" as std "
-                    + "ON (cls.student_id = std._id)"
-                    + "WHERE (cls.class_id = ?) AND (cls.group_id = ?)";
+            String statement = ""
+                    + "SELECT s._id, s.username, s.gender, s.age\n"
+                    + "  FROM public.\"Student_Classes\" as sc,\n"
+                    + "       public.\"Students\" as s \n"
+                    + "    ON cs.student_id = s._id\n"
+                    + " WHERE cs.class_id = ?\n"
+                    + "   AND cs.group_id = ?\n"
+                    + "   AND sc._id = (SELECT sc2._id\n"
+                    + "                  FROM public.\"Student_Classes\" as sc2\n"
+                    + "                  WHERE sc.student_id = sc2.student_id\n"
+                    + "                 ORDER BY sc2.creation_time DESC\n"
+                    + "                 LIMIT 1)";
             //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
