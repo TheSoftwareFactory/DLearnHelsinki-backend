@@ -581,12 +581,12 @@ public class Database extends AbstractDataSource {
             return Optional.empty();
         }
         Student result = getStudent(student.student_id);
-        log.trace(result);
+        log.traceExit(result);
         return Optional.ofNullable(result);
     }
 
     public boolean addStudentToGroup(Student student, int class_id, int group_id) {
-        log.trace("Adding student {} to group {} in class {}", student, group_id, class_id);
+        log.traceEntry("Adding student {} to group {} in class {}", student, group_id, class_id);
         try (Connection dbConnection = getDBConnection()) {
             DataBaseHelper.ensureGroupClassMatch(dbConnection, group_id, class_id);
             String statement = "INSERT INTO public.\"Student_Classes\" (student_id, class_id, group_id) "
@@ -615,7 +615,7 @@ public class Database extends AbstractDataSource {
         Student student = null;
 
         try (Connection dbConnection = getDBConnection()) {
-            String statement = "Select username, pwd, gender, age FROM public.\"Students\" WHERE _id = ?";
+            String statement = "Select username, gender, age FROM public.\"Students\" WHERE _id = ?";
             //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
@@ -644,7 +644,7 @@ public class Database extends AbstractDataSource {
         List<Student> students = null;
         //SQL rewritten for new database
         try(Connection dbConnection = getDBConnection()) {
-            String statement = "Select st._id, username, pwd, gender, age "
+            String statement = "Select st._id, username, gender, age "
                             + "FROM public.\"Groups\" AS gr INNER JOIN  public.\"Student_Classes\" as cls "
                             + "ON (gr._id = cls.group_id) "
                             + "INNER JOIN public.\"Students\" AS st "
@@ -1142,7 +1142,7 @@ public class Database extends AbstractDataSource {
     public Optional<List<ListStudentThemeAverage>> getStudentThemeAverageProgression(int student_id, int amount) {
         log.traceEntry("Getting progression of {} for student {}", amount, student_id);
         try {
-            return Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
+            Optional<List<ListStudentThemeAverage>> result = Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
                     + "SELECT * FROM (\n"
                     + "    SELECT\n"
                     + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
@@ -1191,17 +1191,21 @@ public class Database extends AbstractDataSource {
                             }
                         }
                     }
-                ));
+            ));
+            log.traceExit(result);
+            return result;
         } catch (SQLException e) {
-            System.out.println("Error caught: " + e);
+            log.catching(e);
+            log.traceExit("No average returned");
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 
     public Optional<List<ListStudentThemeAverage>> getStudentThemeAverageProgressionInClass(int class_id,
             int student_id, int amount) {
+        log.traceEntry("Getting progression of {} for student {} in class {}", amount, student_id, class_id);
         try {
-            return Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
+            Optional<List<ListStudentThemeAverage>> result = Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
                     + "SELECT * FROM (\n"
                     + "    SELECT\n"
                     + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
@@ -1254,17 +1258,21 @@ public class Database extends AbstractDataSource {
                             }
                         }
                     }
-                ));
+            ));
+            log.traceExit(result);
+            return result;
         } catch (SQLException e) {
-            System.out.println("Error caught: " + e);
+            log.catching(e);
+            log.traceExit("No average returned");
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 
     public Optional<List<ListGroupThemeAverage>> getGroupThemeAverageProgression(int class_id,
             int group_id, int amount) {
+        log.traceEntry("Getting progression of {} for group {} in class {}", amount, group_id, class_id);
         try {
-            return Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
+            Optional<List<ListGroupThemeAverage>> result = Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
                     + "SELECT * FROM (\n"
                     + "    SELECT\n"
                     + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
@@ -1319,15 +1327,19 @@ public class Database extends AbstractDataSource {
                         }
                     }
             ));
+            log.traceExit(result);
+            return result;
         } catch (SQLException e) {
-            System.out.println("Error caught: " + e);
+            log.catching(e);
+            log.traceExit("No average returned");
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 
     public Optional<List<ListClassThemeAverage>> getClassThemeAverageProgression(int class_id, int amount) {
+        log.traceEntry("Getting progression of {} for class {}", amount, class_id);
         try {
-            return Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
+            Optional<List<ListClassThemeAverage>> result = Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
                     + "SELECT * FROM (\n"
                     + "    SELECT\n"
                     + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
@@ -1376,13 +1388,17 @@ public class Database extends AbstractDataSource {
                             }
                         }
                     }}));
+            log.traceExit(result);
+            return result;
         } catch (SQLException e) {
-            System.out.println("Error caught: " + e);
+            log.catching(e);
+            log.traceExit("No average returned");
             return Optional.empty();
         }
     }
 
     public void closeSurvey(int teacher_id, int class_id, int survey_id) {
+        log.traceEntry("Closing survey {} for teacher {} in class {}", survey_id, teacher_id, class_id);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "UPDATE public.\"Surveys\" "
@@ -1398,13 +1414,14 @@ public class Database extends AbstractDataSource {
                 insert.executeUpdate();
             }
         } catch (SQLException e) {
-            System.out.println("error caught : " + e.getMessage());
-
+            log.catching(e);
         }
+        log.traceExit();
     }
     
     public List<StudentThemeAverage> getStudentLifeTimeAverage(int student_id, int class_id){
-    	ArrayList<StudentThemeAverage> answers = new ArrayList<StudentThemeAverage>();
+        log.traceEntry("Getting student {} average in class {}", student_id, class_id);
+    	ArrayList<StudentThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String select_averages = "SELECT avg(answer),\"Themes\".title,\"Themes\".description,\"Themes\"._id,\"Surveys\".start_date,\"Surveys\"._id,\"Surveys\".title,\"Surveys\".description,\"Surveys\".start_date,\"Surveys\".end_date "
@@ -1416,9 +1433,6 @@ public class Database extends AbstractDataSource {
             		+ "AND \"Surveys\"._id = \"Answers\".survey_id "
             		+ "GROUP BY \"Surveys\"._id,\"Themes\"._id,start_date "
             		+ "ORDER BY start_date DESC";
-        	String select_total_average = "SELECT theme_id,avg(average_answer) "
-        			+ "FROM (" + select_averages + ") "
-        			+ "AS Averages GROUP BY theme_id";
             //prepare statement with survey_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(select_averages)) {
@@ -1441,13 +1455,15 @@ public class Database extends AbstractDataSource {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(answers);
         return answers;
     }
 
     public List<StudentThemeAverage> getStudentHistory(int student_id, int class_id){
-    	ArrayList<StudentThemeAverage> answers = new ArrayList<StudentThemeAverage>();
+        log.traceEntry("Getting student {} history in class {}", student_id, class_id);
+    	ArrayList<StudentThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String select_averages = "SELECT avg(answer),\"Themes\".title,\"Themes\".description,\"Themes\"._id,\"Surveys\".start_date,\"Surveys\"._id,\"Surveys\".title,\"Surveys\".description,\"Surveys\".start_date,\"Surveys\".end_date "
@@ -1459,9 +1475,6 @@ public class Database extends AbstractDataSource {
             		+ "AND \"Surveys\"._id = \"Answers\".survey_id "
             		+ "GROUP BY \"Surveys\"._id,\"Themes\"._id,start_date "
             		+ "ORDER BY start_date DESC";
-        	String select_total_average = "SELECT theme_id,avg(average_answer) "
-        			+ "FROM (" + select_averages + ") "
-        			+ "AS Averages GROUP BY theme_id";
             //prepare statement with survey_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(select_averages)) {
@@ -1470,24 +1483,22 @@ public class Database extends AbstractDataSource {
 
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
-                	ArrayList<Integer> if_list = new ArrayList<Integer>();
                     while (result.next()) {
                         StudentThemeAverage answer = new StudentThemeAverage();
-                        //answer.setQuestion_id(result.getInt(1));
                         answer.setAnswer(result.getFloat(1));
                         answer.setTheme_title(result.getString(2));
                         answer.setDescription(result.getString(3));
                         answer.setTheme_id(result.getInt(4));
                         answer.setStart_date(result.getString(5));
                         answer.setStudent_id(student_id);
-                        //answer.setSurvey_id(survey_id);
                         answers.add(answer);
                     }
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(answers);
         return answers;
     	
     }
