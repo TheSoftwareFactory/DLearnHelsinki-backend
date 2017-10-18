@@ -10,10 +10,13 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 
 import org.dlearn.helsinki.skeleton.model.StudentGroup;
 import org.dlearn.helsinki.skeleton.service.TeacherGroupService;
+import org.dlearn.helsinki.skeleton.exceptions.GroupCannotBeClosedException;
+import org.dlearn.helsinki.skeleton.exceptions.StudentExistsException;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.GroupThemeAverage;
 import org.dlearn.helsinki.skeleton.model.ListGroupThemeAverage;
@@ -89,7 +92,11 @@ public class TeacherClassGroupResource {
     public void deleteGroupFromClass(@PathParam("class_id") int class_id,
             @PathParam("group_id") int group_id) {
         System.out.println("deleting a group from the class");
-        teacherGroupService.deleteGroupFromClass(class_id, group_id);
+        try {
+        	teacherGroupService.deleteGroupFromClass(class_id, group_id);
+        } catch(GroupCannotBeClosedException e) {
+            throw new WebApplicationException("Group cannot be closed. It contains students.", 400);
+        };
     }
     
     @Path("/{group_id}")
