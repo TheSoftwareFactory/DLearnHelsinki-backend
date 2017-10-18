@@ -13,6 +13,9 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import jersey.repackaged.com.google.common.collect.Lists;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
 import org.dlearn.helsinki.skeleton.model.ChangePasswordStudent;
@@ -36,6 +39,8 @@ import org.dlearn.helsinki.skeleton.security.Hasher;
 import org.springframework.jdbc.datasource.AbstractDataSource;
 
 public class Database extends AbstractDataSource {
+    
+    private static final Logger log = LogManager.getLogger(Database.class);
 
     private static final String DB_DRIVER = "org.postgresql.Driver";
 
@@ -45,14 +50,18 @@ public class Database extends AbstractDataSource {
     private static final String DB_PASSWORD = "admin";
 
     public void testConnection() throws Exception {
+        log.traceEntry("Testing connection");
         try (Connection dbConnection = getDBConnection()) {
+            log.debug("Database connection succeeded.");
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit();
     }
 
     // Survey postSurvey : returns the survey that was posted on the database.
     public Survey postSurvey(Survey survey) throws SQLException {
+        log.traceEntry("Posting survey {}", survey);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Surveys\" (title, class_id, start_date, teacher_id, description, open) "
@@ -69,28 +78,25 @@ public class Database extends AbstractDataSource {
                     if (result.next()) {
                         survey.set_id(result.getInt("_id"));
                     } else {
-                        System.out.println(
-                                "Inserting survey didn't return ID of it.");
+                        log.error("Inserting survey didn't return ID of it.");
                     }
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-
+            log.catching(e);
         }
+        log.traceExit(survey);
         return survey;
     }
 
     public List<Question> getQuestions() {
-
-        ArrayList<Question> questions = new ArrayList<Question>();
+        log.traceEntry();
+        ArrayList<Question> questions = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "Select * FROM public.\"Questions\"";
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
-                //select.setInt(1, spidergraph_id);
-                //select.setInt(2, student_id);
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     while (result.next()) {
@@ -100,17 +106,18 @@ public class Database extends AbstractDataSource {
                         question.setMax_answer(result.getInt(3));
                         question.set_id(result.getInt(4));
                         questions.add(question);
-                        System.out.println(question.getQuestion());
                     }
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(questions);
         return questions;
     }
 
     public Question postQuestion(Question question) throws SQLException {
+        log.traceEntry("Posting question {}", question);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Questions\" (question, min_answer, max_answer) "
@@ -125,18 +132,19 @@ public class Database extends AbstractDataSource {
                     if (result.next()) {
                         question.set_id(result.getInt("_id"));
                     } else {
-                        System.out.println(
-                                "Inserting question didn't return ID of it.");
+                        log.error("Inserting question didn't return ID of it.");
                     }
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(question);
         return question;
     }
 
     public void postSurveyQuestions(List<Question> questions, Survey survey) {
+        log.traceEntry("Posting questions {} for survey {}", questions, survey);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Survey_questions\" (survey_id, question_id) "
@@ -144,21 +152,18 @@ public class Database extends AbstractDataSource {
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
                 // prepare batch
-                System.out.println("before for loop.");
                 for (Question question : questions) {
                     insert.setInt(1, survey.get_id());
                     insert.setInt(2, question.get_id());
-                    System.out.println("Preparing batch: " + question.get_id());
                     insert.addBatch();
                 }
                 // execute query
                 insert.executeBatch();
             }
         } catch (SQLException e) {
-            System.out.println(
-                    "SQL Error(postSurveyQuestions): " + e.getMessage());
+            log.catching(e);
         }
-
+        log.traceExit();
     }
 
     // Method getQuestionFromSurvey
@@ -166,7 +171,7 @@ public class Database extends AbstractDataSource {
     // output : ArrayList<Question>, list of questions from the survey
     // Takes a survey id and returns all the questions set to that survey
     public List<Question> getQuestionsFromSurvey(int survey_id) {
-        System.out.println("Getting the questions from the survey.");
+        log.traceEntry("Getting the questions from the survey {}", survey_id);
         ArrayList<Question> questions = new ArrayList<>();
 
         try (Connection dbConnection = getDBConnection()) {
@@ -191,8 +196,9 @@ public class Database extends AbstractDataSource {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(questions);
         return questions;
     }
 
@@ -200,6 +206,7 @@ public class Database extends AbstractDataSource {
     // Takes the survey_id, the student_id
     public void postStudentAnswersForSurvey(List<Answer> answers, int survey_id,
             int student_id) {
+        log.debug("Posting all answers same time isn't implemented.");
         // TODO implement but currently it's easier for front-end to send one at a time...
     }
 
@@ -208,7 +215,8 @@ public class Database extends AbstractDataSource {
     // Output : returns a list of surveys available to the student
     public List<Survey> getSurveysFromClassAsStudent(int student_id,
             int class_id) throws SQLException {
-    	ArrayList<Survey> surveys = new ArrayList<Survey>();
+        log.traceEntry("Getting all surveys from class {} as student {}", class_id, student_id);
+    	ArrayList<Survey> surveys = new ArrayList<>();
 
         try (Connection dbConnection = getDBConnection()) {
             String statement = "SELECT distinct _id,title,description,start_date,end_date,open,teacher_id "
@@ -218,7 +226,6 @@ public class Database extends AbstractDataSource {
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
                 select.setInt(1, class_id);
-                System.out.println("survey list");
 
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
@@ -240,8 +247,9 @@ public class Database extends AbstractDataSource {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(surveys);
         return surveys;
     }
 
@@ -250,8 +258,8 @@ public class Database extends AbstractDataSource {
     // Output : returns a list of surveys available to the student
     public List<Survey> getSurveysFromClassAsTeacher(int teacher_id,
             int class_id) throws SQLException {
-        //SELECT * FROM public."Surveys",public."Students",public."Student_Classes" WHERE public."Students"._id = public."Student_Classes".class_id AND public."Student_Classes".class_id = public."Surveys".class_id AND public."Student_Classes".class_id = 1 AND public."Students"._id = 1
-        ArrayList<Survey> surveys = new ArrayList<Survey>();
+        log.traceEntry("Getting surveys from class {} as student {}", class_id, teacher_id);
+        ArrayList<Survey> surveys = new ArrayList<>();
 
         try (Connection dbConnection = getDBConnection()) {
             String statement = "SELECT _id,title,description,start_date,end_date,open "
@@ -262,7 +270,6 @@ public class Database extends AbstractDataSource {
                     .prepareStatement(statement)) {
                 select.setInt(1, class_id);
                 select.setInt(2, teacher_id);
-                System.out.println("survey list");
 
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
@@ -284,12 +291,14 @@ public class Database extends AbstractDataSource {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(surveys);
         return surveys;
     }
 
     public List<Survey> getSurveys() {
+        log.traceEntry("Getting all surveys");
         List<Survey> survey = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             String statement = "SELECT _id, title, class_id, start_date, end_date, teacher_id, description, open FROM public.\"Surveys\"";
@@ -299,30 +308,28 @@ public class Database extends AbstractDataSource {
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     while (result.next()) {
-                        survey.add(new Survey() {
-                            {
-                                this._id = result.getInt("_id");
-                                this.title = result.getString("title");
-                                this.class_id = result.getInt("class_id");
-                                this.start_date = result
-                                        .getTimestamp("start_date");
-                                this.end_date = result.getTimestamp("end_date");
-                                this.teacher_id = result.getInt("teacher_id");
-                                this.description = result
-                                        .getString("description");
-                                this.open = result.getBoolean("open");
-                            }
-                        });
+                        survey.add(new Survey() {{
+                            this._id = result.getInt("_id");
+                            this.title = result.getString("title");
+                            this.class_id = result.getInt("class_id");
+                            this.start_date = result.getTimestamp("start_date");
+                            this.end_date = result.getTimestamp("end_date");
+                            this.teacher_id = result.getInt("teacher_id");
+                            this.description = result.getString("description");
+                            this.open = result.getBoolean("open");
+                        }});
                     }
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(survey);
         return survey;
     }
     
     public Optional<Group> getGroupForStudent(int class_id, int student_id) {
+        log.traceEntry("Getting groups for student {} in class {}", student_id, class_id);
         try (Connection dbConnection = getDBConnection()) {
             String statement = ""
                     + "SELECT sc.group_id, g.name"
@@ -342,21 +349,25 @@ public class Database extends AbstractDataSource {
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     while (result.next()) {
-                        return Optional.of(new Group() {{
+                        Group group = new Group() {{
                             this.set_id(result.getInt("group_id"));
                             this.setClass_id(class_id);
                             this.setName(result.getString("name"));
-                        }});
+                        }};
+                        log.traceExit(group);
+                        return Optional.of(group);
                     }
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit("No group");
         return Optional.empty();
     }
 
     public List<Group> getAllGroupsForStudent(int student_id) {
+        log.traceEntry("Getting all groups for student {}", student_id);
         ArrayList<Group> groups = new ArrayList<>();
 
         try (Connection dbConnection = getDBConnection()) {
@@ -384,14 +395,15 @@ public class Database extends AbstractDataSource {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(groups);
         return groups;
     }
-
+    
+    // TODO: Use optional
     public List<Group> getAllGroupsFromClass(int class_id) {
-        System.out.println(
-                "Getting groups for the class " + Integer.toString(class_id));
+        log.traceEntry("Getting groups for the class {}", class_id);
         ArrayList<Group> groups = null;
 
         try (Connection dbConnection = getDBConnection()) {
@@ -413,13 +425,15 @@ public class Database extends AbstractDataSource {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(groups);
         return groups;
     }
 
+    // TODO: Use optional
     public Group getGroupFromClass(int class_id, int group_id) {
-        System.out.println("Getting group class " + Integer.toString(class_id));
+        log.traceEntry("Getting group class {}", class_id);
         Group group = null;
 
         try (Connection dbConnection = getDBConnection()) {
@@ -438,15 +452,15 @@ public class Database extends AbstractDataSource {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(group);
         return group;
     }
 
     public List<Student> getAllStudentsFromClassAndGroup(int class_id,
             int group_id) {
-        System.out.println(
-                "Getting groups for the class " + Integer.toString(group_id));
+        log.traceEntry("Getting groups for the class {}", group_id);
         ArrayList<Student> students = null;
 
         try (Connection dbConnection = getDBConnection()) {
@@ -481,70 +495,74 @@ public class Database extends AbstractDataSource {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(students);
         return students;
     }
 
-    public Student createStudent(NewStudent student) {
+    public Optional<Student> createStudent(NewStudent new_student) {
+        log.traceEntry("Creating student {}", new_student);
+        Optional<Student> student = Optional.empty();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Students\" (username, pwd, gender, age) "
                     + "VALUES (?,?,?,?) RETURNING _id";
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
-                insert.setString(1, student.student.username);
+                insert.setString(1, new_student.student.username);
                 insert.setString(2,
-                        Hasher.getHasher().encode(student.password));
-                insert.setString(3, student.student.gender);
-                insert.setInt(4, student.student.age);
+                        Hasher.getHasher().encode(new_student.password));
+                insert.setString(3, new_student.student.gender);
+                insert.setInt(4, new_student.student.age);
 
                 // execute query
                 try (ResultSet result = insert.executeQuery()) {
                     if (result.next()) {
-                        student.student._id = result.getInt("_id");
+                        new_student.student._id = result.getInt("_id");
+                        student = Optional.of(new_student.student);
                     } else {
-                        System.out.println(
-                                "Inserting student didn't return ID of it.");
+                        log.error("Inserting student didn't return ID of it.");
                     }
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return null;
+            log.catching(e);
         }
-        return student.student;
+        log.traceExit(student);
+        return student;
     }
 
-    public Teacher createTeacher(NewTeacher teacher) {
+    public Optional<Teacher> createTeacher(NewTeacher new_teacher) {
+        log.traceEntry("Creating new teacher {}", new_teacher);
+        Optional<Teacher> teacher = Optional.empty();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Teachers\" (username, pwd) "
                     + "VALUES (?,?,?,?) RETURNING _id";
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
-                insert.setString(1, teacher.teacher.username);
+                insert.setString(1, new_teacher.teacher.username);
                 insert.setString(2,
-                        Hasher.getHasher().encode(teacher.password));
+                        Hasher.getHasher().encode(new_teacher.password));
 
                 // execute query
                 try (ResultSet result = insert.executeQuery()) {
                     if (result.next()) {
-                        teacher.teacher._id = result.getInt("_id");
+                        new_teacher.teacher._id = result.getInt("_id");
                     } else {
-                        System.out.println(
-                                "Inserting teacher didn't return ID of it.");
+                        log.error("Inserting teacher didn't return ID of it.");
                     }
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return null;
+            log.catching(e);
         }
-        return teacher.teacher;
+        return teacher;
     }
     
     public Optional<Student> changeStudentPassword(ChangePasswordStudent student) {
+        log.traceEntry("Changing students password {}", student);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "UPDATE public.\"Students\" SET pwd = ? WHERE _id = ?";
@@ -558,15 +576,19 @@ public class Database extends AbstractDataSource {
                 insert.execute();
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
+            log.traceExit("No password change");
             return Optional.empty();
         }
-        return Optional.ofNullable(getStudent(student.student_id));
+        Student result = getStudent(student.student_id);
+        log.trace(result);
+        return Optional.ofNullable(result);
     }
 
     public boolean addStudentToGroup(Student student, int class_id, int group_id) {
+        log.trace("Adding student {} to group {} in class {}", student, group_id, class_id);
         try (Connection dbConnection = getDBConnection()) {
-            ensureGroupClassMatch(dbConnection, group_id, class_id);
+            DataBaseHelper.ensureGroupClassMatch(dbConnection, group_id, class_id);
             String statement = "INSERT INTO public.\"Student_Classes\" (student_id, class_id, group_id) "
                     + "VALUES (?,?,?)";
             try (PreparedStatement insert = dbConnection
@@ -577,30 +599,19 @@ public class Database extends AbstractDataSource {
 
                 // execute query
                 insert.execute();
+                log.traceExit("Adding succesful");
                 return true;
             }
         } catch (SQLException e) {
-            System.out.println("SQL Error(addStudentToGroup): " + e.getMessage());
+            log.catching(e);
+            log.traceExit("Adding failed");
             return false;
         }
     }
 
-    private void ensureGroupClassMatch(final Connection dbConnection, int group_id, int class_id) throws SQLException {
-        try (PreparedStatement insert = dbConnection.prepareStatement(
-                "SELECT class_id FROM public.\"Groups\" WHERE _id=?")) {
-            insert.setInt(1, group_id);
-            try (ResultSet result = insert.executeQuery()) {
-                result.next();
-                int real_class_id = result.getInt(1);
-                if (class_id != real_class_id) {
-                    throw new SQLException("Class id's don't match: "
-                            + class_id + " != " + real_class_id);
-                }
-            }
-        }
-    }
-
+    // TODO: Use optional
     public Student getStudent(int studentID) {
+        log.traceEntry("Getting student {}", studentID);
         Student student = null;
 
         try (Connection dbConnection = getDBConnection()) {
@@ -621,44 +632,49 @@ public class Database extends AbstractDataSource {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(student);
         return student;
     }
-
-	public List<Student> getAllStudentsFromClass(int class_id) {
-		List<Student> students = null;
-		//SQL rewritten for new database
-		try(Connection dbConnection = getDBConnection()) {
-	        String statement = "Select st._id, username, pwd, gender, age "
-	        		+ "FROM public.\"Groups\" AS gr INNER JOIN  public.\"Student_Classes\" as cls "
-	        		+ "ON (gr._id = cls.group_id) "
-	        		+ "INNER JOIN public.\"Students\" AS st "
-	        		+ "ON (st._id = cls.student_id) "
-	        		+ "WHERE (gr.class_id = ?);";
-	        //prepare statement with student_id
-	        try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
-	        	select.setInt(1, class_id);
-	            // execute query
-	            try(ResultSet result = select.executeQuery()) {
-	            	students = new ArrayList<Student>();
-	            	while(result.next()) { 
-	            		Student student = new Student();
-	               		student.set_id(result.getInt("_id"));
-	               		student.setAge(result.getInt("age"));
-	               		student.setUsername(result.getString("username"));
-	               		student.setGender(result.getString("gender"));
-	               		students.add(student);
-                	}
+    
+    // TODO: Use optional
+    public List<Student> getAllStudentsFromClass(int class_id) {
+        log.traceEntry("Getting all students from class {}", class_id);
+        List<Student> students = null;
+        //SQL rewritten for new database
+        try(Connection dbConnection = getDBConnection()) {
+            String statement = "Select st._id, username, pwd, gender, age "
+                            + "FROM public.\"Groups\" AS gr INNER JOIN  public.\"Student_Classes\" as cls "
+                            + "ON (gr._id = cls.group_id) "
+                            + "INNER JOIN public.\"Students\" AS st "
+                            + "ON (st._id = cls.student_id) "
+                            + "WHERE (gr.class_id = ?);";
+            //prepare statement with student_id
+            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
+                    select.setInt(1, class_id);
+                // execute query
+                try(ResultSet result = select.executeQuery()) {
+                    students = new ArrayList<>();
+                    while(result.next()) { 
+                        Student student = new Student();
+                        student.set_id(result.getInt("_id"));
+                        student.setAge(result.getInt("age"));
+                        student.setUsername(result.getString("username"));
+                        student.setGender(result.getString("gender"));
+                        students.add(student);
+                    }
                 }
             }
-	    } catch (SQLException e) {
-	    	System.out.println(e.getMessage());
-	    }		
-		return students;
-	}
+        } catch (SQLException e) {
+            log.catching(e);
+        }
+        log.traceExit(students);
+        return students;
+    }
 
     public Optional<Student> getStudentFromUsername(String username_) {
+        log.traceEntry("Getting student from the username {}", username_);
         Optional<Student> student = Optional.empty();
         try (Connection dbConnection = getDBConnection()) {
             String statement = "Select _id, gender, age FROM public.\"Students\" WHERE username = ?";
@@ -669,24 +685,24 @@ public class Database extends AbstractDataSource {
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     if (result.next()) {
-                        student = Optional.of(new Student() {
-                            {
-                                this.username = username_;
-                                _id = result.getInt("_id");
-                                age = result.getInt("age");
-                                gender = result.getString("gender");
-                            }
-                        });
+                        student = Optional.of(new Student() {{
+                            this.username = username_;
+                            _id = result.getInt("_id");
+                            age = result.getInt("age");
+                            gender = result.getString("gender");
+                        }});
                     }
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(student);
         return student;
     }
 
     public Optional<Teacher> getTeacherFromUsername(String username_) {
+        log.traceEntry("Getting teacher from username {}", username_);
         Optional<Teacher> teacher = Optional.empty();
         try (Connection dbConnection = getDBConnection()) {
             String statement = "Select _id FROM public.\"Teachers\" WHERE username = ?";
@@ -697,22 +713,22 @@ public class Database extends AbstractDataSource {
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     if (result.next()) {
-                        teacher = Optional.of(new Teacher() {
-                            {
-                                this.username = username_;
-                                _id = result.getInt("_id");
-                            }
-                        });
+                        teacher = Optional.of(new Teacher() {{
+                            this.username = username_;
+                            _id = result.getInt("_id");
+                        }});
                     }
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(teacher);
         return teacher;
     }
 
     public Optional<Researcher> getResearcherFromUsername(String username_) {
+        log.traceEntry("Getting researcher from username {}", username_);
         Optional<Researcher> researcher = Optional.empty();
         try (Connection dbConnection = getDBConnection()) {
             String statement = "Select _id FROM public.\"Researchers\" WHERE username = ?";
@@ -723,103 +739,106 @@ public class Database extends AbstractDataSource {
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     if (result.next()) {
-                        researcher = Optional.of(new Researcher() {
-                            {
-                                this.username = username_;
-                                id = result.getInt("_id");
-                            }
-                        });
+                        researcher = Optional.of(new Researcher() {{
+                            this.username = username_;
+                            id = result.getInt("_id");
+                        }});
                     }
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(researcher);
         return researcher;
     }
     
-	public boolean doesStudentUsernameExistInDatabase(Student student) {
-		boolean exists = false;
-		try(Connection dbConnection = getDBConnection()) {
-	        String statement = "Select username FROM public.\"Students\" as std WHERE std.username = ?";
-	        //prepare statement with student_id
-	        try(PreparedStatement select = dbConnection.
-	        		prepareStatement(statement)) {
-	        	select.setString(1, student.getUsername());
-	            // execute query
-	            try(ResultSet result = select.executeQuery()) {
-	            	if(result.next()) {
-	            		exists = true;
-                	}
+    public boolean doesStudentUsernameExistInDatabase(Student student) {
+        log.traceEntry("Checking if student {} exists in database", student);
+        boolean exists = false;
+        try (Connection dbConnection = getDBConnection()) {
+            String statement = "Select username FROM public.\"Students\" as std WHERE std.username = ?";
+            //prepare statement with student_id
+            try (PreparedStatement select = dbConnection.
+                    prepareStatement(statement)) {
+                select.setString(1, student.getUsername());
+                // execute query
+                try (ResultSet result = select.executeQuery()) {
+                    exists = result.next();
                 }
             }
-	    } catch (SQLException e) {
-	    	System.out.println(e.getMessage());
-	    }
-		return exists;
-	}
+        } catch (SQLException e) {
+            log.catching(e);
+        }
+        log.traceExit(exists);
+        return exists;
+    }
 
-	public List<Classes> getAllClassesOfTeacher(int teacher_id) {
-		List<Classes> classes = null;
-		
-		try(Connection dbConnection = getDBConnection()) {
-	        String statement = "Select _id, name "
-	        		+ "FROM public.\"Classes\" as cls "
-	        		+ "WHERE (cls.teacher_id = ?);";
-	        //prepare statement with student_id
-	        try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
-	        	select.setInt(1, teacher_id);
-	            // execute query
-	            try(ResultSet result = select.executeQuery()) {
-	            	classes = new ArrayList<Classes>();
-	            	while(result.next()) { 
-	            		Classes newClass = new Classes();
-	            		newClass.set_id(result.getInt("_id"));
-	            		newClass.setName(result.getString("name"));
-	            		newClass.setTeacher_id(teacher_id);
-	            		classes.add(newClass);
-                	}
+    // TODO: Use optional
+    public List<Classes> getAllClassesOfTeacher(int teacher_id) {
+        log.traceEntry("Getting all classes of teacher {}", teacher_id);
+        List<Classes> classes = null;
+
+        try (Connection dbConnection = getDBConnection()) {
+            String statement = "Select _id, name "
+                    + "FROM public.\"Classes\" as cls "
+                    + "WHERE (cls.teacher_id = ?);";
+            //prepare statement with student_id
+            try (PreparedStatement select = dbConnection.prepareStatement(statement)) {
+                select.setInt(1, teacher_id);
+                // execute query
+                try (ResultSet result = select.executeQuery()) {
+                    classes = new ArrayList<>();
+                    while (result.next()) {
+                        Classes newClass = new Classes();
+                        newClass.set_id(result.getInt("_id"));
+                        newClass.setName(result.getString("name"));
+                        newClass.setTeacher_id(teacher_id);
+                        classes.add(newClass);
+                    }
                 }
             }
-	    } catch (SQLException e) {
-	    	System.out.println(e.getMessage());
-	    }	
-		return classes;		
-	}
-	
-	public List<Classes> getAllClassesStundentIsIn(int student_id) {
-		List<Classes> classes = null;
-		
-		try(Connection dbConnection = getDBConnection()) {
-	        String statement = "Select cls._id, cls.name, cls.teacher_id "
-	        		+ "FROM public.\"Groups\" as gr "
-	        		+ "INNER JOIN public.\"Student_Classes\" as st_cls "
-	        		+ "ON st_cls.group_id = gr._id "
-	        		//+ "INNER JOIN public.\"Students\" as st_cls "
-	        		//+ "ON st_cls.group_id = gr.class_id"
-	        		+ "INNER JOIN public.\"Classes\" as cls "
-	        		+ "ON cls._id = gr.class_id "
-	        		+ "WHERE (st_cls.student_id = ?);";
-	        //prepare statement with student_id
-	        try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
-	        	select.setInt(1, student_id);
-	            // execute query
-	            try(ResultSet result = select.executeQuery()) {
-	            	classes = new ArrayList<Classes>();
-	            	while(result.next()) { 
-	            		Classes newClass = new Classes();
-	            		newClass.set_id(result.getInt("_id"));
-	            		newClass.setName(result.getString("name"));
-	            		newClass.setTeacher_id(result.getInt("teacher_id"));
-	            		classes.add(newClass);
-                	}
+        } catch (SQLException e) {
+            log.catching(e);
+        }
+        log.traceExit(classes);
+        return classes;
+    }
+
+    // TODO: Use optional
+    public List<Classes> getAllClassesStundentIsIn(int student_id) {
+        log.traceEntry("Getting all classes student {} is in", student_id);
+        List<Classes> classes = null;
+
+        try (Connection dbConnection = getDBConnection()) {
+            String statement = "Select cls._id, cls.name, cls.teacher_id "
+                    + "FROM public.\"Groups\" as gr "
+                    + "INNER JOIN public.\"Student_Classes\" as st_cls "
+                    + "ON st_cls.group_id = gr._id "
+                    + "INNER JOIN public.\"Classes\" as cls "
+                    + "ON cls._id = gr.class_id "
+                    + "WHERE (st_cls.student_id = ?);";
+            //prepare statement with student_id
+            try (PreparedStatement select = dbConnection.prepareStatement(statement)) {
+                select.setInt(1, student_id);
+                // execute query
+                try (ResultSet result = select.executeQuery()) {
+                    classes = new ArrayList<>();
+                    while (result.next()) {
+                        Classes newClass = new Classes();
+                        newClass.set_id(result.getInt("_id"));
+                        newClass.setName(result.getString("name"));
+                        newClass.setTeacher_id(result.getInt("teacher_id"));
+                        classes.add(newClass);
+                    }
                 }
             }
-	    } catch (SQLException e) {
-	    	System.out.println(e.getMessage());
-	    }	
-		return classes;		
-	}
+        } catch (SQLException e) {
+            log.catching(e);
+        }
+        log.traceExit(classes);
+        return classes;
+    }
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
@@ -832,13 +851,14 @@ public class Database extends AbstractDataSource {
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
-	
+    
+    // TODO: Use optional
     private static Connection getDBConnection() {
         Connection dbConnection = null;
         try {
             Class.forName(DB_DRIVER);
         } catch (ClassNotFoundException e) {
-            System.out.println(e.getMessage());
+            log.catching(Level.FATAL, e);
         }
         try {
             String dbUrl = System.getenv("JDBC_DATABASE_URL");
@@ -850,18 +870,9 @@ public class Database extends AbstractDataSource {
                 dbConnection = DriverManager.getConnection(dbUrl);
             }
         } catch (SQLException e) {
-            System.out.println("CREATING CONNECTION FAILED HORRIBLY "
-                    + e.getMessage() + " (fix pls)");
+            log.catching(Level.FATAL, e);
         }
         return dbConnection;
-
-    }
-
-    @SuppressWarnings("unused")
-    private static java.sql.Timestamp getCurrentTimeStamp() {
-
-        java.util.Date today = new java.util.Date();
-        return new java.sql.Timestamp(today.getTime());
 
     }
 
@@ -873,11 +884,13 @@ public class Database extends AbstractDataSource {
     @Override
     public Connection getConnection(String username, String password)
             throws SQLException {
+        log.debug("Getting database connection with username and password isn't supported");
         throw new SQLException("Not supported");
     }
 
     // Inserts an answer into the database
     public void putAnswerToQuestion(Answer answer) {
+        log.traceEntry("Adding answer {}", answer);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Answers\" "
@@ -895,15 +908,15 @@ public class Database extends AbstractDataSource {
                 insert.executeQuery();
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-
+            log.catching(e);
         }
-
+        log.traceExit();
     }
 
     public List<Answer> getAnswersFromStudentSurvey(int student_id,
             int survey_id) {
-        ArrayList<Answer> answers = new ArrayList<Answer>();
+        log.traceEntry("Getting answers from student {} survey {}", student_id, survey_id);
+        ArrayList<Answer> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "Select student_id, survey_id, question_id, answer FROM \"Answers\" WHERE"
@@ -927,14 +940,16 @@ public class Database extends AbstractDataSource {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(answers);
         return answers;
     }
 
     public List<GroupThemeAverage> getAverageAnswersFromGroup(int class_id,
             int group_id, int survey_id) {
-        ArrayList<GroupThemeAverage> answers = new ArrayList<GroupThemeAverage>();
+        log.traceEntry("Getting average answers for survey {} for group {} in class {}", survey_id, group_id, class_id);
+        ArrayList<GroupThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "SELECT avg(answer),\"Themes\".title,\"Themes\".description,\"Themes\"._id,\"Surveys\".start_date "
@@ -956,7 +971,6 @@ public class Database extends AbstractDataSource {
                 try (ResultSet result = select.executeQuery()) {
                     while (result.next()) {
                         GroupThemeAverage answer = new GroupThemeAverage();
-                        //answer.setQuestion_id(result.getInt(1));
                         answer.setAnswer(result.getFloat(1));
                         answer.setTheme_title(result.getString(2));
                         answer.setDescription(result.getString(3));
@@ -964,19 +978,19 @@ public class Database extends AbstractDataSource {
                         answer.setStart_date(result.getString(5));
                         answer.setGroup_id(group_id);
                         answer.setSurvey_id(survey_id);
-                        System.out.println(
-                                "Average answer : " + answer.getAnswer());
                         answers.add(answer);
                     }
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(answers);
         return answers;
     }
 
     public List<StudentGroup> getGroupsWithStudents(int class_id) {
+        log.traceEntry("Getting groups in class {}", class_id);
         Map<Integer, StudentGroup> studentGroups = new TreeMap<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -1032,14 +1046,16 @@ public class Database extends AbstractDataSource {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(studentGroups);
         return studentGroups.values().stream().collect(Collectors.toList());
     }
 
     public List<ClassThemeAverage> getClassThemeAverage(int class_id,
             int survey_id) {
-        ArrayList<ClassThemeAverage> answers = new ArrayList<ClassThemeAverage>();
+        log.traceEntry("Getting average for survey {} in class {}", survey_id, class_id);
+        ArrayList<ClassThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "SELECT avg(answer),\"Themes\".title,\"Themes\".description,\"Themes\"._id,\"Surveys\".start_date "
@@ -1075,14 +1091,16 @@ public class Database extends AbstractDataSource {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(answers);
         return answers;
     }
 
     public List<StudentThemeAverage> getStudentThemeAverage(int survey_id,
             int student_id) {
-        ArrayList<StudentThemeAverage> answers = new ArrayList<StudentThemeAverage>();
+        log.traceEntry("Getting average for survey {} in student {}", survey_id, student_id);
+        ArrayList<StudentThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "SELECT avg(answer),\"Themes\".title,\"Themes\".description,\"Themes\"._id,\"Surveys\".start_date "
@@ -1103,7 +1121,6 @@ public class Database extends AbstractDataSource {
                 try (ResultSet result = select.executeQuery()) {
                     while (result.next()) {
                         StudentThemeAverage answer = new StudentThemeAverage();
-                        //answer.setQuestion_id(result.getInt(1));
                         answer.setAnswer(result.getFloat(1));
                         answer.setTheme_title(result.getString(2));
                         answer.setDescription(result.getString(3));
@@ -1116,12 +1133,14 @@ public class Database extends AbstractDataSource {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.catching(e);
         }
+        log.traceExit(answers);
         return answers;
     }
 
     public Optional<List<ListStudentThemeAverage>> getStudentThemeAverageProgression(int student_id, int amount) {
+        log.traceEntry("Getting progression of {} for student {}", amount, student_id);
         try {
             return Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
                     + "SELECT * FROM (\n"

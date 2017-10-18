@@ -94,4 +94,10 @@ public class Survey {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return "Survey{" + "_id=" + _id + ", title=" + title + ", description=" + description + ", start_date=" + start_date + ", end_date=" + end_date + ", teacher_id=" + teacher_id + ", class_id=" + class_id + ", open=" + open + '}';
+    }
+    
 }
