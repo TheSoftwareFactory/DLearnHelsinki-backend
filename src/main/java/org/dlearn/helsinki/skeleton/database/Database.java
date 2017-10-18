@@ -989,7 +989,7 @@ public class Database extends AbstractDataSource {
                     + "   AND sc._id = (SELECT sc2._id\n"
                     + "                   FROM public.\"Student_Classes\" as sc2\n"
                     + "                  WHERE sc.student_id = sc2.student_id\n"
-                    + "                 ORDER BY sc2.creation_time DESC\n"
+                    + "                 ORDER BY sc2.creation_date DESC\n"
                     + "                 LIMIT 1)";
             //prepare statement with survey_id
             try (PreparedStatement select = dbConnection
