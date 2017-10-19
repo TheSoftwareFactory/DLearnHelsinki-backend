@@ -960,19 +960,18 @@ public class Database extends AbstractDataSource {
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "SELECT avg(answer),\"Themes\".title,\"Themes\".description,\"Themes\"._id,\"Surveys\".start_date "
-                    + "FROM public.\"Surveys\",public.\"Answers\", public.\"Student_Classes\", public.\"Themes\", public.\"Questions\" "
+                    + "FROM public.\"Surveys\",public.\"Answers\", public.\"Themes\", public.\"Questions\" "
                     + "WHERE \"Questions\"._id = question_id "
                     + "AND \"Questions\".theme_id = \"Themes\"._id "
-                    + "AND \"Answers\".student_id = \"Student_Classes\".student_id "
                     + "AND \"Surveys\"._id = \"Answers\".survey_id "
-                    + "AND \"Student_Classes\".group_id = ? "
                     + "AND \"Answers\".survey_id = ? "
+                    + "AND \"Answers\".group_id = ?"
                     + "GROUP BY \"Themes\"._id,start_date";
             //prepare statement with survey_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
-                select.setInt(1, group_id);
-                select.setInt(2, survey_id);
+                select.setInt(1, survey_id);
+                select.setInt(2, group_id);
 
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
