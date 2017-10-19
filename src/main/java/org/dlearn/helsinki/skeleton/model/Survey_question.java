@@ -27,4 +27,8 @@ public class Survey_question {
         this.question_id = question_id;
     }
 
+    @Override
+    public String toString() {
+        return "SurveyQuestion { survey_id = "+survey_id+", question_id = "+question_id+" }";
+    }
 }

@@ -82,5 +82,10 @@ public class ClassThemeAverage {
     public void setAnswer(float answer) {
         this.answer = answer;
     }
+    
+    @Override
+    public String toString() {
+        return "ClassThemeAveage{ survey_id = "+survey_id+", start_date = "+start_date+", theme_id = "+theme_id+", theme_title = "+theme_title+", description = "+description+", class_id = "+class_id+", answer = "+answer+" }";
+    }
 
 }

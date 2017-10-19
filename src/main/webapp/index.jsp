@@ -1,10 +1,5 @@
 <html>
     <body>
-        <h2>Jersey RESTful Web Application!</h2>
-        <p><a href="webapi/myresource">Jersey resource</a>
-        <p><a href="webapi/students">students resource</a>
-        <p><a href="webapi/students/1">student resource</a>
-        <p>Visit <a href="http://jersey.java.net">Project Jersey website : branch survey-id</a>
-            for more information on Jersey!
+        <h2>REST backend for Dlearn.Helsinki</h2>
     </body>
 </html>
