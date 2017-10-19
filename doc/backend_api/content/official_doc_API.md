@@ -406,7 +406,53 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/students
   }
 ]
 ```
-### Create new group in class
+
+### Update (i.e. rename) group in class (TESTING)
+
+Allows the teacher to rename the group in class. Note that fields "_id" and "class_id" in the request body are optional and may contain garbage values.
+
+```endpoint
+PUT teachers/{teacher_id}/classes/{class_id}/groups/{group_id}
+```
+
+#### Example request
+
+```curl
+$ curl --request PUT localhost:8080/webapi/teachers/1/classes/1/groups/1
+```
+
+#### Example request body
+
+```json
+{
+  "_id" : 3,
+  "name" : "second group",
+  "class_id" : 4,
+}
+```
+or
+
+```json
+{
+  "name" : "second group"
+}
+```
+
+### Delete (close) group in class (TESTING)
+
+Marks the group as closed if it has no students.
+
+```endpoint
+DELETE teachers/{teacher_id}/classes/{class_id}/groups/{group_id}
+```
+
+#### Example request
+
+```curl
+$ curl --request DELETE localhost:8080/webapi/teachers/1/classes/1/groups/1
+```
+
+### Create new group in class (TESTING)
 
 Add a new group to the class. Note that fields "_id" and "class_id" in the request body are optional and may contain garbage values.
 
@@ -426,7 +472,7 @@ $ curl --request POST localhost:8080/webapi/teachers/1/classes/1/groups
 {
   "_id" : 3,
   "name" : "second group",
-  "class" : 4,
+  "class_id" : 4,
 }
 ```
 or
