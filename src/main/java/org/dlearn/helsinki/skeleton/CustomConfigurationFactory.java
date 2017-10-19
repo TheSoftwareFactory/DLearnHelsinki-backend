@@ -22,7 +22,7 @@ public class CustomConfigurationFactory extends ConfigurationFactory {
         builder.setConfigurationName(name);
         builder.setStatusLevel(Level.ERROR);
         builder.add(builder.newFilter("ThresholdFilter", Filter.Result.ACCEPT, Filter.Result.NEUTRAL)
-                .addAttribute("level", Level.DEBUG));
+                .addAttribute("level", Level.ERROR));
         AppenderComponentBuilder appenderBuilder = builder.newAppender("Stdout", "CONSOLE")
                 .addAttribute("target", ConsoleAppender.Target.SYSTEM_OUT);
         appenderBuilder.add(builder.newLayout("PatternLayout")
