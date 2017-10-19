@@ -7,9 +7,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.function.Supplier;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class DataBaseHelper {
+    
+    private static final Logger log = LogManager.getLogger(DataBaseHelper.class);
 
     public static <T> T query(Supplier<Connection> connection, String statement, FailableConsumer<PreparedStatement, SQLException> preparer, FailableFunction<Iterable<ResultSet>, T, SQLException> take) throws SQLException {
         try (final Connection c = connection.get()) {
@@ -36,6 +40,22 @@ public class DataBaseHelper {
                 }
             }
         }
+    }
+
+    public static void ensureGroupClassMatch(final Connection dbConnection, int group_id, int class_id) throws SQLException {
+        log.traceEntry("Ensuring that groups {} class and supposed class {} match", group_id, class_id);
+        try (final PreparedStatement insert = dbConnection.prepareStatement("SELECT class_id FROM public.\"Groups\" WHERE _id=?")) {
+            insert.setInt(1, group_id);
+            try (final ResultSet result = insert.executeQuery()) {
+                result.next();
+                int real_class_id = result.getInt(1);
+                if (class_id != real_class_id) {
+                    log.traceExit("Classes didn't match");
+                    throw new SQLException("Class id's don't match: " + class_id + " != " + real_class_id);
+                }
+            }
+        }
+        log.traceExit("Classes did match");
     }
     
     public interface FailableFunction<I, O, E extends Throwable> {

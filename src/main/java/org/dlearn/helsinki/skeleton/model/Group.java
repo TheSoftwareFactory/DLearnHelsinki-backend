@@ -40,4 +40,8 @@ public class Group {
         this.class_id = student_id;
     }
 
+    @Override
+    public String toString() {
+        return "Group { _id = "+_id+", name = "+name+", class_id = "+class_id+" }";
+    }
 }
