@@ -1216,10 +1216,16 @@ public class Database extends AbstractDataSource {
                     + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
                     + "        avg(an.answer) as average,\n"
                     + "        su._id as survey_id,\n"
+                    + "        su.class_id\n"
+                    + "        su.start_date\n"
+                    + "        su.end_date\n"
+                    + "        su.title as survey_title\n"
+                    + "        su.description as survey_description\n"
+                    + "        su.open as survey_open\n"
+                    + "        su.teacher_id\n"
                     + "        th.title,\n"
                     + "        th.description,\n"
                     + "        th._id as theme_id,\n"
-                    + "        su.start_date \n"
                     + "    FROM public.\"Surveys\" as su,\n"
                     + "         public.\"Answers\" as an,\n"
                     + "         public.\"Themes\" as th,\n"
@@ -1254,6 +1260,16 @@ public class Database extends AbstractDataSource {
                                     last_survey_rank = survey_rank;
                                     this.add(new ListStudentThemeAverage() {{
                                         this.themes = Lists.newArrayList(answer);
+                                        this.survey = new Survey() {{
+                                            this._id = result.getInt("survey_id");
+                                            this.class_id = result.getInt("class_id");
+                                            this.description = result.getString("survey_description");
+                                            this.start_date = result.getTimestamp("start_date");
+                                            this.end_date = result.getTimestamp("end_date");
+                                            this.open = result.getBoolean("survey_open");
+                                            this.teacher_id = result.getInt("teacher_id");
+                                            this.title = result.getString("survey_title");
+                                        }};
                                     }});
                                 }
                             }
@@ -1279,10 +1295,16 @@ public class Database extends AbstractDataSource {
                     + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
                     + "        avg(an.answer) as average,\n"
                     + "        su._id as survey_id,\n"
+                    + "        su.class_id\n"
+                    + "        su.start_date\n"
+                    + "        su.end_date\n"
+                    + "        su.title as survey_title\n"
+                    + "        su.description as survey_description\n"
+                    + "        su.open as survey_open\n"
+                    + "        su.teacher_id\n"
                     + "        th.title,\n"
                     + "        th.description,\n"
                     + "        th._id as theme_id,\n"
-                    + "        su.start_date \n"
                     + "    FROM public.\"Surveys\" as su,\n"
                     + "         public.\"Answers\" as an,\n"
                     + "         public.\"Student_Classes\" as sc,\n"
@@ -1321,6 +1343,16 @@ public class Database extends AbstractDataSource {
                                     last_survey_rank = survey_rank;
                                     this.add(new ListStudentThemeAverage() {{
                                         this.themes = Lists.newArrayList(answer);
+                                        this.survey = new Survey() {{
+                                            this._id = result.getInt("survey_id");
+                                            this.class_id = result.getInt("class_id");
+                                            this.description = result.getString("survey_description");
+                                            this.start_date = result.getTimestamp("start_date");
+                                            this.end_date = result.getTimestamp("end_date");
+                                            this.open = result.getBoolean("survey_open");
+                                            this.teacher_id = result.getInt("teacher_id");
+                                            this.title = result.getString("survey_title");
+                                        }};
                                     }});
                                 }
                             }
@@ -1346,10 +1378,16 @@ public class Database extends AbstractDataSource {
                     + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
                     + "        avg(an.answer) as average,\n"
                     + "        su._id as survey_id,\n"
+                    + "        su.class_id\n"
+                    + "        su.start_date\n"
+                    + "        su.end_date\n"
+                    + "        su.title as survey_title\n"
+                    + "        su.description as survey_description\n"
+                    + "        su.open as survey_open\n"
+                    + "        su.teacher_id\n"
                     + "        th.title,\n"
                     + "        th.description,\n"
                     + "        th._id as theme_id,\n"
-                    + "        su.start_date \n"
                     + "    FROM public.\"Surveys\" as su,\n"
                     + "         public.\"Answers\" as an,\n"
                     + "	        public.\"Student_Classes\" as sc,\n"
@@ -1389,6 +1427,16 @@ public class Database extends AbstractDataSource {
                                     last_survey_rank = survey_rank;
                                     this.add(new ListGroupThemeAverage() {{
                                         this.themes = Lists.newArrayList(answer);
+                                        this.survey = new Survey() {{
+                                            this._id = result.getInt("survey_id");
+                                            this.class_id = result.getInt("class_id");
+                                            this.description = result.getString("survey_description");
+                                            this.start_date = result.getTimestamp("start_date");
+                                            this.end_date = result.getTimestamp("end_date");
+                                            this.open = result.getBoolean("survey_open");
+                                            this.teacher_id = result.getInt("teacher_id");
+                                            this.title = result.getString("survey_title");
+                                        }};
                                     }});
                                 }
                             }
@@ -1413,10 +1461,16 @@ public class Database extends AbstractDataSource {
                     + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
                     + "        avg(an.answer) as average,\n"
                     + "        su._id as survey_id,\n"
+                    + "        su.class_id\n"
+                    + "        su.start_date\n"
+                    + "        su.end_date\n"
+                    + "        su.title as survey_title\n"
+                    + "        su.description as survey_description\n"
+                    + "        su.open as survey_open\n"
+                    + "        su.teacher_id\n"
                     + "        th.title,\n"
                     + "        th.description,\n"
                     + "        th._id as theme_id,\n"
-                    + "        su.start_date \n"
                     + "    FROM public.\"Surveys\" as su,\n"
                     + "         public.\"Answers\" as an,\n"
                     + "	        public.\"Student_Classes\" as sc,\n"
@@ -1452,6 +1506,16 @@ public class Database extends AbstractDataSource {
                                 last_survey_rank = survey_rank;
                                 this.add(new ListClassThemeAverage() {{
                                     this.themes = Lists.newArrayList(answer);
+                                    this.survey = new Survey() {{
+                                        this._id = result.getInt("survey_id");
+                                        this.class_id = result.getInt("class_id");
+                                        this.description = result.getString("survey_description");
+                                        this.start_date = result.getTimestamp("start_date");
+                                        this.end_date = result.getTimestamp("end_date");
+                                        this.open = result.getBoolean("survey_open");
+                                        this.teacher_id = result.getInt("teacher_id");
+                                        this.title = result.getString("survey_title");
+                                    }};
                                 }});
                             }
                         }
