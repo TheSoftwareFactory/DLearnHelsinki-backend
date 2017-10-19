@@ -62,7 +62,7 @@ public class TeacherResource {
     public Student createNewStudent(@PathParam("teacher_id") int teacher_id,
             NewStudent student) {
         try {
-            return createNewUserService.createNewStudent(student);
+            return createNewUserService.createNewStudent(student).orElse(null);
         } catch(StudentExistsException e) {
             throw new WebApplicationException("The student username is invalid or already exists in database. Choose another.", 400);
         }
