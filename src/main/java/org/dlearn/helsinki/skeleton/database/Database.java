@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.dlearn.helsinki.skeleton.exceptions.GroupUpdateUnsuccessful;
 import org.dlearn.helsinki.skeleton.model.Answer;
 import org.dlearn.helsinki.skeleton.model.ChangePasswordStudent;
 import org.dlearn.helsinki.skeleton.model.ClassThemeAverage;
@@ -839,6 +840,67 @@ public class Database extends AbstractDataSource {
         log.traceExit(classes);
         return classes;
     }
+	
+	public void closeGroup(int group_id) {
+		try(Connection dbConnection = getDBConnection()) {
+	        String update_statement = "UPDATE public.\"Groups\" "
+	        						+ "SET open = false " 
+	        						+ "WHERE (_id = ?);" ;
+	        try(PreparedStatement update = dbConnection.
+	        		prepareStatement(update_statement)) {
+	        	update.setInt(1, group_id);
+	            // execute query
+	            update.executeUpdate();
+            };
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }
+	}
+	
+	public boolean doesGroupExistInDatabase(int group_id) {
+		boolean exists = false;
+		try(Connection dbConnection = getDBConnection()) {
+	        String statement = "Select username FROM public.\"Groups\" as std WHERE std.username = ?";
+	        //prepare statement with student_id
+	        try(PreparedStatement select = dbConnection.
+	        		prepareStatement(statement)) {
+	        	select.setInt(1, group_id);
+	            // execute query
+	            try(ResultSet result = select.executeQuery()) {
+	            	if(result.next()) {
+	            		exists = true;
+                	}
+                }
+            }
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+	    }
+		return exists;
+	}
+	
+
+	public void updateGroupName(int class_id, int group_id, Group group) {
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "UPDATE public.\"Groups\" "+ 
+            		"SET name = ? WHERE (_id = ?) and (class_id = ?);";
+            try (PreparedStatement insert = dbConnection
+                    .prepareStatement(statement)) {
+                insert.setString(1, group.getName());
+                insert.setInt(2, group_id);
+                insert.setInt(3, class_id);
+                // execute query
+                int count = insert.executeUpdate();
+                if (count == 0) {
+                	// update unsuccessful
+                	throw new GroupUpdateUnsuccessful();
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }        
+	}
+	
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
@@ -1509,6 +1571,85 @@ public class Database extends AbstractDataSource {
     	
     }
 
+	public boolean isGroupClosed(int group_id) {
+		// If group is closed, it is empty.
+		boolean closed = false;
+		try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String select_open = "SELECT open "
+            		+ "FROM public.\"Groups\" "
+            		+ "WHERE _id = ?; " ;   
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(select_open)) {
+                select.setInt(1, group_id);
+                // execute query
+                try (ResultSet result = select.executeQuery()) {
+                    if (result.next()) {
+                    	closed = result.getBoolean("open");
+                    };
+                }
+            };  
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+		return closed;
+	}
+
+	public int countNumberOfStudentsInGroup(int group_id) {
+		int count = 0;
+		try (Connection dbConnection = getDBConnection()) {
+	        String select_students_count = "SELECT COUNT(t1.group_id) "
+	        		+ "FROM public.\"Student_Classes\" AS t1 " 
+	        		+ "INNER JOIN ("
+	        		+ "		SELECT student_id, class_id, MAX(creation_date) as maxdate "
+	        		+ "		FROM public.\"Student_Classes\" "
+	        		+ "		GROUP BY student_id, class_id"
+	        		+ ") AS t2 "
+	        		+ "ON t1.student_id = t2.student_id "
+	        		+ "	AND t1.class_id = t2.class_id "
+	        		+ "	AND t1.creation_date = t2.maxdate "
+	        		+ "WHERE t1.group_id = ?;" ; 
+	        try (PreparedStatement select = dbConnection
+	                .prepareStatement(select_students_count)) {
+	            select.setInt(1, group_id);
+	            // execute query
+	            try (ResultSet result = select.executeQuery()) {
+	                if (result.next()) {
+	                	count = result.getInt(1);
+	                };
+	            };
+	        };     
+	     } catch (SQLException e) {
+	        System.out.println(e.getMessage());
+	    };
+		return count;
+	}
+
+	public Group createGroupInClass(int class_id, Group group) {
+		Group createdGroup = null;
+		try (Connection dbConnection = getDBConnection()) {
+	        String insert_group = "INSERT INTO public.\"Groups\" "
+	        		+ "(name, class_id) VALUES (?, ?) RETURNING _id;";
+	        try (PreparedStatement insert = dbConnection
+	                .prepareStatement(insert_group )) {
+	        	insert.setString(1, group.getName());
+	            insert.setInt(2, class_id);
+	            // execute query
+	            try (ResultSet result = insert.executeQuery()) {
+	                if (result.next()) {
+	                	createdGroup = new Group();
+	                	createdGroup.set_id(result.getInt("_id"));
+	                	createdGroup.setClass_id(class_id);
+	                	createdGroup.setName(group.getName());
+	                };
+	            };
+	        };     
+	     } catch (SQLException e) {
+	        System.out.println(e.getMessage());
+	    };
+		return createdGroup;
+	}
+
 	public void addClassToTeacher(Classes teacher_class) {
 		try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -1526,5 +1667,4 @@ public class Database extends AbstractDataSource {
 
         }
 	}
-    
 }
