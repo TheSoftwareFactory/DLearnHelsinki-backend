@@ -49,19 +49,32 @@ public class Database {
     private static final BasicDataSource DATA_SOURCE = new BasicDataSource();
     private static final String DB_DRIVER = "org.postgresql.Driver";
     
+    private static final String DEV_DB_CONNECTION = "jdbc:postgresql://localhost:5432/Dlearn_db?verifyServerCertificate=false&useSSL=true";
+    private static final String DEV_DB_USER = "postgres";
+    private static final String DEV_DB_PASSWORD = "admin";
+    
     static {
         try {
             Class.forName(DB_DRIVER);
-            URI dbUri = new URI(System.getenv("DATABASE_URL"));
-            String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
-            
-            if (dbUri.getUserInfo() != null) {
-                DATA_SOURCE.setUsername(dbUri.getUserInfo().split(":")[0]);
-                DATA_SOURCE.setPassword(dbUri.getUserInfo().split(":")[1]);
-            }
             DATA_SOURCE.setDriverClassName(DB_DRIVER);
-            DATA_SOURCE.setUrl(dbUrl);
             DATA_SOURCE.setInitialSize(1);
+            String dbUrl = System.getenv("JDBC_DATABASE_URL");
+            if (dbUrl.isEmpty()) {
+                String databaseUrl = System.getenv("DATABASE_URL");
+                if (databaseUrl.isEmpty()) {
+                    dbUrl = DEV_DB_CONNECTION;
+                    DATA_SOURCE.setUsername(DEV_DB_USER);
+                    DATA_SOURCE.setPassword(DEV_DB_PASSWORD);
+                } else {
+                    URI dbUri = new URI(databaseUrl);
+                    dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
+                    if (dbUri.getUserInfo() != null) {
+                        DATA_SOURCE.setUsername(dbUri.getUserInfo().split(":")[0]);
+                        DATA_SOURCE.setPassword(dbUri.getUserInfo().split(":")[1]);
+                    }
+                }
+            }
+            DATA_SOURCE.setUrl(dbUrl);
         } catch (URISyntaxException | ClassNotFoundException e) {
             log.catching(Level.FATAL, e);
         }
