@@ -1213,7 +1213,7 @@ public class Database extends AbstractDataSource {
             Optional<List<ListStudentThemeAverage>> result = Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
                     + "SELECT * FROM (\n"
                     + "    SELECT\n"
-                    + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
+                    + "        DENSE_RANK() OVER(ORDER BY su._id ASC) AS survey_rank,\n"
                     + "        avg(an.answer) as average,\n"
                     + "        su._id as survey_id,\n"
                     + "        su.class_id,\n"
@@ -1285,17 +1285,16 @@ public class Database extends AbstractDataSource {
         }
     }
 
-    public Optional<List<ListStudentThemeAverage>> getStudentThemeAverageProgressionInClass(int class_id,
+    public Optional<List<ListStudentThemeAverage>> getStudentThemeAverageProgressionInClass(int class_id_,
             int student_id, int amount) {
-        log.traceEntry("Getting progression of {} for student {} in class {}", amount, student_id, class_id);
+        log.traceEntry("Getting progression of {} for student {} in class {}", amount, student_id, class_id_);
         try {
             Optional<List<ListStudentThemeAverage>> result = Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
                     + "SELECT * FROM (\n"
                     + "    SELECT\n"
-                    + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
+                    + "        DENSE_RANK() OVER(ORDER BY su._id ASC) AS survey_rank,\n"
                     + "        avg(an.answer) as average,\n"
                     + "        su._id as survey_id,\n"
-                    + "        su.class_id,\n"
                     + "        su.start_date,\n"
                     + "        su.end_date,\n"
                     + "        su.title as survey_title,\n"
@@ -1321,7 +1320,7 @@ public class Database extends AbstractDataSource {
                     + ") x WHERE x.survey_rank <= ?",
                     select -> {
                         select.setInt(1, student_id);
-                        select.setInt(2, class_id);
+                        select.setInt(2, class_id_);
                         select.setInt(3, amount);
                     },
                     results -> new ArrayList<ListStudentThemeAverage>() {
@@ -1345,7 +1344,7 @@ public class Database extends AbstractDataSource {
                                         this.themes = Lists.newArrayList(answer);
                                         this.survey = new Survey() {{
                                             this._id = result.getInt("survey_id");
-                                            this.class_id = result.getInt("class_id");
+                                            this.class_id = class_id_;
                                             this.description = result.getString("survey_description");
                                             this.start_date = result.getTimestamp("start_date");
                                             this.end_date = result.getTimestamp("end_date");
@@ -1368,14 +1367,14 @@ public class Database extends AbstractDataSource {
         }
     }
 
-    public Optional<List<ListGroupThemeAverage>> getGroupThemeAverageProgression(int class_id,
+    public Optional<List<ListGroupThemeAverage>> getGroupThemeAverageProgression(int class_id_,
             int group_id, int amount) {
-        log.traceEntry("Getting progression of {} for group {} in class {}", amount, group_id, class_id);
+        log.traceEntry("Getting progression of {} for group {} in class {}", amount, group_id, class_id_);
         try {
             Optional<List<ListGroupThemeAverage>> result = Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
                     + "SELECT * FROM (\n"
                     + "    SELECT\n"
-                    + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
+                    + "        DENSE_RANK() OVER(ORDER BY su._id ASC) AS survey_rank,\n"
                     + "        avg(an.answer) as average,\n"
                     + "        su._id as survey_id,\n"
                     + "        su.class_id,\n"
@@ -1405,7 +1404,7 @@ public class Database extends AbstractDataSource {
                     + ") x WHERE x.survey_rank <= ?",
                     select -> {
                         select.setInt(1, group_id);
-                        select.setInt(2, class_id);
+                        select.setInt(2, class_id_);
                         select.setInt(3, amount);
                     },
                     results -> new ArrayList<ListGroupThemeAverage>() {
@@ -1429,7 +1428,7 @@ public class Database extends AbstractDataSource {
                                         this.themes = Lists.newArrayList(answer);
                                         this.survey = new Survey() {{
                                             this._id = result.getInt("survey_id");
-                                            this.class_id = result.getInt("class_id");
+                                            this.class_id = class_id_;
                                             this.description = result.getString("survey_description");
                                             this.start_date = result.getTimestamp("start_date");
                                             this.end_date = result.getTimestamp("end_date");
@@ -1452,13 +1451,13 @@ public class Database extends AbstractDataSource {
         }
     }
 
-    public Optional<List<ListClassThemeAverage>> getClassThemeAverageProgression(int class_id, int amount) {
-        log.traceEntry("Getting progression of {} for class {}", amount, class_id);
+    public Optional<List<ListClassThemeAverage>> getClassThemeAverageProgression(int class_id_, int amount) {
+        log.traceEntry("Getting progression of {} for class {}", amount, class_id_);
         try {
             Optional<List<ListClassThemeAverage>> result = Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
                     + "SELECT * FROM (\n"
                     + "    SELECT\n"
-                    + "        DENSE_RANK() OVER(ORDER BY su._id DESC) AS survey_rank,\n"
+                    + "        DENSE_RANK() OVER(ORDER BY su._id ASC) AS survey_rank,\n"
                     + "        avg(an.answer) as average,\n"
                     + "        su._id as survey_id,\n"
                     + "        su.class_id,\n"
@@ -1485,7 +1484,7 @@ public class Database extends AbstractDataSource {
                     + "    ORDER BY su.start_date ASC, th._id\n"
                     + ") x WHERE x.survey_rank <= ?",
                     select -> {
-                        select.setInt(1, class_id);
+                        select.setInt(1, class_id_);
                         select.setInt(2, amount);
                     },
                     results -> new ArrayList<ListClassThemeAverage>() {{
@@ -1497,7 +1496,7 @@ public class Database extends AbstractDataSource {
                             answer.setDescription(result.getString("description"));
                             answer.setTheme_id(result.getInt("theme_id"));
                             answer.setStart_date(result.getString("start_date"));
-                            answer.setClass_id(class_id);
+                            answer.setClass_id(class_id_);
                             answer.setSurvey_id(result.getInt("survey_id"));
                             int survey_rank = result.getInt("survey_rank") - 1;
                             if (last_survey_rank == survey_rank) {
@@ -1508,7 +1507,7 @@ public class Database extends AbstractDataSource {
                                     this.themes = Lists.newArrayList(answer);
                                     this.survey = new Survey() {{
                                         this._id = result.getInt("survey_id");
-                                        this.class_id = result.getInt("class_id");
+                                        this.class_id = class_id_;
                                         this.description = result.getString("survey_description");
                                         this.start_date = result.getTimestamp("start_date");
                                         this.end_date = result.getTimestamp("end_date");
