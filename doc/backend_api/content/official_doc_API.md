@@ -876,6 +876,11 @@ $ curl --request POST localhost:8080/webapi/teachers/1/classes/1/surveys
 {
   "title" : "math survey",
   "description" : "Fist math survey of the year"
+  "theme_ids" : [
+                  1,
+                  3,
+                  5
+                ]
 }
 ```
 
