@@ -34,6 +34,7 @@ import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.StudentGroup;
 import org.dlearn.helsinki.skeleton.model.StudentThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Survey;
+import org.dlearn.helsinki.skeleton.model.SurveyTheme;
 import org.dlearn.helsinki.skeleton.model.Teacher;
 import org.dlearn.helsinki.skeleton.security.Hasher;
 import org.springframework.jdbc.datasource.AbstractDataSource;
@@ -60,23 +61,23 @@ public class Database extends AbstractDataSource {
     }
 
     // Survey postSurvey : returns the survey that was posted on the database.
-    public Survey postSurvey(Survey survey) throws SQLException {
-        log.traceEntry("Posting survey {}", survey);
+    public SurveyTheme postSurvey(SurveyTheme surveyTheme) throws SQLException {
+        log.traceEntry("Posting survey {}", surveyTheme);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Surveys\" (title, class_id, start_date, teacher_id, description, open) "
                     + "VALUES (?,?,now(),?,?,True) RETURNING _id";
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
-                insert.setString(1, survey.title);
-                insert.setInt(2, survey.getClass_id());
+                insert.setString(1, surveyTheme.title);
+                insert.setInt(2, surveyTheme.getClass_id());
                 //insert.setDate(3, new Date(0));
-                insert.setInt(3, survey.getTeacher_id());
-                insert.setString(4, survey.description);
+                insert.setInt(3, surveyTheme.getTeacher_id());
+                insert.setString(4, surveyTheme.description);
                 // execute query
                 try (ResultSet result = insert.executeQuery()) {
                     if (result.next()) {
-                        survey.set_id(result.getInt("_id"));
+                    	surveyTheme.set_id(result.getInt("_id"));
                     } else {
                         log.error("Inserting survey didn't return ID of it.");
                     }
@@ -85,18 +86,31 @@ public class Database extends AbstractDataSource {
         } catch (SQLException e) {
             log.catching(e);
         }
-        log.traceExit(survey);
-        return survey;
+        log.traceExit(surveyTheme);
+        return surveyTheme;
     }
 
-    public List<Question> getQuestions() {
+    public List<Question> getQuestions(SurveyTheme surveyTheme) {
         log.traceEntry();
         ArrayList<Question> questions = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "Select * FROM public.\"Questions\"";
+        	// lame fix TODO check that there is at least one theme chosen
+            String statement = "Select * FROM public.\"Questions\" WHERE theme_id = ?";
+            int count = 1;
+            for(int i=1;i<surveyTheme.theme_ids.size();i++){
+            	statement += " OR theme_id = ?";
+            	count++;
+            	System.out.println(count);
+            }
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
+            	count = 0;
+                for(int i=0;i<surveyTheme.theme_ids.size();i++){
+                	count++;
+                	System.out.println(count);
+                	select.setInt(i+1, surveyTheme.theme_ids.get(i));
+                }
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     while (result.next()) {

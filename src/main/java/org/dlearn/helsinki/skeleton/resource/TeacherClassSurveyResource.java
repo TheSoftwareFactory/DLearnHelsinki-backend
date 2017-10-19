@@ -14,6 +14,7 @@ import jersey.repackaged.com.google.common.collect.Lists;
 
 import org.dlearn.helsinki.skeleton.model.ClassThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Survey;
+import org.dlearn.helsinki.skeleton.model.SurveyTheme;
 import org.dlearn.helsinki.skeleton.model.Teacher;
 import org.dlearn.helsinki.skeleton.service.TeacherClassSurveyService;
 
@@ -32,13 +33,13 @@ public class TeacherClassSurveyResource {
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Survey postSurvey(@PathParam("teacher_id") int teacher_id,
-            @PathParam("class_id") int class_id, Survey survey) {
-        survey.teacher_id = teacher_id;
-        survey.class_id = class_id;
-        System.out.println(survey.getTitle());
-        return surveyService.postSurvey(survey);
+    @Consumes(MediaType.APPLICATION_JSON) 
+    public SurveyTheme postSurvey(@PathParam("teacher_id") int teacher_id,
+            @PathParam("class_id") int class_id, SurveyTheme surveyTheme) {
+    	surveyTheme.teacher_id = teacher_id;
+    	surveyTheme.class_id = class_id;
+        System.out.println(surveyTheme.getTitle());
+        return surveyService.postSurvey(surveyTheme);
     }
 
     @POST //(update to close)
