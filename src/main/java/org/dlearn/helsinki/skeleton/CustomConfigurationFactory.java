@@ -21,6 +21,7 @@ public class CustomConfigurationFactory extends ConfigurationFactory {
     static Configuration createConfiguration(final String name, ConfigurationBuilder<BuiltConfiguration> builder) {
         builder.setConfigurationName(name);
         builder.setStatusLevel(Level.ERROR);
+        // Change level here to debug to get debug logging
         builder.add(builder.newFilter("ThresholdFilter", Filter.Result.ACCEPT, Filter.Result.NEUTRAL)
                 .addAttribute("level", Level.ERROR));
         AppenderComponentBuilder appenderBuilder = builder.newAppender("Stdout", "CONSOLE")
