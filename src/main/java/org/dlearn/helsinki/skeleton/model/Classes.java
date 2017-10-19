@@ -39,5 +39,10 @@ public class Classes {
     public void setTeacher_id(int teacher_id) {
         this.teacher_id = teacher_id;
     }
+    
+    @Override
+    public String toString() {
+        return "Classes{ _id = "+_id+", name = "+name+", teacher_id = "+teacher_id+" }";
+    }
 
 }
