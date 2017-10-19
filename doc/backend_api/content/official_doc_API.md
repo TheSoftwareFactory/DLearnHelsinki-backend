@@ -114,7 +114,7 @@ $ curl localhost:8080/webapi/researcher/surveys
 
 End points available for teacher.
 
-### Create new student (DONE) Delma
+### Create new student (DONE)
 
 Creates new student account
 
@@ -154,6 +154,29 @@ $ curl --request POST localhost:8080/webapi/teachers/1/create_student
   "gender" : "dragon"
 }
 ```
+### Create new class (DONE)
+
+```endpoint
+POST teachers/{teacher_id}/classes
+```
+
+#### Example request
+
+```curl
+$ curl --request POST localhost:8080/webapi/teachers/1/classes
+  -d @data.json
+```
+
+#### Example request body
+
+```json
+{
+  "name" : "Physics 101"
+}
+```
+#### Example response
+
+No return response
 
 ### Change student password
 
