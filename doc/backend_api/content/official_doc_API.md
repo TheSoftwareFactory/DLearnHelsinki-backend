@@ -406,6 +406,46 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/students
   }
 ]
 ```
+### Create new group in class
+
+Add a new group to the class. Note that fields "_id" and "class_id" in the request body are optional and may contain garbage values.
+
+```endpoint
+POST teachers/{teacher_id}/classes/{class_id}/groups/
+```
+
+#### Example request
+
+```curl
+$ curl --request POST localhost:8080/webapi/teachers/1/classes/1/groups
+```
+
+#### Example request body
+
+```json
+{
+  "_id" : 3,
+  "name" : "second group",
+  "class" : 4,
+}
+```
+or
+
+```json
+{
+  "name" : "second group"
+}
+```
+
+#### Example response
+
+```json
+{
+  "_id" : 2,
+  "name" : "second group",
+  "class_id" : 1
+}
+```
 
 ### Move student to group
 
