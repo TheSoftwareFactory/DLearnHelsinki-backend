@@ -9,6 +9,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
 import org.dlearn.helsinki.skeleton.exceptions.StudentExistsException;
 import org.dlearn.helsinki.skeleton.model.ChangePasswordStudent;
 import org.dlearn.helsinki.skeleton.model.NewStudent;
@@ -63,8 +66,9 @@ public class TeacherResource {
             NewStudent student) {
         try {
             return createNewUserService.createNewStudent(student);
-        } catch(StudentExistsException e) {
-            throw new WebApplicationException("The student username is invalid or already exists in database. Choose another.", 400);
+        } catch (StudentExistsException e) {
+            throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
+                    .entity("The student username is invalid or already exists in database. Choose another.").build());
         }
     }
 

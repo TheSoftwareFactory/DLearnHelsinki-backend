@@ -14,6 +14,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 import jersey.repackaged.com.google.common.collect.Lists;
 
+import org.dlearn.helsinki.skeleton.exceptions.GroupUpdateUnsuccessful;
 import org.dlearn.helsinki.skeleton.model.Answer;
 import org.dlearn.helsinki.skeleton.model.ChangePasswordStudent;
 import org.dlearn.helsinki.skeleton.model.ClassThemeAverage;
@@ -830,7 +831,7 @@ public class Database extends AbstractDataSource {
 	        		prepareStatement(update_statement)) {
 	        	update.setInt(1, group_id);
 	            // execute query
-	            update.executeQuery();
+	            update.executeUpdate();
             };
 	    } catch (SQLException e) {
 	    	System.out.println(e.getMessage());
@@ -859,7 +860,7 @@ public class Database extends AbstractDataSource {
 	}
 	
 
-	public Group updateGroupName(Group group) {
+	public void updateGroupName(int class_id, int group_id, Group group) {
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "UPDATE public.\"Groups\" "+ 
@@ -867,20 +868,18 @@ public class Database extends AbstractDataSource {
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
                 insert.setString(1, group.getName());
-                insert.setInt(2, group.get_id() );
-                insert.setInt(3, group.getStudent_id());
+                insert.setInt(2, group_id);
+                insert.setInt(3, class_id);
                 // execute query
                 int count = insert.executeUpdate();
                 if (count == 0) {
                 	// update unsuccessful
-                	return null;
+                	throw new GroupUpdateUnsuccessful();
                 }
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return null;
-        }
-        return group;
+        }        
 	}
 
 	
@@ -1537,9 +1536,9 @@ public class Database extends AbstractDataSource {
     	
     }
 
-	public boolean canGroupBeClosed(int group_id) {
+	public boolean isGroupClosed(int group_id) {
 		// If group is closed, it is empty.
-		boolean canBeClosed = false;
+		boolean closed = false;
 		try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String select_open = "SELECT open "
@@ -1551,40 +1550,68 @@ public class Database extends AbstractDataSource {
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     if (result.next()) {
-                    	canBeClosed = result.getBoolean("open"); // Already closed group can be closed.
+                    	closed = result.getBoolean("open");
                     };
                 }
-            };
-            if (canBeClosed) {
-            	//TODO rewrite sql request  
-                String select_students = "SELECT COUNT(t1.group_id) "
-                		+ "FROM public.\"Student_Classes\" AS t1 " 
-                		+ "INNER JOIN ("
-                		+ "		SELECT student_id, class_id, MAX(creation_date) as maxdate "
-                		+ "		FROM public.\"Student_Classes\" "
-                		+ "		GROUP BY student_id, class_id) AS t2 "
-                		+ "ON t1.student_id = t2.student_id "
-                		+ "	AND t1.class_id = t2.class_id "
-                		+ "	AND t1.creation_date = t2.maxdate "
-                		+ "WHERE t1.group_id = ?;" ;
-                try (PreparedStatement select = dbConnection
-                        .prepareStatement(select_students)) {
-                    select.setInt(1, group_id);
-                    // execute query
-                    int count = 0;
-                    try (ResultSet result = select.executeQuery()) {
-                        if (result.next()) {
-                        	count = result.getInt(1);
-                        };
-                        if (count != 0) {
-                        	canBeClosed = false;
-                        };
-                    }
-                }
-            };
+            };  
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-		return canBeClosed;
+		return closed;
 	}
- }
+
+	public int countNumberOfStudentsInGroup(int group_id) {
+		int count = 0;
+		try (Connection dbConnection = getDBConnection()) {
+	        String select_students_count = "SELECT COUNT(t1.group_id) "
+	        		+ "FROM public.\"Student_Classes\" AS t1 " 
+	        		+ "INNER JOIN ("
+	        		+ "		SELECT student_id, class_id, MAX(creation_date) as maxdate "
+	        		+ "		FROM public.\"Student_Classes\" "
+	        		+ "		GROUP BY student_id, class_id"
+	        		+ ") AS t2 "
+	        		+ "ON t1.student_id = t2.student_id "
+	        		+ "	AND t1.class_id = t2.class_id "
+	        		+ "	AND t1.creation_date = t2.maxdate "
+	        		+ "WHERE t1.group_id = ?;" ; 
+	        try (PreparedStatement select = dbConnection
+	                .prepareStatement(select_students_count)) {
+	            select.setInt(1, group_id);
+	            // execute query
+	            try (ResultSet result = select.executeQuery()) {
+	                if (result.next()) {
+	                	count = result.getInt(1);
+	                };
+	            };
+	        };     
+	     } catch (SQLException e) {
+	        System.out.println(e.getMessage());
+	    };
+		return count;
+	}
+
+	public Group createGroupInClass(int class_id, Group group) {
+		Group createdGroup = null;
+		try (Connection dbConnection = getDBConnection()) {
+	        String insert_group = "INSERT INTO public.\"Groups\" "
+	        		+ "(name, class_id) VALUES (?, ?) RETURNING _id;";
+	        try (PreparedStatement insert = dbConnection
+	                .prepareStatement(insert_group )) {
+	        	insert.setString(1, group.getName());
+	            insert.setInt(2, class_id);
+	            // execute query
+	            try (ResultSet result = insert.executeQuery()) {
+	                if (result.next()) {
+	                	createdGroup = new Group();
+	                	createdGroup.set_id(result.getInt("_id"));
+	                	createdGroup.setClass_id(class_id);
+	                	createdGroup.setName(group.getName());
+	                };
+	            };
+	        };     
+	     } catch (SQLException e) {
+	        System.out.println(e.getMessage());
+	    };
+		return createdGroup;
+	}
+}

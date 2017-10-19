@@ -2,6 +2,7 @@ package org.dlearn.helsinki.skeleton.resource;
 
 import java.util.List;
 
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -12,10 +13,13 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.dlearn.helsinki.skeleton.model.StudentGroup;
 import org.dlearn.helsinki.skeleton.service.TeacherGroupService;
 import org.dlearn.helsinki.skeleton.exceptions.GroupCannotBeClosedException;
+import org.dlearn.helsinki.skeleton.exceptions.GroupUpdateUnsuccessful;
 import org.dlearn.helsinki.skeleton.exceptions.StudentExistsException;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.GroupThemeAverage;
@@ -41,10 +45,9 @@ public class TeacherClassGroupResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Group getStudentsInGroups(@PathParam("class_id") int class_id,
-    											  @PathParam("group_id") int group_id,
-    											  Group group){
-    	return teacherGroupService.insertGroupInClass(class_id, group_id, group);
+    public Group getStudentsInGroups(@PathParam("class_id") int class_id, 
+    								 Group group){
+    	return teacherGroupService.insertGroupInClass(class_id, group);
     }
 
 
@@ -95,19 +98,26 @@ public class TeacherClassGroupResource {
         try {
         	teacherGroupService.deleteGroupFromClass(class_id, group_id);
         } catch(GroupCannotBeClosedException e) {
-            throw new WebApplicationException("Group cannot be closed. It contains students.", 400);
+        	//"Group cannot be closed. It contains students.",
+            throw new WebApplicationException(Response.status(Status.METHOD_NOT_ALLOWED)
+                    .entity("Group cannot be closed. It contains students.").build());
         };
     }
     
     @Path("/{group_id}")
-    @PUT
+    @PUT // Quite frankly it should be UPDATE and not PUT.
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Group updateGroupInClass(@PathParam("class_id") int class_id,
-    							 	@PathParam("group_id") int group_id,
-    							 	Group group) {
+    public void updateGroupInClass(@PathParam("class_id") int class_id,
+    							   @PathParam("group_id") int group_id,
+    							   Group group) {
     	// TODO check the teacher has access to this group and class
-        return teacherGroupService.updateGroupInClass(class_id, group_id, group);
+    	try {
+        	teacherGroupService.updateGroupInClass(class_id, group_id, group);
+    	} catch (GroupUpdateUnsuccessful e) {
+    		throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR)
+                    .entity("Could not update the group in database.").build());
+    	}
     }
 
     @Path("/{group_id}/students")

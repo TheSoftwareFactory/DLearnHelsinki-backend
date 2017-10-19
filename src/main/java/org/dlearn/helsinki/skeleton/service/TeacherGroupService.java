@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.dlearn.helsinki.skeleton.database.Database;
 import org.dlearn.helsinki.skeleton.exceptions.GroupCannotBeClosedException;
+import org.dlearn.helsinki.skeleton.exceptions.GroupUpdateUnsuccessful;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.StudentGroup;
@@ -34,27 +35,21 @@ public class TeacherGroupService {
     }
     
     public void deleteGroupFromClass(int class_id, int group_id) {
-    	if (DB.canGroupBeClosed(group_id)) {
-    		System.out.println("Closing group");
-    		DB.closeGroup(group_id);
-    	} else {
-    		throw new GroupCannotBeClosedException();
-    	}
+    	if (DB.isGroupClosed(group_id)) {
+    		if (0 == DB.countNumberOfStudentsInGroup(group_id)) {
+    			System.out.println("Closing group");
+    			DB.closeGroup(group_id);
+    		} else {
+        		throw new GroupCannotBeClosedException();
+        	};
+    	};
     }
     
-    public Group updateGroupInClass(int class_id, int group_id, Group groupSample) {
-    	Group group = null;
-    	//if (db.doesGroupExistInDatabase(group_id)) {
-    		//updating
-    		groupSample.setClass_id(class_id);
-    		groupSample.set_id(group_id);
-    		group = DB.updateGroupName(groupSample);
-    	//};
-    	return group;
+    public void updateGroupInClass(int class_id, int group_id, Group groupSample) {
+   		DB.updateGroupName(class_id, group_id, groupSample);
     }
-
-	public Group insertGroupInClass(int class_id, int group_id, Group group) {
-		// TODO Auto-generated method stub
-		return null;
+    
+	public Group insertGroupInClass(int class_id, Group group) {
+		return DB.createGroupInClass(class_id, group);
 	}
 }
