@@ -6,9 +6,10 @@ import java.util.List;
 
 public class ListGroupThemeAverage {
     public List<GroupThemeAverage> themes;
-    
+    public Survey survey;
+
     @Override
     public String toString() {
-        return "ListGroupThemeAverage { themes = "+themes.toString()+" }";
+        return "ListGroupThemeAverage{" + "themes=" + themes + ", survey=" + survey + '}';
     }
 }
