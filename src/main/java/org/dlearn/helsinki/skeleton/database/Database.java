@@ -889,13 +889,19 @@ public class Database extends AbstractDataSource {
     }
 
     // Inserts an answer into the database
-    public void putAnswerToQuestion(Answer answer) {
+    public void putAnswerToQuestion(Answer answer, int class_id) {
         log.traceEntry("Adding answer {}", answer);
+        // finding his group_id
+        Group group = getGroupForStudent(class_id, answer.student_id).orElse(null);
+        int group_id = -1;
+        if (group != null){
+        	group_id = group._id;
+        }
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Answers\" "
-                    + "(question_id, student_id, answer, survey_id)"
-                    + "VALUES (?, ?, ?, ?) "
+                    + "(question_id, student_id, answer, survey_id, group_id)"
+                    + "VALUES (?, ?, ?, ?, ?) "
                     + "ON CONFLICT (question_id,student_id,survey_id) DO UPDATE SET answer = ?";
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
@@ -903,9 +909,10 @@ public class Database extends AbstractDataSource {
                 insert.setInt(2, answer.student_id);
                 insert.setInt(3, answer.answer);
                 insert.setInt(4, answer.survey_id);
-                insert.setInt(5, answer.answer);
+                insert.setInt(5, group_id);
+                insert.setInt(6, answer.answer);
                 // execute query
-                insert.executeQuery();
+                insert.executeUpdate();
             }
         } catch (SQLException e) {
             log.catching(e);
