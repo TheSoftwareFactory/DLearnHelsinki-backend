@@ -50,4 +50,9 @@ public class Question {
         this.max_answer = max_answer;
     }
 
+    @Override
+    public String toString() {
+        return "Question{" + "_id=" + _id + ", question=" + question + ", min_answer=" + min_answer + ", max_answer=" + max_answer + '}';
+    }
+
 }

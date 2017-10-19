@@ -57,4 +57,10 @@ public class Student {
     public String getGender() {
         return gender;
     }
+
+    @Override
+    public String toString() {
+        return "Student{" + "_id=" + _id + ", username=" + username + ", gender=" + gender + ", age=" + age + '}';
+    }
+    
 }

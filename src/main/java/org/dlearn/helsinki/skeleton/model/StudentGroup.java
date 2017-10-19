@@ -19,4 +19,9 @@ public class StudentGroup {
         this.name = name;
         this.students = students;
     }
+    
+    @Override
+    public String toString() {
+        return "StudentGroup { _id = "+_id+", name = "+name+", students = "+students.toString()+" }";
+    }
 }

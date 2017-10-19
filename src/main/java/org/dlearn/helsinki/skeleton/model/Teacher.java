@@ -30,4 +30,10 @@ public class Teacher {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    @Override
+    public String toString() {
+        return "Teacher{" + "_id=" + _id + ", username=" + username + '}';
+    }
+    
 }

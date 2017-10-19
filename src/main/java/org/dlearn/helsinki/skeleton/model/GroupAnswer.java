@@ -50,5 +50,10 @@ public class GroupAnswer {
     public void setAnswer(float answer) {
         this.answer = answer;
     }
+    
+    @Override
+    public String toString() {
+        return "GroupAnswer { survey_id = "+survey_id+", question_id = "+question_id+", group_id = "+group_id+", answer = "+answer+" }";
+    }
 
 }
