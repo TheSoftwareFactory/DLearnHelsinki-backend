@@ -1502,5 +1502,23 @@ public class Database extends AbstractDataSource {
         return answers;
     	
     }
+
+	public void addClassToTeacher(Classes teacher_class) {
+		try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "INSERT INTO public.\"Classes\" (\"name\", teacher_id) VALUES (?, ?);";
+            try (PreparedStatement insert = dbConnection
+                    .prepareStatement(statement)) {
+                insert.setString(1, teacher_class.getName());
+                insert.setInt(2, teacher_class.getTeacher_id());
+                // execute query
+                try (ResultSet result = insert.executeQuery()) {
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("addClassToTeacher error : " + e.getMessage());
+
+        }
+	}
     
 }

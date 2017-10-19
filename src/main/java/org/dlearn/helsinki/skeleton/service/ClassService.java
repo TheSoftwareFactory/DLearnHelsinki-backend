@@ -28,4 +28,9 @@ public class ClassService {
 	public List<Classes> getAllClassesStundentIsIn(int student_id) {
 		return db.getAllClassesStundentIsIn(student_id);
 	}
+
+	public void addClassToTeacher(Classes teacher_class) {
+		// TODO Auto-generated method stub
+		db.addClassToTeacher(teacher_class);
+	}
 }
