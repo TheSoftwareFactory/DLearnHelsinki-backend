@@ -48,10 +48,9 @@ public class DataBaseHelper {
             insert.setInt(1, group_id);
             try (final ResultSet result = insert.executeQuery()) {
                 if (result.next()) {
-                    int real_class_id = result.getInt("class_id");
-                    if (class_id != real_class_id) {
-                        log.traceExit("Classes didn't match");
-                        return false;
+                    if (class_id == result.getInt("class_id")) {
+                        log.traceExit("Classes did match");
+                        return true;
                     }
                 } else {
                     log.traceExit("No such group exists");
@@ -59,7 +58,8 @@ public class DataBaseHelper {
                 }
             }
         }
-        log.traceExit("Classes did match");
+        
+        log.traceExit("Classes didn't match");
         return true;
     }
     

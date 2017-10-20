@@ -11,6 +11,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import org.dlearn.helsinki.skeleton.exceptions.GroupClassMatchException;
 
 import org.dlearn.helsinki.skeleton.exceptions.StudentExistsException;
 import org.dlearn.helsinki.skeleton.model.ChangePasswordStudent;
@@ -69,6 +70,9 @@ public class TeacherResource {
         } catch (StudentExistsException e) {
             throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
                     .entity("The student username is invalid or already exists in database. Choose another.").build());
+        } catch (GroupClassMatchException e) {
+            throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
+                    .entity("The group doesn't correspond with the class.").build());
         }
     }
 
