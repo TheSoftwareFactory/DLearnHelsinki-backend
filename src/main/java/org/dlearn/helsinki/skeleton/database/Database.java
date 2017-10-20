@@ -377,7 +377,7 @@ public class Database {
         log.traceEntry("Getting groups for student {} in class {}", student_id, class_id);
         try (Connection dbConnection = getDBConnection()) {
             String statement = ""
-                    + "SELECT sc.group_id, g.name"
+                    + "SELECT sc.group_id, g.name, g.open "
                     + "  FROM public.\"Student_Classes\" as sc,"
                     + "       public.\"Groups\" as g"
                     + "  WHERE sc.group_id = g._id"
@@ -398,6 +398,7 @@ public class Database {
                             this.set_id(result.getInt("group_id"));
                             this.setClass_id(class_id);
                             this.setName(result.getString("name"));
+                            this.setOpen(result.getBoolean("open"));
                         }};
                         log.traceExit(group);
                         return Optional.of(group);
@@ -417,7 +418,7 @@ public class Database {
 
         try (Connection dbConnection = getDBConnection()) {
             String statement = ""
-                    + "SELECT sc.group_id, g.name, g.class_id"
+                    + "SELECT sc.group_id, g.name, g.class_id, g.open "
                     + "  FROM public.\"Student_Classes\" as sc,"
                     + "       public.\"Groups\" as g"
                     + "  WHERE sc.group_id = g._id"
@@ -435,6 +436,7 @@ public class Database {
                         group.set_id(result.getInt("group_id"));
                         group.setClass_id(result.getInt("class_id"));
                         group.setName(result.getString("name"));
+                        group.setOpen(result.getBoolean("open"));
                         groups.add(group);
                     }
                 }
@@ -452,7 +454,7 @@ public class Database {
         ArrayList<Group> groups = null;
 
         try (Connection dbConnection = getDBConnection()) {
-            String statement = "Select name, _id, class_id FROM public.\"Groups\" WHERE (class_id = ?);";
+            String statement = "Select name, _id, class_id, open FROM public.\"Groups\" WHERE (class_id = ?);";
             //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
@@ -465,6 +467,7 @@ public class Database {
                         group.set_id(result.getInt("_id"));
                         group.setClass_id(result.getInt("class_id"));
                         group.setName(result.getString("name"));
+                        group.setOpen(result.getBoolean("open"));
                         groups.add(group);
                     }
                 }
@@ -482,7 +485,7 @@ public class Database {
         Group group = null;
 
         try (Connection dbConnection = getDBConnection()) {
-            String statement = "Select name FROM public.\"Groups\" WHERE (class_id = ?) and (_id = ?);";
+            String statement = "Select name, open FROM public.\"Groups\" WHERE (class_id = ?) and (_id = ?);";
             //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
@@ -492,7 +495,7 @@ public class Database {
                 try (ResultSet result = select.executeQuery()) {
                     if (result.next()) {
                         group = new Group(group_id, result.getString("name"),
-                                class_id);
+                                class_id, result.getBoolean("open"));
                     }
                 }
             }
@@ -1078,33 +1081,81 @@ public class Database {
         return answers;
     }
 
-    public List<StudentGroup> getGroupsWithStudents(int class_id) {
-        log.traceEntry("Getting groups in class {}", class_id);
+   
+    public List<StudentGroup> getGroupsWithStudents(int _class_id, boolean all) {
+        log.traceEntry("Getting groups and students in class {}", _class_id);
         Map<Integer, StudentGroup> studentGroups = new TreeMap<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = ""
-                    + "SELECT g._id as group_id,\n"
-                    + "       g.name as group_name,\n"
-                    + "       s._id as student_id,\n"
-                    + "       s.username,\n"
-                    + "       s.gender,\n"
-                    + "       s.age\n"
-                    + "  FROM public.\"Students\" as s,\n"
-                    + "       public.\"Groups\" as g,\n"
-                    + "       public.\"Student_Classes\" as sc\n"
-                    + " WHERE g._id = sc.group_id\n"
-                    + "   AND sc.student_id = s._id\n"
-                    + "   AND sc.class_id = ?\n"
-                    + "   AND sc._id = (SELECT sc2._id\n"
-                    + "                   FROM public.\"Student_Classes\" as sc2\n"
-                    + "                  WHERE sc.student_id = sc2.student_id\n"
-                    + "                 ORDER BY sc2.creation_date DESC\n"
-                    + "                 LIMIT 1)";
+        	String statement = null;
+        	if (all) {
+    			statement = "" 
+    					// Select all open groups with students 
+    	                + "SELECT g._id as group_id,\n" 
+    	                + "       g.name as group_name,\n"
+    	                + "       g.open as group_open,\n"
+    	                + "       s._id as student_id,\n"
+    	                + "       s.username,\n"
+    	                + "       s.gender,\n"
+    	                + "       s.age,\n"
+    	                + "		  0 as EmptyStudents\n"
+    	                + "  FROM public.\"Students\" as s,\n"
+    	                + "       public.\"Groups\" as g,\n"
+    	                + "       public.\"Student_Classes\" as sc\n"
+    	                + " WHERE g._id = sc.group_id\n"
+    	                + "   AND sc.student_id = s._id\n"
+    	                + "   AND sc.class_id = ?\n"
+    	                + "   AND sc._id = (SELECT sc2._id\n"
+    	                + "                   FROM public.\"Student_Classes\" as sc2\n"
+    	                + "                  WHERE sc.student_id = sc2.student_id\n"
+    	                + "                 ORDER BY sc2.creation_date DESC\n"
+    	                + "                 LIMIT 1) \n"
+    	                // Select all closed groups (without students, 
+    	                //		because a group with students can not be closed )
+    	                + " UNION \n" 
+       	                + "SELECT g2._id as group_id,\n"
+    	                + "       g2.name as group_name,\n"
+    	                + "       g2.open as group_open,\n"
+    	                + "       0 as student_id,\n"
+    	                + "       '' as username,\n"
+    	                + "       '' as gender,\n"
+    	                + "       0 as age,\n"
+    	                + "		  1 as EmptyStudents\n"
+    	                + "  FROM public.\"Groups\" as g2 \n"
+    	                + " WHERE (g2.class_id = ?) "
+    	                + "	  AND (g2.open = false);";
+        	} else {
+    			statement = ""
+    					// Select all open groups with students 
+		                + "SELECT g._id as group_id,\n"
+		                + "       g.name as group_name,\n"
+		                + "       g.open as group_open,\n"
+		                + "       s._id as student_id,\n"
+		                + "       s.username,\n"
+		                + "       s.gender,\n"
+		                + "       s.age,\n"
+		                + "		  0 as EmptyStudents\n"
+		                + "  FROM public.\"Students\" as s,\n"
+		                + "       public.\"Groups\" as g,\n"
+		                + "       public.\"Student_Classes\" as sc\n"
+		                + " WHERE g._id = sc.group_id\n"
+		                + "   AND sc.student_id = s._id\n"
+		                + "   AND sc.class_id = ?\n"
+		                + "   AND sc._id = (SELECT sc2._id\n"
+		                + "                   FROM public.\"Student_Classes\" as sc2\n"
+		                + "                  WHERE sc.student_id = sc2.student_id\n"
+		                + "                 ORDER BY sc2.creation_date DESC\n"
+		                + "                 LIMIT 1)";
+        	}
             //prepare statement with survey_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
-                select.setInt(1, class_id);
+                if (all) {
+                	select.setInt(1, _class_id);
+                	select.setInt(2, _class_id);
+                } else {
+                	select.setInt(1, _class_id);
+                };
 
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
@@ -1114,6 +1165,8 @@ public class Database {
                         String _username = result.getString("username");
                         String _gender = result.getString("gender");
                         int _age = result.getInt("age");
+                        boolean group_open = result.getBoolean("group_open");
+                        int noStudent = result.getInt("EmptyStudents");
                         // add Student to Group
                         studentGroups.compute(result.getInt("group_id"),
                             (group_id, group) -> {
@@ -1121,15 +1174,20 @@ public class Database {
                                     group = new StudentGroup(){{
                                         this._id = group_id;
                                         this.name = group_name;
+                                        this.open = group_open;
+                                        this.class_id = _class_id;
                                     }};
                                 }
-                                group.students.add(new Student() {{
-                                    this._id = student_id;
-                                    this.username = _username;
-                                    this.gender = _gender;
-                                    this.age = _age;
-                                }});
+                                if (noStudent == 0) {
+	                                group.students.add(new Student() {{
+	                                    this._id = student_id;
+	                                    this.username = _username;
+	                                    this.gender = _gender;
+	                                    this.age = _age;
+	                                }});
+                                };
                                 return group;
+                                
                             });
                     }
                 }
