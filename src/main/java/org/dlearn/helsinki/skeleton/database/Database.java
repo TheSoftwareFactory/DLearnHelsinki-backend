@@ -60,20 +60,27 @@ public class Database {
             DATA_SOURCE.setDriverClassName(DB_DRIVER);
             DATA_SOURCE.setInitialSize(1);
             String dbUrl = System.getenv("JDBC_DATABASE_URL");
-            if (dbUrl.isEmpty()) {
-                String databaseUrl = System.getenv("DATABASE_URL");
-                if (databaseUrl.isEmpty()) {
-                    dbUrl = DEV_DB_CONNECTION;
-                    DATA_SOURCE.setUsername(DEV_DB_USER);
-                    DATA_SOURCE.setPassword(DEV_DB_PASSWORD);
-                } else {
-                    URI dbUri = new URI(databaseUrl);
-                    dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
-                    if (dbUri.getUserInfo() != null) {
-                        DATA_SOURCE.setUsername(dbUri.getUserInfo().split(":")[0]);
-                        DATA_SOURCE.setPassword(dbUri.getUserInfo().split(":")[1]);
-                    }
-                }
+            if (dbUrl == null) {
+            	System.out.println("Hello");
+                dbUrl = DEV_DB_CONNECTION;
+                DATA_SOURCE.setUsername(DEV_DB_USER);
+                DATA_SOURCE.setPassword(DEV_DB_PASSWORD);
+            }else{
+	            if (dbUrl.isEmpty()) {
+	                String databaseUrl = System.getenv("DATABASE_URL");
+	                if (databaseUrl.isEmpty()) {
+	                    dbUrl = DEV_DB_CONNECTION;
+	                    DATA_SOURCE.setUsername(DEV_DB_USER);
+	                    DATA_SOURCE.setPassword(DEV_DB_PASSWORD);
+	                } else {
+	                    URI dbUri = new URI(databaseUrl);
+	                    dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
+	                    if (dbUri.getUserInfo() != null) {
+	                        DATA_SOURCE.setUsername(dbUri.getUserInfo().split(":")[0]);
+	                        DATA_SOURCE.setPassword(dbUri.getUserInfo().split(":")[1]);
+	                    }
+	                }
+	            }
             }
             DATA_SOURCE.setUrl(dbUrl);
         } catch (URISyntaxException | ClassNotFoundException e) {
@@ -584,7 +591,7 @@ public class Database {
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Teachers\" (username, pwd) "
-                    + "VALUES (?,?,?,?) RETURNING _id";
+                    + "VALUES (?,?) RETURNING _id";
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
                 insert.setString(1, new_teacher.teacher.username);
