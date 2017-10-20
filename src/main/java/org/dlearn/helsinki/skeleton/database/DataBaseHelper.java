@@ -51,8 +51,11 @@ public class DataBaseHelper {
                     if (class_id == result.getInt("class_id")) {
                         log.traceExit("Classes did match");
                         return true;
+                    } else {
+                        log.error("No match " + class_id +  " != " + result.getInt("class_id") + " " + group_id);
                     }
                 } else {
+                    log.error("No such group " + class_id +  " " + group_id);
                     log.traceExit("No such group exists");
                     return false;
                 }
