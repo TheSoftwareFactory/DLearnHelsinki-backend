@@ -39,6 +39,6 @@ public class ResearcherAccessResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Teacher createNewTeacher(NewTeacher teacher) {
-        return createNewUserService.createNewTeacher(teacher);
+        return createNewUserService.createNewTeacher(teacher).orElse(null);
     }
 }

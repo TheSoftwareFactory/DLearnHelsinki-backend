@@ -84,4 +84,8 @@ public class GroupThemeAverage {
         this.answer = answer;
     }
 
+    @Override
+    public String toString() {
+        return "GroupThemeAverage { survey_id = "+survey_id+", start_date = "+start_date+", theme_id = "+theme_id+", theme_title = "+theme_title+", description = "+description+", group_id = "+group_id+", answer = "+answer+" }";
+    }
 }

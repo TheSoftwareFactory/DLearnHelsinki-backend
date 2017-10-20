@@ -8,26 +8,27 @@ import org.dlearn.helsinki.skeleton.database.Database;
 import org.dlearn.helsinki.skeleton.model.ClassThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.model.Survey;
+import org.dlearn.helsinki.skeleton.model.SurveyTheme;
 
 public class TeacherClassSurveyService {
 
     Database db = new Database();
 
-    public Survey postSurvey(Survey survey) {
+    public SurveyTheme postSurvey(SurveyTheme surveyTheme) {
         System.out.println("Calling postSurvey");
         try {
             // Posting the new survey with id
-            survey = db.postSurvey(survey);
+        	surveyTheme = db.postSurvey(surveyTheme);
             // fetching all the questions in DB
-            List<Question> questions = db.getQuestions();
+            List<Question> questions = db.getQuestions(surveyTheme);
             // Posting new survey_questions
-            db.postSurveyQuestions(questions, survey);
-            survey.open = true;
-            return survey;
+            db.postSurveyQuestions(questions, surveyTheme);
+            surveyTheme.open = true;
+            return surveyTheme;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return new Survey();
+        return new SurveyTheme();
     }
 
     ///*
