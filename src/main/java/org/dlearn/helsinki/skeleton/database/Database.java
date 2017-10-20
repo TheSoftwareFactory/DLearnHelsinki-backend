@@ -686,39 +686,46 @@ public class Database {
         return student;
     }
     
-    // TODO: Use optional
-    public List<Student> getAllStudentsFromClass(int class_id) {
+    public Optional<List<Student>> getAllStudentsFromClass(int class_id) {
         log.traceEntry("Getting all students from class {}", class_id);
-        List<Student> students = null;
-        //SQL rewritten for new database
-        try(Connection dbConnection = getDBConnection()) {
-            String statement = "Select st._id, username, gender, age "
-                            + "FROM public.\"Groups\" AS gr INNER JOIN  public.\"Student_Classes\" as cls "
-                            + "ON (gr._id = cls.group_id) "
-                            + "INNER JOIN public.\"Students\" AS st "
-                            + "ON (st._id = cls.student_id) "
-                            + "WHERE (gr.class_id = ?);";
-            //prepare statement with student_id
-            try(PreparedStatement select = dbConnection.prepareStatement(statement)) {
-                    select.setInt(1, class_id);
-                // execute query
-                try(ResultSet result = select.executeQuery()) {
-                    students = new ArrayList<>();
-                    while(result.next()) { 
-                        Student student = new Student();
-                        student.set_id(result.getInt("_id"));
-                        student.setAge(result.getInt("age"));
-                        student.setUsername(result.getString("username"));
-                        student.setGender(result.getString("gender"));
-                        students.add(student);
+        try {
+            List<Student> result = DataBaseHelper.query(Database::getDBConnection, ""
+                    + "SELECT st._id,\n"
+                    + "       st.username,\n"
+                    + "       st.gender,\n"
+                    + "       st.age\n"
+                    + "  FROM public.\"Groups\" AS gr,\n"
+                    + "       public.\"Student_Classes\" AS sc,\n"
+                    + "       public.\"Students\" AS st\n"
+                    + " WHERE st._id = sc.student_id\n"
+                    + "   AND gr._id = sc.group_id\n"
+                    + "   AND gr.class_id = ?\n"
+                    + "   AND sc._id = (SELECT sc2._id\n"
+                    + "                   FROM public.\"Student_Classes\" as sc2\n"
+                    + "                  WHERE sc.student_id = sc2.student_id\n"
+                    + "                 ORDER BY sc2.creation_date DESC\n"
+                    + "                 LIMIT 1)",
+                    select -> select.setInt(1, class_id),
+                    results -> {
+                        List<Student> students = new ArrayList<>();
+                        for (ResultSet r: results) {
+                            students.add(new Student() {{
+                                _id = r.getInt("_id");
+                                age = r.getInt("age");
+                                username = r.getString("username");
+                                gender = r.getString("gender");
+                            }});
+                        }
+                        return students;
                     }
-                }
-            }
+            );
+            log.traceExit(result);
+            return Optional.of(result);
         } catch (SQLException e) {
             log.catching(e);
+            log.traceExit("No students returned");
+            return Optional.empty();
         }
-        log.traceExit(students);
-        return students;
     }
 
     public Optional<Student> getStudentFromUsername(String username_) {
@@ -1231,7 +1238,7 @@ public class Database {
     public Optional<List<ListStudentThemeAverage>> getStudentThemeAverageProgression(int student_id, int amount) {
         log.traceEntry("Getting progression of {} for student {}", amount, student_id);
         try {
-            Optional<List<ListStudentThemeAverage>> result = Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
+            List<ListStudentThemeAverage> result = DataBaseHelper.query(Database::getDBConnection, ""
                     + "SELECT * FROM (\n"
                     + "    SELECT\n"
                     + "        DENSE_RANK() OVER(ORDER BY su._id ASC) AS survey_rank,\n"
@@ -1294,9 +1301,9 @@ public class Database {
                             }
                         }
                     }}
-            ));
+            );
             log.traceExit(result);
-            return result;
+            return Optional.of(result);
         } catch (SQLException e) {
             log.catching(e);
             log.traceExit("No average returned");
@@ -1308,7 +1315,7 @@ public class Database {
             int student_id, int amount) {
         log.traceEntry("Getting progression of {} for student {} in class {}", amount, student_id, class_id_);
         try {
-            Optional<List<ListStudentThemeAverage>> result = Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
+            List<ListStudentThemeAverage> result = DataBaseHelper.query(Database::getDBConnection, ""
                     + "SELECT * FROM (\n"
                     + "    SELECT\n"
                     + "        DENSE_RANK() OVER(ORDER BY su._id ASC) AS survey_rank,\n"
@@ -1374,9 +1381,9 @@ public class Database {
                             }
                         }
                     }}
-            ));
+            );
             log.traceExit(result);
-            return result;
+            return Optional.of(result);
         } catch (SQLException e) {
             log.catching(e);
             log.traceExit("No average returned");
@@ -1388,7 +1395,7 @@ public class Database {
             int group_id, int amount) {
         log.traceEntry("Getting progression of {} for group {} in class {}", amount, group_id, class_id_);
         try {
-            Optional<List<ListGroupThemeAverage>> result = Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
+            List<ListGroupThemeAverage> result = DataBaseHelper.query(Database::getDBConnection, ""
                     + "SELECT * FROM (\n"
                     + "    SELECT\n"
                     + "        DENSE_RANK() OVER(ORDER BY su._id ASC) AS survey_rank,\n"
@@ -1457,9 +1464,9 @@ public class Database {
                             }
                         }
                     }}
-            ));
+            );
             log.traceExit(result);
-            return result;
+            return Optional.of(result);
         } catch (SQLException e) {
             log.catching(e);
             log.traceExit("No average returned");
@@ -1470,7 +1477,7 @@ public class Database {
     public Optional<List<ListClassThemeAverage>> getClassThemeAverageProgression(int class_id_, int amount) {
         log.traceEntry("Getting progression of {} for class {}", amount, class_id_);
         try {
-            Optional<List<ListClassThemeAverage>> result = Optional.of(DataBaseHelper.query(Database::getDBConnection, ""
+            List<ListClassThemeAverage> result = DataBaseHelper.query(Database::getDBConnection, ""
                     + "SELECT * FROM (\n"
                     + "    SELECT\n"
                     + "        DENSE_RANK() OVER(ORDER BY su._id ASC) AS survey_rank,\n"
@@ -1534,9 +1541,9 @@ public class Database {
                                 }});
                             }
                         }
-                    }}));
+                    }});
             log.traceExit(result);
-            return result;
+            return Optional.of(result);
         } catch (SQLException e) {
             log.catching(e);
             log.traceExit("No average returned");
