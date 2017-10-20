@@ -704,7 +704,8 @@ public class Database {
                     + "                   FROM public.\"Student_Classes\" as sc2\n"
                     + "                  WHERE sc.student_id = sc2.student_id\n"
                     + "                 ORDER BY sc2.creation_date DESC\n"
-                    + "                 LIMIT 1)",
+                    + "                 LIMIT 1)"
+                    + "ORDER BY st.username",
                     select -> select.setInt(1, class_id),
                     results -> {
                         List<Student> students = new ArrayList<>();
