@@ -619,7 +619,10 @@ public class Database {
     public boolean addStudentToGroup(Student student, int class_id, int group_id) {
         log.traceEntry("Adding student {} to group {} in class {}", student, group_id, class_id);
         try (Connection dbConnection = getDBConnection()) {
-            DataBaseHelper.ensureGroupClassMatch(dbConnection, group_id, class_id);
+            if (DataBaseHelper.doesGroupClassMatch(dbConnection, group_id, class_id)) {
+                log.traceExit("Group and class didn't match");
+                return false;
+            }
             String statement = "INSERT INTO public.\"Student_Classes\" (student_id, class_id, group_id) "
                     + "VALUES (?,?,?)";
             try (PreparedStatement insert = dbConnection
@@ -629,7 +632,7 @@ public class Database {
                 insert.setInt(3, group_id);
 
                 // execute query
-                insert.execute();
+                insert.executeUpdate();
                 log.traceExit("Adding succesful");
                 return true;
             }
@@ -1631,6 +1634,15 @@ public class Database {
         log.traceExit(answers);
         return answers;
     	
+    }
+    
+    public boolean doesGroupClassMatch(int group_id, int class_id) {
+        try (Connection dbConnection = getDBConnection()) {
+            return DataBaseHelper.doesGroupClassMatch(dbConnection, group_id, class_id);
+        } catch (SQLException e) {
+            log.catching(e);
+            return false;
+        }
     }
 
     public boolean isGroupClosed(int group_id) {

@@ -12,14 +12,17 @@ public class CreateNewUserService {
 
     private final Database db = new Database();
 
-    public Optional<Student> createNewStudent(NewStudent newStudent) throws RuntimeException{
+    public Optional<Student> createNewStudent(NewStudent newStudent) throws RuntimeException {
         // TODO: Check that age is positive, password isn't too short.
     	if(db.doesStudentUsernameExistInDatabase(newStudent.student)) {
             throw new StudentExistsException();
         }
-        Optional<Student> student = db.createStudent(newStudent);
-        student.ifPresent(s -> db.addStudentToGroup(s, newStudent.class_id, newStudent.group_id));
-        return student;
+        if (db.doesGroupClassMatch(newStudent.class_id, newStudent.group_id)) {
+            Optional<Student> student = db.createStudent(newStudent);
+            student.ifPresent(s -> db.addStudentToGroup(s, newStudent.class_id, newStudent.group_id));
+            return student;
+        }
+        return Optional.empty();
     }
 
     public Optional<Teacher> createNewTeacher(NewTeacher newTeacher) {
