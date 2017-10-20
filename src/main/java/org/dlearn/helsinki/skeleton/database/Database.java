@@ -619,7 +619,7 @@ public class Database {
     public boolean addStudentToGroup(Student student, int class_id, int group_id) {
         log.traceEntry("Adding student {} to group {} in class {}", student, group_id, class_id);
         try (Connection dbConnection = getDBConnection()) {
-            if (DataBaseHelper.doesGroupClassMatch(dbConnection, group_id, class_id)) {
+            if (!DataBaseHelper.doesGroupClassMatch(dbConnection, group_id, class_id)) {
                 log.traceExit("Group and class didn't match");
                 return false;
             }

@@ -2,6 +2,7 @@ package org.dlearn.helsinki.skeleton.service;
 
 import java.util.Optional;
 import org.dlearn.helsinki.skeleton.database.Database;
+import org.dlearn.helsinki.skeleton.exceptions.AddGroupFailedException;
 import org.dlearn.helsinki.skeleton.exceptions.GroupClassMatchException;
 import org.dlearn.helsinki.skeleton.exceptions.StudentExistsException;
 import org.dlearn.helsinki.skeleton.model.NewStudent;
@@ -22,7 +23,9 @@ public class CreateNewUserService {
             throw new GroupClassMatchException();
         }
         Optional<Student> student = db.createStudent(newStudent);
-        student.ifPresent(s -> db.addStudentToGroup(s, newStudent.class_id, newStudent.group_id));
+        if (student.isPresent() && !db.addStudentToGroup(student.get(), newStudent.class_id, newStudent.group_id)) {
+            throw new AddGroupFailedException();
+        }
         return student;
     }
 
