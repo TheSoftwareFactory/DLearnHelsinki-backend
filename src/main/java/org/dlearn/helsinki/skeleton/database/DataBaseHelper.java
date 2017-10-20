@@ -42,20 +42,25 @@ public class DataBaseHelper {
         }
     }
 
-    public static void ensureGroupClassMatch(final Connection dbConnection, int group_id, int class_id) throws SQLException {
+    public static boolean doesGroupClassMatch(final Connection dbConnection, int group_id, int class_id) throws SQLException {
         log.traceEntry("Ensuring that groups {} class and supposed class {} match", group_id, class_id);
         try (final PreparedStatement insert = dbConnection.prepareStatement("SELECT class_id FROM public.\"Groups\" WHERE _id=?")) {
             insert.setInt(1, group_id);
             try (final ResultSet result = insert.executeQuery()) {
-                result.next();
-                int real_class_id = result.getInt(1);
-                if (class_id != real_class_id) {
-                    log.traceExit("Classes didn't match");
-                    throw new SQLException("Class id's don't match: " + class_id + " != " + real_class_id);
+                if (result.next()) {
+                    if (class_id == result.getInt("class_id")) {
+                        log.traceExit("Classes did match");
+                        return true;
+                    }
+                } else {
+                    log.traceExit("No such group exists");
+                    return false;
                 }
             }
         }
-        log.traceExit("Classes did match");
+        
+        log.traceExit("Classes didn't match");
+        return true;
     }
     
     public interface FailableFunction<I, O, E extends Throwable> {
