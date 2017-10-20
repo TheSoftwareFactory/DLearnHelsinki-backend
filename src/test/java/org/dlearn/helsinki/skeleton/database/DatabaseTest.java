@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.model.Survey;
+import org.dlearn.helsinki.skeleton.model.SurveyTheme;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -12,7 +13,7 @@ public class DatabaseTest {
 
     @Test
     public void testPostingSurveyQuestions() throws Exception {
-        Survey survey = new Survey() {
+        SurveyTheme survey = new SurveyTheme() {
             {
                 title = "The salt of life";
                 description = "What can you learn from nothing?";

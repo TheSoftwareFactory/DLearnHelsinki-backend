@@ -114,7 +114,7 @@ $ curl localhost:8080/webapi/researcher/surveys
 
 End points available for teacher.
 
-### Create new student (DONE) Delma
+### Create new student (DONE)
 
 Creates new student account
 
@@ -139,7 +139,7 @@ $ curl --request POST localhost:8080/webapi/teachers/1/create_student
   "student" : {
     "username" : "LegoLass",
     "age" : 13,
-    "gender" : "dragon"
+    "gender" : "male"
   }
 }
 ```
@@ -154,6 +154,29 @@ $ curl --request POST localhost:8080/webapi/teachers/1/create_student
   "gender" : "dragon"
 }
 ```
+### Create new class (DONE)
+
+```endpoint
+POST teachers/{teacher_id}/classes
+```
+
+#### Example request
+
+```curl
+$ curl --request POST localhost:8080/webapi/teachers/1/classes
+  -d @data.json
+```
+
+#### Example request body
+
+```json
+{
+  "name" : "Physics 101"
+}
+```
+#### Example response
+
+No return response
 
 ### Change student password
 
@@ -998,6 +1021,11 @@ $ curl --request POST localhost:8080/webapi/teachers/1/classes/1/surveys
 {
   "title" : "math survey",
   "description" : "Fist math survey of the year"
+  "theme_ids" : [
+                  1,
+                  3,
+                  5
+                ]
 }
 ```
 
