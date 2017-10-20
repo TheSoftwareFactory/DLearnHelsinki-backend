@@ -13,8 +13,8 @@ public class TeacherGroupService {
 
     private static final Database DB = new Database();
 
-    public List<StudentGroup> getGroupsWithStudents(int class_id) {
-        return DB.getGroupsWithStudents(class_id);
+    public List<StudentGroup> getGroupsWithStudents(int class_id, boolean all) {
+        return DB.getGroupsWithStudents(class_id, all);
     }
     
     public List<Group> getAllGroupsTheStudentIsIn(int studentID) {
