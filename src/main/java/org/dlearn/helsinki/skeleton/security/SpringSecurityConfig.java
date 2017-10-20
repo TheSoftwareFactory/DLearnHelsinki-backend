@@ -17,7 +17,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth)
             throws Exception {
-        auth.jdbcAuthentication().dataSource(db)
+        auth.jdbcAuthentication().dataSource(db.getDataSource())
                 .usersByUsernameQuery("select * from ("
                         + "select username as username, pwd, 'true' as enabled from public.\"Students\""
                         + " union "

@@ -407,6 +407,92 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/students
 ]
 ```
 
+### Update (i.e. rename) group in class (TESTING)
+
+Allows the teacher to rename the group in class. Note that fields "\_id" and "class_id" in the request body are optional and may contain garbage values.
+
+```endpoint
+PUT teachers/{teacher_id}/classes/{class_id}/groups/{group_id}
+```
+
+#### Example request
+
+```curl
+$ curl --request PUT localhost:8080/webapi/teachers/1/classes/1/groups/1
+```
+
+#### Example request body
+
+```json
+{
+  "_id" : 3,
+  "name" : "second group",
+  "class_id" : 4,
+}
+```
+or
+
+```json
+{
+  "name" : "second group"
+}
+```
+
+### Delete (close) group in class (TESTING)
+
+Marks the group as closed if it has no students.
+
+```endpoint
+DELETE teachers/{teacher_id}/classes/{class_id}/groups/{group_id}
+```
+
+#### Example request
+
+```curl
+$ curl --request DELETE localhost:8080/webapi/teachers/1/classes/1/groups/1
+```
+
+### Create new group in class (TESTING)
+
+Add a new group to the class. Note that fields "\_id" and "class_id" in the request body are optional and may contain garbage values.
+
+```endpoint
+POST teachers/{teacher_id}/classes/{class_id}/groups/
+```
+
+#### Example request
+
+```curl
+$ curl --request POST localhost:8080/webapi/teachers/1/classes/1/groups
+```
+
+#### Example request body
+
+```json
+{
+  "_id" : 3,
+  "name" : "second group",
+  "class_id" : 4,
+}
+```
+or
+
+```json
+{
+  "name" : "second group"
+}
+```
+
+#### Example response
+
+```json
+{
+  "_id" : 2,
+  "name" : "second group",
+  "class_id" : 1
+}
+```
+
 ### Move student to group
 
 ```endpoint
@@ -542,6 +628,16 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/students/1/progression/2
         "theme_title" : "Persistence"
       },
     ],
+    "survey" : {
+      "_id" : 53,
+      "title" : "Another survey",
+      "description" : "arrested development",
+      "start_date" : "2017-10-13 10:13:09.972716+00",
+      "end_date" : "2017-11-13 10:13:09.972716+00",
+      "teacher_id" : 1,
+      "class_id" : 1,
+      "open" : true
+    }
   },
   {
     "themes" : [
@@ -563,7 +659,17 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/students/1/progression/2
         "theme_id" : 3,
         "theme_title" : "Persistence"
       },
-    ]
+    ],
+    "survey" : {
+      "_id" : 85,
+      "title" : "MR F of survey",
+      "description" : "arrested development",
+      "start_date" : "2017-11-09 10:12:03.972716+00",
+      "end_date" : "2017-12-09 10:12:03.972716+00",
+      "teacher_id" : 1,
+      "class_id" : 1,
+      "open" : false
+    }
   }
 ]
 ```
@@ -617,7 +723,6 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/surveys/27/answers
       "theme_id":3,
       "theme_title":"Persistence"
    },
-   ...
 ]
 
 ```
@@ -659,6 +764,16 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/progression/2
         "theme_title" : "Persistence"
       },
     ],
+    "survey" : {
+      "_id" : 53,
+      "title" : "Another survey",
+      "description" : "arrested development",
+      "start_date" : "2017-10-13 10:13:09.972716+00",
+      "end_date" : "2017-11-13 10:13:09.972716+00",
+      "teacher_id" : 1,
+      "class_id" : 1,
+      "open" : true
+    }
   },
   {
     "themes" : [
@@ -680,7 +795,17 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/progression/2
         "theme_id" : 3,
         "theme_title" : "Persistence"
       },
-    ]
+    ],
+    "survey" : {
+      "_id" : 85,
+      "title" : "MR F of survey",
+      "description" : "arrested development",
+      "start_date" : "2017-11-09 10:12:03.972716+00",
+      "end_date" : "2017-12-09 10:12:03.972716+00",
+      "teacher_id" : 1,
+      "class_id" : 1,
+      "open" : false
+    }
   }
 ]
 ```
@@ -775,6 +900,16 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/progression/2
         "theme_title" : "Persistence"
       },
     ],
+    "survey" : {
+      "_id" : 53,
+      "title" : "Another survey",
+      "description" : "arrested development",
+      "start_date" : "2017-10-13 10:13:09.972716+00",
+      "end_date" : "2017-11-13 10:13:09.972716+00",
+      "teacher_id" : 1,
+      "class_id" : 1,
+      "open" : true
+    }
   },
   {
     "themes" : [
@@ -796,7 +931,17 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/progression/2
         "theme_id" : 3,
         "theme_title" : "Persistence"
       },
-    ]
+    ],
+    "survey" : {
+      "_id" : 85,
+      "title" : "MR F of survey",
+      "description" : "arrested development",
+      "start_date" : "2017-11-09 10:12:03.972716+00",
+      "end_date" : "2017-12-09 10:12:03.972716+00",
+      "teacher_id" : 1,
+      "class_id" : 1,
+      "open" : false
+    }
   }
 ]
 ```
@@ -1047,6 +1192,16 @@ $ curl localhost:8080/webapi/students/1/progression/2
         "theme_title" : "Persistence"
       },
     ],
+    "survey" : {
+      "_id" : 53,
+      "title" : "Another survey",
+      "description" : "arrested development",
+      "start_date" : "2017-10-13 10:13:09.972716+00",
+      "end_date" : "2017-11-13 10:13:09.972716+00",
+      "teacher_id" : 1,
+      "class_id" : 1,
+      "open" : true
+    }
   },
   {
     "themes" : [
@@ -1068,7 +1223,17 @@ $ curl localhost:8080/webapi/students/1/progression/2
         "theme_id" : 3,
         "theme_title" : "Persistence"
       },
-    ]
+    ],
+    "survey" : {
+      "_id" : 85,
+      "title" : "MR F of survey",
+      "description" : "arrested development",
+      "start_date" : "2017-11-09 10:12:03.972716+00",
+      "end_date" : "2017-12-09 10:12:03.972716+00",
+      "teacher_id" : 1,
+      "class_id" : 1,
+      "open" : false
+    }
   }
 ]
 ```
@@ -1151,6 +1316,16 @@ $ curl localhost:8080/webapi/students/1/classes/1/progression/2
         "theme_title" : "Persistence"
       },
     ],
+    "survey" : {
+      "_id" : 53,
+      "title" : "Another survey",
+      "description" : "arrested development",
+      "start_date" : "2017-10-13 10:13:09.972716+00",
+      "end_date" : "2017-11-13 10:13:09.972716+00",
+      "teacher_id" : 1,
+      "class_id" : 1,
+      "open" : true
+    }
   }
 ]
 ```
