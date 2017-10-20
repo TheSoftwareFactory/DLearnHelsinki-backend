@@ -9,7 +9,7 @@ public class TeacherStudentService {
     static final Database db = new Database();
 
     public List<Student> getAllStudentsFromClass(int class_id) {
-        return db.getAllStudentsFromClass(class_id);
+        return db.getAllStudentsFromClass(class_id).orElse(null);
     }
 
     public Student getStudent(int student_id) {
