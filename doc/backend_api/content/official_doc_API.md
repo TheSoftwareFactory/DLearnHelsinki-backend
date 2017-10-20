@@ -139,7 +139,7 @@ $ curl --request POST localhost:8080/webapi/teachers/1/create_student
   "student" : {
     "username" : "LegoLass",
     "age" : 13,
-    "gender" : "dragon"
+    "gender" : "male"
   }
 }
 ```
