@@ -288,7 +288,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/
 
 ### List of all groups in one specified class (DONE)
 
-This request allows you to retrieve a detailed list of all students in their respective groups, in one class
+This request allows you to retrieve a detailed list of all students in their respective groups from one class. Takes one query parameter ?all=BOOLEAN, where BOOLEAN is 'true' or 'false'. If value is false, returns the list containg only open groups with students. If the value is true, returns the list containg open groups with students and closed groups (without students, as there are no students in a closed group). Default value is false.
 
 ```endpoint
 GET teachers/{teacher_id}/classes/{class_id}/groups/
@@ -297,7 +297,7 @@ GET teachers/{teacher_id}/classes/{class_id}/groups/
 #### Example request
 
 ```curl
-$ curl localhost:8080/webapi/teachers/1/classes/1/groups/
+$ curl localhost:8080/webapi/teachers/1/classes/1/groups/?all=true
 ```
 
 #### Example response
@@ -307,11 +307,12 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/
    {  
       "_id":1,
       "name":"first group",
+      "open":true,
       "students":[  
          {  
             "_id":2,
             "username":"pzaragoza",
-            "gender":"male",
+            "gender":true,
             "age":10
          },
          {  
@@ -331,6 +332,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/
    {  
       "_id":2,
       "name":"second group",
+      "open":true,
       "students":[  
          {  
             "_id":4,
@@ -351,6 +353,12 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/
             "age":9
          }
       ]
+   },
+   {  
+      "_id":3,
+      "name":"third group",
+      "open":false,
+      "students":[]
    }
 ]
 ```
