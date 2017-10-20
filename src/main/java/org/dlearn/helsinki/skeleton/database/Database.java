@@ -1146,6 +1146,16 @@ public class Database {
                                 }});
                                 return group;
                             });
+                        //hotfix TODO refactor
+                        // adding missing groups
+                        for(Group group : getAllGroupsFromClass(class_id)){
+                        	if(!studentGroups.containsKey(group._id)){
+                        		StudentGroup gr = new StudentGroup();
+                        		gr._id = group._id;
+                        		gr.name = group.name;
+                        		studentGroups.put(group._id, gr);
+                        	}
+                        }
                     }
                 }
             }
