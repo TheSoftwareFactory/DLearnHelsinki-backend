@@ -66,6 +66,7 @@ public class TeacherResource {
     public Student createNewStudent(@PathParam("teacher_id") int teacher_id,
             NewStudent student) {
         try {
+            System.out.println("Creating new student: " + student);
             return createNewUserService.createNewStudent(student).orElse(null);
         } catch (StudentExistsException e) {
             throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
