@@ -1853,7 +1853,6 @@ public class Database {
 		                    + "                WHERE s._id = sc2.student_id\n"
 		                    + "              	ORDER BY sc2.creation_date DESC\n"
 		                    + "            	 	LIMIT 1) \n";
-    		System.out.println(statement);
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
                 // execute query
