@@ -11,6 +11,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -34,12 +35,12 @@ public class TeacherClassGroupResource {
     private final ProgressionService progression = new ProgressionService();
 
 
-    // simple GET to retrieve all the groups in the class
+    // Simple GET to retrieve all the groups in the class and students in them.
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<StudentGroup> getStudentsInGroups(
-            @PathParam("class_id") int class_id) {
-        return teacherGroupService.getGroupsWithStudents(class_id);
+            @PathParam("class_id") int class_id, @QueryParam("all") boolean all) {
+        return teacherGroupService.getGroupsWithStudents(class_id, all);
     }
     
     @POST
