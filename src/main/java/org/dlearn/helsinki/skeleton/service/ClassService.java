@@ -19,7 +19,7 @@ public class ClassService {
 		for(Classes s : classes) {
 			ClassWithAllGroups classWithAllGroups = new ClassWithAllGroups();
 			classWithAllGroups.setFields(s);
-			classWithAllGroups.setGroups(db.getAllGroupsFromClass(s.get_id()));
+			classWithAllGroups.setGroups(db.getAllGroupsFromClass(s.get_id(),false)); //by default returns only open groups
 			classesGroups.add(classWithAllGroups);
 		};
 		return classesGroups;

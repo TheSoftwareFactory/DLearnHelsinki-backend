@@ -456,12 +456,16 @@ public class Database {
     }
     
     // TODO: Use optional
-    public List<Group> getAllGroupsFromClass(int class_id) {
+    public List<Group> getAllGroupsFromClass(int class_id, boolean all) {
         log.traceEntry("Getting groups for the class {}", class_id);
         ArrayList<Group> groups = null;
 
         try (Connection dbConnection = getDBConnection()) {
-            String statement = "Select name, _id, class_id, open FROM public.\"Groups\" WHERE (class_id = ?);";
+            String statement = "Select name, _id, class_id, open "
+            		+ "FROM public.\"Groups\" "
+            		+ "WHERE (class_id = ?) ";
+            		if(!all)
+            			statement += "AND (open = true)";
             //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
@@ -1207,7 +1211,7 @@ public class Database {
                     }
                     //hotfix TODO refactor
                     // adding missing groups
-                    for(Group group : getAllGroupsFromClass(_class_id)){
+                    for(Group group : getAllGroupsFromClass(_class_id,all)){
                     	if(!studentGroups.containsKey(group._id)){
                     		StudentGroup gr = new StudentGroup();
                     		gr._id = group._id;

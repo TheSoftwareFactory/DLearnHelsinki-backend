@@ -22,7 +22,7 @@ public class TeacherGroupService {
     }
 
     public List<Group> getAllGroupsFromClass(int class_id) {
-        return DB.getAllGroupsFromClass(class_id);
+        return DB.getAllGroupsFromClass(class_id,false); // only open by default
     }
 
     public Group getGroupFromClass(int class_id, int group_id) {
