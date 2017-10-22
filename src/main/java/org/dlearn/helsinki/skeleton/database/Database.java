@@ -1822,6 +1822,7 @@ public class Database {
                         createdGroup.set_id(result.getInt("_id"));
                         createdGroup.setClass_id(class_id);
                         createdGroup.setName(group.getName());
+                        createdGroup.setOpen(true);
                     }
                 }
             }
@@ -1831,7 +1832,35 @@ public class Database {
         log.traceExit(createdGroup);
         return createdGroup;
     }
-
+    
+    public Group createGroupInClass(int class_id, String name) {
+        log.traceEntry("Creating group {} in class {}", name, class_id);
+        Group createdGroup = null;
+        try (Connection dbConnection = getDBConnection()) {
+            String insert_group = "INSERT INTO public.\"Groups\" "
+                    + "(name, class_id) VALUES (?, ?) RETURNING _id;";
+            try (PreparedStatement insert = dbConnection
+                    .prepareStatement(insert_group)) {
+                insert.setString(1, name);
+                insert.setInt(2, class_id);
+                // execute query
+                try (ResultSet result = insert.executeQuery()) {
+                    if (result.next()) {
+                        createdGroup = new Group();
+                        createdGroup.set_id(result.getInt("_id"));
+                        createdGroup.setClass_id(class_id);
+                        createdGroup.setName(name);
+                        createdGroup.setOpen(true);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            log.catching(e);
+        }
+        log.traceExit(createdGroup);
+        return createdGroup;
+    }
+    
     public void addClassToTeacher(Classes teacher_class) {
         log.traceEntry("Add class to teacher {}", teacher_class);
         try (Connection dbConnection = getDBConnection()) {
@@ -1853,6 +1882,7 @@ public class Database {
     public DataSource getDataSource() {
         return DATA_SOURCE;
     }
+
 
 	public List<Student> getAllStudents() {//(int teacher_id)  
         log.traceEntry("Getting all students ");//from {}", teacher_id);
@@ -1893,5 +1923,31 @@ public class Database {
         }
         log.traceExit(students);
         return students;
+	}
+
+	public boolean doesStudentIdExistInDatabase(int student_id)	{
+		boolean idExists = false;
+        log.traceEntry("Checking whether a student with student_id = {}", student_id, " exists in databsae.");
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+    		String statement = "" 
+		                    + "SELECT COUNT(s._id)\n"
+		                    + "  FROM public.\"Students\" as s\n"
+		                    + " WHERE s._id = ?\n";
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(statement)) {
+                // execute query
+                select.setInt(1, student_id);
+                try (ResultSet result = select.executeQuery()) {
+                    if (result.next() & (result.getInt(1) != 0)) {
+                    	idExists = true;
+                    };
+                };
+            }
+        } catch (SQLException e) {
+            log.catching(e);
+        }
+        log.traceExit(idExists);
+        return idExists;
 	}
 }

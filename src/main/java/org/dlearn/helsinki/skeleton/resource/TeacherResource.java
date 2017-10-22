@@ -2,10 +2,12 @@ package org.dlearn.helsinki.skeleton.resource;
 
 import java.util.List;
 
+
 import javax.ws.rs.Consumes;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -24,6 +26,7 @@ import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.Teacher;
 import org.dlearn.helsinki.skeleton.service.ChangePasswordService;
 import org.dlearn.helsinki.skeleton.service.CreateNewUserService;
+import org.dlearn.helsinki.skeleton.service.MoveToGroupService;
 import org.dlearn.helsinki.skeleton.service.SecurityService;
 import org.dlearn.helsinki.skeleton.service.TeacherStudentService;
 
@@ -33,7 +36,8 @@ public class TeacherResource {
     private final CreateNewUserService createNewUserService = new CreateNewUserService();
     private final ChangePasswordService change_password = new ChangePasswordService();
     private final SecurityService security = new SecurityService();
-    private final TeacherStudentService teacherStudentService= new TeacherStudentService();
+    private final TeacherStudentService teacherStudentService = new TeacherStudentService();
+    private final MoveToGroupService moveToGroupService = new MoveToGroupService();
     // Request webapi/teachers/
     // Returns the teacher's info based on log credentials
     @GET
@@ -64,14 +68,26 @@ public class TeacherResource {
     	}
     }
 
-    @POST
+    @PUT
     @Path("/{teacher_id}/create_student")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Student createNewStudent(@PathParam("teacher_id") int teacher_id,
             NewStudent student) {
+    	Student returnedStudent = null;
+    	int student_id = student.student.get_id();
+    	int class_id = student.class_id;
+    	int group_id = student.group_id;    	
         try {
-            return createNewUserService.createNewStudent(student).orElse(null);
+        	if (teacherStudentService.doesStudentIdExistInDatabase(student.student.get_id())) {
+        		// Student already exists, move him to a new group and class.
+        		if (moveToGroupService.moveStudentToGroup(class_id, student_id, group_id)) {
+        			returnedStudent = teacherStudentService.getStudent(student_id);
+        		};        		
+        	} else {
+        		// Student does not exist, create a new student.
+        		returnedStudent = createNewUserService.createNewStudent(student).orElse(null);
+        	};
         } catch (StudentExistsException e) {
             throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
                     .entity("The student username is invalid or already exists in database. Choose another.").build());
@@ -83,6 +99,7 @@ public class TeacherResource {
             throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
                     .entity("Adding student to group failed. Student was created without group.").build());
         }
+		return returnedStudent;
     }
 
     @POST

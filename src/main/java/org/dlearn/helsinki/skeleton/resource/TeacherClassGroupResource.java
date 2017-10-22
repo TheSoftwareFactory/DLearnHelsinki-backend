@@ -25,6 +25,7 @@ import org.dlearn.helsinki.skeleton.exceptions.StudentExistsException;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.GroupThemeAverage;
 import org.dlearn.helsinki.skeleton.model.ListGroupThemeAverage;
+import org.dlearn.helsinki.skeleton.model.NewStudentGroup;
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.service.ProgressionService;
 
@@ -46,9 +47,9 @@ public class TeacherClassGroupResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Group getStudentsInGroups(@PathParam("class_id") int class_id, 
-    								 Group group){
-    	return teacherGroupService.insertGroupInClass(class_id, group);
+    public StudentGroup ginsertGroupInClass(@PathParam("class_id") int class_id, 
+    		NewStudentGroup group){
+    	return teacherGroupService.insertNewGroupInClass(class_id, group);
     }
 
 
@@ -99,7 +100,6 @@ public class TeacherClassGroupResource {
         try {
         	teacherGroupService.deleteGroupFromClass(class_id, group_id);
         } catch(GroupCannotBeClosedException e) {
-        	//"Group cannot be closed. It contains students.",
             throw new WebApplicationException(Response.status(Status.METHOD_NOT_ALLOWED)
                     .entity("Group cannot be closed. It contains students.").build());
         };
