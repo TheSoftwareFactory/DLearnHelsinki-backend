@@ -2,11 +2,13 @@ package org.dlearn.helsinki.skeleton.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class  NewStudentGroup {
+public class NewStudentGroup {
 
     public int _id;
     public int class_id;
+    public boolean open;
     public String name;
     public List<NewStudent> students;
 
@@ -28,6 +30,13 @@ public class  NewStudentGroup {
     }
 
 	public Group getGroup() {
-		return null;//new Group(_id, name, class_id) {};
+		return new Group(_id, name, class_id, open);
+	}
+
+	public void setGroup(Group group) {		
+	    _id = group.get_id();
+	    class_id= group.getStudent_id();
+	    open = group.getOpen();
+	    name = group.getName();
 	}
 }

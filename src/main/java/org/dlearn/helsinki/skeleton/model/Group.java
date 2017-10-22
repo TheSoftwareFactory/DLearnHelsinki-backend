@@ -46,6 +46,10 @@ public class Group {
         this.open = open;
     }
     
+    public Boolean getOpen() {
+        return open;
+    }
+        
     @Override
     public String toString() {
         return "Group { _id = "+_id+", name = "+name+", class_id = "+class_id+", open = " +open+" }";
