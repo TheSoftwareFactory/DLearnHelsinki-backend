@@ -118,7 +118,7 @@ public class TeacherResource {
     public List<Student> getAllStudents(@PathParam("teacher_id") int teacher_id ) {
     	List<Student> students = null;
     	if (security.isTheTeacher(teacher_id)) {
-    		students = teacherStudentService.getAllStudents(teacher_id);
+    		students = teacherStudentService.getAllStudents();//(teacher_id);
     	};
     	return students;
     }

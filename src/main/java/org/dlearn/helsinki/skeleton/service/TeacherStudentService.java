@@ -16,9 +16,8 @@ public class TeacherStudentService {
         return db.getStudent(student_id);
     }
 
-	public List<Student> getAllStudents(int teacher_id)
-	{
-		return db.getAllStudentsOfTeacher(teacher_id);
+	public List<Student> getAllStudents() {//(int teacher_id)
+		return db.getAllStudents();//teacher_id);
 	}
 	
 	public boolean doesStudentIdExistInDatabase(int student_id) {
