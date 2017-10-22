@@ -114,18 +114,18 @@ $ curl localhost:8080/webapi/researcher/surveys
 
 End points available for teacher.
 
-### Create new student (DONE)
+### Create new student (TESTING)
 
-Creates new student account
+Creates new student account or move the existing student to another group. In the latter case the server confirms the existence of the student by _id. Then moves this student to the group and its respective class.
 
 ```endpoint
-POST teachers/{teacher_id}/create_student
+PUT teachers/{teacher_id}/create_student
 ```
 
 #### Example request
 
 ```curl
-$ curl --request POST localhost:8080/webapi/teachers/1/create_student
+$ curl --request PUT localhost:8080/webapi/teachers/1/create_student
   -d @data.json
 ```
 
@@ -149,6 +149,34 @@ $ curl --request POST localhost:8080/webapi/teachers/1/create_student
 ```json
 {
   "_id" : 1,
+  "username" : "LegoLass",
+  "age" : 13,
+  "gender" : "dragon"
+}
+```
+
+#### Second example request body. 
+Assume the student with _id = 10 already exists. Then this requests moves the student to the class 1, group 1.
+
+```json
+{
+  "groud_id" : 1,
+  "class_id" : 1,
+  "password" : "hunter2",
+  "student" : {
+    "_id" : 10,
+    "username" : "LegoLass",
+    "age" : 13,
+    "gender" : "male"
+  }
+}
+```
+
+#### Second example response
+
+```json
+{
+  "_id" : 10,
   "username" : "LegoLass",
   "age" : 13,
   "gender" : "dragon"
@@ -520,7 +548,8 @@ or
 {
   "_id" : 2,
   "name" : "second group",
-  "class_id" : 1
+  "class_id" : 1,
+  "students" : []
 }
 ```
 
