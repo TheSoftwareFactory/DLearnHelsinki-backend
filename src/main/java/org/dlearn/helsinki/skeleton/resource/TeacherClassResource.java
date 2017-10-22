@@ -26,7 +26,7 @@ public class TeacherClassResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<ClassWithAllGroups> getClasses(@PathParam("teacher_id") int teacher_id) {
     	System.out.println("producing list of classes with groups");
-        return classService.getAllClassesWithGroups(teacher_id);
+        return classService.getAllClassesWithGroups(teacher_id); // returns only open groups
     }
     
     @POST

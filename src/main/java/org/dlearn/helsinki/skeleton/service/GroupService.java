@@ -19,8 +19,9 @@ public class GroupService {
         return db.getAllGroupsForStudent(studentID);
     }
 
+    //unused
     public List<Group> getAllGroupsFromClass(int class_id) {
-        return db.getAllGroupsFromClass(class_id);
+        return db.getAllGroupsFromClass(class_id,false); // only open groups by default
     }
 
     public Group getGroupFromClass(int class_id, int group_id) {
