@@ -15,4 +15,9 @@ public class TeacherStudentService {
     public Student getStudent(int student_id) {
         return db.getStudent(student_id);
     }
+
+	public List<Student> getAllStudents(int teacher_id)
+	{
+		return db.getAllStudentsOfTeacher(teacher_id);
+	}
 }

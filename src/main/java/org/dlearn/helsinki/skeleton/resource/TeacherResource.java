@@ -1,5 +1,7 @@
 package org.dlearn.helsinki.skeleton.resource;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 
 import javax.ws.rs.GET;
@@ -23,6 +25,7 @@ import org.dlearn.helsinki.skeleton.model.Teacher;
 import org.dlearn.helsinki.skeleton.service.ChangePasswordService;
 import org.dlearn.helsinki.skeleton.service.CreateNewUserService;
 import org.dlearn.helsinki.skeleton.service.SecurityService;
+import org.dlearn.helsinki.skeleton.service.TeacherStudentService;
 
 @Path("/teachers")
 public class TeacherResource {
@@ -30,6 +33,7 @@ public class TeacherResource {
     private final CreateNewUserService createNewUserService = new CreateNewUserService();
     private final ChangePasswordService change_password = new ChangePasswordService();
     private final SecurityService security = new SecurityService();
+    private final TeacherStudentService teacherStudentService= new TeacherStudentService();
     // Request webapi/teachers/
     // Returns the teacher's info based on log credentials
     @GET
@@ -89,5 +93,16 @@ public class TeacherResource {
         return security.getTeacher()
             .map(t -> change_password.changeStudentPassword(student))
             .orElse(null);
+    }
+    
+    @GET
+    @Path("/{teacher_id}/students")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Student> getAllStudents(@PathParam("teacher_id") int teacher_id ) {
+    	List<Student> students = null;
+    	if (security.isTheTeacher(teacher_id)) {
+    		students = teacherStudentService.getAllStudents(teacher_id);
+    	};
+    	return students;
     }
 }
