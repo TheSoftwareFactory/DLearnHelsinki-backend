@@ -1854,9 +1854,8 @@ public class Database {
         return DATA_SOURCE;
     }
 
-	public List<Student> getAllStudentsOfTeacher(int teacher_id)
-	{             
-        log.traceEntry("Getting all students from {}", teacher_id);
+	public List<Student> getAllStudents() {//(int teacher_id)  
+        log.traceEntry("Getting all students ");//from {}", teacher_id);
         List<Student> students = null;
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -1865,20 +1864,20 @@ public class Database {
 		                    + "       s.username,\n"
 		                    + "       s.gender,\n"
 		                    + "       s.age\n"
-		                    + "  FROM public.\"Students\" as s\n"
-		                    + " WHERE s._id = (SELECT sc2.student_id\n"
-		                    + "           	   FROM public.\"Student_Classes\" as sc2\n"
-		                    + "                INNER JOIN public.\"Classes\" as cls\n"
-		                    + "                ON (cls.teacher_id = ?)\n"
-		                    + "				    AND (cls._id = sc2.class_id)\n"
-		                    + "                WHERE s._id = sc2.student_id\n"
-		                    + "              	ORDER BY sc2.creation_date DESC\n"
-		                    + "            	 	LIMIT 1) \n";
+		                    + "  FROM public.\"Students\" as s\n";
+		                    //+ " WHERE s._id = (SELECT sc2.student_id\n"
+		                    //+ "           	   FROM public.\"Student_Classes\" as sc2\n"
+		                    //+ "                INNER JOIN public.\"Classes\" as cls\n"
+		                    //+ "                ON (cls.teacher_id = ?)\n"
+		                    //+ "				    AND (cls._id = sc2.class_id)\n"
+		                    //+ "                WHERE s._id = sc2.student_id\n"
+		                    //+ "              	ORDER BY sc2.creation_date DESC\n"
+		                    //+ "            	 	LIMIT 1) \n";
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
                 // execute query
             	students = new ArrayList<Student>();
-                insert.setInt(1, teacher_id);
+                //insert.setInt(1, teacher_id);
                 try (ResultSet result = insert.executeQuery()) {
                     while (result.next()) {
                         Student student = new Student(result.getInt("_id"),
