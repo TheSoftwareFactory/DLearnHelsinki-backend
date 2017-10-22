@@ -2,6 +2,7 @@ package org.dlearn.helsinki.skeleton.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class StudentGroup {
 
@@ -29,4 +30,19 @@ public class StudentGroup {
     public String toString() {
         return "StudentGroup { _id = "+_id+", name = "+name+", students = "+students.toString()+" }";
     }
+
+	public void setGroup(Group group) {		
+	    _id = group.get_id();
+	    class_id= group.getStudent_id();
+	    open = group.getOpen();
+	    name = group.getName();
+	}
+
+	public void addStudent(Optional<Student> student) {
+		students.add(student.orElse(null));
+	}
+
+	public int get_id() {
+		return _id;
+	}
 }

@@ -20,4 +20,8 @@ public class TeacherStudentService {
 	{
 		return db.getAllStudentsOfTeacher(teacher_id);
 	}
+	
+	public boolean doesStudentIdExistInDatabase(int student_id) {
+		return db.doesStudentIdExistInDatabase(student_id);
+	}
 }
