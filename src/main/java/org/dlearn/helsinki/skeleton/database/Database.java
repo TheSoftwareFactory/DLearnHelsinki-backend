@@ -60,12 +60,12 @@ public class Database {
             DATA_SOURCE.setDriverClassName(DB_DRIVER);
             DATA_SOURCE.setInitialSize(1);
             String dbUrl = System.getenv("JDBC_DATABASE_URL");
-            if (dbUrl == null) {
-            	System.out.println("Hello");
-                dbUrl = DEV_DB_CONNECTION;
-                DATA_SOURCE.setUsername(DEV_DB_USER);
-                DATA_SOURCE.setPassword(DEV_DB_PASSWORD);
-            }else{
+            //if (dbUrl == null) {
+            //	System.out.println("Hello");
+            //    dbUrl = DEV_DB_CONNECTION;
+            //    DATA_SOURCE.setUsername(DEV_DB_USER);
+            //    DATA_SOURCE.setPassword(DEV_DB_PASSWORD);
+            //}else{
 	            if (dbUrl.isEmpty()) {
 	                String databaseUrl = System.getenv("DATABASE_URL");
 	                if (databaseUrl.isEmpty()) {
@@ -81,7 +81,7 @@ public class Database {
 	                    }
 	                }
 	            }
-            }
+            //}
             DATA_SOURCE.setUrl(dbUrl);
         } catch (URISyntaxException | ClassNotFoundException e) {
             log.catching(Level.FATAL, e);
