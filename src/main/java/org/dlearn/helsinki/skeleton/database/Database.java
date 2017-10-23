@@ -1950,4 +1950,25 @@ public class Database {
         log.traceExit(idExists);
         return idExists;
 	}
+
+	public void removeStudenFromClass(Student student, int class_id) {
+		log.traceEntry("Removing student {} in class {}", student, class_id);
+        try (Connection dbConnection = getDBConnection()) {
+            String statement = "INSERT INTO public.\"Student_Classes\" "
+            		+ "(student_id, class_id, group_id) "
+            		+ "VALUES (?, ?, -1);";
+            try (PreparedStatement insert = dbConnection
+                    .prepareStatement(statement)) {
+                insert.setInt(1, student._id);
+                insert.setInt(2, class_id);
+
+                // execute query
+                insert.executeUpdate();
+                log.traceExit("Adding succesful");
+            }
+        } catch (SQLException e) {
+            log.catching(e);
+            log.traceExit("Adding failed");
+        }
+	}
 }

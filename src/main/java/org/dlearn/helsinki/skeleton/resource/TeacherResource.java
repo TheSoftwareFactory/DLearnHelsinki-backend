@@ -67,8 +67,15 @@ public class TeacherResource {
     		return null;
     	}
     }
-
-    @PUT
+    
+    @POST
+    @Path("/{teacher_id}/remove_student_from_class/{class_id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void removeStudentFromClass(@PathParam("class_id") int class_id, Student student){
+    	moveToGroupService.removeStudentFromClass(student,class_id);
+    }
+    
+    @POST
     @Path("/{teacher_id}/create_student")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -77,15 +84,18 @@ public class TeacherResource {
     	Student returnedStudent = null;
     	int student_id = student.student.get_id();
     	int class_id = student.class_id;
-    	int group_id = student.group_id;    	
-        try {
+    	int group_id = student.group_id;  // TODO id is set to zero by default
+    	System.out.println(student_id);
+        try {// TODO horrible implementation Denis...
         	if (teacherStudentService.doesStudentIdExistInDatabase(student.student.get_id())) {
+        		System.out.println("Student " + student.student.username + " does exist in db.");
         		// Student already exists, move him to a new group and class.
         		if (moveToGroupService.moveStudentToGroup(class_id, student_id, group_id)) {
         			returnedStudent = teacherStudentService.getStudent(student_id);
         		};        		
         	} else {
-        		// Student does not exist, create a new student.
+        		// Student does not exist, create a new student. TODO why so many services...
+        		System.out.println("Student " + student.student.username + " does not exist in db.");
         		returnedStudent = createNewUserService.createNewStudent(student).orElse(null);
         	};
         } catch (StudentExistsException e) {

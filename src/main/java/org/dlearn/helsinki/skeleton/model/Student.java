@@ -1,8 +1,5 @@
 package org.dlearn.helsinki.skeleton.model;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlTransient;
-
 public class Student {
 
     public int _id;
