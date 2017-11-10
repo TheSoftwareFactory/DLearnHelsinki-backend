@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="Multi-file class diagram">
+  <ClassDiagramComponents>
+    <Class name="AnswerQuestionService" package="org.dlearn.helsinki.skeleton.service" visibility="public" xPosition="77.0" yPosition="39.0">
+      <Fields>
+        <Field name="db" type="Database" visibility="package"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="getSurveyQuestions" returnType="List&lt;Question&gt;" visibility="public">
+          <Argument type="int" name="survey_id"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="AnswerService" package="org.dlearn.helsinki.skeleton.service" visibility="public" xPosition="440.0" yPosition="39.0">
+      <Fields>
+        <Field name="db" type="Database" visibility="package"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="getAnswers" returnType="List&lt;Answer&gt;" visibility="public">
+          <Argument type="int" name="survey_id"/>
+        </Method>
+        <Method name="postAnswers" returnType="void" visibility="public">
+          <Argument type="List&lt;Answer&gt;" name="answers"/>
+          <Argument type="int" name="survey_id"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="ChangePasswordService" package="org.dlearn.helsinki.skeleton.service" visibility="public" xPosition="820.0" yPosition="39.0">
+      <Fields>
+        <Field name="DB" type="Database" visibility="private" isStatic="true" isFinal="true"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="changeStudentPassword" returnType="Student" visibility="public">
+          <Argument type="ChangePasswordStudent" name="student"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="ClassService" package="org.dlearn.helsinki.skeleton.service" visibility="public" xPosition="666.0" yPosition="585.0">
+      <Fields>
+        <Field name="db" type="Database" visibility="package" isStatic="true" isFinal="true"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="getAllClassesWithGroups" returnType="List&lt;ClassWithAllGroups&gt;" visibility="public">
+          <Argument type="int" name="teacher_id"/>
+        </Method>
+        <Method name="getAllClassesStundentIsIn" returnType="List&lt;Classes&gt;" visibility="public">
+          <Argument type="int" name="student_id"/>
+        </Method>
+        <Method name="addClassToTeacher" returnType="void" visibility="public">
+          <Argument type="Classes" name="teacher_class"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="CreateNewUserService" package="org.dlearn.helsinki.skeleton.service" visibility="public" xPosition="1716.0" yPosition="856.0">
+      <Fields>
+        <Field name="db" type="Database" visibility="private" isFinal="true"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="createNewStudent" returnType="Optional&lt;Student&gt;" visibility="public">
+          <Argument type="NewStudent" name="newStudent"/>
+        </Method>
+        <Method name="createNewTeacher" returnType="Optional&lt;Teacher&gt;" visibility="public">
+          <Argument type="NewTeacher" name="newTeacher"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="GroupService" package="org.dlearn.helsinki.skeleton.service" visibility="public" xPosition="1324.0" yPosition="20.0">
+      <Fields>
+        <Field name="db" type="Database" visibility="private" isFinal="true"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="getTheGroupStudentIsIn" returnType="Optional&lt;Group&gt;" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="studentID"/>
+        </Method>
+        <Method name="getAllGroupsTheStudentIsIn" returnType="List&lt;Group&gt;" visibility="public">
+          <Argument type="int" name="studentID"/>
+        </Method>
+        <Method name="getAllGroupsFromClass" returnType="List&lt;Group&gt;" visibility="public">
+          <Argument type="int" name="class_id"/>
+        </Method>
+        <Method name="getGroupFromClass" returnType="Group" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="group_id"/>
+        </Method>
+        <Method name="getAllStudentsFromClassAndGroup" returnType="List&lt;Student&gt;" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="group_id"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="MoveToGroupService" package="org.dlearn.helsinki.skeleton.service" visibility="public" xPosition="1820.0" yPosition="20.0">
+      <Fields>
+        <Field name="DB" type="Database" visibility="private" isStatic="true" isFinal="true"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="moveStudentToGroup" returnType="boolean" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="student_id"/>
+          <Argument type="int" name="group_id"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="ProgressionService" package="org.dlearn.helsinki.skeleton.service" visibility="public" xPosition="2304.0" yPosition="20.0">
+      <Fields>
+        <Field name="DB" type="Database" visibility="private" isStatic="true" isFinal="true"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="getStudentProgression" returnType="List&lt;ListStudentThemeAverage&gt;" visibility="public">
+          <Argument type="int" name="student_id"/>
+          <Argument type="int" name="amount"/>
+        </Method>
+        <Method name="getStudentClassProgression" returnType="List&lt;ListStudentThemeAverage&gt;" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="student_id"/>
+          <Argument type="int" name="amount"/>
+        </Method>
+        <Method name="getGroupProgression" returnType="List&lt;ListGroupThemeAverage&gt;" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="group_id"/>
+          <Argument type="int" name="amount"/>
+        </Method>
+        <Method name="getClassProgression" returnType="List&lt;ListClassThemeAverage&gt;" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="amount"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="SecurityService" package="org.dlearn.helsinki.skeleton.service" visibility="public" xPosition="90.0" yPosition="363.0">
+      <Fields>
+        <Field name="DB" type="Database" visibility="private" isStatic="true" isFinal="true"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="isTheStudent" returnType="boolean" visibility="public">
+          <Argument type="int" name="student_id"/>
+        </Method>
+        <Method name="isTheTeacher" returnType="boolean" visibility="public">
+          <Argument type="int" name="teacher_id"/>
+        </Method>
+        <Method name="isTheResearcher" returnType="boolean" visibility="public">
+          <Argument type="int" name="researcher_id"/>
+        </Method>
+        <Method name="getStudent" returnType="Optional&lt;Student&gt;" visibility="public"/>
+        <Method name="getTeacher" returnType="Optional&lt;Teacher&gt;" visibility="public"/>
+        <Method name="getResearcher" returnType="Optional&lt;Researcher&gt;" visibility="public"/>
+        <Method name="getFromSession" returnType="Optional&lt;T&gt;" visibility="private" isStatic="true">
+          <Argument type="Function&lt;String, Optional&lt;T&gt;&gt;" name="getIdFromName"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="StudentClassSurveyService" package="org.dlearn.helsinki.skeleton.service" visibility="public" xPosition="77.0" yPosition="198.0">
+      <Fields>
+        <Field name="db" type="Database" visibility="package" isStatic="true" isFinal="true"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="getSurveysFromClass" returnType="List&lt;Survey&gt;" visibility="public">
+          <Argument type="int" name="student_id"/>
+          <Argument type="int" name="class_id"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="StudentService" package="org.dlearn.helsinki.skeleton.service" visibility="public" xPosition="499.0" yPosition="198.0">
+      <Fields>
+        <Field name="db" type="Database" visibility="package" isStatic="true" isFinal="true"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="getStudent" returnType="Student" visibility="public">
+          <Argument type="int" name="student_id"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="StudentSurveyAnswerService" package="org.dlearn.helsinki.skeleton.service" visibility="public" xPosition="666.0" yPosition="373.0">
+      <Fields>
+        <Field name="db" type="Database" visibility="package"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="putAnswerToQuestion" returnType="void" visibility="public">
+          <Argument type="int" name="student_id"/>
+          <Argument type="int" name="survey_id"/>
+          <Argument type="int" name="question_id"/>
+          <Argument type="Answer" name="answer"/>
+          <Argument type="int" name="class_id"/>
+        </Method>
+        <Method name="getAnswers" returnType="List&lt;Answer&gt;" visibility="public">
+          <Argument type="int" name="student_id"/>
+          <Argument type="int" name="survey_id"/>
+        </Method>
+        <Method name="getStudentThemeAverage" returnType="List&lt;StudentThemeAverage&gt;" visibility="public">
+          <Argument type="int" name="student_id"/>
+          <Argument type="int" name="survey_id"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="StudentSurveyQuestionService" package="org.dlearn.helsinki.skeleton.service" visibility="public" xPosition="1520.0" yPosition="391.0">
+      <Fields>
+        <Field name="db" type="Database" visibility="package"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="getSurveyQuestions" returnType="List&lt;Question&gt;" visibility="public">
+          <Argument type="int" name="survey_id"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="StudentSurveyService" package="org.dlearn.helsinki.skeleton.service" visibility="public" xPosition="1354.0" yPosition="308.0">
+      <Fields/>
+      <Constructors/>
+      <Methods/>
+    </Class>
+    <Class name="SurveyService" package="org.dlearn.helsinki.skeleton.service" visibility="public" xPosition="1842.0" yPosition="198.0">
+      <Fields>
+        <Field name="db" type="Database" visibility="private" isFinal="true"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="getAllSurveys" returnType="List&lt;Survey&gt;" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="TeacherClassStudentService" package="org.dlearn.helsinki.skeleton.service" visibility="public" xPosition="779.0" yPosition="198.0">
+      <Fields>
+        <Field name="DB" type="Database" visibility="private" isStatic="true" isFinal="true"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="getStudentThemeAverage" returnType="List&lt;StudentThemeAverage&gt;" visibility="public">
+          <Argument type="int" name="survey_id"/>
+          <Argument type="int" name="student_id"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="TeacherClassSurveyService" package="org.dlearn.helsinki.skeleton.service" visibility="public" xPosition="90.0" yPosition="657.0">
+      <Fields>
+        <Field name="db" type="Database" visibility="package"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="postSurvey" returnType="SurveyTheme" visibility="public">
+          <Argument type="SurveyTheme" name="surveyTheme"/>
+        </Method>
+        <Method name="getSurveysFromClassAsTeacher" returnType="List&lt;Survey&gt;" visibility="public">
+          <Argument type="int" name="teacher_id"/>
+          <Argument type="int" name="class_id"/>
+        </Method>
+        <Method name="getClassThemeAverage" returnType="List&lt;ClassThemeAverage&gt;" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="survey_id"/>
+        </Method>
+        <Method name="closeSurvey" returnType="void" visibility="public">
+          <Argument type="int" name="teacher_id"/>
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="survey_id"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="TeacherGroupService" package="org.dlearn.helsinki.skeleton.service" visibility="public" xPosition="1061.0" yPosition="790.0">
+      <Fields>
+        <Field name="DB" type="Database" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="createNewUserService" type="CreateNewUserService" visibility="private" isStatic="true" isFinal="true"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="getGroupsWithStudents" returnType="List&lt;StudentGroup&gt;" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="boolean" name="all"/>
+        </Method>
+        <Method name="getAllGroupsTheStudentIsIn" returnType="List&lt;Group&gt;" visibility="public">
+          <Argument type="int" name="studentID"/>
+        </Method>
+        <Method name="getAllGroupsFromClass" returnType="List&lt;Group&gt;" visibility="public">
+          <Argument type="int" name="class_id"/>
+        </Method>
+        <Method name="getGroupFromClass" returnType="Group" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="group_id"/>
+        </Method>
+        <Method name="getAllStudentsFromClassAndGroup" returnType="List&lt;Student&gt;" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="group_id"/>
+        </Method>
+        <Method name="deleteGroupFromClass" returnType="void" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="group_id"/>
+        </Method>
+        <Method name="updateGroupInClass" returnType="void" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="group_id"/>
+          <Argument type="Group" name="groupSample"/>
+        </Method>
+        <Method name="insertNewGroupInClass" returnType="StudentGroup" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="NewStudentGroup" name="group"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="TeacherGroupSurveyService" package="org.dlearn.helsinki.skeleton.service" visibility="public" xPosition="101.0" yPosition="886.0">
+      <Fields>
+        <Field name="db" type="Database" visibility="package"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="getAverageAnswersFromGroup" returnType="List&lt;GroupThemeAverage&gt;" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="group_id"/>
+          <Argument type="int" name="survey_id"/>
+        </Method>
+        <Method name="getQuestionsFromSurvey" returnType="List&lt;Question&gt;" visibility="public">
+          <Argument type="int" name="survey_id"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="TeacherStudentService" package="org.dlearn.helsinki.skeleton.service" visibility="public" xPosition="90.0" yPosition="1082.0">
+      <Fields>
+        <Field name="db" type="Database" visibility="package" isStatic="true" isFinal="true"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="getAllStudentsFromClass" returnType="List&lt;Student&gt;" visibility="public">
+          <Argument type="int" name="class_id"/>
+        </Method>
+        <Method name="getStudent" returnType="Student" visibility="public">
+          <Argument type="int" name="student_id"/>
+        </Method>
+        <Method name="getAllStudents" returnType="//(int teacher_id) List&lt;Student&gt;" visibility="public"/>
+        <Method name="doesStudentIdExistInDatabase" returnType="boolean" visibility="public">
+          <Argument type="int" name="student_id"/>
+        </Method>
+      </Methods>
+    </Class>
+  </ClassDiagramComponents>
+  <ClassDiagramRelations>
+    <HasRelation name="createNewUserService" source="org.dlearn.helsinki.skeleton.service.TeacherGroupService" target="org.dlearn.helsinki.skeleton.service.CreateNewUserService" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+  </ClassDiagramRelations>
+</ClassDiagram>

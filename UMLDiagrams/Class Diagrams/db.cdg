@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="Multi-file class diagram">
+  <ClassDiagramComponents>
+    <Class name="DataBaseHelper" package="org.dlearn.helsinki.skeleton.database" visibility="public" xPosition="370.0" yPosition="56.0">
+      <Fields>
+        <Field name="log" type="Logger" visibility="private" isStatic="true" isFinal="true"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="query" returnType="T" visibility="public" isStatic="true">
+          <Argument type="Supplier&lt;Connection&gt;" name="connection"/>
+          <Argument type="String" name="statement"/>
+          <Argument type="FailableConsumer&lt;PreparedStatement, SQLException&gt;" name="preparer"/>
+          <Argument type="FailableFunction&lt;Iterable&lt;ResultSet&gt;, T, SQLException&gt;" name="take"/>
+        </Method>
+        <Method name="doesGroupClassMatch" returnType="boolean" visibility="public" isStatic="true">
+          <Argument type="Connection" name="dbConnection"/>
+          <Argument type="int" name="group_id"/>
+          <Argument type="int" name="class_id"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="Database" package="org.dlearn.helsinki.skeleton.database" visibility="public" xPosition="370.0" yPosition="278.0">
+      <Fields>
+        <Field name="log" type="Logger" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="DATA_SOURCE" type="BasicDataSource" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="DB_DRIVER" type="String" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="DEV_DB_CONNECTION" type="String" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="DEV_DB_USER" type="String" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="DEV_DB_PASSWORD" type="String" visibility="private" isStatic="true" isFinal="true"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="testConnection" returnType="void" visibility="public"/>
+        <Method name="postSurvey" returnType="SurveyTheme" visibility="public">
+          <Argument type="SurveyTheme" name="surveyTheme"/>
+        </Method>
+        <Method name="getQuestions" returnType="List&lt;Question&gt;" visibility="public">
+          <Argument type="SurveyTheme" name="surveyTheme"/>
+        </Method>
+        <Method name="postQuestion" returnType="Question" visibility="public">
+          <Argument type="Question" name="question"/>
+        </Method>
+        <Method name="postSurveyQuestions" returnType="void" visibility="public">
+          <Argument type="List&lt;Question&gt;" name="questions"/>
+          <Argument type="Survey" name="survey"/>
+        </Method>
+        <Method name="getQuestionsFromSurvey" returnType="List&lt;Question&gt;" visibility="public">
+          <Argument type="int" name="survey_id"/>
+        </Method>
+        <Method name="postStudentAnswersForSurvey" returnType="void" visibility="public">
+          <Argument type="List&lt;Answer&gt;" name="answers"/>
+          <Argument type="int" name="survey_id"/>
+          <Argument type="int" name="student_id"/>
+        </Method>
+        <Method name="getSurveysFromClassAsStudent" returnType="List&lt;Survey&gt;" visibility="public">
+          <Argument type="int" name="student_id"/>
+          <Argument type="int" name="class_id"/>
+        </Method>
+        <Method name="getSurveysFromClassAsTeacher" returnType="List&lt;Survey&gt;" visibility="public">
+          <Argument type="int" name="teacher_id"/>
+          <Argument type="int" name="class_id"/>
+        </Method>
+        <Method name="getSurveys" returnType="List&lt;Survey&gt;" visibility="public"/>
+        <Method name="getGroupForStudent" returnType="Optional&lt;Group&gt;" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="student_id"/>
+        </Method>
+        <Method name="getAllGroupsForStudent" returnType="List&lt;Group&gt;" visibility="public">
+          <Argument type="int" name="student_id"/>
+        </Method>
+        <Method name="getAllGroupsFromClass" returnType="List&lt;Group&gt;" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="boolean" name="all"/>
+        </Method>
+        <Method name="getGroupFromClass" returnType="Group" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="group_id"/>
+        </Method>
+        <Method name="getAllStudentsFromClassAndGroup" returnType="List&lt;Student&gt;" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="group_id"/>
+        </Method>
+        <Method name="createStudent" returnType="Optional&lt;Student&gt;" visibility="public">
+          <Argument type="NewStudent" name="new_student"/>
+        </Method>
+        <Method name="createTeacher" returnType="Optional&lt;Teacher&gt;" visibility="public">
+          <Argument type="NewTeacher" name="new_teacher"/>
+        </Method>
+        <Method name="changeStudentPassword" returnType="Optional&lt;Student&gt;" visibility="public">
+          <Argument type="ChangePasswordStudent" name="student"/>
+        </Method>
+        <Method name="addStudentToGroup" returnType="boolean" visibility="public">
+          <Argument type="Student" name="student"/>
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="group_id"/>
+        </Method>
+        <Method name="getStudent" returnType="Student" visibility="public">
+          <Argument type="int" name="studentID"/>
+        </Method>
+        <Method name="getAllStudentsFromClass" returnType="Optional&lt;List&lt;Student&gt;&gt;" visibility="public">
+          <Argument type="int" name="class_id"/>
+        </Method>
+        <Method name="getStudentFromUsername" returnType="Optional&lt;Student&gt;" visibility="public">
+          <Argument type="String" name="username_"/>
+        </Method>
+        <Method name="getTeacherFromUsername" returnType="Optional&lt;Teacher&gt;" visibility="public">
+          <Argument type="String" name="username_"/>
+        </Method>
+        <Method name="getResearcherFromUsername" returnType="Optional&lt;Researcher&gt;" visibility="public">
+          <Argument type="String" name="username_"/>
+        </Method>
+        <Method name="doesStudentUsernameExistInDatabase" returnType="boolean" visibility="public">
+          <Argument type="Student" name="student"/>
+        </Method>
+        <Method name="getAllClassesOfTeacher" returnType="List&lt;Classes&gt;" visibility="public">
+          <Argument type="int" name="teacher_id"/>
+        </Method>
+        <Method name="getAllClassesStundentIsIn" returnType="List&lt;Classes&gt;" visibility="public">
+          <Argument type="int" name="student_id"/>
+        </Method>
+        <Method name="closeGroup" returnType="void" visibility="public">
+          <Argument type="int" name="group_id"/>
+        </Method>
+        <Method name="doesGroupExistInDatabase" returnType="boolean" visibility="public">
+          <Argument type="int" name="group_id"/>
+        </Method>
+        <Method name="updateGroupName" returnType="void" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="group_id"/>
+          <Argument type="Group" name="group"/>
+        </Method>
+        <Method name="getDBConnection" returnType="Connection" visibility="private" isStatic="true"/>
+        <Method name="putAnswerToQuestion" returnType="void" visibility="public">
+          <Argument type="Answer" name="answer"/>
+          <Argument type="int" name="class_id"/>
+        </Method>
+        <Method name="getAnswersFromStudentSurvey" returnType="List&lt;Answer&gt;" visibility="public">
+          <Argument type="int" name="student_id"/>
+          <Argument type="int" name="survey_id"/>
+        </Method>
+        <Method name="getAverageAnswersFromGroup" returnType="List&lt;GroupThemeAverage&gt;" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="group_id"/>
+          <Argument type="int" name="survey_id"/>
+        </Method>
+        <Method name="getGroupsWithStudents" returnType="List&lt;StudentGroup&gt;" visibility="public">
+          <Argument type="int" name="_class_id"/>
+          <Argument type="boolean" name="all"/>
+        </Method>
+        <Method name="getClassThemeAverage" returnType="List&lt;ClassThemeAverage&gt;" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="survey_id"/>
+        </Method>
+        <Method name="getStudentThemeAverage" returnType="List&lt;StudentThemeAverage&gt;" visibility="public">
+          <Argument type="int" name="survey_id"/>
+          <Argument type="int" name="student_id"/>
+        </Method>
+        <Method name="getStudentThemeAverageProgression" returnType="Optional&lt;List&lt;ListStudentThemeAverage&gt;&gt;" visibility="public">
+          <Argument type="int" name="student_id"/>
+          <Argument type="int" name="amount"/>
+        </Method>
+        <Method name="getStudentThemeAverageProgressionInClass" returnType="Optional&lt;List&lt;ListStudentThemeAverage&gt;&gt;" visibility="public">
+          <Argument type="int" name="class_id_"/>
+          <Argument type="int" name="student_id"/>
+          <Argument type="int" name="amount"/>
+        </Method>
+        <Method name="getGroupThemeAverageProgression" returnType="Optional&lt;List&lt;ListGroupThemeAverage&gt;&gt;" visibility="public">
+          <Argument type="int" name="class_id_"/>
+          <Argument type="int" name="group_id"/>
+          <Argument type="int" name="amount"/>
+        </Method>
+        <Method name="getClassThemeAverageProgression" returnType="Optional&lt;List&lt;ListClassThemeAverage&gt;&gt;" visibility="public">
+          <Argument type="int" name="class_id_"/>
+          <Argument type="int" name="amount"/>
+        </Method>
+        <Method name="closeSurvey" returnType="void" visibility="public">
+          <Argument type="int" name="teacher_id"/>
+          <Argument type="int" name="class_id"/>
+          <Argument type="int" name="survey_id"/>
+        </Method>
+        <Method name="getStudentLifeTimeAverage" returnType="List&lt;StudentThemeAverage&gt;" visibility="public">
+          <Argument type="int" name="student_id"/>
+          <Argument type="int" name="class_id"/>
+        </Method>
+        <Method name="getStudentHistory" returnType="List&lt;StudentThemeAverage&gt;" visibility="public">
+          <Argument type="int" name="student_id"/>
+          <Argument type="int" name="class_id"/>
+        </Method>
+        <Method name="doesGroupClassMatch" returnType="boolean" visibility="public">
+          <Argument type="int" name="group_id"/>
+          <Argument type="int" name="class_id"/>
+        </Method>
+        <Method name="isGroupClosed" returnType="boolean" visibility="public">
+          <Argument type="int" name="group_id"/>
+        </Method>
+        <Method name="countNumberOfStudentsInGroup" returnType="int" visibility="public">
+          <Argument type="int" name="group_id"/>
+        </Method>
+        <Method name="createGroupInClass" returnType="Group" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="Group" name="group"/>
+        </Method>
+        <Method name="createGroupInClass" returnType="Group" visibility="public">
+          <Argument type="int" name="class_id"/>
+          <Argument type="String" name="name"/>
+        </Method>
+        <Method name="addClassToTeacher" returnType="void" visibility="public">
+          <Argument type="Classes" name="teacher_class"/>
+        </Method>
+        <Method name="getDataSource" returnType="DataSource" visibility="public"/>
+        <Method name="getAllStudents" returnType="//(int teacher_id)   List&lt;Student&gt;" visibility="public"/>
+        <Method name="doesStudentIdExistInDatabase" returnType="boolean" visibility="public">
+          <Argument type="int" name="student_id"/>
+        </Method>
+      </Methods>
+    </Class>
+  </ClassDiagramComponents>
+  <ClassDiagramRelations/>
+</ClassDiagram>
