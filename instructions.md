@@ -42,10 +42,13 @@ Instructions
 10. Add some data to the database
 
 `\connect Dlearn_db
+
 INSERT INTO "Students" (username, pwd, gender, age) 
 	VALUES ('student', '$2a$16$pdcURh3hIwiiCvkiU8zwLOCfNR3h/R2WuCTonoRBRZHry7/4.m5Hm', 'Male', 18);
+	
 INSERT INTO "Teachers" (lastname, firstname, username, pwd) 
 	VALUES ('Test', 'Teacher', 'teacher', '$2a$16$pdcURh3hIwiiCvkiU8zwLOCfNR3h/R2WuCTonoRBRZHry7/4.m5Hm');
+	
 INSERT INTO "Researchers" (username, pwd) 
 	VALUES ('researcher', '$2a$16$pdcURh3hIwiiCvkiU8zwLOCfNR3h/R2WuCTonoRBRZHry7/4.m5Hm');`
 
