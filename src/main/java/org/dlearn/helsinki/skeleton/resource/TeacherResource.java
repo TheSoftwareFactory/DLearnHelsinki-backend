@@ -68,7 +68,7 @@ public class TeacherResource {
     	}
     }
 
-    @PUT
+    @POST
     @Path("/{teacher_id}/create_student")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
