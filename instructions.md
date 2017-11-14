@@ -33,7 +33,7 @@ Instructions
 
 8. Run this commad in postgreSQL UI
 
-`ALTER USER Postgres WITH PASSWORD 'admin';`
+`ALTER USER postgres WITH PASSWORD 'admin';`
 
 9. Run this command from backend root. Use password `admin`
 
