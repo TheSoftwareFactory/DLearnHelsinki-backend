@@ -172,13 +172,14 @@ public class Database {
         log.traceEntry("Posting question {}", question);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "INSERT INTO public.\"Questions\" (question, min_answer, max_answer) "
-                    + "VALUES (?, ?, ?) RETURNING _id";
+            String statement = "INSERT INTO public.\"Questions\" (question, question_fi min_answer, max_answer) "
+                    + "VALUES (?, ?, ?, ?) RETURNING _id";
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
                 insert.setString(1, question.question);
-                insert.setInt(2, question.min_answer);
-                insert.setInt(3, question.max_answer);
+                insert.setString(2, question.question_fi);
+                insert.setInt(3, question.min_answer);
+                insert.setInt(4, question.max_answer);
                 // execute query
                 try (ResultSet result = insert.executeQuery()) {
                     if (result.next()) {
@@ -228,7 +229,7 @@ public class Database {
 
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "Select _id, question, min_answer, max_answer FROM \"Questions\", \"Survey_questions\" WHERE"
+            String statement = "Select _id, question, quation_fi, min_answer, max_answer FROM \"Questions\", \"Survey_questions\" WHERE"
                     + " \"Survey_questions\".survey_id = ? AND \"Survey_questions\".question_id = \"Questions\"._id";
             //prepare statement with survey_id
             try (PreparedStatement select = dbConnection
@@ -241,8 +242,9 @@ public class Database {
                         Question question = new Question();
                         question.set_id(result.getInt(1));
                         question.setQuestion(result.getString(2));
-                        question.setMin_answer(result.getInt(3));
-                        question.setMax_answer(result.getInt(4));
+                        question.setQuestion(result.getString(3));
+                        question.setMin_answer(result.getInt(4));
+                        question.setMax_answer(result.getInt(5));
                         questions.add(question);
                     }
                 }
