@@ -1,4 +1,4 @@
-package org.dlearn.helsinki.skeleton.database;
+  package org.dlearn.helsinki.skeleton.database;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -850,7 +850,7 @@ public class Database {
         List<Classes> classes = null;
 
         try (Connection dbConnection = getDBConnection()) {
-            String statement = "Select _id, name "
+            String statement = "Select _id, name, name_fi "
                     + "FROM public.\"Classes\" as cls "
                     + "WHERE (cls.teacher_id = ?);";
             //prepare statement with student_id
@@ -863,6 +863,7 @@ public class Database {
                         Classes newClass = new Classes();
                         newClass.set_id(result.getInt("_id"));
                         newClass.setName(result.getString("name"));
+                        newClass.setName_fi(result.getString("name_fi"));
                         newClass.setTeacher_id(teacher_id);
                         classes.add(newClass);
                     }
@@ -1865,11 +1866,12 @@ public class Database {
         log.traceEntry("Add class to teacher {}", teacher_class);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "INSERT INTO public.\"Classes\" (\"name\", teacher_id) VALUES (?, ?);";
+            String statement = "INSERT INTO public.\"Classes\" (\"name\", \"name_fi\", teacher_id) VALUES (?, ?, ?);";
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
                 insert.setString(1, teacher_class.getName());
-                insert.setInt(2, teacher_class.getTeacher_id());
+                insert.setString(2, teacher_class.getName_fi());
+                insert.setInt(3, teacher_class.getTeacher_id());
                 // execute query
                 insert.executeUpdate();
             }
