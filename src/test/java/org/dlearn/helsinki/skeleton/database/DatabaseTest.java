@@ -16,7 +16,9 @@ public class DatabaseTest {
         SurveyTheme survey = new SurveyTheme() {
             {
                 title = "The salt of life";
+                title_fi = "Elämänsuola";
                 description = "What can you learn from nothing?";
+                description_fi = "Mitä voit oppia tyhjästä?";
                 open = true;
             }
         };
@@ -25,6 +27,7 @@ public class DatabaseTest {
                 .asList(db.postQuestion(new Question() {
                     {
                         question = "Do you like trains?";
+                        question_fi = "Pidätkö junista?";
                         min_answer = 7;
                         max_answer = 42;
                     }
