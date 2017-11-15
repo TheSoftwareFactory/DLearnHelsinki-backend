@@ -174,7 +174,7 @@ public class Database {
         log.traceEntry("Posting question {}", question);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "INSERT INTO public.\"Questions\" (question, question_fi min_answer, max_answer) "
+            String statement = "INSERT INTO public.\"Questions\" (question, question_fi, min_answer, max_answer) "
                     + "VALUES (?, ?, ?, ?) RETURNING _id";
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
