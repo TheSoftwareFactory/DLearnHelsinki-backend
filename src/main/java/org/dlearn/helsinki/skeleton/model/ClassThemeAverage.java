@@ -6,7 +6,9 @@ public class ClassThemeAverage {
     private String start_date;
     private int theme_id;
     private String theme_title;
+    private String theme_title_fi;
     private String description;
+    private String description_fi;
     private int class_id;
     private float answer;
 
@@ -15,14 +17,16 @@ public class ClassThemeAverage {
     }
 
     public ClassThemeAverage(int survey_id, String start_date, int theme_id,
-            String theme_title, String description, int class_id,
+            String theme_title, String theme_title_fi, String description, String description_fi, int class_id,
             float answer) {
         super();
         this.survey_id = survey_id;
         this.start_date = start_date;
         this.theme_id = theme_id;
         this.theme_title = theme_title;
+        this.theme_title_fi = theme_title_fi;
         this.description = description;
+        this.description_fi = description_fi;
         this.class_id = class_id;
         this.answer = answer;
     }
@@ -54,17 +58,33 @@ public class ClassThemeAverage {
     public String getTheme_title() {
         return theme_title;
     }
+    
+    public String getTheme_title_fi() {
+        return theme_title_fi;
+    }
 
     public void setTheme_title(String theme_title) {
         this.theme_title = theme_title;
+    }
+    
+    public void setTheme_title_fi(String theme_title) {
+        this.theme_title_fi = theme_title;
     }
 
     public String getDescription() {
         return description;
     }
+    
+    public String getDescription_fi() {
+        return description_fi;
+    }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public void setDescription_fi(String description) {
+        this.description_fi = description;
     }
 
     public int getClass_id() {
