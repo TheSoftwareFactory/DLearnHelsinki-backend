@@ -29,7 +29,7 @@ public class Classes {
     public String getName() {
         return name;
     }
-    
+
     public String getName_fi() {
         return name_fi;
     }
@@ -37,7 +37,7 @@ public class Classes {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public void setName_fi(String name) {
         this.name_fi = name;
     }
@@ -49,10 +49,11 @@ public class Classes {
     public void setTeacher_id(int teacher_id) {
         this.teacher_id = teacher_id;
     }
-    
+
     @Override
     public String toString() {
-        return "Classes{ _id = "+_id+", name = "+name+", name_FI = "+name_fi+", teacher_id = "+teacher_id+" }";
+        return "Classes{ _id = " + _id + ", name = " + name + ", name_fi = "
+                + name_fi + ", teacher_id = " + teacher_id + " }";
     }
 
 }

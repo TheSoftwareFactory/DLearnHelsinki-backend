@@ -10,7 +10,7 @@ public class ClassesTest {
     @Before
     public void setUp() {
         class1 = new Classes();
-        class2 = new Classes(7, "The best of the best", 5);
+        class2 = new Classes(7, "The best of the best", "Parhaista parhaat", 5);
     }
 
     @Test
@@ -22,8 +22,11 @@ public class ClassesTest {
     @Test
     public void emptyConstructorSetName() {
         String className = "Crap class";
+        String className_fi = "Paska Luokka";
         class1.setName(className);
+        class1.setName_fi(className_fi);
         assertEquals(className, class1.getName());
+        assertEquals(className_fi, class1.getName_fi());
     }
 
     @Test
@@ -34,7 +37,7 @@ public class ClassesTest {
 
     @Test
     public void toStringTest() {
-        String expected = "Classes{ _id = 0, name = null, teacher_id = 0 }";
+        String expected = "Classes{ _id = 0, name = null, name_fi = null, teacher_id = 0 }";
         assertEquals(expected, class1.toString());
     }
 
