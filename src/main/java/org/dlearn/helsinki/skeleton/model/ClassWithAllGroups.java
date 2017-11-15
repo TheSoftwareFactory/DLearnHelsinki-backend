@@ -7,6 +7,7 @@ public class ClassWithAllGroups {
 
     private int _id;
     private String name;
+    private String name_fi;
     private int teacher_id;
     List<Group> groups = null;
 
@@ -25,9 +26,17 @@ public class ClassWithAllGroups {
     public String getName() {
         return name;
     }
+    
+    public String getName_fi() {
+        return name_fi;
+    }
 
     public void setName(String name) {
         this.name = name;
+    }
+    
+    public void setName_fi(String name) {
+        this.name_fi = name;
     }
 
     public int getTeacher_id() {
@@ -48,6 +57,7 @@ public class ClassWithAllGroups {
 
     public void setFields(Classes classes) {
         this.name = classes.getName();
+        this.name_fi = classes.getName_fi();
         this._id = classes.get_id();
         this.teacher_id = classes.getTeacher_id();
     }

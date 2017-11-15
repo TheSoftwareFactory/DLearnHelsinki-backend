@@ -54,6 +54,7 @@ CREATE TABLE "Answers" (
 CREATE TABLE "Classes" (
     _id integer NOT NULL,
     name character varying(80),
+    name_fi character varying(80),
     teacher_id integer
 );
 
@@ -114,6 +115,7 @@ ALTER SEQUENCE "Groups__id_seq" OWNED BY "Groups"._id;
 
 CREATE TABLE "Questions" (
     question character varying(600),
+    question_fi character varying(600),
     min_answer integer,
     max_answer integer,
     _id integer NOT NULL,
@@ -250,13 +252,15 @@ CREATE TABLE "Survey_questions" (
 
 CREATE TABLE "Surveys" (
     title character varying(60),
+    title_fi character varying(60),
     start_date timestamp(6) without time zone,
     end_date timestamp(6) without time zone,
     teacher_id integer,
     _id integer NOT NULL,
     open boolean,
     class_id integer,
-    description character varying(100)
+    description character varying(100),
+    description_fi character varying(100)
 );
 
 
@@ -318,7 +322,9 @@ ALTER SEQUENCE "Teachers__id_seq" OWNED BY "Teachers"._id;
 CREATE TABLE "Themes" (
     _id integer NOT NULL,
     title character varying(50) NOT NULL,
-    description character varying(256)
+    title_fi character varying(50) NOT NULL,
+    description character varying(256),
+    description_fi character varying(256)
 );
 
 

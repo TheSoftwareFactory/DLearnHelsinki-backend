@@ -18,7 +18,7 @@ public class GroupSurveyResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Survey getSurvey() {
-        return new Survey(1, null, null, null, null, 1, 0, false);
+        return new Survey(1, null, null, null, null, null, null, 1, 0, false);
     }
 
     // TODO implement same as getSurvey()

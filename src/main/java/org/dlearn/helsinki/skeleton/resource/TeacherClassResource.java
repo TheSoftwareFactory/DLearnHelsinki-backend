@@ -32,7 +32,7 @@ public class TeacherClassResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void addNewClass(@PathParam("teacher_id") int teacher_id, Classes teacher_class){
-    	System.out.println("posting the new class "+teacher_class.getName()+" to teacher " + teacher_id);
+    	System.out.println("posting the new class "+teacher_class.getName()+" : "+teacher_class.getName_fi()+" to teacher " + teacher_id);
     	teacher_class.setTeacher_id(teacher_id);
     	classService.addClassToTeacher(teacher_class);
     }

@@ -1,4 +1,4 @@
-package org.dlearn.helsinki.skeleton.database;
+  package org.dlearn.helsinki.skeleton.database;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -103,15 +103,17 @@ public class Database {
         log.traceEntry("Posting survey {}", surveyTheme);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "INSERT INTO public.\"Surveys\" (title, class_id, start_date, teacher_id, description, open) "
-                    + "VALUES (?,?,now(),?,?,True) RETURNING _id";
+            String statement = "INSERT INTO public.\"Surveys\" (title, title_fi, class_id, start_date, teacher_id, description, description_fi, open) "
+                    + "VALUES (?,?,?,now(),?,?,?,True) RETURNING _id";
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
                 insert.setString(1, surveyTheme.title);
-                insert.setInt(2, surveyTheme.getClass_id());
+                insert.setString(2, surveyTheme.title_fi);
+                insert.setInt(3, surveyTheme.getClass_id());
                 //insert.setDate(3, new Date(0));
-                insert.setInt(3, surveyTheme.getTeacher_id());
-                insert.setString(4, surveyTheme.description);
+                insert.setInt(4, surveyTheme.getTeacher_id());
+                insert.setString(5, surveyTheme.description);
+                insert.setString(6, surveyTheme.description_fi);
                 // execute query
                 try (ResultSet result = insert.executeQuery()) {
                     if (result.next()) {
@@ -172,13 +174,14 @@ public class Database {
         log.traceEntry("Posting question {}", question);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "INSERT INTO public.\"Questions\" (question, min_answer, max_answer) "
-                    + "VALUES (?, ?, ?) RETURNING _id";
+            String statement = "INSERT INTO public.\"Questions\" (question, question_fi, min_answer, max_answer) "
+                    + "VALUES (?, ?, ?, ?) RETURNING _id";
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
                 insert.setString(1, question.question);
-                insert.setInt(2, question.min_answer);
-                insert.setInt(3, question.max_answer);
+                insert.setString(2, question.question_fi);
+                insert.setInt(3, question.min_answer);
+                insert.setInt(4, question.max_answer);
                 // execute query
                 try (ResultSet result = insert.executeQuery()) {
                     if (result.next()) {
@@ -228,7 +231,7 @@ public class Database {
 
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "Select _id, question, min_answer, max_answer FROM \"Questions\", \"Survey_questions\" WHERE"
+            String statement = "Select _id, question, question_fi, min_answer, max_answer FROM \"Questions\", \"Survey_questions\" WHERE"
                     + " \"Survey_questions\".survey_id = ? AND \"Survey_questions\".question_id = \"Questions\"._id";
             //prepare statement with survey_id
             try (PreparedStatement select = dbConnection
@@ -241,8 +244,9 @@ public class Database {
                         Question question = new Question();
                         question.set_id(result.getInt(1));
                         question.setQuestion(result.getString(2));
-                        question.setMin_answer(result.getInt(3));
-                        question.setMax_answer(result.getInt(4));
+                        question.setQuestion_fi(result.getString(3));
+                        question.setMin_answer(result.getInt(4));
+                        question.setMax_answer(result.getInt(5));
                         questions.add(question);
                     }
                 }
@@ -271,7 +275,7 @@ public class Database {
     	ArrayList<Survey> surveys = new ArrayList<>();
 
         try (Connection dbConnection = getDBConnection()) {
-            String statement = "SELECT distinct _id,title,description,start_date,end_date,open,teacher_id "
+            String statement = "SELECT distinct _id,title,title_fi,description,description_fi,start_date,end_date,open,teacher_id "
                     + "FROM public.\"Surveys\" "
                     + "WHERE class_id = ? ";
             //prepare statement with student_id
@@ -285,8 +289,10 @@ public class Database {
                         Survey survey = new Survey();
                         survey.set_id(result.getInt(1));
                         survey.setTitle(result.getString(2));
-                        survey.setDescription(result.getString(3));
-                        survey.setStart_date(result.getTimestamp(4));
+                        survey.setTitle_fi(result.getString(3));
+                        survey.setDescription(result.getString(4));
+                        survey.setDescription_fi(result.getString(5));
+                        survey.setStart_date(result.getTimestamp(6));
                         result.getTimestamp(5);
                         if (!result.wasNull()) {
                             survey.setEnd_date(result.getTimestamp(5));
@@ -314,7 +320,7 @@ public class Database {
         ArrayList<Survey> surveys = new ArrayList<>();
 
         try (Connection dbConnection = getDBConnection()) {
-            String statement = "SELECT _id,title,description,start_date,end_date,open "
+            String statement = "SELECT _id,title, title_fi, description, description_fi, start_date,end_date,open "
                     + "FROM public.\"Surveys\" "
                     + "WHERE class_id = ? AND teacher_id = ?";
             //prepare statement with student_id
@@ -329,13 +335,15 @@ public class Database {
                         Survey survey = new Survey();
                         survey.set_id(result.getInt(1));
                         survey.setTitle(result.getString(2));
-                        survey.setDescription(result.getString(3));
-                        survey.setStart_date(result.getTimestamp(4));
+                        survey.setTitle_fi(result.getString(3));
+                        survey.setDescription(result.getString(4));
+                        survey.setDescription_fi(result.getString(5));
+                        survey.setStart_date(result.getTimestamp(6));
                         result.getTimestamp(5);
                         if (!result.wasNull()) {
-                            survey.setEnd_date(result.getTimestamp(5));
+                            survey.setEnd_date(result.getTimestamp(7));
                         }
-                        survey.setOpen(result.getBoolean(6));
+                        survey.setOpen(result.getBoolean(8));
                         survey.setClass_id(class_id);
                         survey.setTeacher_id(teacher_id);
                         surveys.add(survey);
@@ -353,7 +361,7 @@ public class Database {
         log.traceEntry("Getting all surveys");
         List<Survey> survey = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
-            String statement = "SELECT _id, title, class_id, start_date, end_date, teacher_id, description, open FROM public.\"Surveys\"";
+            String statement = "SELECT _id, title, title_fi, class_id, start_date, end_date, teacher_id, description, description_fi open FROM public.\"Surveys\"";
             //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
@@ -363,11 +371,13 @@ public class Database {
                         survey.add(new Survey() {{
                             this._id = result.getInt("_id");
                             this.title = result.getString("title");
+                            this.title_fi = result.getString("title_fi");
                             this.class_id = result.getInt("class_id");
                             this.start_date = result.getTimestamp("start_date");
                             this.end_date = result.getTimestamp("end_date");
                             this.teacher_id = result.getInt("teacher_id");
                             this.description = result.getString("description");
+                            this.description_fi = result.getString("description_fi");
                             this.open = result.getBoolean("open");
                         }});
                     }
@@ -850,7 +860,7 @@ public class Database {
         List<Classes> classes = null;
 
         try (Connection dbConnection = getDBConnection()) {
-            String statement = "Select _id, name "
+            String statement = "Select _id, name, name_fi "
                     + "FROM public.\"Classes\" as cls "
                     + "WHERE (cls.teacher_id = ?);";
             //prepare statement with student_id
@@ -863,6 +873,7 @@ public class Database {
                         Classes newClass = new Classes();
                         newClass.set_id(result.getInt("_id"));
                         newClass.setName(result.getString("name"));
+                        newClass.setName_fi(result.getString("name_fi"));
                         newClass.setTeacher_id(teacher_id);
                         classes.add(newClass);
                     }
@@ -1064,7 +1075,7 @@ public class Database {
         ArrayList<GroupThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "SELECT avg(answer),\"Themes\".title,\"Themes\".description,\"Themes\"._id,\"Surveys\".start_date "
+            String statement = "SELECT avg(answer),\"Themes\".title,\"Themes\".title_fi,\"Themes\".description,\"Themes\".description_fi,\"Themes\"._id,\"Surveys\".start_date "
                     + "FROM public.\"Surveys\",public.\"Answers\", public.\"Themes\", public.\"Questions\" "
                     + "WHERE \"Questions\"._id = question_id "
                     + "AND \"Questions\".theme_id = \"Themes\"._id "
@@ -1084,9 +1095,11 @@ public class Database {
                         GroupThemeAverage answer = new GroupThemeAverage();
                         answer.setAnswer(result.getFloat(1));
                         answer.setTheme_title(result.getString(2));
-                        answer.setDescription(result.getString(3));
-                        answer.setTheme_id(result.getInt(4));
-                        answer.setStart_date(result.getString(5));
+                        answer.setTheme_title_fi(result.getString(3));
+                        answer.setDescription(result.getString(4));
+                        answer.setDescription_fi(result.getString(5));
+                        answer.setTheme_id(result.getInt(6));
+                        answer.setStart_date(result.getString(7));
                         answer.setGroup_id(group_id);
                         answer.setSurvey_id(survey_id);
                         answers.add(answer);
@@ -1234,7 +1247,7 @@ public class Database {
         ArrayList<ClassThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "SELECT avg(answer),\"Themes\".title,\"Themes\".description,\"Themes\"._id,\"Surveys\".start_date "
+            String statement = "SELECT avg(answer),\"Themes\".title,\"Themes\".title_fi,\"Themes\".description,\"Themes\".description_fi,\"Themes\"._id,\"Surveys\".start_date "
                     + "FROM public.\"Surveys\",public.\"Answers\", public.\"Student_Classes\",public.\"Groups\", public.\"Themes\", public.\"Questions\" "
                     + "WHERE \"Questions\"._id = question_id "
                     + "AND \"Questions\".theme_id = \"Themes\"._id "
@@ -1257,9 +1270,11 @@ public class Database {
                         //answer.setQuestion_id(result.getInt(1));
                         answer.setAnswer(result.getFloat(1));
                         answer.setTheme_title(result.getString(2));
-                        answer.setDescription(result.getString(3));
-                        answer.setTheme_id(result.getInt(4));
-                        answer.setStart_date(result.getString(5));
+                        answer.setTheme_title_fi(result.getString(3));
+                        answer.setDescription(result.getString(4));
+                        answer.setDescription(result.getString(5));
+                        answer.setTheme_id(result.getInt(6));
+                        answer.setStart_date(result.getString(7));
                         answer.setClass_id(class_id);
                         answer.setSurvey_id(survey_id);
                         answers.add(answer);
@@ -1279,7 +1294,7 @@ public class Database {
         ArrayList<StudentThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "SELECT avg(answer),\"Themes\".title,\"Themes\".description,\"Themes\"._id,\"Surveys\".start_date "
+            String statement = "SELECT avg(answer),\"Themes\".title,\"Themes\".title_fi,\"Themes\".description,\"Themes\".description_fi,\"Themes\"._id,\"Surveys\".start_date "
                     + "FROM public.\"Surveys\",public.\"Answers\", public.\"Student_Classes\",public.\"Groups\", public.\"Themes\", public.\"Questions\" "
                     + "WHERE \"Questions\"._id = question_id "
                     + "AND \"Questions\".theme_id = \"Themes\"._id "
@@ -1299,9 +1314,11 @@ public class Database {
                         StudentThemeAverage answer = new StudentThemeAverage();
                         answer.setAnswer(result.getFloat(1));
                         answer.setTheme_title(result.getString(2));
-                        answer.setDescription(result.getString(3));
-                        answer.setTheme_id(result.getInt(4));
-                        answer.setStart_date(result.getString(5));
+                        answer.setTheme_title_fi(result.getString(3));
+                        answer.setDescription(result.getString(4));
+                        answer.setDescription_fi(result.getString(5));
+                        answer.setTheme_id(result.getInt(6));
+                        answer.setStart_date(result.getString(7));
                         answer.setStudent_id(student_id);
                         answer.setSurvey_id(survey_id);
                         answers.add(answer);
@@ -1328,11 +1345,15 @@ public class Database {
                     + "        su.start_date,\n"
                     + "        su.end_date,\n"
                     + "        su.title as survey_title,\n"
+                    + "        su.title_fi as survey_title_fi,\n"
                     + "        su.description as survey_description,\n"
+                    + "        su.description_fi as survey_description_fi,\n"
                     + "        su.open as survey_open,\n"
                     + "        su.teacher_id,\n"
                     + "        th.title,\n"
+                    + "        th.title_fi,\n"
                     + "        th.description,\n"
+                    + "        th.description_fi,\n"
                     + "        th._id as theme_id\n"
                     + "    FROM public.\"Surveys\" as su,\n"
                     + "         public.\"Answers\" as an,\n"
@@ -1355,7 +1376,9 @@ public class Database {
                             StudentThemeAverage answer = new StudentThemeAverage();
                             answer.setAnswer(result.getFloat("average"));
                             answer.setTheme_title(result.getString("title"));
+                            answer.setTheme_title_fi(result.getString("title_fi"));
                             answer.setDescription(result.getString("description"));
+                            answer.setDescription_fi(result.getString("description_fi"));
                             answer.setTheme_id(result.getInt("theme_id"));
                             answer.setStart_date(result.getString("start_date"));
                             answer.setStudent_id(student_id);
@@ -1371,11 +1394,13 @@ public class Database {
                                         this._id = result.getInt("survey_id");
                                         this.class_id = result.getInt("class_id");
                                         this.description = result.getString("survey_description");
+                                        this.description_fi = result.getString("survey_description_fi");
                                         this.start_date = result.getTimestamp("start_date");
                                         this.end_date = result.getTimestamp("end_date");
                                         this.open = result.getBoolean("survey_open");
                                         this.teacher_id = result.getInt("teacher_id");
                                         this.title = result.getString("survey_title");
+                                        this.title_fi = result.getString("survey_title_fi");
                                     }};
                                 }});
                             }
@@ -1404,11 +1429,15 @@ public class Database {
                     + "        su.start_date,\n"
                     + "        su.end_date,\n"
                     + "        su.title as survey_title,\n"
+                    + "        su.title as survey_title_fi,\n"
                     + "        su.description as survey_description,\n"
+                    + "        su.description as survey_description_fi,\n"
                     + "        su.open as survey_open,\n"
                     + "        su.teacher_id,\n"
                     + "        th.title,\n"
+                    + "        th.title_fi,\n"
                     + "        th.description,\n"
+                    + "        th.description_fi,\n"
                     + "        th._id as theme_id\n"
                     + "    FROM public.\"Surveys\" as su,\n"
                     + "         public.\"Answers\" as an,\n"
@@ -1435,7 +1464,9 @@ public class Database {
                             StudentThemeAverage answer = new StudentThemeAverage();
                             answer.setAnswer(result.getFloat("average"));
                             answer.setTheme_title(result.getString("title"));
+                            answer.setTheme_title_fi(result.getString("title_fi"));
                             answer.setDescription(result.getString("description"));
+                            answer.setDescription_fi(result.getString("description_fi"));
                             answer.setTheme_id(result.getInt("theme_id"));
                             answer.setStart_date(result.getString("start_date"));
                             answer.setStudent_id(student_id);
@@ -1485,11 +1516,15 @@ public class Database {
                     + "        su.start_date,\n"
                     + "        su.end_date,\n"
                     + "        su.title as survey_title,\n"
+                    + "        su.title as survey_title_fi,\n"
                     + "        su.description as survey_description,\n"
+                    + "        su.description as survey_description_fi,\n"
                     + "        su.open as survey_open,\n"
                     + "        su.teacher_id,\n"
                     + "        th.title,\n"
+                    + "        th.title_fi,\n"
                     + "        th.description,\n"
+                    + "        th.description_fi,\n"
                     + "        th._id as theme_id\n"
                     + "    FROM public.\"Surveys\" as su,\n"
                     + "         public.\"Answers\" as an,\n"
@@ -1518,7 +1553,9 @@ public class Database {
                             GroupThemeAverage answer = new GroupThemeAverage();
                             answer.setAnswer(result.getFloat("average"));
                             answer.setTheme_title(result.getString("title"));
+                            answer.setTheme_title_fi(result.getString("title_fi"));
                             answer.setDescription(result.getString("description"));
+                            answer.setDescription_fi(result.getString("description_fi"));
                             answer.setTheme_id(result.getInt("theme_id"));
                             answer.setStart_date(result.getString("start_date"));
                             answer.setGroup_id(group_id);
@@ -1534,11 +1571,13 @@ public class Database {
                                         this._id = result.getInt("survey_id");
                                         this.class_id = class_id_;
                                         this.description = result.getString("survey_description");
+                                        this.description_fi = result.getString("survey_description_fi");
                                         this.start_date = result.getTimestamp("start_date");
                                         this.end_date = result.getTimestamp("end_date");
                                         this.open = result.getBoolean("survey_open");
                                         this.teacher_id = result.getInt("teacher_id");
                                         this.title = result.getString("survey_title");
+                                        this.title_fi = result.getString("survey_title_fi");
                                     }};
                                 }});
                             }
@@ -1567,11 +1606,15 @@ public class Database {
                     + "        su.start_date,\n"
                     + "        su.end_date,\n"
                     + "        su.title as survey_title,\n"
+                    + "        su.title_fi as survey_title_fi,\n"
                     + "        su.description as survey_description,\n"
+                    + "        su.description_fi as survey_description_fi,\n"
                     + "        su.open as survey_open,\n"
                     + "        su.teacher_id,\n"
                     + "        th.title,\n"
+                    + "        th.title_fi,\n"
                     + "        th.description,\n"
+                    + "        th.description_fi,\n"
                     + "        th._id as theme_id\n"
                     + "    FROM public.\"Surveys\" as su,\n"
                     + "         public.\"Answers\" as an,\n"
@@ -1596,7 +1639,9 @@ public class Database {
                             ClassThemeAverage answer = new ClassThemeAverage();
                             answer.setAnswer(result.getFloat("average"));
                             answer.setTheme_title(result.getString("title"));
+                            answer.setTheme_title_fi(result.getString("title_fi"));
                             answer.setDescription(result.getString("description"));
+                            answer.setDescription_fi(result.getString("description_fi"));
                             answer.setTheme_id(result.getInt("theme_id"));
                             answer.setStart_date(result.getString("start_date"));
                             answer.setClass_id(class_id_);
@@ -1612,11 +1657,13 @@ public class Database {
                                         this._id = result.getInt("survey_id");
                                         this.class_id = class_id_;
                                         this.description = result.getString("survey_description");
+                                        this.description_fi = result.getString("survey_description_fi");
                                         this.start_date = result.getTimestamp("start_date");
                                         this.end_date = result.getTimestamp("end_date");
                                         this.open = result.getBoolean("survey_open");
                                         this.teacher_id = result.getInt("teacher_id");
                                         this.title = result.getString("survey_title");
+                                        this.title_fi = result.getString("survey_title_fi");
                                     }};
                                 }});
                             }
@@ -1658,7 +1705,7 @@ public class Database {
     	ArrayList<StudentThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String select_averages = "SELECT avg(answer),\"Themes\".title,\"Themes\".description,\"Themes\"._id,\"Surveys\".start_date,\"Surveys\"._id,\"Surveys\".title,\"Surveys\".description,\"Surveys\".start_date,\"Surveys\".end_date "
+            String select_averages = "SELECT avg(answer),\"Themes\".title,\"Themes\".title_fi,\"Themes\".description,\"Themes\".description_fi,\"Themes\"._id,\"Surveys\".start_date,\"Surveys\"._id,\"Surveys\".title,\"Surveys\".title_fi,\"Surveys\".description,\"Surveys\".description_fi,\"Surveys\".start_date,\"Surveys\".end_date "
             		+ "FROM public.\"Surveys\",public.\"Answers\", public.\"Student_Classes\",public.\"Groups\", public.\"Themes\", public.\"Questions\" "
             		+ "WHERE \"Questions\"._id = question_id "
             		+ "AND \"Questions\".theme_id = \"Themes\"._id "
@@ -1679,9 +1726,11 @@ public class Database {
                         StudentThemeAverage answer = new StudentThemeAverage();
                         answer.setAnswer(result.getFloat(1));
                         answer.setTheme_title(result.getString(2));
-                        answer.setDescription(result.getString(3));
-                        answer.setTheme_id(result.getInt(4));
-                        answer.setStart_date(result.getString(5));
+                        answer.setTheme_title_fi(result.getString(3));
+                        answer.setDescription(result.getString(4));
+                        answer.setDescription_fi(result.getString(5));
+                        answer.setTheme_id(result.getInt(6));
+                        answer.setStart_date(result.getString(7));
                         answer.setStudent_id(student_id);
                         answer.setSurvey_id(-1);
                         answers.add(answer);
@@ -1700,7 +1749,7 @@ public class Database {
     	ArrayList<StudentThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String select_averages = "SELECT avg(answer),\"Themes\".title,\"Themes\".description,\"Themes\"._id,\"Surveys\".start_date,\"Surveys\"._id,\"Surveys\".title,\"Surveys\".description,\"Surveys\".start_date,\"Surveys\".end_date "
+            String select_averages = "SELECT avg(answer),\"Themes\".title,\"Themes\".title_fi,\"Themes\".description,\"Themes\".description_fi,\"Themes\"._id,\"Surveys\".start_date,\"Surveys\"._id,\"Surveys\".title,\"Surveys\".title_fi,\"Surveys\".description,\"Surveys\".description_fi,\"Surveys\".start_date,\"Surveys\".end_date "
             		+ "FROM public.\"Surveys\",public.\"Answers\", public.\"Student_Classes\",public.\"Groups\", public.\"Themes\", public.\"Questions\" "
             		+ "WHERE \"Questions\"._id = question_id "
             		+ "AND \"Questions\".theme_id = \"Themes\"._id "
@@ -1721,9 +1770,11 @@ public class Database {
                         StudentThemeAverage answer = new StudentThemeAverage();
                         answer.setAnswer(result.getFloat(1));
                         answer.setTheme_title(result.getString(2));
-                        answer.setDescription(result.getString(3));
-                        answer.setTheme_id(result.getInt(4));
-                        answer.setStart_date(result.getString(5));
+                        answer.setTheme_title_fi(result.getString(3));
+                        answer.setDescription(result.getString(4));
+                        answer.setDescription_fi(result.getString(5));
+                        answer.setTheme_id(result.getInt(6));
+                        answer.setStart_date(result.getString(7));
                         answer.setStudent_id(student_id);
                         answers.add(answer);
                     }
@@ -1865,11 +1916,12 @@ public class Database {
         log.traceEntry("Add class to teacher {}", teacher_class);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "INSERT INTO public.\"Classes\" (\"name\", teacher_id) VALUES (?, ?);";
+            String statement = "INSERT INTO public.\"Classes\" (\"name\", \"name_fi\", teacher_id) VALUES (?, ?, ?);";
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
                 insert.setString(1, teacher_class.getName());
-                insert.setInt(2, teacher_class.getTeacher_id());
+                insert.setString(2, teacher_class.getName_fi());
+                insert.setInt(3, teacher_class.getTeacher_id());
                 // execute query
                 insert.executeUpdate();
             }
