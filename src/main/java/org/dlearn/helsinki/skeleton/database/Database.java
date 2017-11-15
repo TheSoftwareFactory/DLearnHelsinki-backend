@@ -231,7 +231,7 @@ public class Database {
 
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "Select _id, question, quation_fi, min_answer, max_answer FROM \"Questions\", \"Survey_questions\" WHERE"
+            String statement = "Select _id, question, question_fi, min_answer, max_answer FROM \"Questions\", \"Survey_questions\" WHERE"
                     + " \"Survey_questions\".survey_id = ? AND \"Survey_questions\".question_id = \"Questions\"._id";
             //prepare statement with survey_id
             try (PreparedStatement select = dbConnection
