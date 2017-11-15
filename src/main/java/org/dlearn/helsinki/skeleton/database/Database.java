@@ -244,7 +244,7 @@ public class Database {
                         Question question = new Question();
                         question.set_id(result.getInt(1));
                         question.setQuestion(result.getString(2));
-                        question.setQuestion(result.getString(3));
+                        question.setQuestion_fi(result.getString(3));
                         question.setMin_answer(result.getInt(4));
                         question.setMax_answer(result.getInt(5));
                         questions.add(question);
