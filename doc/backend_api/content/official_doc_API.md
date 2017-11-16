@@ -665,8 +665,8 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/students/1/surveys/27/answers
       "student_id":1,
       "survey_id":27,
       "theme_id":2,
-      "theme_title":"Opinions and arguments"
-	  "theme_title":"Mielipiteitä ja perusteluita"
+      "theme_title":"Opinions and arguments",
+	  "theme_title_fi":"Mielipiteitä ja perusteluita"
    },
 ]
 ```
@@ -859,7 +859,7 @@ $ curl localhost:8080/webapi/teachers/1/classes/1/groups/1/progression/2
       "title" : "Another survey",
 	  "title_fi" : "Kysely",
       "description" : "arrested development",
-	  "description" : "Sukuvika",
+	  "description_fi" : "Sukuvika",
       "start_date" : "2017-10-13 10:13:09.972716+00",
       "end_date" : "2017-11-13 10:13:09.972716+00",
       "teacher_id" : 1,
@@ -1259,29 +1259,29 @@ $ curl localhost:8080/webapi/students/1/classes/1/surveys/1/answers
       "survey_id":27,
       "theme_id":4,
       "theme_title":"Responsibility",
-	  "theme_title":"Vastuullisuus"
+      "theme_title_fi":"Vastuullisuus"
    },
    {  
       "answer":5.0,
       "description":"These questions are about the persistence of the excercise.",
-	  "description_fi" : "Kuvaus",
+      "description_fi" : "Kuvaus",
       "start_date":"1970-01-01",
       "student_id":1,
       "survey_id":27,
       "theme_id":3,
       "theme_title":"Persistence",
-	  "theme_title_fi":"Sisu"
+      "theme_title_fi":"Sisu"
    },
    {  
       "answer":5.0,
       "description":"These questions ask about the opinions brought by the student during the exercise.",
-	  "description_fi" : "Kuvaus",
+      "description_fi" : "Kuvaus",
       "start_date":"1970-01-01",
       "student_id":1,
       "survey_id":27,
       "theme_id":2,
       "theme_title":"Opinions and arguments",
-	  "theme_title_fi":"Mielipiteitä"
+      "theme_title_fi":"Mielipiteitä"
    }
 ]
 ```
@@ -1307,32 +1307,32 @@ $ curl localhost:8080/webapi/students/1/progression/2
       {
         "answer" : 3.0,
         "description" : "These questions are about respect and the sustainability of the work.",
-		"description_fi" : "Kuvaus",
+        "description_fi" : "Kuvaus",
         "start_date" : "2017-10-13 10:13:09.972716+00",
         "student_id" : 1,
         "survey_id" : 53,
         "theme_id" : 5,
         "theme_title" : "Sustainable work - respect",
-		"theme_title_fi" : "Teema"
+        "theme_title_fi" : "Teema"
       },
       {
         "answer" : 3.1,
         "description" : "These questions are about the persistence of the excercise.",
-		"description_fi" : "Kuvaus",
+        "description_fi" : "Kuvaus",
         "start_date" : "2017-10-13 10:13:09.972716+00",
         "student_id" : 1,
         "survey_id" : 53,
         "theme_id" : 3,
         "theme_title" : "Persistence",
-		"theme_title_fi" : "Teema"
+        "theme_title_fi" : "Teema"
       },
     ],
     "survey" : {
       "_id" : 53,
       "title" : "Another survey",
-	  "title_fi" : "Kysely",
+      "title_fi" : "Kysely",
       "description" : "arrested development",
-	  "description_fi" : "Kuvaus",
+      "description_fi" : "Kuvaus",
       "start_date" : "2017-10-13 10:13:09.972716+00",
       "end_date" : "2017-11-13 10:13:09.972716+00",
       "teacher_id" : 1,
@@ -1345,32 +1345,32 @@ $ curl localhost:8080/webapi/students/1/progression/2
       {
         "answer" : 3.2,
         "description" : "These questions are about respect and the sustainability of the work.",
-		"description_fi" : "Kuvaus",
+        "description_fi" : "Kuvaus",
         "start_date" : "2017-11-09 10:12:03.972716+00",
         "student_id" : 1,
         "survey_id" : 85,
         "theme_id" : 5,
         "theme_title" : "Sustainable work - respect",
-		"theme_title_fi" : "Teema"
+        "theme_title_fi" : "Teema"
       },
       {
         "answer" : 2.9,
         "description" : "These questions are about the persistence of the excercise.",
-		"description_fi" : "Kuvaus",
+        "description_fi" : "Kuvaus",
         "start_date" : "2017-11-09 10:12:03.972716+00",
         "student_id" : 1,
         "survey_id" : 85,
         "theme_id" : 3,
         "theme_title" : "Persistence",
-		"theme_title_fi" : "Teema"
+        "theme_title_fi" : "Teema"
       },
     ],
     "survey" : {
       "_id" : 85,
       "title" : "MR F of survey",
-	  "title_fi" : "MR F",
+      "title_fi" : "MR F",
       "description" : "arrested development",
-	  "description_fi" : "Kuvaus",
+      "description_fi" : "Kuvaus",
       "start_date" : "2017-11-09 10:12:03.972716+00",
       "end_date" : "2017-12-09 10:12:03.972716+00",
       "teacher_id" : 1,
@@ -1402,9 +1402,9 @@ $ curl localhost:8080/webapi/students/1/classes/1/surveys
    {  
       "_id":27,
       "title":"MR F of survey",
-	  "title_fi" : "MR F",
+      "title_fi" : "MR F",
       "description":"arrested development",
-	  "description_fi" : "Kuvaus",
+      "description_fi" : "Kuvaus",
       "start_date":"1970-01-01",
       "end_date":"2017-10-11",
       "teacher_id":1,
@@ -1414,9 +1414,9 @@ $ curl localhost:8080/webapi/students/1/classes/1/surveys
    {  
       "_id":28,
       "title":"test_2",
-	  "title_fi" : "Testi 2",
+      "title_fi" : "Testi 2",
       "description":"arrested_development",
-	  "description_fi" : "Kuvaus",
+      "description_fi" : "Kuvaus",
       "start_date":"1970-01-01",
       "end_date":"",
       "teacher_id":1,
@@ -1447,32 +1447,32 @@ $ curl localhost:8080/webapi/students/1/classes/1/progression/2
       {
         "answer" : 3.0,
         "description" : "These questions are about respect and the sustainability of the work.",
-		"description_fi" : "Kuvaus",
+        "description_fi" : "Kuvaus",
         "start_date" : "2017-10-13 10:13:09.972716+00",
         "student_id" : 1,
         "survey_id" : 53,
         "theme_id" : 5,
         "theme_title" : "Sustainable work - respect",
-		"theme_title_fi" : "Kunnioittaminen"
+        "theme_title_fi" : "Kunnioittaminen"
       },
       {
         "answer" : 3.1,
         "description" : "These questions are about the persistence of the excercise.",
-		"description_fi" : "Kuvaus",
+        "description_fi" : "Kuvaus",
         "start_date" : "2017-10-13 10:13:09.972716+00",
         "student_id" : 1,
         "survey_id" : 53,
         "theme_id" : 3,
         "theme_title" : "Persistence",
-		"theme_title_fi" : "sisu"
+        "theme_title_fi" : "sisu"
       },
     ],
     "survey" : {
       "_id" : 53,
       "title" : "Another survey",
-	  "title_fi" : "Kysely",
+      "title_fi" : "Kysely",
       "description" : "arrested development",
-	  "description_fi" : "Kuvaus",
+      "description_fi" : "Kuvaus",
       "start_date" : "2017-10-13 10:13:09.972716+00",
       "end_date" : "2017-11-13 10:13:09.972716+00",
       "teacher_id" : 1,
