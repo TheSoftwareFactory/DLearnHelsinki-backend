@@ -14,7 +14,4 @@ ALTER TABLE "Themes"
 ADD title_fi character varying(50);
 
 ALTER TABLE "Themes"
-ADD title_fi character varying(50);
-
-ALTER TABLE "Themes"
 ADD description_fi character varying(256);
