@@ -275,6 +275,7 @@ public class Database {
     	ArrayList<Survey> surveys = new ArrayList<>();
 
         try (Connection dbConnection = getDBConnection()) {
+                                                //1     2        3           4              5          6        7    8         9
             String statement = "SELECT distinct _id,title,title_fi,description,description_fi,start_date,end_date,open,teacher_id "
                     + "FROM public.\"Surveys\" "
                     + "WHERE class_id = ? ";
@@ -293,13 +294,13 @@ public class Database {
                         survey.setDescription(result.getString(4));
                         survey.setDescription_fi(result.getString(5));
                         survey.setStart_date(result.getTimestamp(6));
-                        result.getTimestamp(5);
+                        result.getTimestamp(7);
                         if (!result.wasNull()) {
-                            survey.setEnd_date(result.getTimestamp(5));
+                            survey.setEnd_date(result.getTimestamp(7));
                         }
-                        survey.setOpen(result.getBoolean(6));
+                        survey.setOpen(result.getBoolean(8));
                         survey.setClass_id(class_id);
-                        survey.setTeacher_id(result.getInt(7));
+                        survey.setTeacher_id(result.getInt(9));
                         surveys.add(survey);
                     }
                 }
