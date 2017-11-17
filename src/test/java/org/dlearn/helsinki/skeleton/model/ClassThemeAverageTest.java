@@ -74,7 +74,6 @@ public class ClassThemeAverageTest {
         String str = "ClassThemeAverage{ survey_id = 0, start_date = null,"
                 + " theme_id = 0, theme_title = null, description = null,"
                 + " class_id = 0, answer = 0.0 }";
-        System.out.println(cta);
         assertEquals(str, cta.toString());
     }
 
