@@ -26,7 +26,7 @@ public class ClassWithAllGroups {
     public String getName() {
         return name;
     }
-    
+
     public String getName_fi() {
         return name_fi;
     }
@@ -34,7 +34,7 @@ public class ClassWithAllGroups {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public void setName_fi(String name) {
         this.name_fi = name;
     }
@@ -64,6 +64,8 @@ public class ClassWithAllGroups {
 
     @Override
     public String toString() {
-        return "ClassWithAllGroups{ _id = "+_id+", name = "+name+", teacher_id = "+teacher_id+" groups = "+groups.toString()+" }";
+        return "ClassWithAllGroups{ _id = " + _id + ", name = " + name
+                + ", teacher_id = " + teacher_id + ", groups = "
+                + groups.toString() + " }";
     }
 }
