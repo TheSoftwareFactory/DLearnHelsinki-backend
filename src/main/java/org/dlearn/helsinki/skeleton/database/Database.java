@@ -340,6 +340,7 @@ public class Database {
                         survey.setDescription(result.getString(4));
                         survey.setDescription_fi(result.getString(5));
                         survey.setStart_date(result.getTimestamp(6));
+                        
                         if (result.getBoolean(8)){
                             survey.setEnd_date(result.getTimestamp(7));
                         }
