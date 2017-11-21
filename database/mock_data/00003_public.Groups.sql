@@ -1,302 +1,302 @@
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('aLFvayIuedpn6ky3tfYg7cjig23pMIPxbknALt2xpuJS5BPgJCbkWhQTPMXCFZ2FGUdz7or5s2a5',1,1789,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('mEuRNZnczLespu2K1BFKiUhflXmrdXXhjrpKvexIfqySFCmxFnv2GNFaPSpxEB4Dq0l0o1aN',1,1,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('6Gt52WXSRz0dMauTVtWKhzrjwz3g5D08ZHykkCrcLnja5h1adoOk7BzXzRscgn8F',2,2724,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('YKVILj6FD6fkz5r6WnIpEaYsMhHhL41QDRUJ5kal18YPPhvO2ZY',2,1,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,3,2806,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('glyepIwqYFFBhWKCkq8qNOem2trqa0XA0rQsxGFXQNfcwURcabVYF3wxr7cEJlDIXKsI',3,1,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('rddnuGXJ6UWOZx3HJq4iR6f5kmkIQhpTR61',4,2605,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('cc56TZXnif3AzL7e4cpyosDLl1EuzJrX7tzQQiazHW5uWdKVpc4OMTHqqCbm4A',4,1,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,5,2533,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,5,1,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('fIIuP3GBeY7WNvrZXkqaz1stbulyqRSStntSBfV3JU1V7sKACslT3Dt1IgvGjaQ6UoCRl3tK',6,37,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('oyL2VdQZUfIKd6X5wobmilInXeKaCuWoIo4srxxRTfThnzjhFvc3Qx',6,2,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('4BoLdgJavWhrn4RPsaFycvL0jHn3iuPhcd7W52TDkfreOC878a',7,1387,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('GJyUtyfty4Eyg1dyladJfK',7,2,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('5Z8daUv5ap5pKUF68g2E1Euw',8,588,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('BnwBuyYqO8F6RBypClOSvB2O8iSH8e4X4kS3wiYOJ7WqVs4zxn',8,2,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('ahA5zfMAmfz6WdcmD40QlatSsz5WEZQrBPLKWShqSOSpkuMD1up',9,NULL,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('a1bZo1JrPLQXtKcrqZyLCOUkt0blP5yv7RnRyQz7PqeomEvgpoSJCXVzT',9,2,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,10,474,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('NJovNGIFQmP1tJ',10,2,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('GsfDkcVyumKiAnAplcBUpqJYTxatin4j5RailA7jfK',11,2404,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('ZHp0tQ2qqu',11,3,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('SMC8ImEtwNcrlC',12,1898,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('8xhOOvgL66gpO6ELnoooO5xnuqiUBKhl35oKSIPUuYjscTI6VDU4CvGnQqmHgoHEm81eyKoz',12,3,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('BmT0Jk8tSrCvVXYRvsTfz4i4mg4QWgSa61JMvLTtsQWZ0Pdoyp146NQGdBwmgt2Eyu7DwvQuJbVgj',13,NULL,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('je2TdxvUySZVBYd0yZgMbuxquksyVFgtcLI3gkbTl27ANKhwUJLCuxDffq4RahsYOO8XXA',13,3,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('BTEY8byrsapS6sZf',14,2892,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('4YMuFiiwRQ2UfczvPWjeq5YkHBbRezEaUQaZsyeXTfqAFMkg0MlRGdqthKOqpb3KyvikRBjaatlojf',14,3,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,15,485,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('CkrhwIFQQm5d8ay',15,3,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('eHAgsPHlLnzftFdAfUlHxZwfEqixNNKj3bMHwYI38e2Wnd5mUFm0DQvuQ5bG7S7tp4aeAeDGIaSz',16,NULL,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('X7g6M5qv',16,4,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('JVQjP5JS4hjek4SOt0N0GB1QMar7KR1ibxXm',17,217,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('cWET1KtXbwmCEVgjzTqHWDzD3Agas2PmyHrMO3J',17,4,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('eG06Gp64ZL7c0R4vD7aUEqZPmjUToiJ4T82zbjw4LaD6MgppJBLXbCiJpt',18,NULL,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('QJGtysOMFfcVEAIEIZiInG6W1fZ',18,4,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,19,402,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('56HazdxUg',19,4,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('QErp1avHwetG',20,1927,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('4DDu4G',20,4,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,21,1215,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,21,5,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('MtQ',22,70,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('HA6xAZ45uzRngiAx5MTcCa5lmXAyxCN6Z0inIK2wCgF0rpPs0qoVm4wf',22,5,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('Y2SoEUJ87U8ryQoEqyirT8mXF3LObpgfclBKmdXnHR5k',23,2786,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('cosDm8FITdZHBopEz05RCITcyHqPnu1QS4yAyxtOSkB8dYyut5xIXodPHNeNyHXdWkBfXOvdf',23,5,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('m7LFEtzLF3HqeWEHQUpDbOw3IBQOEWKvrD7RWw',24,540,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('vOC6nHA7UOd5PHAv0bcQn3r37j3pxYzgLzISDUb4lOHjkHikTpPAeU5re1a1W8p06rvMuwXU7X5tMC',24,5,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('07KAEoJYZAIFNsETTgExHtrPzH7uEROVYkezPBS',25,2039,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,25,5,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('w60SUmPNLIAuEzZV',26,2252,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('z665weFMTAUCcwE2GaCpNkIRSXPh46uKQXu6tBHJMxCSHoTvhaRb0Js3VifdrLZGqy6hR60GWL27j',26,6,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('pbDq',27,2314,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('eT3JAWZ8kRmBEhcllIOTm04MOcGr8Z8WAU2G5OoPm4R4RGELZBtZtFEmi',27,6,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('48VWTGEDDSVJeo',28,1699,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('aqtCXKvxBVyXgrlv4v7KwUHWYf1ZVarDA06UYQxrqHpGR8xBretD7nJQNjcx2ui8TMlaya1DxYLD',28,6,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('ZR7TGr86Onwk0CzvmcvAbUXpYqlVeKZDnWPAKX4HVFz',29,NULL,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('VOPkIHiE4qf7NTLHCOVwB2xagUnwuVzZBFgTinmEOejS7cdv',29,6,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('v4mmNOX4pWptuMvI60dFgZOHm3NoDn3oqpY7otWPLN1QEie6JUNHmf6AAkum6EB1Z',30,502,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('nsIWmQjoyJ0Y5d1Q1HS8fxBv8K5fQigprJ266pfxVibp7sv25a7SzFfkSyb5HHE',30,6,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('VbgUhjtJgKDB4H1KRXG6LlRCeGHEndEjya27smNmjZmUAEJ70ysrvUM',31,230,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('4nsC6cMkD3d3DFIfbwWkyR0zPtTSo',31,7,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('rp86WiOFeA7laRrUCbeuo3XVgDwgSqqLqwhcbYLFZsZkh4h7f6dDaNjB6vjFCyLMvIXOZ',32,2749,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('1jOqecXsPqUbD40e3wvQsh5KyN1pf7OYdiFq8s281pRUVhbUMb4GgSMCs6xbiD1jYRthgU',32,7,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('ecUYLxNeyqtVvDIWl7XVUcFQd6jA2HBIaqNZgT3bIpeImISp6ISPZtJRdu1jSrgfa1qbEwUzzXkCeQ',33,2143,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('SopwQ5fG4e55cWuNKqxHbnKG5UGdMQDZop5GUKhrEJA4emRK0A1faHtJtBIjjGTs8VEEMpW40',33,7,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('wRTm',34,2710,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('qjVfFbCYsFfNECALBMlJ60dJ7ygv5wTtzluQ3gLC4TJIZv1MpW4WvXYrXHKGAtvh',34,7,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('ZgRlC7x7yTduSALbc4hG02FWTc5HHFYqlnIJGbt2XrG4u6GGNNFQqwzK05uJWjoDHhEk',35,1532,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('i5PjGuNDRUS01NNccwWHHcvAcKQ6BhRYVPQ1xLTMREAm6',35,7,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,36,1841,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,36,8,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('2sJ3IHxBIrhTpyNeBkaj8NNnlEKdsj6KHzhbvx0bzx',37,1846,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,37,8,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,38,NULL,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('su6huaTOo0QmFpbMxrKZSfTCh1jxJ4r8SJPJN4K1P0s1OIAWKFwmoEPANtpSnnVyEq',38,8,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('2H5LCkjPONRvybYpnksCOo6snvZppOTZTNrVrqM',39,188,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('1DqWagFpuMV6jlPY2p3Ksvu0Ie6Lgyp381nqE2ALZW2qqLAnfFo3O',39,8,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,40,1350,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('VDkBM0btfo5RdjZj0lFfs0RHoUyvhYXkeqJI',40,8,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('gCQ2r3',41,1142,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('2Od1wAxkYv20RnYMQmn75i0LaKfGljDKk841CF0YMKjdtY273V0bUVbSFZ0ONzT0bIf',41,9,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('BAQWUmJvYfzsjOwVBvUT4PlPPXnOufUkQ2QqDudPc8i4jt',42,NULL,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('R2nMu',42,9,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('HMV7PXF8vt11vrxwQKejsPc',43,NULL,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('TVArGl2F0F2SuGcaEVTgoPunS78fARJsa1s6AuBB2h0lKoOSkAsy',43,9,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('m843OfUgUdzhLoxtrzq14a66WCtabhUDKEtqutH5X7tu7RohV1wwFiQRzeRJl8tH7eHAs',44,NULL,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('3OYo0IhABtmOxUI7d47pkqePHeysdptYFnbtfxVIQJgB7WBrYfYuO3l8H',44,9,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('Vx3RppjbS4HTMsQ7YPgsCNhaLrSq7w7m4SBBSszUrmi6QAoKGHmnjU',45,905,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('SKZQmtPKc2huh10fLvQHs0JXJ3X0sxbwW',45,9,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,46,198,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('BzjKXXGkJLvkQbcbnXRNJyi',46,10,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('TvbwbqwZL54gzR2qXIQR310SiGwEswtsEZQjmSOuR',47,NULL,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,47,10,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,48,1968,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('CE51oLLvYr5OYCIK6K2JaJqZuyelcY',48,10,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('JKgcMEKyfUQNi0PbTSS2GHA7160JTv',49,1690,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,49,10,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('lp7LdF6gu348k5GXeLf',50,2818,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('5ILnZpE21HVBbaDCuddTHwi7hEFRGEYXd2U0PChfPQ4sQ7Wuw',50,10,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,51,2667,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('Qwqczerylu75kVdBl6gTTzFvikDnM3',51,11,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('femUtzumMqRZzfm8G34nNELeeNoxtb8CyjFzU7E1tvsnLvuqGir2axnNe005trYP',52,1406,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,52,11,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('FozwLXP4M07fjXwQwKX8bBG8zpZaZyU1BI5faGCKWyt7Y7wYm',53,615,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('WN6pKuMFuB',53,11,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('3Hu864T6d8UqLdCDXyMGfX3Mphxwu3fRKoFUm3pRVwGxBrJ5nh5AByjr',54,152,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('yN1g4uKJq',54,11,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,55,1255,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('12RYcsQWUbFhnMzPxKFXX8pCANjiCiuBmZHjKuEnDCIg',55,11,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('PoUVmAPGvjI16gXBwPFfffoArcFdNuzJPKLWtzpnlbtJvyLIdmGhBO',56,62,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('ybMG21AFmJNXhcUF1LtCvzSckVBg07EhXnZiCJlTk1H7xMhwB6dl4YMC4oWb4qURyV2fMs',56,12,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,57,463,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('dd7jAjwrkfFavYwyh4q2qXGq7U8FqfMChU',57,12,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('fBIDDRt1e8SnzuF1FdEzkbGvxsCJkwq7zetsjxRgaQLpmGlptMmJee3y07CsnKyW5yRcp',58,1123,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('OPRVq8RFB',58,12,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('7KmNnvg7uEKrBAkZ0HUPncSqVx4I1EJCVKjHhGcKSNlP',59,504,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('ZE1bn7XgFz0',59,12,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('hbYwzqY0qGpxCJQnnF8jugJnTVl0Afye5JpS216KEpkqss',60,485,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('aqeEWoaFkIavvBm3xkFQAJXKt1q1vCl8z4vBGAujiU',60,12,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('EggmXBqG06PE6qx7ti5NccoIMJ11AFIJQTRwkSYzkotK0dHdSjFiIcHBp',61,2346,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('wAqcSG3EZya7uoduPbjN3QFKDWPqKeTGstCZTtdR',61,13,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('o81tvt6pg',62,2515,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('6ixDfnc8sxbLFOhVx8NWBMumKBE8lp8r0rGx6bQvVqJif6As3hsNwlEDzBFhhif',62,13,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('ROfqHmFuelynG2XHpdplyR1RcTVHJgyjFIKe',63,NULL,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('5xLWQa4aegBUOu3lPBUYWXIhHzj7X5V8CWtaDXZPnVQhlw43fnHd0Khz6V5Yq4ReYvHB0tzbw0Lj4Q4V',63,13,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('funNdcnia5V3QsSJ6z31R5RXNMpyf10WTa6nE2B',64,NULL,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('Lw4dGtJRZzzmyjIcnmDPfnBq5O5jD8TedZTen4kX1uwne5ztAsYnpkcdVbgKrnoKnmwkyGskzV8SZs',64,13,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('dlD4iBkoWLh8kQgPst1WXXmWNQ8yjAv',65,2072,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('TnRLZU1DPebGSG1N1ZbKHndHBhFwmrsagIE4eLjbzfN6JsAJYmFZJplCS6TDNVfWVXM',65,13,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('VfZgbydqkhJykZdz4',66,2754,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('fgBG6WWJu2gQkySywDFkYjvGOorEebZghIlcyPE7KeWZnoJomW',66,14,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('rA0UB0IGakFBmyB1lgg7U',67,1662,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('DZp0RRFx1r5E2qv4LuF5WyM6JvOdHnwTxQY5v7',67,14,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,68,1908,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('tnHrs0OjEpnoA01em7L3idp5K2Xmwg1nQDl8uw',68,14,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('iRhVbKozSVyb8lOoDolcuxfbdTjzYm1hNb43gi6d1nGbQZNZLMSpzcE3HTkSS',69,1511,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('C0V4W22Nj8wyAv7Ofb6IYpbq7n3rsPDGFg1',69,14,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('vSydWKqDrAHmmuRgRuDX3xBhI7hyfjTH',70,NULL,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('W2LSq1CQ5Vheqt7DO7yFsxKu3IGORY8Vzo31iqmuh4AikPTwOL7mmh',70,14,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('MQZOIXyUQj8dfzRt5rmx0Mlxtvsv06IHdyUN6QTFb3OHhkjOXDrNDErkWH4DjtmuQYTTK',71,NULL,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('kSeWhsGAbLHByhWljJifAY8m85HvpXWTBtqlNEFM',71,15,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('v',72,1706,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('JHo7m4VJ6pyrHKFtrbQX8NR4jXb5wnIVFm5O4K7FzCNFlyt',72,15,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('hRJ8vVrjorttGiVBlhKYfN',73,NULL,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('CR7BtmliiGPuqiJ2GTeho2MI',73,15,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('oBvEM65upy2Gpl2ysFx1gddMoo0NVtdhCbGDag2VsDrgnRc4e',74,2465,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,74,15,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('oS17lIS8YZgXEWW0MRp6FyDibAbS4wF2r2F3AgK2lccWm0GfUyc3SB8',75,2791,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('2DkINQq3feRvMQJqtyXxm72rYXerRXyDCYLPbkQ4gV',75,15,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('zp30iFu6GnRnaoXFxEZadZnKXPe6GZLG03jErhEezrkfhNRlExcZb6eND1IexlrxhIR',76,2061,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('5luZzGim1BhKexHeVEcJoeNsmMN',76,16,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('FVRvxURmEMBL0EhDFIElE1f',77,938,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('g7',77,16,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,78,2843,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('28jg301p0ltGJSr',78,16,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,79,NULL,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('FjSGXssx4dnYbQ3wj5L7C7Q3cYzmnpUMqqWBUbAkj',79,16,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('6zfBmercWPrhzOShEKgbniukZ5EKZgsSMqjl85lqf6uUm83Mszo2QWj7rOObNOJhhM',80,2318,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,80,16,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('OpMCHKY',81,1085,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('0QvFoh5Xy4BzH4zVeOIs0AsFfJsbBfC5',81,17,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('a20w',82,2202,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('CLDPmAyDLmh2aKjXrnKOq',82,17,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('RlaKrF66AXWjZatvdchqONtYO6IphHyNhuW14mh8dDCfShKevY6SXi0MxDg0bHyyLXsBuIOtz',83,1814,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('nArZfNLJ0YeFD00W6ywE36Bo4rV',83,17,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('CihUXRrqGdm0MlklwgW83hVI2qa7Go67mH61jDUM5NiI3y',84,1374,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('54dVpuVpZmY2c145mRMohD4CdpaoWJv1SSaUr0R5Ean',84,17,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('2qHGfywUzQSUTWr6zrdRBDi4BlLPhBUI47Tg7e4E25',85,661,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('JrSmX0WlT1Gvlnf4ASbDdNKhRW5Zl74AiYwRJRPAsIFkM7D1b63KBSONhIR4eQ',85,17,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,86,2382,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('N3maor44ZXRmcuf3aO',86,18,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('TJkkp21exSl2UFlnftgAHpPlagpYC6Y7nMqQExlIG2BEDI2oau1j25Yb7uyxI2zhwOdXoTMiZrl',87,1613,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES (NULL,87,18,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('aLhQDK7QFMfYItPfrt',88,878,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('GCIIIqm3MPhWzVK75r0TZEyvdJmTK',88,18,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('KDqz6KIl',89,745,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('0jMnBqGXHOLc0x1GNL74SA4Uuojh2fQNz0jx3fthdHLmrOlfRDvv1Q5FjdPuWBWG072f7ZaEC5z',89,18,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('mJ11ym5uCpkjaOFB5sxQ',90,NULL,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('gyijRQRrnW',90,18,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('VnJW3U0P',91,97,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('nBCSkDKe3jiWjOIlLmAzwkV6XW6YQfCy45nrNuCfktjvj',91,19,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('OasHVcKZqRbrnt7yQv8e',92,2018,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('urmJw2wF707RM',92,19,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('OuU8dm8Xhl5XWKeuq3X8tayqqY3Qi7AncKwiaX0',93,328,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('wbVmDrIukVTz2Ygu4h55cobDZ3cmLqwNIkwKnDeDV2RGhpvqeabtIP5oZNZm',93,19,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('Qe7XD0g',94,1487,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('c1x8Eqk13Z2xLk3qRNP0AnrQFH7sTZXCq1MUFFVbguQTZHu8NaBmW7CsNgZyGXifd6GxGCjWoNd15',94,19,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('gZp8I0JoIyrqAQvc5VYFDYAUziJJyNrzIuRNsJUkUTSfSbEG53p70Q1A37fMHiQamUuBr6',95,NULL,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('rRZ4qSjgIoSk084iewhwbipGx27KTu',95,19,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('5fgF62zr6hGfRSpHvCwx3rPPso80FH6uwKM8tAUBqVmSmGqZunwqob',96,220,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('J2si3bd0pa66hkExTStiSdgXlDFYcLoHfl2yKlvt8eKNapbAcv0GIUqUtrZyxghAeASGa',96,20,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('M0Lh4LcBm3DFSQ1fvxQ3fjYcUDtdlbs',97,NULL,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('E6YhozprwJGfbIR8dzmfAukEAwNeF4DjzKCqlvpSTxFR5qCFCER4',97,20,False);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('mp',98,1026,True);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('V2v01NDTNbdgVOX73jDMPh7HjNHpuB0iVm88kSptnEvthAZkhcRduA2ACQdrGSXVnd1xMdk0kngBw',98,20,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('dgWnCiXUj4WrqVhQ',99,1692,NULL);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('JgmPuPEPzHcpQmtohXU5Ief87w5nFUHN6qEHeqXxgHIMfYbWHorK11nfpdFaHDlpEalu2qsat',99,20,True);
  
  
-INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('RVeu6',100,NULL,False);
+INSERT INTO "public"."Groups" ("name","_id","class_id","open") VALUES ('XrioK3pWZHG6XNFNO00obMpve5EtAmeRZ2TVuou1UJug0VkTLZLaYPV2xWSHXEUpMHAilWKP',100,20,False);
  
 
 
