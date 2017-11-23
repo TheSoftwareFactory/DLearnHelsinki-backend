@@ -1584,7 +1584,8 @@ public class Database {
             return Optional.empty();
         }
     }
-
+    
+    //Is this used by the front end at all?
     public Optional<List<ListClassThemeAverage>> getClassThemeAverageProgression(int class_id_, int amount) {
         log.traceEntry("Getting progression of {} for class {}", amount, class_id_);
         try {
