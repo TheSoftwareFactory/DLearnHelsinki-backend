@@ -1392,16 +1392,7 @@ public class Database {
                                 this.add(new ListStudentThemeAverage() {{
                                     this.themes = Lists.newArrayList(answer);
                                     this.survey = new Survey() {{
-                                        this._id = result.getInt("survey_id");
-                                        this.class_id = result.getInt("class_id");
-                                        this.description = result.getString("survey_description");
-                                        this.description_fi = result.getString("survey_description_fi");
-                                        this.start_date = result.getTimestamp("start_date");
-                                        this.end_date = result.getTimestamp("end_date");
-                                        this.open = result.getBoolean("survey_open");
-                                        this.teacher_id = result.getInt("teacher_id");
-                                        this.title = result.getString("survey_title");
-                                        this.title_fi = result.getString("survey_title_fi");
+                                         
                                     }};
                                 }});
                             }
@@ -1517,9 +1508,9 @@ public class Database {
                     + "        su.start_date,\n"
                     + "        su.end_date,\n"
                     + "        su.title as survey_title,\n"
-                    + "        su.title as survey_title_fi,\n"
+                    + "        su.title_fi as survey_title_fi,\n"
                     + "        su.description as survey_description,\n"
-                    + "        su.description as survey_description_fi,\n"
+                    + "        su.description_fi as survey_description_fi,\n"
                     + "        su.open as survey_open,\n"
                     + "        su.teacher_id,\n"
                     + "        th.title,\n"
