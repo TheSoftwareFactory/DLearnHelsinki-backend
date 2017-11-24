@@ -1307,7 +1307,7 @@ $ curl localhost:8080/webapi/students/1/classes/1/surveys
 ]
 ```
 
-### Retrieve student's progression in a class
+### Retrieve student's progression in a class (TODO)
 
 ```endpoint
 GET students/{student_id}/classes/{class_id}/progression/{amount}
