@@ -1526,7 +1526,7 @@ public class Database {
                     select -> {
                         select.setInt(1, class_id_);
                         select.setInt(2, group_id);
-                        select.setInt(3, amount);
+                   //     select.setInt(3, amount);
                     },
 
                     results -> new ArrayList<ListGroupThemeAverage>() {{
