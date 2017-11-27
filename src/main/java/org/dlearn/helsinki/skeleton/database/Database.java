@@ -1524,8 +1524,8 @@ public class Database {
                             + "WHERE su.open = false and su.class_id = ? and an.group_id = ?\n"
                             + "GROUP BY su._id,th._id,an.group_id ORDER BY su.start_date, th._id",
                     select -> {
-                        select.setInt(1, group_id);
-                        select.setInt(2, class_id_);
+                        select.setInt(1, class_id_);
+                        select.setInt(2, group_id);
                         select.setInt(3, amount);
                     },
 
