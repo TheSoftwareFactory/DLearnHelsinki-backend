@@ -50,7 +50,7 @@ public class Database {
     private static final BasicDataSource DATA_SOURCE = new BasicDataSource();
     private static final String DB_DRIVER = "org.postgresql.Driver";
     
-    private static final String DEV_DB_CONNECTION = "jdbc:postgresql://localhost:5432/Dlearn_db?verifyServerCertificate=false&useSSL=true";
+    private static final String DEV_DB_CONNECTION = "jdbc:postgresql://localhost:5432/Dlearn_db?verifyServerCertificate=false&useSSL=true&useServerPrepStmts=false&rewriteBatchedStatements=true";
     private static final String DEV_DB_USER = "postgres";
     private static final String DEV_DB_PASSWORD = "admin";
     
