@@ -1,4 +1,4 @@
-  package org.dlearn.helsinki.skeleton.database;
+package org.dlearn.helsinki.skeleton.database;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -42,45 +42,50 @@ import org.dlearn.helsinki.skeleton.model.SurveyTheme;
 import org.dlearn.helsinki.skeleton.model.Teacher;
 import org.dlearn.helsinki.skeleton.security.Hasher;
 
-
 public class Database {
-    
+
     private static final Logger log = LogManager.getLogger(Database.class);
-    
+
     private static final BasicDataSource DATA_SOURCE = new BasicDataSource();
     private static final String DB_DRIVER = "org.postgresql.Driver";
-    
+
     private static final String DEV_DB_CONNECTION = "jdbc:postgresql://localhost:5432/Dlearn_db?verifyServerCertificate=false&useSSL=true&useServerPrepStmts=false&rewriteBatchedStatements=true";
     private static final String DEV_DB_USER = "postgres";
     private static final String DEV_DB_PASSWORD = "admin";
-    
+
     static {
         try {
             Class.forName(DB_DRIVER);
             DATA_SOURCE.setDriverClassName(DB_DRIVER);
+            DATA_SOURCE.setMaxIdle(20);
+            DATA_SOURCE.setMaxTotal(100);
+            DATA_SOURCE.setPoolPreparedStatements(true);
             DATA_SOURCE.setInitialSize(1);
             String dbUrl = System.getenv("JDBC_DATABASE_URL");
             if (dbUrl == null) {
-            	System.out.println("Hello");
+                System.out.println("Hello");
                 dbUrl = DEV_DB_CONNECTION;
                 DATA_SOURCE.setUsername(DEV_DB_USER);
                 DATA_SOURCE.setPassword(DEV_DB_PASSWORD);
-            }else{
-	            if (dbUrl.isEmpty()) {
-	                String databaseUrl = System.getenv("DATABASE_URL");
-	                if (databaseUrl.isEmpty()) {
-	                    dbUrl = DEV_DB_CONNECTION;
-	                    DATA_SOURCE.setUsername(DEV_DB_USER);
-	                    DATA_SOURCE.setPassword(DEV_DB_PASSWORD);
-	                } else {
-	                    URI dbUri = new URI(databaseUrl);
-	                    dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
-	                    if (dbUri.getUserInfo() != null) {
-	                        DATA_SOURCE.setUsername(dbUri.getUserInfo().split(":")[0]);
-	                        DATA_SOURCE.setPassword(dbUri.getUserInfo().split(":")[1]);
-	                    }
-	                }
-	            }
+            } else {
+                if (dbUrl.isEmpty()) {
+                    String databaseUrl = System.getenv("DATABASE_URL");
+                    if (databaseUrl.isEmpty()) {
+                        dbUrl = DEV_DB_CONNECTION;
+                        DATA_SOURCE.setUsername(DEV_DB_USER);
+                        DATA_SOURCE.setPassword(DEV_DB_PASSWORD);
+                    } else {
+                        URI dbUri = new URI(databaseUrl);
+                        dbUrl = "jdbc:postgresql://" + dbUri.getHost()
+                                + dbUri.getPath();
+                        if (dbUri.getUserInfo() != null) {
+                            DATA_SOURCE.setUsername(
+                                    dbUri.getUserInfo().split(":")[0]);
+                            DATA_SOURCE.setPassword(
+                                    dbUri.getUserInfo().split(":")[1]);
+                        }
+                    }
+                }
             }
             DATA_SOURCE.setUrl(dbUrl);
         } catch (URISyntaxException | ClassNotFoundException e) {
@@ -92,6 +97,7 @@ public class Database {
         log.traceEntry("Testing connection");
         try (Connection dbConnection = getDBConnection()) {
             log.debug("Database connection succeeded.");
+            dbConnection.close();
         } catch (Exception e) {
             log.catching(e);
         }
@@ -117,12 +123,13 @@ public class Database {
                 // execute query
                 try (ResultSet result = insert.executeQuery()) {
                     if (result.next()) {
-                    	surveyTheme.set_id(result.getInt("_id"));
+                        surveyTheme.set_id(result.getInt("_id"));
                     } else {
                         log.error("Inserting survey didn't return ID of it.");
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -135,21 +142,21 @@ public class Database {
         ArrayList<Question> questions = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-        	// lame fix TODO check that there is at least one theme chosen
+            // lame fix TODO check that there is at least one theme chosen
             String statement = "Select * FROM public.\"Questions\" WHERE theme_id = ?";
             int count = 1;
-            for(int i=1;i<surveyTheme.theme_ids.size();i++){
-            	statement += " OR theme_id = ?";
-            	count++;
-            	System.out.println(count);
+            for (int i = 1; i < surveyTheme.theme_ids.size(); i++) {
+                statement += " OR theme_id = ?";
+                count++;
+                System.out.println(count);
             }
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
-            	count = 0;
-                for(int i=0;i<surveyTheme.theme_ids.size();i++){
-                	count++;
-                	System.out.println(count);
-                	select.setInt(i+1, surveyTheme.theme_ids.get(i));
+                count = 0;
+                for (int i = 0; i < surveyTheme.theme_ids.size(); i++) {
+                    count++;
+                    System.out.println(count);
+                    select.setInt(i + 1, surveyTheme.theme_ids.get(i));
                 }
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
@@ -163,6 +170,7 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -191,6 +199,7 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -215,6 +224,7 @@ public class Database {
                 // execute query
                 insert.executeBatch();
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -251,6 +261,7 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -271,14 +282,14 @@ public class Database {
     // Output : returns a list of surveys available to the student
     public List<Survey> getSurveysFromClassAsStudent(int student_id,
             int class_id) throws SQLException {
-        log.traceEntry("Getting all surveys from class {} as student {}", class_id, student_id);
-    	ArrayList<Survey> surveys = new ArrayList<>();
+        log.traceEntry("Getting all surveys from class {} as student {}",
+                class_id, student_id);
+        ArrayList<Survey> surveys = new ArrayList<>();
 
         try (Connection dbConnection = getDBConnection()) {
-                                                //1     2        3           4              5          6        7    8         9
+            //1     2        3           4              5          6        7    8         9
             String statement = "SELECT distinct _id,title,title_fi,description,description_fi,start_date,end_date,open,teacher_id "
-                    + "FROM public.\"Surveys\" "
-                    + "WHERE class_id = ? ";
+                    + "FROM public.\"Surveys\" " + "WHERE class_id = ? ";
             //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
@@ -305,6 +316,7 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -317,7 +329,8 @@ public class Database {
     // Output : returns a list of surveys available to the student
     public List<Survey> getSurveysFromClassAsTeacher(int teacher_id,
             int class_id) throws SQLException {
-        log.traceEntry("Getting surveys from class {} as student {}", class_id, teacher_id);
+        log.traceEntry("Getting surveys from class {} as student {}", class_id,
+                teacher_id);
         ArrayList<Survey> surveys = new ArrayList<>();
 
         try (Connection dbConnection = getDBConnection()) {
@@ -340,8 +353,8 @@ public class Database {
                         survey.setDescription(result.getString(4));
                         survey.setDescription_fi(result.getString(5));
                         survey.setStart_date(result.getTimestamp(6));
-                        
-                        if (!result.getBoolean(8)){
+
+                        if (!result.getBoolean(8)) {
                             survey.setEnd_date(result.getTimestamp(7));
                         }
                         survey.setOpen(result.getBoolean(8));
@@ -351,6 +364,7 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -369,41 +383,45 @@ public class Database {
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     while (result.next()) {
-                        survey.add(new Survey() {{
-                            this._id = result.getInt("_id");
-                            this.title = result.getString("title");
-                            this.title_fi = result.getString("title_fi");
-                            this.class_id = result.getInt("class_id");
-                            this.start_date = result.getTimestamp("start_date");
-                            this.end_date = result.getTimestamp("end_date");
-                            this.teacher_id = result.getInt("teacher_id");
-                            this.description = result.getString("description");
-                            this.description_fi = result.getString("description_fi");
-                            this.open = result.getBoolean("open");
-                        }});
+                        survey.add(new Survey() {
+                            {
+                                this._id = result.getInt("_id");
+                                this.title = result.getString("title");
+                                this.title_fi = result.getString("title_fi");
+                                this.class_id = result.getInt("class_id");
+                                this.start_date = result
+                                        .getTimestamp("start_date");
+                                this.end_date = result.getTimestamp("end_date");
+                                this.teacher_id = result.getInt("teacher_id");
+                                this.description = result
+                                        .getString("description");
+                                this.description_fi = result
+                                        .getString("description_fi");
+                                this.open = result.getBoolean("open");
+                            }
+                        });
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
         log.traceExit(survey);
         return survey;
     }
-    
+
     public Optional<Group> getGroupForStudent(int class_id, int student_id) {
-        log.traceEntry("Getting groups for student {} in class {}", student_id, class_id);
+        log.traceEntry("Getting groups for student {} in class {}", student_id,
+                class_id);
         try (Connection dbConnection = getDBConnection()) {
-            String statement = ""
-                    + "SELECT sc.group_id, g.name, g.open "
+            String statement = "" + "SELECT sc.group_id, g.name, g.open "
                     + "  FROM public.\"Student_Classes\" as sc,"
                     + "       public.\"Groups\" as g"
                     + "  WHERE sc.group_id = g._id"
                     + "    AND sc.class_id = g.class_id"
-                    + "    AND sc.student_id = ?"
-                    + "    AND sc.class_id = ?"
-                    + "  ORDER BY sc.creation_date DESC"
-                    + "  LIMIT 1";
+                    + "    AND sc.student_id = ?" + "    AND sc.class_id = ?"
+                    + "  ORDER BY sc.creation_date DESC" + "  LIMIT 1";
             //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
@@ -412,17 +430,20 @@ public class Database {
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     while (result.next()) {
-                        Group group = new Group() {{
-                            this.set_id(result.getInt("group_id"));
-                            this.setClass_id(class_id);
-                            this.setName(result.getString("name"));
-                            this.setOpen(result.getBoolean("open"));
-                        }};
+                        Group group = new Group() {
+                            {
+                                this.set_id(result.getInt("group_id"));
+                                this.setClass_id(class_id);
+                                this.setName(result.getString("name"));
+                                this.setOpen(result.getBoolean("open"));
+                            }
+                        };
                         log.traceExit(group);
                         return Optional.of(group);
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -441,8 +462,7 @@ public class Database {
                     + "       public.\"Groups\" as g"
                     + "  WHERE sc.group_id = g._id"
                     + "    AND sc.class_id = g.class_id"
-                    + "    AND sc.student_id = ?"
-                    + "    AND sc.class_id = ?";
+                    + "    AND sc.student_id = ?" + "    AND sc.class_id = ?";
             //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
@@ -459,13 +479,14 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
         log.traceExit(groups);
         return groups;
     }
-    
+
     // TODO: Use optional
     public List<Group> getAllGroupsFromClass(int class_id, boolean all) {
         log.traceEntry("Getting groups for the class {}", class_id);
@@ -473,10 +494,9 @@ public class Database {
 
         try (Connection dbConnection = getDBConnection()) {
             String statement = "Select name, _id, class_id, open "
-            		+ "FROM public.\"Groups\" "
-            		+ "WHERE (class_id = ?) ";
-            		if(!all)
-            			statement += "AND (open = true)";
+                    + "FROM public.\"Groups\" " + "WHERE (class_id = ?) ";
+            if (!all)
+                statement += "AND (open = true)";
             //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
@@ -494,6 +514,7 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -521,6 +542,7 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -540,8 +562,7 @@ public class Database {
                     + "  FROM public.\"Student_Classes\" as sc,\n"
                     + "       public.\"Students\" as s \n"
                     + " WHERE sc.student_id = s._id\n"
-                    + "   AND sc.class_id = ?\n"
-                    + "   AND sc.group_id = ?\n"
+                    + "   AND sc.class_id = ?\n" + "   AND sc.group_id = ?\n"
                     + "   AND sc._id = (SELECT sc2._id\n"
                     + "                  FROM public.\"Student_Classes\" as sc2\n"
                     + "                  WHERE sc.student_id = sc2.student_id\n"
@@ -564,6 +585,7 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -596,6 +618,7 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -625,13 +648,15 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
         return teacher;
     }
-    
-    public Optional<Student> changeStudentPassword(ChangePasswordStudent student) {
+
+    public Optional<Student> changeStudentPassword(
+            ChangePasswordStudent student) {
         log.traceEntry("Changing students password {}", student);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -645,6 +670,7 @@ public class Database {
                 // execute query
                 insert.execute();
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
             log.traceExit("No password change");
@@ -655,10 +681,13 @@ public class Database {
         return Optional.ofNullable(result);
     }
 
-    public boolean addStudentToGroup(Student student, int class_id, int group_id) {
-        log.traceEntry("Adding student {} to group {} in class {}", student, group_id, class_id);
+    public boolean addStudentToGroup(Student student, int class_id,
+            int group_id) {
+        log.traceEntry("Adding student {} to group {} in class {}", student,
+                group_id, class_id);
         try (Connection dbConnection = getDBConnection()) {
-            if (!DataBaseHelper.doesGroupClassMatch(dbConnection, group_id, class_id)) {
+            if (!DataBaseHelper.doesGroupClassMatch(dbConnection, group_id,
+                    class_id)) {
                 log.traceExit("Group and class didn't match");
                 return false;
             }
@@ -673,8 +702,10 @@ public class Database {
                 // execute query
                 insert.executeUpdate();
                 log.traceExit("Adding succesful");
+                dbConnection.close();
                 return true;
             }
+
         } catch (SQLException e) {
             log.catching(e);
             log.traceExit("Adding failed");
@@ -704,47 +735,47 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
         log.traceExit(student);
         return student;
     }
-    
+
     public Optional<List<Student>> getAllStudentsFromClass(int class_id) {
         log.traceEntry("Getting all students from class {}", class_id);
         try {
-            List<Student> result = DataBaseHelper.query(Database::getDBConnection, ""
-                    + "SELECT st._id,\n"
-                    + "       st.username,\n"
-                    + "       st.gender,\n"
-                    + "       st.age\n"
-                    + "  FROM public.\"Groups\" AS gr,\n"
-                    + "       public.\"Student_Classes\" AS sc,\n"
-                    + "       public.\"Students\" AS st\n"
-                    + " WHERE st._id = sc.student_id\n"
-                    + "   AND gr._id = sc.group_id\n"
-                    + "   AND gr.class_id = ?\n"
-                    + "   AND sc._id = (SELECT sc2._id\n"
-                    + "                   FROM public.\"Student_Classes\" as sc2\n"
-                    + "                  WHERE sc.student_id = sc2.student_id\n"
-                    + "                 ORDER BY sc2.creation_date DESC\n"
-                    + "                 LIMIT 1)"
-                    + "ORDER BY st.username",
-                    select -> select.setInt(1, class_id),
-                    results -> {
+            List<Student> result = DataBaseHelper.query(
+                    Database::getDBConnection,
+                    "" + "SELECT st._id,\n" + "       st.username,\n"
+                            + "       st.gender,\n" + "       st.age\n"
+                            + "  FROM public.\"Groups\" AS gr,\n"
+                            + "       public.\"Student_Classes\" AS sc,\n"
+                            + "       public.\"Students\" AS st\n"
+                            + " WHERE st._id = sc.student_id\n"
+                            + "   AND gr._id = sc.group_id\n"
+                            + "   AND gr.class_id = ?\n"
+                            + "   AND sc._id = (SELECT sc2._id\n"
+                            + "                   FROM public.\"Student_Classes\" as sc2\n"
+                            + "                  WHERE sc.student_id = sc2.student_id\n"
+                            + "                 ORDER BY sc2.creation_date DESC\n"
+                            + "                 LIMIT 1)"
+                            + "ORDER BY st.username",
+                    select -> select.setInt(1, class_id), results -> {
                         List<Student> students = new ArrayList<>();
-                        for (ResultSet r: results) {
-                            students.add(new Student() {{
-                                _id = r.getInt("_id");
-                                age = r.getInt("age");
-                                username = r.getString("username");
-                                gender = r.getString("gender");
-                            }});
+                        for (ResultSet r : results) {
+                            students.add(new Student() {
+                                {
+                                    _id = r.getInt("_id");
+                                    age = r.getInt("age");
+                                    username = r.getString("username");
+                                    gender = r.getString("gender");
+                                }
+                            });
                         }
                         return students;
-                    }
-            );
+                    });
             log.traceExit(result);
             return Optional.of(result);
         } catch (SQLException e) {
@@ -766,15 +797,18 @@ public class Database {
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     if (result.next()) {
-                        student = Optional.of(new Student() {{
-                            this.username = username_;
-                            _id = result.getInt("_id");
-                            age = result.getInt("age");
-                            gender = result.getString("gender");
-                        }});
+                        student = Optional.of(new Student() {
+                            {
+                                this.username = username_;
+                                _id = result.getInt("_id");
+                                age = result.getInt("age");
+                                gender = result.getString("gender");
+                            }
+                        });
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -794,13 +828,16 @@ public class Database {
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     if (result.next()) {
-                        teacher = Optional.of(new Teacher() {{
-                            this.username = username_;
-                            _id = result.getInt("_id");
-                        }});
+                        teacher = Optional.of(new Teacher() {
+                            {
+                                this.username = username_;
+                                _id = result.getInt("_id");
+                            }
+                        });
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -820,34 +857,38 @@ public class Database {
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     if (result.next()) {
-                        researcher = Optional.of(new Researcher() {{
-                            this.username = username_;
-                            id = result.getInt("_id");
-                        }});
+                        researcher = Optional.of(new Researcher() {
+                            {
+                                this.username = username_;
+                                id = result.getInt("_id");
+                            }
+                        });
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
         log.traceExit(researcher);
         return researcher;
     }
-    
+
     public boolean doesStudentUsernameExistInDatabase(Student student) {
         log.traceEntry("Checking if student {} exists in database", student);
         boolean exists = false;
         try (Connection dbConnection = getDBConnection()) {
             String statement = "Select username FROM public.\"Students\" as std WHERE std.username = ?";
             //prepare statement with student_id
-            try (PreparedStatement select = dbConnection.
-                    prepareStatement(statement)) {
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(statement)) {
                 select.setString(1, student.getUsername());
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
                     exists = result.next();
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -865,7 +906,8 @@ public class Database {
                     + "FROM public.\"Classes\" as cls "
                     + "WHERE (cls.teacher_id = ?);";
             //prepare statement with student_id
-            try (PreparedStatement select = dbConnection.prepareStatement(statement)) {
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(statement)) {
                 select.setInt(1, teacher_id);
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
@@ -880,6 +922,7 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -901,7 +944,8 @@ public class Database {
                     + "ON cls._id = gr.class_id "
                     + "WHERE (st_cls.student_id = ?);";
             //prepare statement with student_id
-            try (PreparedStatement select = dbConnection.prepareStatement(statement)) {
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(statement)) {
                 select.setInt(1, student_id);
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
@@ -915,56 +959,57 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
         log.traceExit(classes);
         return classes;
     }
-	
-	public void closeGroup(int group_id) {
-		try(Connection dbConnection = getDBConnection()) {
-	        String update_statement = "UPDATE public.\"Groups\" "
-	        						+ "SET open = false " 
-	        						+ "WHERE (_id = ?);" ;
-	        try(PreparedStatement update = dbConnection.
-	        		prepareStatement(update_statement)) {
-	        	update.setInt(1, group_id);
-	            // execute query
-	            update.executeUpdate();
-            };
-	    } catch (SQLException e) {
-	    	System.out.println(e.getMessage());
-	    }
-	}
-	
-	public boolean doesGroupExistInDatabase(int group_id) {
-		boolean exists = false;
-		try(Connection dbConnection = getDBConnection()) {
-	        String statement = "Select username FROM public.\"Groups\" as std WHERE std.username = ?";
-	        //prepare statement with student_id
-	        try(PreparedStatement select = dbConnection.
-	        		prepareStatement(statement)) {
-	        	select.setInt(1, group_id);
-	            // execute query
-	            try(ResultSet result = select.executeQuery()) {
-	            	if(result.next()) {
-	            		exists = true;
-                	}
+
+    public void closeGroup(int group_id) {
+        try (Connection dbConnection = getDBConnection()) {
+            String update_statement = "UPDATE public.\"Groups\" "
+                    + "SET open = false " + "WHERE (_id = ?);";
+            try (PreparedStatement update = dbConnection
+                    .prepareStatement(update_statement)) {
+                update.setInt(1, group_id);
+                // execute query
+                update.executeUpdate();
+            }
+            dbConnection.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public boolean doesGroupExistInDatabase(int group_id) {
+        boolean exists = false;
+        try (Connection dbConnection = getDBConnection()) {
+            String statement = "Select username FROM public.\"Groups\" as std WHERE std.username = ?";
+            //prepare statement with student_id
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(statement)) {
+                select.setInt(1, group_id);
+                // execute query
+                try (ResultSet result = select.executeQuery()) {
+                    if (result.next()) {
+                        exists = true;
+                    }
                 }
             }
-	    } catch (SQLException e) {
-	    	System.out.println(e.getMessage());
-	    }
-		return exists;
-	}
-	
+            dbConnection.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return exists;
+    }
 
-	public void updateGroupName(int class_id, int group_id, Group group) {
+    public void updateGroupName(int class_id, int group_id, Group group) {
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "UPDATE public.\"Groups\" "+ 
-            		"SET name = ? WHERE (_id = ?) and (class_id = ?);";
+            String statement = "UPDATE public.\"Groups\" "
+                    + "SET name = ? WHERE (_id = ?) and (class_id = ?);";
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
                 insert.setString(1, group.getName());
@@ -973,28 +1018,29 @@ public class Database {
                 // execute query
                 int count = insert.executeUpdate();
                 if (count == 0) {
-                	// update unsuccessful
-                	throw new GroupUpdateUnsuccessful();
+                    // update unsuccessful
+                    throw new GroupUpdateUnsuccessful();
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-        }        
-	}
-	
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-    
+        }
+    }
+
+    /////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
+
     // TODO: Use optional
     private static Connection getDBConnection() {
         try {
@@ -1009,10 +1055,11 @@ public class Database {
     public void putAnswerToQuestion(Answer answer, int class_id) {
         log.traceEntry("Adding answer {}", answer);
         // finding his group_id
-        Group group = getGroupForStudent(class_id, answer.student_id).orElse(null);
+        Group group = getGroupForStudent(class_id, answer.student_id)
+                .orElse(null);
         int group_id = -1;
-        if (group != null){
-        	group_id = group._id;
+        if (group != null) {
+            group_id = group._id;
         }
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -1031,6 +1078,7 @@ public class Database {
                 // execute query
                 insert.executeUpdate();
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -1039,7 +1087,8 @@ public class Database {
 
     public List<Answer> getAnswersFromStudentSurvey(int student_id,
             int survey_id) {
-        log.traceEntry("Getting answers from student {} survey {}", student_id, survey_id);
+        log.traceEntry("Getting answers from student {} survey {}", student_id,
+                survey_id);
         ArrayList<Answer> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -1063,6 +1112,7 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -1072,7 +1122,9 @@ public class Database {
 
     public List<GroupThemeAverage> getAverageAnswersFromGroup(int class_id,
             int group_id, int survey_id) {
-        log.traceEntry("Getting average answers for survey {} for group {} in class {}", survey_id, group_id, class_id);
+        log.traceEntry(
+                "Getting average answers for survey {} for group {} in class {}",
+                survey_id, group_id, class_id);
         ArrayList<GroupThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -1107,6 +1159,7 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -1114,81 +1167,75 @@ public class Database {
         return answers;
     }
 
-   
-    public List<StudentGroup> getGroupsWithStudents(int _class_id, boolean all) {
+    public List<StudentGroup> getGroupsWithStudents(int _class_id,
+            boolean all) {
         log.traceEntry("Getting groups and students in class {}", _class_id);
         Map<Integer, StudentGroup> studentGroups = new TreeMap<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-        	String statement = null;
-        	if (all) {
-    			statement = "" 
-    					// Select all open groups with students 
-    	                + "SELECT g._id as group_id,\n" 
-    	                + "       g.name as group_name,\n"
-    	                + "       g.open as group_open,\n"
-    	                + "       s._id as student_id,\n"
-    	                + "       s.username,\n"
-    	                + "       s.gender,\n"
-    	                + "       s.age,\n"
-    	                + "		  0 as EmptyStudents\n"
-    	                + "  FROM public.\"Students\" as s,\n"
-    	                + "       public.\"Groups\" as g,\n"
-    	                + "       public.\"Student_Classes\" as sc\n"
-    	                + " WHERE g._id = sc.group_id\n"
-    	                + "   AND sc.student_id = s._id\n"
-    	                + "   AND sc.class_id = ?\n"
-    	                + "   AND sc._id = (SELECT sc2._id\n"
-    	                + "                   FROM public.\"Student_Classes\" as sc2\n"
-    	                + "                  WHERE sc.student_id = sc2.student_id\n"
-    	                + "                 ORDER BY sc2.creation_date DESC\n"
-    	                + "                 LIMIT 1) \n"
-    	                // Select all closed groups (without students, 
-    	                //		because a group with students can not be closed )
-    	                + " UNION \n" 
-       	                + "SELECT g2._id as group_id,\n"
-    	                + "       g2.name as group_name,\n"
-    	                + "       g2.open as group_open,\n"
-    	                + "       0 as student_id,\n"
-    	                + "       '' as username,\n"
-    	                + "       '' as gender,\n"
-    	                + "       0 as age,\n"
-    	                + "		  1 as EmptyStudents\n"
-    	                + "  FROM public.\"Groups\" as g2 \n"
-    	                + " WHERE (g2.class_id = ?) "
-    	                + "	  AND (g2.open = false);";
-        	} else {
-    			statement = ""
-    					// Select all open groups with students 
-		                + "SELECT g._id as group_id,\n"
-		                + "       g.name as group_name,\n"
-		                + "       g.open as group_open,\n"
-		                + "       s._id as student_id,\n"
-		                + "       s.username,\n"
-		                + "       s.gender,\n"
-		                + "       s.age,\n"
-		                + "		  0 as EmptyStudents\n"
-		                + "  FROM public.\"Students\" as s,\n"
-		                + "       public.\"Groups\" as g,\n"
-		                + "       public.\"Student_Classes\" as sc\n"
-		                + " WHERE g._id = sc.group_id\n"
-		                + "   AND sc.student_id = s._id\n"
-		                + "   AND sc.class_id = ?\n"
-		                + "   AND sc._id = (SELECT sc2._id\n"
-		                + "                   FROM public.\"Student_Classes\" as sc2\n"
-		                + "                  WHERE sc.student_id = sc2.student_id\n"
-		                + "                 ORDER BY sc2.creation_date DESC\n"
-		                + "                 LIMIT 1)";
-        	}
+            String statement = null;
+            if (all) {
+                statement = ""
+                        // Select all open groups with students 
+                        + "SELECT g._id as group_id,\n"
+                        + "       g.name as group_name,\n"
+                        + "       g.open as group_open,\n"
+                        + "       s._id as student_id,\n"
+                        + "       s.username,\n" + "       s.gender,\n"
+                        + "       s.age,\n" + "		  0 as EmptyStudents\n"
+                        + "  FROM public.\"Students\" as s,\n"
+                        + "       public.\"Groups\" as g,\n"
+                        + "       public.\"Student_Classes\" as sc\n"
+                        + " WHERE g._id = sc.group_id\n"
+                        + "   AND sc.student_id = s._id\n"
+                        + "   AND sc.class_id = ?\n"
+                        + "   AND sc._id = (SELECT sc2._id\n"
+                        + "                   FROM public.\"Student_Classes\" as sc2\n"
+                        + "                  WHERE sc.student_id = sc2.student_id\n"
+                        + "                 ORDER BY sc2.creation_date DESC\n"
+                        + "                 LIMIT 1) \n"
+                        // Select all closed groups (without students, 
+                        //		because a group with students can not be closed )
+                        + " UNION \n" + "SELECT g2._id as group_id,\n"
+                        + "       g2.name as group_name,\n"
+                        + "       g2.open as group_open,\n"
+                        + "       0 as student_id,\n"
+                        + "       '' as username,\n" + "       '' as gender,\n"
+                        + "       0 as age,\n" + "		  1 as EmptyStudents\n"
+                        + "  FROM public.\"Groups\" as g2 \n"
+                        + " WHERE (g2.class_id = ?) "
+                        + "	  AND (g2.open = false);";
+            } else {
+                statement = ""
+                        // Select all open groups with students 
+                        + "SELECT g._id as group_id,\n"
+                        + "       g.name as group_name,\n"
+                        + "       g.open as group_open,\n"
+                        + "       s._id as student_id,\n"
+                        + "       s.username,\n" + "       s.gender,\n"
+                        + "       s.age,\n" + "		  0 as EmptyStudents\n"
+                        + "  FROM public.\"Students\" as s,\n"
+                        + "       public.\"Groups\" as g,\n"
+                        + "       public.\"Student_Classes\" as sc\n"
+                        + " WHERE g._id = sc.group_id\n"
+                        + "   AND sc.student_id = s._id\n"
+                        + "   AND sc.class_id = ?\n"
+                        + "   AND sc._id = (SELECT sc2._id\n"
+                        + "                   FROM public.\"Student_Classes\" as sc2\n"
+                        + "                  WHERE sc.student_id = sc2.student_id\n"
+                        + "                 ORDER BY sc2.creation_date DESC\n"
+                        + "                 LIMIT 1)";
+            }
             //prepare statement with survey_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
                 if (all) {
-                	select.setInt(1, _class_id);
-                	select.setInt(2, _class_id);
+                    select.setInt(1, _class_id);
+                    select.setInt(2, _class_id);
                 } else {
-                	select.setInt(1, _class_id);
-                };
+                    select.setInt(1, _class_id);
+                }
+                ;
 
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
@@ -1202,39 +1249,45 @@ public class Database {
                         int noStudent = result.getInt("EmptyStudents");
                         // add Student to Group
                         studentGroups.compute(result.getInt("group_id"),
-                            (group_id, group) -> {
-                                if (group == null) {
-                                    group = new StudentGroup(){{
-                                        this._id = group_id;
-                                        this.name = group_name;
-                                        this.open = group_open;
-                                        this.class_id = _class_id;
-                                    }};
-                                }
-                                if (noStudent == 0) {
-	                                group.students.add(new Student() {{
-	                                    this._id = student_id;
-	                                    this.username = _username;
-	                                    this.gender = _gender;
-	                                    this.age = _age;
-	                                }});
-                                };
-                                return group;
-                                
-                            });
+                                (group_id, group) -> {
+                                    if (group == null) {
+                                        group = new StudentGroup() {
+                                            {
+                                                this._id = group_id;
+                                                this.name = group_name;
+                                                this.open = group_open;
+                                                this.class_id = _class_id;
+                                            }
+                                        };
+                                    }
+                                    if (noStudent == 0) {
+                                        group.students.add(new Student() {
+                                            {
+                                                this._id = student_id;
+                                                this.username = _username;
+                                                this.gender = _gender;
+                                                this.age = _age;
+                                            }
+                                        });
+                                    }
+                                    ;
+                                    return group;
+
+                                });
                     }
                     //hotfix TODO refactor
                     // adding missing groups
-                    for(Group group : getAllGroupsFromClass(_class_id,all)){
-                    	if(!studentGroups.containsKey(group._id)){
-                    		StudentGroup gr = new StudentGroup();
-                    		gr._id = group._id;
-                    		gr.name = group.name;
-                    		studentGroups.put(group._id, gr);
-                    	}
+                    for (Group group : getAllGroupsFromClass(_class_id, all)) {
+                        if (!studentGroups.containsKey(group._id)) {
+                            StudentGroup gr = new StudentGroup();
+                            gr._id = group._id;
+                            gr.name = group.name;
+                            studentGroups.put(group._id, gr);
+                        }
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -1244,7 +1297,8 @@ public class Database {
 
     public List<ClassThemeAverage> getClassThemeAverage(int class_id,
             int survey_id) {
-        log.traceEntry("Getting average for survey {} in class {}", survey_id, class_id);
+        log.traceEntry("Getting average for survey {} in class {}", survey_id,
+                class_id);
         ArrayList<ClassThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -1282,6 +1336,7 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -1291,7 +1346,8 @@ public class Database {
 
     public List<StudentThemeAverage> getStudentThemeAverage(int survey_id,
             int student_id) {
-        log.traceEntry("Getting average for survey {} in student {}", survey_id, student_id);
+        log.traceEntry("Getting average for survey {} in student {}", survey_id,
+                student_id);
         ArrayList<StudentThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -1326,6 +1382,7 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -1333,173 +1390,14 @@ public class Database {
         return answers;
     }
 
-    public Optional<List<ListStudentThemeAverage>> getStudentThemeAverageProgression(int student_id, int amount) {
-        log.traceEntry("Getting progression of {} for student {}", amount, student_id);
-        try {
-            List<ListStudentThemeAverage> result = DataBaseHelper.query(Database::getDBConnection, ""
-                    + "SELECT * FROM (\n"
-                    + "    SELECT\n"
-                    + "        DENSE_RANK() OVER(ORDER BY su._id ASC) AS survey_rank,\n"
-                    + "        avg(an.answer) as average,\n"
-                    + "        su._id as survey_id,\n"
-                    + "        su.class_id,\n"
-                    + "        su.start_date,\n"
-                    + "        su.end_date,\n"
-                    + "        su.title as survey_title,\n"
-                    + "        su.title_fi as survey_title_fi,\n"
-                    + "        su.description as survey_description,\n"
-                    + "        su.description_fi as survey_description_fi,\n"
-                    + "        su.open as survey_open,\n"
-                    + "        su.teacher_id,\n"
-                    + "        th.title,\n"
-                    + "        th.title_fi,\n"
-                    + "        th.description,\n"
-                    + "        th.description_fi,\n"
-                    + "        th._id as theme_id\n"
-                    + "    FROM public.\"Surveys\" as su,\n"
-                    + "         public.\"Answers\" as an,\n"
-                    + "         public.\"Themes\" as th,\n"
-                    + "         public.\"Questions\" as qu \n"
-                    + "    WHERE qu._id = an.question_id \n"
-                    + "      AND qu.theme_id = th._id \n"
-                    + "      AND an.student_id = ? \n"
-                    + "      AND su._id = an.survey_id \n"
-                    + "    GROUP BY su._id, th._id\n"
-                    + "    ORDER BY su.start_date ASC, th._id\n"
-                    + ") x WHERE x.survey_rank <= ?",
-                    select -> {
-                        select.setInt(1, student_id);
-                        select.setInt(2, amount);
-                    },
-                    results -> new ArrayList<ListStudentThemeAverage>() {{
-                        int last_survey_rank = -2;
-                        for (ResultSet result : results) {
-                            StudentThemeAverage answer = new StudentThemeAverage();
-                            answer.setAnswer(result.getFloat("average"));
-                            answer.setTheme_title(result.getString("title"));
-                            answer.setTheme_title_fi(result.getString("title_fi"));
-                            answer.setDescription(result.getString("description"));
-                            answer.setDescription_fi(result.getString("description_fi"));
-                            answer.setTheme_id(result.getInt("theme_id"));
-                            answer.setStart_date(result.getString("start_date"));
-                            answer.setStudent_id(student_id);
-                            answer.setSurvey_id(result.getInt("survey_id"));
-                            int survey_rank = result.getInt("survey_rank") - 1;
-                            if (last_survey_rank == survey_rank) {
-                                this.get(survey_rank).themes.add(answer);
-                            } else {
-                                last_survey_rank = survey_rank;
-                                this.add(new ListStudentThemeAverage() {{
-                                    this.themes = Lists.newArrayList(answer);
-                                    this.survey = new Survey() {{
-                                         
-                                    }};
-                                }});
-                            }
-                        }
-                    }}
-            );
-            log.traceExit(result);
-            return Optional.of(result);
-        } catch (SQLException e) {
-            log.catching(e);
-            log.traceExit("No average returned");
-            return Optional.empty();
-        }
-    }
-
-    public Optional<List<ListStudentThemeAverage>> getStudentThemeAverageProgressionInClass(int class_id_,
+    public Optional<List<ListStudentThemeAverage>> getStudentThemeAverageProgression(
             int student_id, int amount) {
-        log.traceEntry("Getting progression of {} for student {} in class {}", amount, student_id, class_id_);
+        log.traceEntry("Getting progression of {} for student {}", amount,
+                student_id);
         try {
-            List<ListStudentThemeAverage> result = DataBaseHelper.query(Database::getDBConnection, ""
-                    + "SELECT * FROM (\n"
-                    + "    SELECT\n"
-                    + "        DENSE_RANK() OVER(ORDER BY su._id ASC) AS survey_rank,\n"
-                    + "        avg(an.answer) as average,\n"
-                    + "        su._id as survey_id,\n"
-                    + "        su.start_date,\n"
-                    + "        su.end_date,\n"
-                    + "        su.title as survey_title,\n"
-                    + "        su.title as survey_title_fi,\n"
-                    + "        su.description as survey_description,\n"
-                    + "        su.description as survey_description_fi,\n"
-                    + "        su.open as survey_open,\n"
-                    + "        su.teacher_id,\n"
-                    + "        th.title,\n"
-                    + "        th.title_fi,\n"
-                    + "        th.description,\n"
-                    + "        th.description_fi,\n"
-                    + "        th._id as theme_id\n"
-                    + "    FROM public.\"Surveys\" as su,\n"
-                    + "         public.\"Answers\" as an,\n"
-                    + "         public.\"Student_Classes\" as sc,\n"
-                    + "         public.\"Themes\" as th,\n"
-                    + "         public.\"Questions\" as qu \n"
-                    + "    WHERE qu._id = an.question_id \n"
-                    + "      AND qu.theme_id = th._id \n"
-                    + "      AND an.student_id = ? \n"
-                    + "      AND su._id = an.survey_id \n"
-                    + "      AND sc.student_id = an.student_id\n"
-                    + "      AND sc.class_id = ?\n"
-                    + "    GROUP BY su._id, th._id\n"
-                    + "    ORDER BY su.start_date ASC, th._id\n"
-                    + ") x WHERE x.survey_rank <= ?",
-                    select -> {
-                        select.setInt(1, student_id);
-                        select.setInt(2, class_id_);
-                        select.setInt(3, amount);
-                    },
-                    results -> new ArrayList<ListStudentThemeAverage>() {{
-                        int last_survey_rank = -2;
-                        for (ResultSet result : results) {
-                            StudentThemeAverage answer = new StudentThemeAverage();
-                            answer.setAnswer(result.getFloat("average"));
-                            answer.setTheme_title(result.getString("title"));
-                            answer.setTheme_title_fi(result.getString("title_fi"));
-                            answer.setDescription(result.getString("description"));
-                            answer.setDescription_fi(result.getString("description_fi"));
-                            answer.setTheme_id(result.getInt("theme_id"));
-                            answer.setStart_date(result.getString("start_date"));
-                            answer.setStudent_id(student_id);
-                            answer.setSurvey_id(result.getInt("survey_id"));
-                            int survey_rank = result.getInt("survey_rank") - 1;
-                            if (last_survey_rank == survey_rank) {
-                                this.get(survey_rank).themes.add(answer);
-                            } else {
-                                last_survey_rank = survey_rank;
-                                this.add(new ListStudentThemeAverage() {{
-                                    this.themes = Lists.newArrayList(answer);
-                                    this.survey = new Survey() {{
-                                        this._id = result.getInt("survey_id");
-                                        this.class_id = class_id_;
-                                        this.description = result.getString("survey_description");
-                                        this.start_date = result.getTimestamp("start_date");
-                                        this.end_date = result.getTimestamp("end_date");
-                                        this.open = result.getBoolean("survey_open");
-                                        this.teacher_id = result.getInt("teacher_id");
-                                        this.title = result.getString("survey_title");
-                                    }};
-                                }});
-                            }
-                        }
-                    }}
-            );
-            log.traceExit(result);
-            return Optional.of(result);
-        } catch (SQLException e) {
-            log.catching(e);
-            log.traceExit("No average returned");
-            return Optional.empty();
-        }
-    }
-
-    public Optional<List<ListGroupThemeAverage>> getGroupThemeAverageProgression(int class_id_,
-            int group_id, int amount) {
-        log.traceEntry("Getting progression of {} for group {} in class {}", amount, group_id, class_id_);
-        try {
-            List<ListGroupThemeAverage> result = DataBaseHelper.query(Database::getDBConnection, ""
-                            + "SELECT \n"
+            List<ListStudentThemeAverage> result = DataBaseHelper.query(
+                    Database::getDBConnection,
+                    "" + "SELECT * FROM (\n" + "    SELECT\n"
                             + "        DENSE_RANK() OVER(ORDER BY su._id ASC) AS survey_rank,\n"
                             + "        avg(an.answer) as average,\n"
                             + "        su._id as survey_id,\n"
@@ -1511,8 +1409,203 @@ public class Database {
                             + "        su.description as survey_description,\n"
                             + "        su.description_fi as survey_description_fi,\n"
                             + "        su.open as survey_open,\n"
-                            + "        su.teacher_id,\n" 
-                            + "        th.title,\n"
+                            + "        su.teacher_id,\n" + "        th.title,\n"
+                            + "        th.title_fi,\n"
+                            + "        th.description,\n"
+                            + "        th.description_fi,\n"
+                            + "        th._id as theme_id\n"
+                            + "    FROM public.\"Surveys\" as su,\n"
+                            + "         public.\"Answers\" as an,\n"
+                            + "         public.\"Themes\" as th,\n"
+                            + "         public.\"Questions\" as qu \n"
+                            + "    WHERE qu._id = an.question_id \n"
+                            + "      AND qu.theme_id = th._id \n"
+                            + "      AND an.student_id = ? \n"
+                            + "      AND su._id = an.survey_id \n"
+                            + "    GROUP BY su._id, th._id\n"
+                            + "    ORDER BY su.start_date ASC, th._id\n"
+                            + ") x WHERE x.survey_rank <= ?",
+                    select -> {
+                        select.setInt(1, student_id);
+                        select.setInt(2, amount);
+                    }, results -> new ArrayList<ListStudentThemeAverage>() {
+                        {
+                            int last_survey_rank = -2;
+                            for (ResultSet result : results) {
+                                StudentThemeAverage answer = new StudentThemeAverage();
+                                answer.setAnswer(result.getFloat("average"));
+                                answer.setTheme_title(
+                                        result.getString("title"));
+                                answer.setTheme_title_fi(
+                                        result.getString("title_fi"));
+                                answer.setDescription(
+                                        result.getString("description"));
+                                answer.setDescription_fi(
+                                        result.getString("description_fi"));
+                                answer.setTheme_id(result.getInt("theme_id"));
+                                answer.setStart_date(
+                                        result.getString("start_date"));
+                                answer.setStudent_id(student_id);
+                                answer.setSurvey_id(result.getInt("survey_id"));
+                                int survey_rank = result.getInt("survey_rank")
+                                        - 1;
+                                if (last_survey_rank == survey_rank) {
+                                    this.get(survey_rank).themes.add(answer);
+                                } else {
+                                    last_survey_rank = survey_rank;
+                                    this.add(new ListStudentThemeAverage() {
+                                        {
+                                            this.themes = Lists
+                                                    .newArrayList(answer);
+                                            this.survey = new Survey() {
+                                                {
+
+                                                }
+                                            };
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    });
+            log.traceExit(result);
+            return Optional.of(result);
+        } catch (SQLException e) {
+            log.catching(e);
+            log.traceExit("No average returned");
+            return Optional.empty();
+        }
+    }
+
+    public Optional<List<ListStudentThemeAverage>> getStudentThemeAverageProgressionInClass(
+            int class_id_, int student_id, int amount) {
+        log.traceEntry("Getting progression of {} for student {} in class {}",
+                amount, student_id, class_id_);
+        try {
+            List<ListStudentThemeAverage> result = DataBaseHelper.query(
+                    Database::getDBConnection,
+                    "" + "SELECT * FROM (\n" + "    SELECT\n"
+                            + "        DENSE_RANK() OVER(ORDER BY su._id ASC) AS survey_rank,\n"
+                            + "        avg(an.answer) as average,\n"
+                            + "        su._id as survey_id,\n"
+                            + "        su.start_date,\n"
+                            + "        su.end_date,\n"
+                            + "        su.title as survey_title,\n"
+                            + "        su.title as survey_title_fi,\n"
+                            + "        su.description as survey_description,\n"
+                            + "        su.description as survey_description_fi,\n"
+                            + "        su.open as survey_open,\n"
+                            + "        su.teacher_id,\n" + "        th.title,\n"
+                            + "        th.title_fi,\n"
+                            + "        th.description,\n"
+                            + "        th.description_fi,\n"
+                            + "        th._id as theme_id\n"
+                            + "    FROM public.\"Surveys\" as su,\n"
+                            + "         public.\"Answers\" as an,\n"
+                            + "         public.\"Student_Classes\" as sc,\n"
+                            + "         public.\"Themes\" as th,\n"
+                            + "         public.\"Questions\" as qu \n"
+                            + "    WHERE qu._id = an.question_id \n"
+                            + "      AND qu.theme_id = th._id \n"
+                            + "      AND an.student_id = ? \n"
+                            + "      AND su._id = an.survey_id \n"
+                            + "      AND sc.student_id = an.student_id\n"
+                            + "      AND sc.class_id = ?\n"
+                            + "    GROUP BY su._id, th._id\n"
+                            + "    ORDER BY su.start_date ASC, th._id\n"
+                            + ") x WHERE x.survey_rank <= ?",
+                    select -> {
+                        select.setInt(1, student_id);
+                        select.setInt(2, class_id_);
+                        select.setInt(3, amount);
+                    }, results -> new ArrayList<ListStudentThemeAverage>() {
+                        {
+                            int last_survey_rank = -2;
+                            for (ResultSet result : results) {
+                                StudentThemeAverage answer = new StudentThemeAverage();
+                                answer.setAnswer(result.getFloat("average"));
+                                answer.setTheme_title(
+                                        result.getString("title"));
+                                answer.setTheme_title_fi(
+                                        result.getString("title_fi"));
+                                answer.setDescription(
+                                        result.getString("description"));
+                                answer.setDescription_fi(
+                                        result.getString("description_fi"));
+                                answer.setTheme_id(result.getInt("theme_id"));
+                                answer.setStart_date(
+                                        result.getString("start_date"));
+                                answer.setStudent_id(student_id);
+                                answer.setSurvey_id(result.getInt("survey_id"));
+                                int survey_rank = result.getInt("survey_rank")
+                                        - 1;
+                                if (last_survey_rank == survey_rank) {
+                                    this.get(survey_rank).themes.add(answer);
+                                } else {
+                                    last_survey_rank = survey_rank;
+                                    this.add(new ListStudentThemeAverage() {
+                                        {
+                                            this.themes = Lists
+                                                    .newArrayList(answer);
+                                            this.survey = new Survey() {
+                                                {
+                                                    this._id = result.getInt(
+                                                            "survey_id");
+                                                    this.class_id = class_id_;
+                                                    this.description = result
+                                                            .getString(
+                                                                    "survey_description");
+                                                    this.start_date = result
+                                                            .getTimestamp(
+                                                                    "start_date");
+                                                    this.end_date = result
+                                                            .getTimestamp(
+                                                                    "end_date");
+                                                    this.open = result
+                                                            .getBoolean(
+                                                                    "survey_open");
+                                                    this.teacher_id = result
+                                                            .getInt("teacher_id");
+                                                    this.title = result
+                                                            .getString(
+                                                                    "survey_title");
+                                                }
+                                            };
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    });
+            log.traceExit(result);
+            return Optional.of(result);
+        } catch (SQLException e) {
+            log.catching(e);
+            log.traceExit("No average returned");
+            return Optional.empty();
+        }
+    }
+
+    public Optional<List<ListGroupThemeAverage>> getGroupThemeAverageProgression(
+            int class_id_, int group_id, int amount) {
+        log.traceEntry("Getting progression of {} for group {} in class {}",
+                amount, group_id, class_id_);
+        try {
+            List<ListGroupThemeAverage> result = DataBaseHelper.query(
+                    Database::getDBConnection,
+                    "" + "SELECT \n"
+                            + "        DENSE_RANK() OVER(ORDER BY su._id ASC) AS survey_rank,\n"
+                            + "        avg(an.answer) as average,\n"
+                            + "        su._id as survey_id,\n"
+                            + "        su.class_id,\n"
+                            + "        su.start_date,\n"
+                            + "        su.end_date,\n"
+                            + "        su.title as survey_title,\n"
+                            + "        su.title_fi as survey_title_fi,\n"
+                            + "        su.description as survey_description,\n"
+                            + "        su.description_fi as survey_description_fi,\n"
+                            + "        su.open as survey_open,\n"
+                            + "        su.teacher_id,\n" + "        th.title,\n"
                             + "        th.title_fi,\n"
                             + "        th.description,\n"
                             + "        th.description_fi,\n"
@@ -1526,46 +1619,74 @@ public class Database {
                     select -> {
                         select.setInt(1, class_id_);
                         select.setInt(2, group_id);
-                   //     select.setInt(3, amount);
+                        //     select.setInt(3, amount);
                     },
 
-                    results -> new ArrayList<ListGroupThemeAverage>() {{
-                        int last_survey_rank = -2;
-                        for (ResultSet result : results) {
-                            GroupThemeAverage answer = new GroupThemeAverage();
-                            answer.setAnswer(result.getFloat("average"));
-                            answer.setTheme_title(result.getString("title"));
-                            answer.setTheme_title_fi(result.getString("title_fi"));
-                            answer.setDescription(result.getString("description"));
-                            answer.setDescription_fi(result.getString("description_fi"));
-                            answer.setTheme_id(result.getInt("theme_id"));
-                            answer.setStart_date(result.getString("start_date"));
-                            answer.setGroup_id(group_id);
-                            answer.setSurvey_id(result.getInt("survey_id"));
-                            int survey_rank = result.getInt("survey_rank") - 1;
-                            if (last_survey_rank == survey_rank) {
-                                this.get(survey_rank).themes.add(answer);
-                            } else {
-                                last_survey_rank = survey_rank;
-                                this.add(new ListGroupThemeAverage() {{
-                                    this.themes = Lists.newArrayList(answer);
-                                    this.survey = new Survey() {{
-                                        this._id = result.getInt("survey_id");
-                                        this.class_id = class_id_;
-                                        this.description = result.getString("survey_description");
-                                        this.description_fi = result.getString("survey_description_fi");
-                                        this.start_date = result.getTimestamp("start_date");
-                                        this.end_date = result.getTimestamp("end_date");
-                                        this.open = result.getBoolean("survey_open");
-                                        this.teacher_id = result.getInt("teacher_id");
-                                        this.title = result.getString("survey_title");
-                                        this.title_fi = result.getString("survey_title_fi");
-                                    }};
-                                }});
+                    results -> new ArrayList<ListGroupThemeAverage>() {
+                        {
+                            int last_survey_rank = -2;
+                            for (ResultSet result : results) {
+                                GroupThemeAverage answer = new GroupThemeAverage();
+                                answer.setAnswer(result.getFloat("average"));
+                                answer.setTheme_title(
+                                        result.getString("title"));
+                                answer.setTheme_title_fi(
+                                        result.getString("title_fi"));
+                                answer.setDescription(
+                                        result.getString("description"));
+                                answer.setDescription_fi(
+                                        result.getString("description_fi"));
+                                answer.setTheme_id(result.getInt("theme_id"));
+                                answer.setStart_date(
+                                        result.getString("start_date"));
+                                answer.setGroup_id(group_id);
+                                answer.setSurvey_id(result.getInt("survey_id"));
+                                int survey_rank = result.getInt("survey_rank")
+                                        - 1;
+                                if (last_survey_rank == survey_rank) {
+                                    this.get(survey_rank).themes.add(answer);
+                                } else {
+                                    last_survey_rank = survey_rank;
+                                    this.add(new ListGroupThemeAverage() {
+                                        {
+                                            this.themes = Lists
+                                                    .newArrayList(answer);
+                                            this.survey = new Survey() {
+                                                {
+                                                    this._id = result.getInt(
+                                                            "survey_id");
+                                                    this.class_id = class_id_;
+                                                    this.description = result
+                                                            .getString(
+                                                                    "survey_description");
+                                                    this.description_fi = result
+                                                            .getString(
+                                                                    "survey_description_fi");
+                                                    this.start_date = result
+                                                            .getTimestamp(
+                                                                    "start_date");
+                                                    this.end_date = result
+                                                            .getTimestamp(
+                                                                    "end_date");
+                                                    this.open = result
+                                                            .getBoolean(
+                                                                    "survey_open");
+                                                    this.teacher_id = result
+                                                            .getInt("teacher_id");
+                                                    this.title = result
+                                                            .getString(
+                                                                    "survey_title");
+                                                    this.title_fi = result
+                                                            .getString(
+                                                                    "survey_title_fi");
+                                                }
+                                            };
+                                        }
+                                    });
+                                }
                             }
                         }
-                    }}
-            );
+                    });
             log.traceExit(result);
             return Optional.of(result);
         } catch (SQLException e) {
@@ -1574,84 +1695,113 @@ public class Database {
             return Optional.empty();
         }
     }
-    
+
     //Is this used by the front end at all?
-    public Optional<List<ListClassThemeAverage>> getClassThemeAverageProgression(int class_id_, int amount) {
-        log.traceEntry("Getting progression of {} for class {}", amount, class_id_);
+    public Optional<List<ListClassThemeAverage>> getClassThemeAverageProgression(
+            int class_id_, int amount) {
+        log.traceEntry("Getting progression of {} for class {}", amount,
+                class_id_);
         try {
-            List<ListClassThemeAverage> result = DataBaseHelper.query(Database::getDBConnection, ""
-                    + "SELECT * FROM (\n"
-                    + "    SELECT\n"
-                    + "        DENSE_RANK() OVER(ORDER BY su._id ASC) AS survey_rank,\n"
-                    + "        avg(an.answer) as average,\n"
-                    + "        su._id as survey_id,\n"
-                    + "        su.class_id,\n"
-                    + "        su.start_date,\n"
-                    + "        su.end_date,\n"
-                    + "        su.title as survey_title,\n"
-                    + "        su.title_fi as survey_title_fi,\n"
-                    + "        su.description as survey_description,\n"
-                    + "        su.description_fi as survey_description_fi,\n"
-                    + "        su.open as survey_open,\n"
-                    + "        su.teacher_id,\n"
-                    + "        th.title,\n"
-                    + "        th.title_fi,\n"
-                    + "        th.description,\n"
-                    + "        th.description_fi,\n"
-                    + "        th._id as theme_id\n"
-                    + "    FROM public.\"Surveys\" as su,\n"
-                    + "         public.\"Answers\" as an,\n"
-                    + "	        public.\"Student_Classes\" as sc,\n"
-                    + "         public.\"Themes\" as th,\n"
-                    + "	        public.\"Questions\" as qu \n"
-                    + "    WHERE qu._id = an.question_id \n"
-                    + "      AND qu.theme_id = th._id \n"
-                    + "      AND su._id = an.survey_id \n"
-                    + "      AND sc.student_id = an.student_id\n"
-                    + "      AND sc.class_id = ?\n"
-                    + "    GROUP BY su._id, th._id\n"
-                    + "    ORDER BY su.start_date ASC, th._id\n"
-                    + ") x WHERE x.survey_rank <= ?",
+            List<ListClassThemeAverage> result = DataBaseHelper.query(
+                    Database::getDBConnection,
+                    "" + "SELECT * FROM (\n" + "    SELECT\n"
+                            + "        DENSE_RANK() OVER(ORDER BY su._id ASC) AS survey_rank,\n"
+                            + "        avg(an.answer) as average,\n"
+                            + "        su._id as survey_id,\n"
+                            + "        su.class_id,\n"
+                            + "        su.start_date,\n"
+                            + "        su.end_date,\n"
+                            + "        su.title as survey_title,\n"
+                            + "        su.title_fi as survey_title_fi,\n"
+                            + "        su.description as survey_description,\n"
+                            + "        su.description_fi as survey_description_fi,\n"
+                            + "        su.open as survey_open,\n"
+                            + "        su.teacher_id,\n" + "        th.title,\n"
+                            + "        th.title_fi,\n"
+                            + "        th.description,\n"
+                            + "        th.description_fi,\n"
+                            + "        th._id as theme_id\n"
+                            + "    FROM public.\"Surveys\" as su,\n"
+                            + "         public.\"Answers\" as an,\n"
+                            + "	        public.\"Student_Classes\" as sc,\n"
+                            + "         public.\"Themes\" as th,\n"
+                            + "	        public.\"Questions\" as qu \n"
+                            + "    WHERE qu._id = an.question_id \n"
+                            + "      AND qu.theme_id = th._id \n"
+                            + "      AND su._id = an.survey_id \n"
+                            + "      AND sc.student_id = an.student_id\n"
+                            + "      AND sc.class_id = ?\n"
+                            + "    GROUP BY su._id, th._id\n"
+                            + "    ORDER BY su.start_date ASC, th._id\n"
+                            + ") x WHERE x.survey_rank <= ?",
                     select -> {
                         select.setInt(1, class_id_);
                         select.setInt(2, amount);
-                    },
-                    results -> new ArrayList<ListClassThemeAverage>() {{
-                        int last_survey_rank = -2;
-                        for (ResultSet result : results) {
-                            ClassThemeAverage answer = new ClassThemeAverage();
-                            answer.setAnswer(result.getFloat("average"));
-                            answer.setTheme_title(result.getString("title"));
-                            answer.setTheme_title_fi(result.getString("title_fi"));
-                            answer.setDescription(result.getString("description"));
-                            answer.setDescription_fi(result.getString("description_fi"));
-                            answer.setTheme_id(result.getInt("theme_id"));
-                            answer.setStart_date(result.getString("start_date"));
-                            answer.setClass_id(class_id_);
-                            answer.setSurvey_id(result.getInt("survey_id"));
-                            int survey_rank = result.getInt("survey_rank") - 1;
-                            if (last_survey_rank == survey_rank) {
-                                this.get(survey_rank).themes.add(answer);
-                            } else {
-                                last_survey_rank = survey_rank;
-                                this.add(new ListClassThemeAverage() {{
-                                    this.themes = Lists.newArrayList(answer);
-                                    this.survey = new Survey() {{
-                                        this._id = result.getInt("survey_id");
-                                        this.class_id = class_id_;
-                                        this.description = result.getString("survey_description");
-                                        this.description_fi = result.getString("survey_description_fi");
-                                        this.start_date = result.getTimestamp("start_date");
-                                        this.end_date = result.getTimestamp("end_date");
-                                        this.open = result.getBoolean("survey_open");
-                                        this.teacher_id = result.getInt("teacher_id");
-                                        this.title = result.getString("survey_title");
-                                        this.title_fi = result.getString("survey_title_fi");
-                                    }};
-                                }});
+                    }, results -> new ArrayList<ListClassThemeAverage>() {
+                        {
+                            int last_survey_rank = -2;
+                            for (ResultSet result : results) {
+                                ClassThemeAverage answer = new ClassThemeAverage();
+                                answer.setAnswer(result.getFloat("average"));
+                                answer.setTheme_title(
+                                        result.getString("title"));
+                                answer.setTheme_title_fi(
+                                        result.getString("title_fi"));
+                                answer.setDescription(
+                                        result.getString("description"));
+                                answer.setDescription_fi(
+                                        result.getString("description_fi"));
+                                answer.setTheme_id(result.getInt("theme_id"));
+                                answer.setStart_date(
+                                        result.getString("start_date"));
+                                answer.setClass_id(class_id_);
+                                answer.setSurvey_id(result.getInt("survey_id"));
+                                int survey_rank = result.getInt("survey_rank")
+                                        - 1;
+                                if (last_survey_rank == survey_rank) {
+                                    this.get(survey_rank).themes.add(answer);
+                                } else {
+                                    last_survey_rank = survey_rank;
+                                    this.add(new ListClassThemeAverage() {
+                                        {
+                                            this.themes = Lists
+                                                    .newArrayList(answer);
+                                            this.survey = new Survey() {
+                                                {
+                                                    this._id = result.getInt(
+                                                            "survey_id");
+                                                    this.class_id = class_id_;
+                                                    this.description = result
+                                                            .getString(
+                                                                    "survey_description");
+                                                    this.description_fi = result
+                                                            .getString(
+                                                                    "survey_description_fi");
+                                                    this.start_date = result
+                                                            .getTimestamp(
+                                                                    "start_date");
+                                                    this.end_date = result
+                                                            .getTimestamp(
+                                                                    "end_date");
+                                                    this.open = result
+                                                            .getBoolean(
+                                                                    "survey_open");
+                                                    this.teacher_id = result
+                                                            .getInt("teacher_id");
+                                                    this.title = result
+                                                            .getString(
+                                                                    "survey_title");
+                                                    this.title_fi = result
+                                                            .getString(
+                                                                    "survey_title_fi");
+                                                }
+                                            };
+                                        }
+                                    });
+                                }
                             }
                         }
-                    }});
+                    });
             log.traceExit(result);
             return Optional.of(result);
         } catch (SQLException e) {
@@ -1662,7 +1812,8 @@ public class Database {
     }
 
     public void closeSurvey(int teacher_id, int class_id, int survey_id) {
-        log.traceEntry("Closing survey {} for teacher {} in class {}", survey_id, teacher_id, class_id);
+        log.traceEntry("Closing survey {} for teacher {} in class {}",
+                survey_id, teacher_id, class_id);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "UPDATE public.\"Surveys\" "
@@ -1677,26 +1828,29 @@ public class Database {
                 // execute query
                 insert.executeUpdate();
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
         log.traceExit();
     }
-    
-    public List<StudentThemeAverage> getStudentLifeTimeAverage(int student_id, int class_id){
-        log.traceEntry("Getting student {} average in class {}", student_id, class_id);
-    	ArrayList<StudentThemeAverage> answers = new ArrayList<>();
+
+    public List<StudentThemeAverage> getStudentLifeTimeAverage(int student_id,
+            int class_id) {
+        log.traceEntry("Getting student {} average in class {}", student_id,
+                class_id);
+        ArrayList<StudentThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String select_averages = "SELECT avg(answer),\"Themes\".title,\"Themes\".title_fi,\"Themes\".description,\"Themes\".description_fi,\"Themes\"._id,\"Surveys\".start_date,\"Surveys\"._id,\"Surveys\".title,\"Surveys\".title_fi,\"Surveys\".description,\"Surveys\".description_fi,\"Surveys\".start_date,\"Surveys\".end_date "
-            		+ "FROM public.\"Surveys\",public.\"Answers\", public.\"Student_Classes\",public.\"Groups\", public.\"Themes\", public.\"Questions\" "
-            		+ "WHERE \"Questions\"._id = question_id "
-            		+ "AND \"Questions\".theme_id = \"Themes\"._id "
-            		+ "AND \"Answers\".student_id = ? "
-            		+ "AND \"Groups\".class_id = ?"
-            		+ "AND \"Surveys\"._id = \"Answers\".survey_id "
-            		+ "GROUP BY \"Surveys\"._id,\"Themes\"._id,start_date "
-            		+ "ORDER BY start_date DESC";
+                    + "FROM public.\"Surveys\",public.\"Answers\", public.\"Student_Classes\",public.\"Groups\", public.\"Themes\", public.\"Questions\" "
+                    + "WHERE \"Questions\"._id = question_id "
+                    + "AND \"Questions\".theme_id = \"Themes\"._id "
+                    + "AND \"Answers\".student_id = ? "
+                    + "AND \"Groups\".class_id = ?"
+                    + "AND \"Surveys\"._id = \"Answers\".survey_id "
+                    + "GROUP BY \"Surveys\"._id,\"Themes\"._id,start_date "
+                    + "ORDER BY start_date DESC";
             //prepare statement with survey_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(select_averages)) {
@@ -1720,6 +1874,7 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -1727,20 +1882,22 @@ public class Database {
         return answers;
     }
 
-    public List<StudentThemeAverage> getStudentHistory(int student_id, int class_id){
-        log.traceEntry("Getting student {} history in class {}", student_id, class_id);
-    	ArrayList<StudentThemeAverage> answers = new ArrayList<>();
+    public List<StudentThemeAverage> getStudentHistory(int student_id,
+            int class_id) {
+        log.traceEntry("Getting student {} history in class {}", student_id,
+                class_id);
+        ArrayList<StudentThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String select_averages = "SELECT avg(answer),\"Themes\".title,\"Themes\".title_fi,\"Themes\".description,\"Themes\".description_fi,\"Themes\"._id,\"Surveys\".start_date,\"Surveys\"._id,\"Surveys\".title,\"Surveys\".title_fi,\"Surveys\".description,\"Surveys\".description_fi,\"Surveys\".start_date,\"Surveys\".end_date "
-            		+ "FROM public.\"Surveys\",public.\"Answers\", public.\"Student_Classes\",public.\"Groups\", public.\"Themes\", public.\"Questions\" "
-            		+ "WHERE \"Questions\"._id = question_id "
-            		+ "AND \"Questions\".theme_id = \"Themes\"._id "
-            		+ "AND \"Answers\".student_id = ? "
-            		+ "AND \"Groups\".class_id = ?"
-            		+ "AND \"Surveys\"._id = \"Answers\".survey_id "
-            		+ "GROUP BY \"Surveys\"._id,\"Themes\"._id,start_date "
-            		+ "ORDER BY start_date DESC";
+                    + "FROM public.\"Surveys\",public.\"Answers\", public.\"Student_Classes\",public.\"Groups\", public.\"Themes\", public.\"Questions\" "
+                    + "WHERE \"Questions\"._id = question_id "
+                    + "AND \"Questions\".theme_id = \"Themes\"._id "
+                    + "AND \"Answers\".student_id = ? "
+                    + "AND \"Groups\".class_id = ?"
+                    + "AND \"Surveys\"._id = \"Answers\".survey_id "
+                    + "GROUP BY \"Surveys\"._id,\"Themes\"._id,start_date "
+                    + "ORDER BY start_date DESC";
             //prepare statement with survey_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(select_averages)) {
@@ -1763,17 +1920,19 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
         log.traceExit(answers);
         return answers;
-    	
+
     }
-    
+
     public boolean doesGroupClassMatch(int group_id, int class_id) {
         try (Connection dbConnection = getDBConnection()) {
-            return DataBaseHelper.doesGroupClassMatch(dbConnection, group_id, class_id);
+            return DataBaseHelper.doesGroupClassMatch(dbConnection, group_id,
+                    class_id);
         } catch (SQLException e) {
             log.catching(e);
             return false;
@@ -1786,8 +1945,7 @@ public class Database {
         boolean closed = false;
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String select_open = "SELECT open "
-                    + "FROM public.\"Groups\" "
+            String select_open = "SELECT open " + "FROM public.\"Groups\" "
                     + "WHERE _id = ?; ";
             try (PreparedStatement select = dbConnection
                     .prepareStatement(select_open)) {
@@ -1799,6 +1957,7 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -1811,12 +1970,10 @@ public class Database {
         int count = 0;
         try (Connection dbConnection = getDBConnection()) {
             String select_students_count = "SELECT COUNT(t1.group_id) "
-                    + "FROM public.\"Student_Classes\" AS t1 "
-                    + "INNER JOIN ("
+                    + "FROM public.\"Student_Classes\" AS t1 " + "INNER JOIN ("
                     + "		SELECT student_id, class_id, MAX(creation_date) as maxdate "
                     + "		FROM public.\"Student_Classes\" "
-                    + "		GROUP BY student_id, class_id"
-                    + ") AS t2 "
+                    + "		GROUP BY student_id, class_id" + ") AS t2 "
                     + "ON t1.student_id = t2.student_id "
                     + "	AND t1.class_id = t2.class_id "
                     + "	AND t1.creation_date = t2.maxdate "
@@ -1831,6 +1988,7 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -1860,13 +2018,14 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
         log.traceExit(createdGroup);
         return createdGroup;
     }
-    
+
     public Group createGroupInClass(int class_id, String name) {
         log.traceEntry("Creating group {} in class {}", name, class_id);
         Group createdGroup = null;
@@ -1888,13 +2047,14 @@ public class Database {
                     }
                 }
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
         log.traceExit(createdGroup);
         return createdGroup;
     }
-    
+
     public void addClassToTeacher(Classes teacher_class) {
         log.traceEntry("Add class to teacher {}", teacher_class);
         try (Connection dbConnection = getDBConnection()) {
@@ -1908,6 +2068,7 @@ public class Database {
                 // execute query
                 insert.executeUpdate();
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
@@ -1918,71 +2079,73 @@ public class Database {
         return DATA_SOURCE;
     }
 
-
-	public List<Student> getAllStudents() {//(int teacher_id)  
+    public List<Student> getAllStudents() {//(int teacher_id)  
         log.traceEntry("Getting all students ");//from {}", teacher_id);
         List<Student> students = null;
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-    		String statement = "" 
-		                    + "SELECT s._id,\n"
-		                    + "       s.username,\n"
-		                    + "       s.gender,\n"
-		                    + "       s.age\n"
-		                    + "  FROM public.\"Students\" as s\n";
-		                    //+ " WHERE s._id = (SELECT sc2.student_id\n"
-		                    //+ "           	   FROM public.\"Student_Classes\" as sc2\n"
-		                    //+ "                INNER JOIN public.\"Classes\" as cls\n"
-		                    //+ "                ON (cls.teacher_id = ?)\n"
-		                    //+ "				    AND (cls._id = sc2.class_id)\n"
-		                    //+ "                WHERE s._id = sc2.student_id\n"
-		                    //+ "              	ORDER BY sc2.creation_date DESC\n"
-		                    //+ "            	 	LIMIT 1) \n";
+            String statement = "" + "SELECT s._id,\n" + "       s.username,\n"
+                    + "       s.gender,\n" + "       s.age\n"
+                    + "  FROM public.\"Students\" as s\n";
+            //+ " WHERE s._id = (SELECT sc2.student_id\n"
+            //+ "           	   FROM public.\"Student_Classes\" as sc2\n"
+            //+ "                INNER JOIN public.\"Classes\" as cls\n"
+            //+ "                ON (cls.teacher_id = ?)\n"
+            //+ "				    AND (cls._id = sc2.class_id)\n"
+            //+ "                WHERE s._id = sc2.student_id\n"
+            //+ "              	ORDER BY sc2.creation_date DESC\n"
+            //+ "            	 	LIMIT 1) \n";
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
                 // execute query
-            	students = new ArrayList<Student>();
+                students = new ArrayList<Student>();
                 //insert.setInt(1, teacher_id);
                 try (ResultSet result = insert.executeQuery()) {
                     while (result.next()) {
                         Student student = new Student(result.getInt("_id"),
-                        							  result.getString("username"),
-                        							  result.getString("gender"),
-                        							  result.getInt("age"));  
+                                result.getString("username"),
+                                result.getString("gender"),
+                                result.getInt("age"));
                         students.add(student);
-                    };
-                };
+                    }
+                    ;
+                }
+                ;
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
         log.traceExit(students);
         return students;
-	}
+    }
 
-	public boolean doesStudentIdExistInDatabase(int student_id)	{
-		boolean idExists = false;
-        log.traceEntry("Checking whether a student with student_id = {}", student_id, " exists in databsae.");
+    public boolean doesStudentIdExistInDatabase(int student_id) {
+        boolean idExists = false;
+        log.traceEntry("Checking whether a student with student_id = {}",
+                student_id, " exists in databsae.");
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-    		String statement = "" 
-		                    + "SELECT COUNT(s._id)\n"
-		                    + "  FROM public.\"Students\" as s\n"
-		                    + " WHERE s._id = ?\n";
+            String statement = "" + "SELECT COUNT(s._id)\n"
+                    + "  FROM public.\"Students\" as s\n"
+                    + " WHERE s._id = ?\n";
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
                 // execute query
                 select.setInt(1, student_id);
                 try (ResultSet result = select.executeQuery()) {
                     if (result.next() & (result.getInt(1) != 0)) {
-                    	idExists = true;
-                    };
-                };
+                        idExists = true;
+                    }
+
+                }
+
             }
+            dbConnection.close();
         } catch (SQLException e) {
             log.catching(e);
         }
         log.traceExit(idExists);
         return idExists;
-	}
+    }
 }
