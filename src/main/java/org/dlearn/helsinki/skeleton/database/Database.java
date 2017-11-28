@@ -57,9 +57,9 @@ public class Database {
         try {
             Class.forName(DB_DRIVER);
             DATA_SOURCE.setDriverClassName(DB_DRIVER);
-            DATA_SOURCE.setMaxIdle(20);
-            DATA_SOURCE.setMaxTotal(100);
-            DATA_SOURCE.setPoolPreparedStatements(true);
+            //DATA_SOURCE.setMaxIdle(20);
+            //DATA_SOURCE.setMaxTotal(100);
+            //DATA_SOURCE.setPoolPreparedStatements(true);
             DATA_SOURCE.setInitialSize(1);
             String dbUrl = System.getenv("JDBC_DATABASE_URL");
             if (dbUrl == null) {
