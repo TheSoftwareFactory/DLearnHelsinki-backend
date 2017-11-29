@@ -1,12 +1,39 @@
 #!/usr/bin/python3
 # -*- coding: utf8 -*-
 
-from math import sqrt
+
+"""
+
+Distance metrics and related functions
+
+"""
+
+
+# Computes the City Block (Manhanttan) distance of vectors u and v
+def cityblock(u, v): return minkowski(u, v, 1)
+
 
 # Computes the euclidean distance of vectors u and v 
-def euclidean_distance(u, v): return sqrt(sum([(au-av)**2 for au,av in zip(u, v)])) 
+def euclidean(u, v): return minkowski(u, v, 2)
 
-def k_nearest_neighbors(k, p, data, dist=euclidean_distance):
+
+# Computes the square of euclidean distance of vectors u and v
+def sqeuclidean(u, v): return euclidean(u, v)**2
+
+
+# Computes the p:th Minkoski distance of vectors u and v
+def minkowski(u, v, p=2): return sum([abs(au-av)**p for au,av in zip(u, v)])**(1/p)
+
+"""
+
+Local outlier factor related function
+www.dbs.ifi.lmu.de/Publikationen/Papers/LOF.pdf
+
+"""
+
+
+# KNN algorithm aggording to \cite. Returns also the k-distance of p
+def k_nearest_neighbors(k, p, data, dist=euclidean):
     data1 = data.copy()
     data1.remove(p)
     distances = {}
@@ -17,6 +44,25 @@ def k_nearest_neighbors(k, p, data, dist=euclidean_distance):
     k_dist = distances[neighbors[-1]]
     return k_dist, neighbors
 
-def reachability_distance(k, p, o, data, dist=euclidean_distance):
+
+# Reachability distance of a vector p with respect to vector o
+def reachability_distance(k, p, o, data, dist=euclidean):
     k_dist, neighbors = k_nearest_neighbors(k, o, data, dist=dist)
     return max(k_dist, dist(p, o))
+
+
+# Local reachability denśity of a vector p
+def local_reachability_density(min_pts, p, data, dist=euclidean):
+    k_dist, neighbors = k_nearest_neighbors(min_pts, p, data, dist=dist)
+    reach_distances = [reach_distance(p, o) for o in neighbors]
+    lrd = len(neighbors) / sum(reach_distances)
+    return lrd
+
+
+# Local outlier factor of a vector p
+def local_outlier_factor(min_pts, p, data, dist=euclidean):
+    k_dist, neighbors = k_nearest_neighbors(min_pts, p, data, dist=dist)
+    lrd_p = local_reachability_density(min_pts, p, data, dist=dist)
+    lrd_ratios = [local_reachability_density(o) / lrd_p for o in neighbors]
+    lof = sum(lrd_ratios) / len(neighbors)
+    return lof
