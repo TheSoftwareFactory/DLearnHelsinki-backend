@@ -22,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 
 import org.dlearn.helsinki.skeleton.exceptions.GroupUpdateUnsuccessful;
 import org.dlearn.helsinki.skeleton.model.Answer;
+import org.dlearn.helsinki.skeleton.model.AnswersAvgs;
 import org.dlearn.helsinki.skeleton.model.ChangePasswordStudent;
 import org.dlearn.helsinki.skeleton.model.ClassThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Classes;
@@ -102,6 +103,33 @@ public class Database {
             log.catching(e);
         }
         log.traceExit();
+    }
+
+    public Survey getSurvey(int survey_id) {
+        Survey s = null;
+        try (Connection dbConnection = getDBConnection()) {
+            String statement = "Select * FROM public.\"Surveys\" WHERE _id = ?";
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(statement)) {
+                select.setInt(1, survey_id);
+                ResultSet result = select.executeQuery();
+                if (!result.next())
+                    return s;
+                s = new Survey(result.getInt("_id"), result.getString("title"),
+                        result.getString("title_fi"),
+                        result.getString("description"),
+                        result.getString("description_fi"),
+                        result.getTimestamp("start_date"),
+                        result.getTimestamp("end_date"),
+                        result.getInt("teacher_id"), result.getInt("class_id"),
+                        result.getBoolean("open"));
+
+            }
+        } catch (SQLException e) {
+            log.catching(e);
+        }
+        log.traceExit(s);
+        return s;
     }
 
     // Survey postSurvey : returns the survey that was posted on the database.
@@ -2147,5 +2175,61 @@ public class Database {
         }
         log.traceExit(idExists);
         return idExists;
+    }
+
+    //  TODO: Add checks if student belongs to class or grp in services maybe?
+    // std = student, cls = class, grp = group, srv = survey
+    // returns list of average values with student and possible survey
+    public AnswersAvgs getSurveyAnswerAverages(int std_id, int cls_id,
+            int grp_id, int srv_id) {
+        AnswersAvgs results = new AnswersAvgs();
+        try (Connection dbConnection = getDBConnection()) {
+            String statement = ""
+                    + "SELECT question_id, qu.theme_id, qu.question, avg(answer)\n"
+                    + "FROM \"Answers\" AS an\n"
+                    + "INNER JOIN \"Questions\" as qu ON qu._id=an.question_id\n"
+                    + "INNER JOIN \"Surveys\" as su ON su._id=an.survey_id\n"
+                    + "WHERE 1 = 1 \n" // dummy condition to continue with AND
+                    + ((std_id > 0) ? " AND student_id=? \n" : "") // for 1 student
+                    + ((cls_id > 0) ? " AND su.class_id=? \n" : "") // for 1 class
+                    + ((grp_id > 0) ? " AND group_id=? \n" : "") // for 1 grp
+                    + ((srv_id > 0) ? " AND survey_id=? \n" : "") // for 1 srv
+                    + "GROUP BY question_id, qu.question, qu.theme_id\n"
+                    + "ORDER BY question_id, qu.theme_id";
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(statement)) {
+                int i = 1;
+                if (std_id > 0) {
+                    results.setStudent(this.getStudent(std_id));
+                    select.setInt(i, std_id);
+                    i++;
+                }
+                if (cls_id > 0) {
+                    select.setInt(i, cls_id);
+                    i++;
+                }
+                if (grp_id > 0) {
+                    select.setInt(i, grp_id);
+                    i++;
+                }
+                if (srv_id > 0) {
+                    results.setSurvey(this.getSurvey(srv_id));
+                    select.setInt(i, srv_id);
+                }
+
+                try (ResultSet result = select.executeQuery()) {
+                    while (result.next()) {
+                        results.addAverage(result.getInt("question_id"),
+                                result.getInt("theme_id"),
+                                result.getString("question"),
+                                result.getFloat("avg"));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            log.catching(e);
+            return null;
+        }
+        return results;
     }
 }
