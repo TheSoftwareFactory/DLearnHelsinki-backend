@@ -14,10 +14,10 @@ public class PasswordEncoderDummy implements PasswordEncoder {
         return rawPassword.toString();
     }
 
-    // Password always matches
+    // Plain text comparison
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
-        return true;
+        return rawPassword.toString().equals(encodedPassword);
     }
 
 }
