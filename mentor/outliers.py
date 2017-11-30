@@ -24,6 +24,7 @@ def sqeuclidean(u, v): return euclidean(u, v)**2
 # Computes the p:th Minkoski distance of vectors u and v
 def minkowski(u, v, p=2): return sum([abs(au-av)**p for au,av in zip(u, v)])**(1/p)
 
+
 """
 
 Local outlier factor related function
@@ -66,3 +67,14 @@ def local_outlier_factor(min_pts, p, data, dist=euclidean):
     lrd_ratios = [local_reachability_density(o) / lrd_p for o in neighbors]
     lof = sum(lrd_ratios) / len(neighbors)
     return lof
+
+
+# According to the paper anything under lof-score of 1.0 is not a local oulier
+def outliers(min_pts, data, dist=euclidean):
+    outliers = []
+    for p in data:
+        lof = local_outlier_factor(min_pts, p, data, dist=euclidean)
+        if lof > 1.0:
+            outliers.append({'score': lof, 'object': p})
+        outliers.sort(key=lambda p: p['score'], reverse=True)
+    return outliers
