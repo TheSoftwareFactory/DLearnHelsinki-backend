@@ -5,6 +5,8 @@
  */
 package org.dlearn.helsinki.skeleton.security;
 
+import java.sql.Connection;
+import java.util.Optional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -13,6 +15,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.dlearn.helsinki.skeleton.database.Database;
+import org.dlearn.helsinki.skeleton.model.Researcher;
+import org.dlearn.helsinki.skeleton.model.Student;
+import org.dlearn.helsinki.skeleton.model.Teacher;
 
 /**
  *
@@ -99,7 +104,10 @@ public class AuthenticationEndpoint {
         // Authenticate against a database, LDAP, file or whatever
         // Throw an Exception if the credentials are invalid
         
-        
+        Optional<Student> studentFromUsername = db.getStudentFromUsername(username);
+        Optional<Teacher> teacherFromUsername = db.getTeacherFromUsername(username);
+        Optional<Researcher> researcherFromUsername = db.getResearcherFromUsername(username);
+            
     }
     
     
