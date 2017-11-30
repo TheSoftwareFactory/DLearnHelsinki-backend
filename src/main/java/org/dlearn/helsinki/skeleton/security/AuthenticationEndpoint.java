@@ -100,13 +100,16 @@ public class AuthenticationEndpoint {
     }
 
     
-    private void authenticate(String username, String password, String userType) throws Exception {
+    private void authenticate(String username, String password, String usertype) throws Exception {
         // Authenticate against a database, LDAP, file or whatever
         // Throw an Exception if the credentials are invalid
-        
+        if(usertype.equals("student")) {
         Optional<Student> studentFromUsername = db.getStudentFromUsername(username);
+        } else if(usertype.equals("teacher")) {
         Optional<Teacher> teacherFromUsername = db.getTeacherFromUsername(username);
+        }else if(usertype.equals("researcher")) {
         Optional<Researcher> researcherFromUsername = db.getResearcherFromUsername(username);
+        }
             
     }
     
