@@ -2,7 +2,6 @@ package org.dlearn.helsinki.skeleton.resource;
 
 import java.util.List;
 
-
 import javax.ws.rs.Consumes;
 
 import javax.ws.rs.GET;
@@ -38,6 +37,7 @@ public class TeacherResource {
     private final SecurityService security = new SecurityService();
     private final TeacherStudentService teacherStudentService = new TeacherStudentService();
     private final MoveToGroupService moveToGroupService = new MoveToGroupService();
+
     // Request webapi/teachers/
     // Returns the teacher's info based on log credentials
     @GET
@@ -61,11 +61,11 @@ public class TeacherResource {
     @Path("/{teacher_id}/classes")
     public TeacherClassResource getClassesFromId(
             @PathParam("teacher_id") int teacher_id) {
-    	if(security.isTheTeacher(teacher_id)){
-    		return new TeacherClassResource();
-    	}else{
-    		return null;
-    	}
+        if (security.isTheTeacher(teacher_id)) {
+            return new TeacherClassResource();
+        } else {
+            return null;
+        }
     }
 
     @POST
@@ -74,52 +74,68 @@ public class TeacherResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Student createNewStudent(@PathParam("teacher_id") int teacher_id,
             NewStudent student) {
-    	Student returnedStudent = null;
-    	int student_id = student.student.get_id();
-    	int class_id = student.class_id;
-    	int group_id = student.group_id;    	
+        Student returnedStudent = null;
+        int student_id = student.student.get_id();
+        int class_id = student.class_id;
+        int group_id = student.group_id;
         try {
-        	if (teacherStudentService.doesStudentIdExistInDatabase(student.student.get_id())) {
-        		// Student already exists, move him to a new group and class.
-        		if (moveToGroupService.moveStudentToGroup(class_id, student_id, group_id)) {
-        			returnedStudent = teacherStudentService.getStudent(student_id);
-        		};        		
-        	} else {
-        		// Student does not exist, create a new student.
-        		returnedStudent = createNewUserService.createNewStudent(student).orElse(null);
-        	};
+            if (teacherStudentService
+                    .doesStudentIdExistInDatabase(student.student.get_id())) {
+                // Student already exists, move him to a new group and class.
+                if (moveToGroupService.moveStudentToGroup(class_id, student_id,
+                        group_id)) {
+                    returnedStudent = teacherStudentService
+                            .getStudent(student_id);
+                }
+                ;
+            } else {
+                // Student does not exist, create a new student.
+                returnedStudent = createNewUserService.createNewStudent(student)
+                        .orElse(null);
+            }
+            ;
         } catch (StudentExistsException e) {
-            throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
-                    .entity("The student username is invalid or already exists in database. Choose another.").build());
+            throw new WebApplicationException(
+                    Response.status(Status.BAD_REQUEST)
+                            .entity("The student username is invalid or already exists in database. Choose another.")
+                            .build());
         } catch (GroupClassMatchException e) {
-            throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
-                    .entity("The group doesn't correspond with the class.").build());
+            throw new WebApplicationException(
+                    Response.status(Status.BAD_REQUEST)
+                            .entity("The group doesn't correspond with the class.")
+                            .build());
         } catch (AddGroupFailedException e) {
             // TODO: Prevent this
-            throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
-                    .entity("Adding student to group failed. Student was created without group.").build());
+            throw new WebApplicationException(
+                    Response.status(Status.BAD_REQUEST)
+                            .entity("Adding student to group failed. Student was created without group.")
+                            .build());
         }
-		return returnedStudent;
+        return returnedStudent;
     }
 
     @POST
     @Path("/{teacher_id}/change_student_password")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Student changeStudentPassword(@PathParam("teacher_id") int teacher_id, ChangePasswordStudent student) {
+    public Student changeStudentPassword(
+            @PathParam("teacher_id") int teacher_id,
+            ChangePasswordStudent student) {
         return security.getTeacher()
-            .map(t -> change_password.changeStudentPassword(student))
-            .orElse(null);
+                .map(t -> change_password.changeStudentPassword(student))
+                .orElse(null);
     }
-    
+
     @GET
     @Path("/{teacher_id}/students")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Student> getAllStudents(@PathParam("teacher_id") int teacher_id ) {
-    	List<Student> students = null;
-    	if (security.isTheTeacher(teacher_id)) {
-    		students = teacherStudentService.getAllStudents();//(teacher_id);
-    	};
-    	return students;
+    public List<Student> getAllStudents(
+            @PathParam("teacher_id") int teacher_id) {
+        List<Student> students = null;
+        if (security.isTheTeacher(teacher_id)) {
+            students = teacherStudentService.getAllStudents();//(teacher_id);
+        }
+        ;
+        return students;
     }
 }

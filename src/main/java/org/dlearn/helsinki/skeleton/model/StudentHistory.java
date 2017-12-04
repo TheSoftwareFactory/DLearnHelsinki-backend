@@ -16,7 +16,8 @@ public class StudentHistory {
         themeAverages = new ArrayList<>();
     }
 
-    public StudentHistory(int survey_id, String survey_name, String survey_description, int start_date, int end_date,
+    public StudentHistory(int survey_id, String survey_name,
+            String survey_description, int start_date, int end_date,
             List<StudentThemeAverage> themeAverages) {
         super();
         this.survey_id = survey_id;
@@ -77,6 +78,9 @@ public class StudentHistory {
 
     @Override
     public String toString() {
-        return "StudentHistory { survey_id = "+survey_id+", survey_name = "+survey_name+", survey_description = "+survey_description+", start_date = "+start_date+", end_date = "+end_date+", themeAverages = "+themeAverages.toString()+"  }";
+        return "StudentHistory { survey_id = " + survey_id + ", survey_name = "
+                + survey_name + ", survey_description = " + survey_description
+                + ", start_date = " + start_date + ", end_date = " + end_date
+                + ", themeAverages = " + themeAverages.toString() + "  }";
     }
 }

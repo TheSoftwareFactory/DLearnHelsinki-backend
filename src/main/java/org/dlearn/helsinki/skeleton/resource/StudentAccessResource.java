@@ -17,7 +17,7 @@ import org.dlearn.helsinki.skeleton.service.StudentService;
 
 @Path("/students")
 public class StudentAccessResource {
-    
+
     private final StudentService studentService = new StudentService();
     private final SecurityService security = new SecurityService();
     private final ProgressionService progression = new ProgressionService();

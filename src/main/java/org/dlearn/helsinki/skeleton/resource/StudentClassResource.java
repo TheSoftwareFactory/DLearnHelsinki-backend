@@ -69,7 +69,7 @@ public class StudentClassResource {
             @PathParam("amount") int amount) {
         return security
                 .getStudent().map(s -> progression
-                .getStudentClassProgression(class_id, s._id, amount))
+                        .getStudentClassProgression(class_id, s._id, amount))
                 .orElse(Collections.EMPTY_LIST);
     }
 }

@@ -8,5 +8,5 @@ public class NewTeacher {
     public String toString() {
         return "NewTeacher{" + "teacher=" + teacher + '}';
     }
-    
+
 }

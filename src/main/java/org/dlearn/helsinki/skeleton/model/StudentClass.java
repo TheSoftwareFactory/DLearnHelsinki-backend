@@ -53,6 +53,8 @@ public class StudentClass {
 
     @Override
     public String toString() {
-        return "StudentClass { _id = "+_id+", student_id = "+student_id+", class_id = "+class_id+", group_id = "+group_id+" }";
+        return "StudentClass { _id = " + _id + ", student_id = " + student_id
+                + ", class_id = " + class_id + ", group_id = " + group_id
+                + " }";
     }
 }

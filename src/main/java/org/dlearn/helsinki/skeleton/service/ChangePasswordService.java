@@ -9,8 +9,7 @@ public class ChangePasswordService {
     private static final Database DB = new Database();
 
     public Student changeStudentPassword(ChangePasswordStudent student) {
-        return DB.changeStudentPassword(student)
-                .orElse(null);
+        return DB.changeStudentPassword(student).orElse(null);
     }
-    
+
 }

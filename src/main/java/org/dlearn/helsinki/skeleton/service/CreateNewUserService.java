@@ -14,16 +14,18 @@ public class CreateNewUserService {
 
     private final Database db = new Database();
 
-    public Optional<Student> createNewStudent(NewStudent newStudent) throws RuntimeException {
+    public Optional<Student> createNewStudent(NewStudent newStudent)
+            throws RuntimeException {
         // TODO: Check that age is positive, password isn't too short.
-    	if(db.doesStudentUsernameExistInDatabase(newStudent.student)) {
+        if (db.doesStudentUsernameExistInDatabase(newStudent.student)) {
             throw new StudentExistsException();
         }
         if (!db.doesGroupClassMatch(newStudent.group_id, newStudent.class_id)) {
             throw new GroupClassMatchException();
         }
         Optional<Student> student = db.createStudent(newStudent);
-        if (student.isPresent() && !db.addStudentToGroup(student.get(), newStudent.class_id, newStudent.group_id)) {
+        if (student.isPresent() && !db.addStudentToGroup(student.get(),
+                newStudent.class_id, newStudent.group_id)) {
             throw new AddGroupFailedException();
         }
         return student;
