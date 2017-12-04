@@ -32,12 +32,12 @@ import org.springframework.web.filter.GenericFilterBean;
         {
             final HttpServletRequest httpRequest = (HttpServletRequest)request;
 
-             //extract token from header
+            //extract token from header
             final String accessToken = httpRequest.getHeader("header-name");
             if (null != accessToken) {
-           //get and check whether token is valid ( from DB or file wherever you are storing the token)
+            //get and check whether token is valid ( from DB or file wherever you are storing the token)
 
-          //Populate SecurityContextHolder by fetching relevant information using token
+            //Populate SecurityContextHolder by fetching relevant information using token
                final User user = new User(
                             "username",
                             "password",
