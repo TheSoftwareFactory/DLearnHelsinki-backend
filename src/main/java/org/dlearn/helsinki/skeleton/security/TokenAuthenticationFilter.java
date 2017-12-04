@@ -7,6 +7,7 @@ package org.dlearn.helsinki.skeleton.security;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -22,37 +23,32 @@ import org.springframework.web.filter.GenericFilterBean;
  *
  * @author Kalle
  */
- public class TokenAuthenticationFilter extends GenericFilterBean
-    {
+public class TokenAuthenticationFilter extends GenericFilterBean {
 
+    @Override
+    public void doFilter(final ServletRequest request,
+            final ServletResponse response, final FilterChain chain)
+            throws IOException, ServletException {
+        final HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-        @Override
-        public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
-                throws IOException, ServletException
-        {
-            final HttpServletRequest httpRequest = (HttpServletRequest)request;
+        //extract token from header
+        final String accessToken = httpRequest.getHeader("header-name");
+        if (null != accessToken) {
 
-            //extract token from header
-            final String accessToken = httpRequest.getHeader("header-name");
-            if (null != accessToken) {
+            Collection<? extends GrantedAuthority> authorities = new HashSet<>();
             //get and check whether token is valid ( from DB or file wherever you are storing the token)
 
             //Populate SecurityContextHolder by fetching relevant information using token
-               final User user = new User(
-                            "username",
-                            "password",
-                            true,
-                            true,
-                            true,
-                            true,
-                            authorities);
-                    final UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+            final User user = new User("username", "password", true, true, true,
+                    true, authorities);
+            final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    user, null, user.getAuthorities());
+            SecurityContextHolder.getContext()
+                    .setAuthentication(authentication);
 
-            }
-
-            chain.doFilter(request, response);
         }
 
-      }
+        chain.doFilter(request, response);
+    }
+
+}

@@ -8,8 +8,8 @@ import org.dlearn.helsinki.skeleton.database.Database;
 import org.dlearn.helsinki.skeleton.model.Survey;
 
 public class StudentClassSurveyService {
-	
-	final static Database db = new Database();
+
+    final static Database db = new Database();
 
     public List<Survey> getSurveysFromClass(int student_id, int class_id) {
         System.out.println("Calling getSurveysFromClass(as Student)");
