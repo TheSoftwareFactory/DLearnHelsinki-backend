@@ -1529,35 +1529,33 @@ PUT /students/{student_id}/classes/{class_id}/surveys/{survey_id}/answers/{quest
 {
   "answer" : 2
 }
-```
+``` 
 
-### Student API: 
-
-Get survey's result from his group (for specific survey) -> average of all student in his group for a survey
+###Get survey's result from his group (for specific survey) -> average of all student in his group for a survey
 
 ```endpoint
 GET webapi/students/{student_id}/classes/{class_id}/surveys/{survey_id}/group_averages
 ```
 
-Get survey's result from his class (for specific survey) -> average of all student in the class for a survey
+###Get survey's result from his class (for specific survey) -> average of all student in the class for a survey
 
 ```endpoint
 GET webapi/students/{student_id}/classes/{class_id}/surveys/{survey_id}/class_averages
 ```
 
-Get his survey's results (for all surveys) -> average of all his result for all his surveys
+###Get his survey's results (for all surveys) -> average of all his result for all his surveys
 
 ```endpoint
 GET /webapi/students/{student_id}/survey_averages
 ```
 
-Get survey's result from his class (for all surveys) -> average of all student in the class for all surveys
+###Get survey's result from his class (for all surveys) -> average of all student in the class for all surveys
 
 ```endpoint
 GET /webapi/students/{student_id}/classes/{class_id}/class_averages
 ```
 
-Get survey's results from his group (for all surveys) -> average of all student in his group for all surveys
+###Get survey's results from his group (for all surveys) -> average of all student in his group for all surveys
 
 ```endpoint
 GET /webapi/students/{student_id}/classes/{class_id}/group_averages
