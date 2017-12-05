@@ -45,7 +45,7 @@ public class LocalOutlierFactor {
         for (int i = 0; i < reachDistances.length; i++) {
             // remove last element from neighbor
             double[] neighbor = Arrays.copyOfRange(neighbors[i], 0,
-                    neighbors[i].length);
+                    neighbors[i].length - 1);
             reachDistances[i] = this.rechabilityDistance(k, p, neighbor, data);
         }
         for (double e : reachDistances)
@@ -62,7 +62,7 @@ public class LocalOutlierFactor {
         for (int i = 0; i < lrd_ratios.length; i++) {
             //slice distance element out
             double[] o = Arrays.copyOfRange(neighbors[i], 0,
-                    neighbors[i].length);
+                    neighbors[i].length - 1);
             lrd_ratios[i] = this.localReachabilityDensity(k, o, data) / lrd_p;
         }
         double sum = 0.0;
