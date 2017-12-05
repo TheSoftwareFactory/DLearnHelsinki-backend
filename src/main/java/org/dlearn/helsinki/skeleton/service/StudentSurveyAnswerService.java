@@ -27,4 +27,10 @@ public class StudentSurveyAnswerService {
         return db.getStudentThemeAverage(survey_id, student_id);
     }
 
+    public boolean postAnswersToQuestion(int class_id, int survey_id,
+            int student_id, List<Answer> answers) {
+        return db.postStudentAnswersForSurvey(class_id, survey_id, student_id,
+                answers);
+    }
+
 }

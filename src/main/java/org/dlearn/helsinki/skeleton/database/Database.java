@@ -299,10 +299,14 @@ public class Database {
 
     // Method : postSutdentAnswersForSurvey
     // Takes the survey_id, the student_id
-    public void postStudentAnswersForSurvey(List<Answer> answers, int survey_id,
-            int student_id) {
+    public boolean postStudentAnswersForSurvey(int class_id, int survey_id,
+            int student_id, List<Answer> answers) {
         log.debug("Posting all answers same time isn't implemented.");
-        // TODO implement but currently it's easier for front-end to send one at a time...
+        answers.forEach((answer) -> {
+            this.putAnswerToQuestion(answer, class_id);
+        });
+        return true;
+
     }
 
     // Method : getSurveysFromClassAsStudent

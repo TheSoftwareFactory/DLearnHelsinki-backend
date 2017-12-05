@@ -28,6 +28,7 @@ public class AnswerResource {
     }
 
     // POST all the answers
+    /*
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -37,6 +38,7 @@ public class AnswerResource {
         answerService.postAnswers(answers, survey_id);
         return "";
     }
+    */
     // GET one answer
     // POST one answer
 }
