@@ -14,9 +14,8 @@ public class LocalOutlierFactorTest {
 
     @Test
     public void distance() {
-
         double difference = 1.0;
-        assertEquals(difference, lof.euclidean(u, v), 0.0);
+        assertEquals(difference, LocalOutlierFactor.euclidean(u, v), 0.0);
     }
 
     @Test

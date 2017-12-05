@@ -4,19 +4,6 @@ import java.util.Arrays;
 import org.apache.commons.lang3.ArrayUtils;
 
 public class LocalOutlierFactor {
-    public double euclidean(double[] u, double[] v) {
-        double result = 0.0;
-
-        if (u.length != v.length) {
-            return result;
-        }
-
-        for (int i = 0; i < u.length; i++) {
-            result += Math.pow((u[i] - v[i]), 2);
-        }
-
-        return result;
-    }
 
     // Sort by column method missing
     public double[][] kNearestNeighbors(int k, double[] p, double[][] data) {
@@ -31,7 +18,8 @@ public class LocalOutlierFactor {
             for (int j = 0; j < data[i].length; j++) {
                 neighbors[h][j] = data[i][j];
             }
-            neighbors[h][data[i].length] = euclidean(p, data[i]);
+            neighbors[h][data[i].length] = LocalOutlierFactor.euclidean(p,
+                    data[i]);
             h++;
         }
         //sort(neighbors, by=last element of every row);
@@ -45,7 +33,7 @@ public class LocalOutlierFactor {
         int n = neighbors.length - 1;
         int m = neighbors[n].length - 1;
         double kDist = neighbors[n][m];
-        double distance = this.euclidean(p, o);
+        double distance = LocalOutlierFactor.euclidean(p, o);
         return Math.max(kDist, distance);
     }
 
@@ -55,6 +43,7 @@ public class LocalOutlierFactor {
         double[][] neighbors = this.kNearestNeighbors(k, p, data);
         double[] reachDistances = new double[neighbors.length];
         for (int i = 0; i < reachDistances.length; i++) {
+        	// remove last element from neighbor
             reachDistances[i] = this.rechabilityDistance(k, p, neighbors[i],
                     data);
         }
@@ -65,13 +54,30 @@ public class LocalOutlierFactor {
     }
 
     // TODO
-    public double localOutlierFactor() {
+    public double localOutlierFactor(int k, double[] p, double[][] data) {
         double lof = 0.0;
+        double[][] neighbors = this.kNearestNeighbors(k, p, data);
+        lrd_p = this.localReachabilityDensity(k, p, data);
+
         return lof;
     }
 
     // TODO
     public void outliers(int minPts, double[][] data) {
+    }
+
+    public static double euclidean(double[] u, double[] v) {
+        double result = 0.0;
+
+        if (u.length != v.length) {
+            return result;
+        }
+
+        for (int i = 0; i < u.length; i++) {
+            result += Math.pow((u[i] - v[i]), 2);
+        }
+
+        return result;
     }
 
     public static double[][] slice(double[][] data, int start, int end) {
