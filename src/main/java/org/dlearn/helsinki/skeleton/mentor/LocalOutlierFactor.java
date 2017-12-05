@@ -43,7 +43,7 @@ public class LocalOutlierFactor {
         double[][] neighbors = this.kNearestNeighbors(k, p, data);
         double[] reachDistances = new double[neighbors.length];
         for (int i = 0; i < reachDistances.length; i++) {
-        	// remove last element from neighbor
+            // remove last element from neighbor
             reachDistances[i] = this.rechabilityDistance(k, p, neighbors[i],
                     data);
         }
@@ -57,7 +57,7 @@ public class LocalOutlierFactor {
     public double localOutlierFactor(int k, double[] p, double[][] data) {
         double lof = 0.0;
         double[][] neighbors = this.kNearestNeighbors(k, p, data);
-        lrd_p = this.localReachabilityDensity(k, p, data);
+        double lrd_p = this.localReachabilityDensity(k, p, data);
 
         return lof;
     }
