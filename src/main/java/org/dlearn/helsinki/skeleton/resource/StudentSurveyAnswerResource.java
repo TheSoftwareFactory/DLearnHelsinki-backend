@@ -40,14 +40,12 @@ public class StudentSurveyAnswerResource {
     
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/{class_id}/answers")
     public boolean post_answers(@PathParam("student_id") int student_id,
                                 @PathParam("class_id") int class_id,
                                 @PathParam("survey_id") int survey_id, 
                                 List<Answer> answers) {
 
-        System.out.println("Student Answering a questions");
-        //todo parse json
+        System.out.println("Student Answering a survey");
         return studentSurveyAnswerService.postAnswersToQuestion(class_id,
                 student_id, survey_id, answers);
     }
