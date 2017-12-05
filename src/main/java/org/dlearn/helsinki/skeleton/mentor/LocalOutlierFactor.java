@@ -44,9 +44,9 @@ public class LocalOutlierFactor {
         double[] reachDistances = new double[neighbors.length];
         for (int i = 0; i < reachDistances.length; i++) {
             // remove last element from neighbor
-            double[] neighbor = LocalOutlierFactor.slice(neighbors[i], 0, neighbors[i].length);
-            reachDistances[i] = this.rechabilityDistance(k, p, neighbor,
-                    data);
+            double[] neighbor = Arrays.copyOfRange(neighbors[i], 0,
+                    neighbors[i].length);
+            reachDistances[i] = this.rechabilityDistance(k, p, neighbor, data);
         }
         for (double e : reachDistances)
             sum += e;
@@ -59,13 +59,15 @@ public class LocalOutlierFactor {
         double[][] neighbors = this.kNearestNeighbors(k, p, data);
         double lrd_p = this.localReachabilityDensity(k, p, data);
         double[] lrd_ratios = new double[neighbors.length];
-        for(int i = 0; i < lrd_ratios.length; i++) {
-        	//slice distance element out
-        	double[] o = LocalOutlierFactor.slice(neighbors[i], 0, neighbors[i].length);
-        	lrd_ratios[i] = this.localReachabilityDensity(k, o, data) / lrd_p;
+        for (int i = 0; i < lrd_ratios.length; i++) {
+            //slice distance element out
+            double[] o = Arrays.copyOfRange(neighbors[i], 0,
+                    neighbors[i].length);
+            lrd_ratios[i] = this.localReachabilityDensity(k, o, data) / lrd_p;
         }
         double sum = 0.0;
-        for (double e : lrd_ratios) sum += e;
+        for (double e : lrd_ratios)
+            sum += e;
         lof = sum / neighbors.length;
         return lof;
     }
