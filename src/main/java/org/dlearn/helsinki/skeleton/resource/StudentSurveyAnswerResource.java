@@ -36,12 +36,25 @@ public class StudentSurveyAnswerResource {
         studentSurveyAnswerService.putAnswerToQuestion(student_id, survey_id,
                 answer_id, answer, class_id);
     }
+    
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{class_id}/answers")
+    public boolean post_answers(@PathParam("student_id") int student_id,
+                                @PathParam("class_id") int class_id,
+                                @PathParam("survey_id") int survey_id, 
+                                List<Answer> answers) {
+
+        System.out.println("Student Answering a questions");
+        //todo parse json
+        return studentSurveyAnswerService.postAnswersToQuestion(class_id,
+                student_id, survey_id, answers);
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<StudentThemeAverage> getSurveyAnswers(
-            @PathParam("student_id") int student_id,
-            @PathParam("survey_id") int survey_id) {
+    public List<StudentThemeAverage> getSurveyAnswers(@PathParam("student_id") int student_id,
+                                                      @PathParam("survey_id") int survey_id) {
         //return surveyService.getSurveysFromTeacherId(teacher_id);
         return studentSurveyAnswerService.getStudentThemeAverage(student_id,
                 survey_id);

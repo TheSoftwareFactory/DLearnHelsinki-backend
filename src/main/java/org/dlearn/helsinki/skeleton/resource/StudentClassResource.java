@@ -2,15 +2,12 @@ package org.dlearn.helsinki.skeleton.resource;
 
 import java.util.Collections;
 import java.util.List;
-import javax.ws.rs.Consumes;
 
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import org.dlearn.helsinki.skeleton.model.Answer;
 
 import org.dlearn.helsinki.skeleton.model.AnswersAvgs;
 import org.dlearn.helsinki.skeleton.model.Classes;
@@ -76,18 +73,5 @@ public class StudentClassResource {
                 .getStudent().map(s -> progression
                         .getStudentClassProgression(class_id, s._id, amount))
                 .orElse(Collections.EMPTY_LIST);
-    }
-
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/{class_id}/answers")
-    public boolean post_answers(@PathParam("student_id") int student_id,
-            @PathParam("class_id") int class_id,
-            @PathParam("survey_id") int survey_id, List<Answer> answers) {
-
-        System.out.println("Student Answering a questions");
-        //todo parse json
-        return studentSurveyAnswerService.postAnswersToQuestion(class_id,
-                student_id, survey_id, answers);
     }
 }
