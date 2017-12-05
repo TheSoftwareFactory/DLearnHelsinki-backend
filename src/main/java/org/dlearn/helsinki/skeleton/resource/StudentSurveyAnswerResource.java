@@ -28,9 +28,10 @@ public class StudentSurveyAnswerResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{answer_id}")
     public void putSurveyAnswers(@PathParam("student_id") int student_id,
-            @PathParam("class_id") int class_id,
-            @PathParam("survey_id") int survey_id,
-            @PathParam("answer_id") int answer_id, Answer answer) {
+                                 @PathParam("class_id") int class_id,
+                                 @PathParam("survey_id") int survey_id,
+                                 @PathParam("answer_id") int answer_id, 
+                                 Answer answer) {
         //return surveyService.getSurveysFromTeacherId(teacher_id);
         System.out.println("Student Answering a question");
         studentSurveyAnswerService.putAnswerToQuestion(student_id, survey_id,
