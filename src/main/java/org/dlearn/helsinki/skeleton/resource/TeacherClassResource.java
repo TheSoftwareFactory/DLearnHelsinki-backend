@@ -16,31 +16,35 @@ import org.dlearn.helsinki.skeleton.service.ClassService;
 import org.dlearn.helsinki.skeleton.model.ListClassThemeAverage;
 import org.dlearn.helsinki.skeleton.service.ProgressionService;
 
-public class TeacherClassResource {	
+public class TeacherClassResource {
     // request teachers/{teacher_id}/classes
     // returns the teacher's classes based on the teacher_id.
     private final ClassService classService = new ClassService();
     private final ProgressionService progression = new ProgressionService();
-	
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<ClassWithAllGroups> getClasses(@PathParam("teacher_id") int teacher_id) {
-    	System.out.println("producing list of classes with groups");
+    public List<ClassWithAllGroups> getClasses(
+            @PathParam("teacher_id") int teacher_id) {
+        System.out.println("producing list of classes with groups");
         return classService.getAllClassesWithGroups(teacher_id); // returns only open groups
     }
-    
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void addNewClass(@PathParam("teacher_id") int teacher_id, Classes teacher_class){
-    	System.out.println("posting the new class "+teacher_class.getName()+" : "+teacher_class.getName_fi()+" to teacher " + teacher_id);
-    	teacher_class.setTeacher_id(teacher_id);
-    	classService.addClassToTeacher(teacher_class);
+    public void addNewClass(@PathParam("teacher_id") int teacher_id,
+            Classes teacher_class) {
+        System.out.println("posting the new class " + teacher_class.getName()
+                + " : " + teacher_class.getName_fi() + " to teacher "
+                + teacher_id);
+        teacher_class.setTeacher_id(teacher_id);
+        classService.addClassToTeacher(teacher_class);
     }
-    
+
     @GET
     @Path("/{class_id}/progression/{amount}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<ListClassThemeAverage>getClassAverage(
+    public List<ListClassThemeAverage> getClassAverage(
             @PathParam("class_id") int class_id,
             @PathParam("amount") int amount) {
         return progression.getClassProgression(class_id, amount);

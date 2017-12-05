@@ -42,10 +42,12 @@ public class Answer {
     public void setAnswer(int answer) {
         this.answer = answer;
     }
-    
+
     @Override
     public String toString() {
-        return "Answer{ survey_id = "+survey_id+", question_id = "+question_id+", student_id = "+student_id+", answer = "+answer+" }";
+        return "Answer{ survey_id = " + survey_id + ", question_id = "
+                + question_id + ", student_id = " + student_id + ", answer = "
+                + answer + " }";
     }
 
 }

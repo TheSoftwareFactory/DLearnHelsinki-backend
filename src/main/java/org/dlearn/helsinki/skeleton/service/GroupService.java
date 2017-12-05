@@ -10,7 +10,7 @@ import org.dlearn.helsinki.skeleton.model.Student;
 
 public class GroupService {
     private final Database db = new Database();
-    
+
     public Optional<Group> getTheGroupStudentIsIn(int class_id, int studentID) {
         return db.getGroupForStudent(class_id, studentID);
     }
@@ -21,7 +21,7 @@ public class GroupService {
 
     //unused
     public List<Group> getAllGroupsFromClass(int class_id) {
-        return db.getAllGroupsFromClass(class_id,false); // only open groups by default
+        return db.getAllGroupsFromClass(class_id, false); // only open groups by default
     }
 
     public Group getGroupFromClass(int class_id, int group_id) {

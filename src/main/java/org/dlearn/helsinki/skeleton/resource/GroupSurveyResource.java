@@ -1,18 +1,16 @@
 package org.dlearn.helsinki.skeleton.resource;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.Survey;
+import org.dlearn.helsinki.skeleton.service.SurveyService;
 
 public class GroupSurveyResource {
+
+    SurveyService surveyService = new SurveyService();
 
     // TODO get last survey on db
     @GET
@@ -26,7 +24,7 @@ public class GroupSurveyResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Survey getSurveyInfo(@PathParam("survey_id") int survey_id) {
-        return new Survey();
+        return surveyService.getSurvey(survey_id);
     }
 
     @Path("/{survey_id}/questions")

@@ -16,27 +16,29 @@ public class NewStudentGroup {
         students = new ArrayList<NewStudent>();
     }
 
-    public NewStudentGroup(int _id, int class_id, String name, List<NewStudent> students) {
+    public NewStudentGroup(int _id, int class_id, String name,
+            List<NewStudent> students) {
         super();
         this._id = _id;
         this.class_id = class_id;
         this.name = name;
         this.students = students;
     }
-    
+
     @Override
     public String toString() {
-        return "StudentGroup { _id = "+_id+", name = "+name+", students = "+students.toString()+" }";
+        return "StudentGroup { _id = " + _id + ", name = " + name
+                + ", students = " + students.toString() + " }";
     }
 
-	public Group getGroup() {
-		return new Group(_id, name, class_id, open);
-	}
+    public Group getGroup() {
+        return new Group(_id, name, class_id, open);
+    }
 
-	public void setGroup(Group group) {		
-	    _id = group.get_id();
-	    class_id= group.getStudent_id();
-	    open = group.getOpen();
-	    name = group.getName();
-	}
+    public void setGroup(Group group) {
+        _id = group.get_id();
+        class_id = group.getStudent_id();
+        open = group.getOpen();
+        name = group.getName();
+    }
 }

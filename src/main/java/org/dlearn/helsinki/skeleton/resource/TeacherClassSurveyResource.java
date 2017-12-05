@@ -33,11 +33,11 @@ public class TeacherClassSurveyResource {
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON) 
+    @Consumes(MediaType.APPLICATION_JSON)
     public SurveyTheme postSurvey(@PathParam("teacher_id") int teacher_id,
             @PathParam("class_id") int class_id, SurveyTheme surveyTheme) {
-    	surveyTheme.teacher_id = teacher_id;
-    	surveyTheme.class_id = class_id;
+        surveyTheme.teacher_id = teacher_id;
+        surveyTheme.class_id = class_id;
         System.out.println(surveyTheme.getTitle());
         return surveyService.postSurvey(surveyTheme);
     }

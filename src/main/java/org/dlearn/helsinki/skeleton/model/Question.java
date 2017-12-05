@@ -11,7 +11,8 @@ public class Question {
     public Question() {
     }
 
-    public Question(int _id, String question, String question_fi, int min_answer, int max_answer) {
+    public Question(int _id, String question, String question_fi,
+            int min_answer, int max_answer) {
         super();
         this._id = _id;
         this.question = question;
@@ -31,7 +32,7 @@ public class Question {
     public String getQuestion() {
         return question;
     }
-    
+
     public String getQuestion_fi() {
         return question_fi;
     }
@@ -39,7 +40,7 @@ public class Question {
     public void setQuestion(String question) {
         this.question = question;
     }
-    
+
     public void setQuestion_fi(String question) {
         this.question_fi = question;
     }
@@ -62,7 +63,9 @@ public class Question {
 
     @Override
     public String toString() {
-        return "Question{" + "_id=" + _id + ", question=" + question +" : " + question_fi + ", min_answer=" + min_answer + ", max_answer=" + max_answer + '}';
+        return "Question{" + "_id=" + _id + ", question=" + question + " : "
+                + question_fi + ", min_answer=" + min_answer + ", max_answer="
+                + max_answer + '}';
     }
 
 }

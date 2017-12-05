@@ -8,5 +8,5 @@ public class ChangePasswordStudent {
     public String toString() {
         return "ChangePasswordStudent{" + "student_id=" + student_id + '}';
     }
-    
+
 }
