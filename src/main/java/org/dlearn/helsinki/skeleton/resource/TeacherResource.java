@@ -1,6 +1,9 @@
 package org.dlearn.helsinki.skeleton.resource;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ws.rs.Consumes;
 
@@ -127,9 +130,22 @@ public class TeacherResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Student changeStudentPassword(
             @PathParam("teacher_id") int teacher_id,
-            ChangePasswordStudent student) {
+            ChangePasswordStudent student) throws PasswordException {
+        
         return security.getTeacher()
-                .map(t -> change_password.changeStudentPassword(student))
+                .map(new Function<Teacher, Student>() {
+            @Override
+            public Student apply(Teacher t) {
+                try {
+                    return change_password.changeStudentPassword(student);
+                } catch (PasswordException ex) {
+                                throw new WebApplicationException(
+                    Response.status(Status.BAD_REQUEST)
+                            .entity("Invalid password.")
+                            .build());
+                }
+            }
+        })
                 .orElse(null);
     }
 
