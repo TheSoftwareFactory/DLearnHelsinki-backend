@@ -1,12 +1,12 @@
 package org.dlearn.helsinki.skeleton.resource;
 
 import java.util.List;
+import java.util.function.Function;
 
 import javax.ws.rs.Consumes;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -16,6 +16,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.dlearn.helsinki.skeleton.exceptions.AddGroupFailedException;
 import org.dlearn.helsinki.skeleton.exceptions.GroupClassMatchException;
+import org.dlearn.helsinki.skeleton.exceptions.InvalidAgeException;
+import org.dlearn.helsinki.skeleton.exceptions.PasswordException;
 
 import org.dlearn.helsinki.skeleton.exceptions.StudentExistsException;
 import org.dlearn.helsinki.skeleton.model.ChangePasswordStudent;
@@ -73,7 +75,7 @@ public class TeacherResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Student createNewStudent(@PathParam("teacher_id") int teacher_id,
-            NewStudent student) {
+            NewStudent student) throws RuntimeException, InvalidAgeException {
         Student returnedStudent = null;
         int student_id = student.student.get_id();
         int class_id = student.class_id;
@@ -87,13 +89,13 @@ public class TeacherResource {
                     returnedStudent = teacherStudentService
                             .getStudent(student_id);
                 }
-                ;
+
             } else {
                 // Student does not exist, create a new student.
                 returnedStudent = createNewUserService.createNewStudent(student)
                         .orElse(null);
             }
-            ;
+
         } catch (StudentExistsException e) {
             throw new WebApplicationException(
                     Response.status(Status.BAD_REQUEST)
@@ -110,6 +112,11 @@ public class TeacherResource {
                     Response.status(Status.BAD_REQUEST)
                             .entity("Adding student to group failed. Student was created without group.")
                             .build());
+
+        } catch (PasswordException e) {
+            throw new WebApplicationException(
+                    Response.status(Status.BAD_REQUEST)
+                            .entity("Invalid password.").build());
         }
         return returnedStudent;
     }
@@ -120,10 +127,20 @@ public class TeacherResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Student changeStudentPassword(
             @PathParam("teacher_id") int teacher_id,
-            ChangePasswordStudent student) {
-        return security.getTeacher()
-                .map(t -> change_password.changeStudentPassword(student))
-                .orElse(null);
+            ChangePasswordStudent student) throws PasswordException {
+
+        return security.getTeacher().map(new Function<Teacher, Student>() {
+            @Override
+            public Student apply(Teacher t) {
+                try {
+                    return change_password.changeStudentPassword(student);
+                } catch (PasswordException ex) {
+                    throw new WebApplicationException(
+                            Response.status(Status.BAD_REQUEST)
+                                    .entity("Invalid password.").build());
+                }
+            }
+        }).orElse(null);
     }
 
     @GET
@@ -135,7 +152,7 @@ public class TeacherResource {
         if (security.isTheTeacher(teacher_id)) {
             students = teacherStudentService.getAllStudents();//(teacher_id);
         }
-        ;
+
         return students;
     }
 }
