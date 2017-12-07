@@ -29,7 +29,7 @@ public class CreateNewUserService {
         }
         
         //Check password length
-        if (newStudent.password.length() >=5 ) {
+        if (newStudent.password.length() < 5 || newStudent.password.length() > 100 ) {
             throw new PasswordException();
         }
         
