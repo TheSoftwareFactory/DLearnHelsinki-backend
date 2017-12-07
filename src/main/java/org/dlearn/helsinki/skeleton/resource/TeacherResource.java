@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.dlearn.helsinki.skeleton.exceptions.AddGroupFailedException;
 import org.dlearn.helsinki.skeleton.exceptions.GroupClassMatchException;
+import org.dlearn.helsinki.skeleton.exceptions.PasswordException;
 
 import org.dlearn.helsinki.skeleton.exceptions.StudentExistsException;
 import org.dlearn.helsinki.skeleton.model.ChangePasswordStudent;
@@ -87,13 +88,13 @@ public class TeacherResource {
                     returnedStudent = teacherStudentService
                             .getStudent(student_id);
                 }
-                ;
+                
             } else {
                 // Student does not exist, create a new student.
                 returnedStudent = createNewUserService.createNewStudent(student)
                         .orElse(null);
             }
-            ;
+            
         } catch (StudentExistsException e) {
             throw new WebApplicationException(
                     Response.status(Status.BAD_REQUEST)
@@ -109,6 +110,12 @@ public class TeacherResource {
             throw new WebApplicationException(
                     Response.status(Status.BAD_REQUEST)
                             .entity("Adding student to group failed. Student was created without group.")
+                            .build());
+            
+        } catch (PasswordException e) {
+            throw new WebApplicationException(
+                    Response.status(Status.BAD_REQUEST)
+                            .entity("Invalid password.")
                             .build());
         }
         return returnedStudent;

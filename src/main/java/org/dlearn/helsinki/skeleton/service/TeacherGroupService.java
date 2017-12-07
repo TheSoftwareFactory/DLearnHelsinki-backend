@@ -6,6 +6,7 @@ import java.util.List;
 import org.dlearn.helsinki.skeleton.database.Database;
 import org.dlearn.helsinki.skeleton.exceptions.GroupCannotBeClosedException;
 import org.dlearn.helsinki.skeleton.exceptions.GroupUpdateUnsuccessful;
+import org.dlearn.helsinki.skeleton.exceptions.PasswordException;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.NewStudent;
 import org.dlearn.helsinki.skeleton.model.NewStudentGroup;
@@ -46,9 +47,7 @@ public class TeacherGroupService {
             } else {
                 throw new GroupCannotBeClosedException();
             }
-            ;
         }
-        ;
     }
 
     public void updateGroupInClass(int class_id, int group_id,
@@ -56,12 +55,11 @@ public class TeacherGroupService {
         DB.updateGroupName(class_id, group_id, groupSample);
     }
 
-    public StudentGroup insertNewGroupInClass(int class_id,
-            NewStudentGroup group) {
+    public StudentGroup insertNewGroupInClass(int class_id, NewStudentGroup group) throws RuntimeException, PasswordException {
         StudentGroup createdStudentGroup = new StudentGroup();
-        createdStudentGroup
-                .setGroup(DB.createGroupInClass(class_id, group.name));
+        createdStudentGroup.setGroup(DB.createGroupInClass(class_id, group.name));
         Iterator<NewStudent> iterator = group.students.iterator();
+        
         while (iterator.hasNext()) {
             NewStudent prepareStudent = iterator.next()
                     .setGroup_id(createdStudentGroup.get_id())
@@ -69,7 +67,6 @@ public class TeacherGroupService {
             createdStudentGroup.addStudent(
                     createNewUserService.createNewStudent(prepareStudent));
         }
-        ;
         return createdStudentGroup;
     }
 }
