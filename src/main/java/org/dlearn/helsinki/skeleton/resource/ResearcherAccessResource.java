@@ -41,14 +41,14 @@ public class ResearcherAccessResource {
     @Path("/create_teacher")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Teacher createNewTeacher(NewTeacher teacher) throws PasswordException {
-        try { 
+    public Teacher createNewTeacher(NewTeacher teacher)
+            throws PasswordException {
+        try {
             return createNewUserService.createNewTeacher(teacher).orElse(null);
         } catch (PasswordException e) {
             throw new WebApplicationException(
                     Response.status(Response.Status.BAD_REQUEST)
-                            .entity("Invalid password.")
-                            .build());
+                            .entity("Invalid password.").build());
         }
     }
 }

@@ -2,8 +2,6 @@ package org.dlearn.helsinki.skeleton.resource;
 
 import java.util.List;
 import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.ws.rs.Consumes;
 
@@ -91,13 +89,13 @@ public class TeacherResource {
                     returnedStudent = teacherStudentService
                             .getStudent(student_id);
                 }
-                
+
             } else {
                 // Student does not exist, create a new student.
                 returnedStudent = createNewUserService.createNewStudent(student)
                         .orElse(null);
             }
-            
+
         } catch (StudentExistsException e) {
             throw new WebApplicationException(
                     Response.status(Status.BAD_REQUEST)
@@ -114,12 +112,11 @@ public class TeacherResource {
                     Response.status(Status.BAD_REQUEST)
                             .entity("Adding student to group failed. Student was created without group.")
                             .build());
-            
+
         } catch (PasswordException e) {
             throw new WebApplicationException(
                     Response.status(Status.BAD_REQUEST)
-                            .entity("Invalid password.")
-                            .build());
+                            .entity("Invalid password.").build());
         }
         return returnedStudent;
     }
@@ -131,22 +128,19 @@ public class TeacherResource {
     public Student changeStudentPassword(
             @PathParam("teacher_id") int teacher_id,
             ChangePasswordStudent student) throws PasswordException {
-        
-        return security.getTeacher()
-                .map(new Function<Teacher, Student>() {
+
+        return security.getTeacher().map(new Function<Teacher, Student>() {
             @Override
             public Student apply(Teacher t) {
                 try {
                     return change_password.changeStudentPassword(student);
                 } catch (PasswordException ex) {
-                                throw new WebApplicationException(
-                    Response.status(Status.BAD_REQUEST)
-                            .entity("Invalid password.")
-                            .build());
+                    throw new WebApplicationException(
+                            Response.status(Status.BAD_REQUEST)
+                                    .entity("Invalid password.").build());
                 }
             }
-        })
-                .orElse(null);
+        }).orElse(null);
     }
 
     @GET
@@ -158,7 +152,7 @@ public class TeacherResource {
         if (security.isTheTeacher(teacher_id)) {
             students = teacherStudentService.getAllStudents();//(teacher_id);
         }
-        
+
         return students;
     }
 }

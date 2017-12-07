@@ -23,23 +23,23 @@ public class CreateNewUserService {
         if (db.doesStudentUsernameExistInDatabase(newStudent.student)) {
             throw new StudentExistsException();
         }
-        
+
         //Check group
         if (!db.doesGroupClassMatch(newStudent.group_id, newStudent.class_id)) {
             throw new GroupClassMatchException();
         }
-        
+
         //Check password
         isPasswordValid(newStudent.password);
-        
+
         //Check age
-        if (newStudent.student.age < 0 || newStudent.student.age > 120){
+        if (newStudent.student.age < 0 || newStudent.student.age > 120) {
             throw new InvalidAgeException();
         }
-        
+
         //Create Student in Database
         Optional<Student> student = db.createStudent(newStudent);
-        
+
         if (student.isPresent() && !db.addStudentToGroup(student.get(),
                 newStudent.class_id, newStudent.group_id)) {
             throw new AddGroupFailedException();
@@ -47,16 +47,17 @@ public class CreateNewUserService {
         return student;
     }
 
-    public Optional<Teacher> createNewTeacher(NewTeacher newTeacher) throws PasswordException {
-        
+    public Optional<Teacher> createNewTeacher(NewTeacher newTeacher)
+            throws PasswordException {
+
         //Check password
         isPasswordValid(newTeacher.password);
-        
+
         return db.createTeacher(newTeacher);
     }
-    
-    private boolean isPasswordValid(String password) throws PasswordException{
-        if (password.length() < 5 || password.length() > 100 ) {
+
+    private boolean isPasswordValid(String password) throws PasswordException {
+        if (password.length() < 5 || password.length() > 100) {
             throw new PasswordException();
         } else {
             return true;

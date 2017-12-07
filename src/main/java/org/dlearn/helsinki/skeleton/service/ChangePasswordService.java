@@ -9,11 +9,12 @@ import org.dlearn.helsinki.skeleton.model.Student;
 public class ChangePasswordService {
     private static final Database DB = new Database();
 
-    public Student changeStudentPassword(ChangePasswordStudent student) throws PasswordException {
+    public Student changeStudentPassword(ChangePasswordStudent student)
+            throws PasswordException {
         if (student.password.length() < 5 || student.password.length() > 100) {
             throw new PasswordException();
         }
-                
+
         return DB.changeStudentPassword(student).orElse(null);
     }
 

@@ -56,11 +56,14 @@ public class TeacherGroupService {
         DB.updateGroupName(class_id, group_id, groupSample);
     }
 
-    public StudentGroup insertNewGroupInClass(int class_id, NewStudentGroup group) throws RuntimeException, PasswordException, InvalidAgeException {
+    public StudentGroup insertNewGroupInClass(int class_id,
+            NewStudentGroup group)
+            throws RuntimeException, PasswordException, InvalidAgeException {
         StudentGroup createdStudentGroup = new StudentGroup();
-        createdStudentGroup.setGroup(DB.createGroupInClass(class_id, group.name));
+        createdStudentGroup
+                .setGroup(DB.createGroupInClass(class_id, group.name));
         Iterator<NewStudent> iterator = group.students.iterator();
-        
+
         while (iterator.hasNext()) {
             NewStudent prepareStudent = iterator.next()
                     .setGroup_id(createdStudentGroup.get_id())

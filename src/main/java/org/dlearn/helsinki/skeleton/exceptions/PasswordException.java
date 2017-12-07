@@ -12,6 +12,6 @@ package org.dlearn.helsinki.skeleton.exceptions;
 public class PasswordException extends Exception {
 
     public PasswordException() {
-        
+
     }
 }
