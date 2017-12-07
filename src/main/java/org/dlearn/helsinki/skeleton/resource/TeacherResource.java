@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.dlearn.helsinki.skeleton.exceptions.AddGroupFailedException;
 import org.dlearn.helsinki.skeleton.exceptions.GroupClassMatchException;
+import org.dlearn.helsinki.skeleton.exceptions.InvalidAgeException;
 import org.dlearn.helsinki.skeleton.exceptions.PasswordException;
 
 import org.dlearn.helsinki.skeleton.exceptions.StudentExistsException;
@@ -74,7 +75,7 @@ public class TeacherResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Student createNewStudent(@PathParam("teacher_id") int teacher_id,
-            NewStudent student) {
+            NewStudent student) throws RuntimeException, InvalidAgeException {
         Student returnedStudent = null;
         int student_id = student.student.get_id();
         int class_id = student.class_id;
@@ -142,7 +143,7 @@ public class TeacherResource {
         if (security.isTheTeacher(teacher_id)) {
             students = teacherStudentService.getAllStudents();//(teacher_id);
         }
-        ;
+        
         return students;
     }
 }

@@ -1,5 +1,6 @@
 package org.dlearn.helsinki.skeleton.service;
 
+import org.dlearn.helsinki.skeleton.exceptions.InvalidAgeException;
 import org.dlearn.helsinki.skeleton.exceptions.PasswordException;
 import java.util.Optional;
 import org.dlearn.helsinki.skeleton.database.Database;
@@ -16,7 +17,7 @@ public class CreateNewUserService {
     private final Database db = new Database();
 
     public Optional<Student> createNewStudent(NewStudent newStudent)
-            throws RuntimeException, PasswordException {
+            throws RuntimeException, PasswordException, InvalidAgeException {
 
         //Check uniquenes of username
         if (db.doesStudentUsernameExistInDatabase(newStudent.student)) {
@@ -28,8 +29,13 @@ public class CreateNewUserService {
             throw new GroupClassMatchException();
         }
         
-        //Check password length
+        //Check password
         isPasswordValid(newStudent.password);
+        
+        //Check age
+        if (newStudent.student.age < 0 || newStudent.student.age > 120){
+            throw new InvalidAgeException();
+        }
         
         //Create Student in Database
         Optional<Student> student = db.createStudent(newStudent);
@@ -43,8 +49,9 @@ public class CreateNewUserService {
 
     public Optional<Teacher> createNewTeacher(NewTeacher newTeacher) throws PasswordException {
         
-        //Check password length
+        //Check password
         isPasswordValid(newTeacher.password);
+        
         return db.createTeacher(newTeacher);
     }
     
