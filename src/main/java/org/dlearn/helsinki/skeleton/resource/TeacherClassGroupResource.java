@@ -20,6 +20,7 @@ import org.dlearn.helsinki.skeleton.model.StudentGroup;
 import org.dlearn.helsinki.skeleton.service.TeacherGroupService;
 import org.dlearn.helsinki.skeleton.exceptions.GroupCannotBeClosedException;
 import org.dlearn.helsinki.skeleton.exceptions.GroupUpdateUnsuccessful;
+import org.dlearn.helsinki.skeleton.exceptions.PasswordException;
 import org.dlearn.helsinki.skeleton.exceptions.StudentExistsException;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.GroupThemeAverage;
@@ -46,7 +47,7 @@ public class TeacherClassGroupResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public StudentGroup ginsertGroupInClass(@PathParam("class_id") int class_id,
-            NewStudentGroup group) {
+            NewStudentGroup group) throws RuntimeException, PasswordException {
         return teacherGroupService.insertNewGroupInClass(class_id, group);
     }
 

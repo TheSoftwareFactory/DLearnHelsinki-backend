@@ -29,9 +29,7 @@ public class CreateNewUserService {
         }
         
         //Check password length
-        if (newStudent.password.length() < 5 || newStudent.password.length() > 100 ) {
-            throw new PasswordException();
-        }
+        isPasswordValid(newStudent.password);
         
         //Create Student in Database
         Optional<Student> student = db.createStudent(newStudent);
@@ -43,8 +41,19 @@ public class CreateNewUserService {
         return student;
     }
 
-    public Optional<Teacher> createNewTeacher(NewTeacher newTeacher) {
+    public Optional<Teacher> createNewTeacher(NewTeacher newTeacher) throws PasswordException {
+        
+        //Check password length
+        isPasswordValid(newTeacher.password);
         return db.createTeacher(newTeacher);
+    }
+    
+    private boolean isPasswordValid(String password) throws PasswordException{
+        if (password.length() < 5 || password.length() > 100 ) {
+            throw new PasswordException();
+        } else {
+            return true;
+        }
     }
 
 }
