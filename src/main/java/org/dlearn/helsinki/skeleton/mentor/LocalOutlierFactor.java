@@ -2,36 +2,35 @@ package org.dlearn.helsinki.skeleton.mentor;
 
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
 
-import org.dlearn.helsinki.skeleton.mentor.Distance;
+import org.dlearn.helsinki.skeleton.model.Answer;
+import org.dlearn.helsinki.skeleton.mentor.Tuple;
+import static org.dlearn.helsinki.skeleton.mentor.Distance.euclidean;
 
 public class LocalOutlierFactor {
 
-    // Sort by column method missing
-    public double[][] kNearestNeighbors(int k, double[] p, double[][] data) {
-        // last index reserved for distances
-        double[][] neighbors = new double[data.length][data[0].length + 1];
-        ArrayUtils.removeElement(neighbors, p);
-        int h = 0;
-        for (int i = 0; i < neighbors.length; i++) {
-            if (Arrays.equals(p, data[i])) {
+    public Tuple<Double, List<Integer>> kNearestNeighbors(int k, List<Answer> p,
+            List<List<Answer>> data) {
+        Map<Integer, Double> neighbors = new HashMap(data.size());
+        for (List<Answer> o : data) {
+            if (p.equals(o)) {
                 continue;
             }
-            for (int j = 0; j < data[i].length; j++) {
-                neighbors[h][j] = data[i][j];
-            }
-            neighbors[h][data[i].length] = Distance.euclidean(
-                    new ArrayList(Arrays.asList(p)),
-                    new ArrayList(Arrays.asList(data[i])));
-            h++;
+            int student_id = o.get(0).getStudent_id();
+            neighbors.put(student_id, euclidean(p, o));
         }
-        //sort(neighbors, by=last element of every row);
-        //k_dist is the last element of the last row
-        return LocalOutlierFactor.slice(neighbors, 0, k);
+        List<Double> distances = new ArrayList(neighbors.values());
+        Collections.sort(distances);
+        double kDist = distances.get(0);
+        return new Tuple(kDist, neighbors);
     }
 
+    /*
     public double rechabilityDistance(int k, double[] p, double[] o,
             double[][] data) {
         double[][] neighbors = this.kNearestNeighbors(k, o, data); // does not care if p present
@@ -42,7 +41,7 @@ public class LocalOutlierFactor {
                 new ArrayList(Arrays.asList(o)));
         return Math.max(kDist, distance);
     }
-
+    
     public double localReachabilityDensity(int k, double[] p, double[][] data) {
         double lrd = 0.0;
         double sum = 0.0;
@@ -59,7 +58,7 @@ public class LocalOutlierFactor {
         lrd = neighbors.length / sum;
         return lrd;
     }
-
+    
     public double localOutlierFactor(int k, double[] p, double[][] data) {
         double lof = 0.0;
         double[][] neighbors = this.kNearestNeighbors(k, p, data);
@@ -77,11 +76,11 @@ public class LocalOutlierFactor {
         lof = sum / neighbors.length;
         return lof;
     }
-
+    
     // TODO
     public void outliers(int minPts, double[][] data) {
     }
-
+    */
     public static double[][] slice(double[][] data, int start, int end) {
         if (end <= start) {
             return null;
