@@ -12,6 +12,7 @@ import org.dlearn.helsinki.skeleton.model.Answer;
 import org.dlearn.helsinki.skeleton.mentor.Tuple;
 import static org.dlearn.helsinki.skeleton.mentor.Distance.euclidean;
 import static org.dlearn.helsinki.skeleton.mentor.Sort.sortMapByValue;
+import static org.dlearn.helsinki.skeleton.mentor.Sort.sortMapByValueReverse;
 
 public class LocalOutlierFactor {
 
@@ -84,9 +85,56 @@ public class LocalOutlierFactor {
         lof = sum / n;
         return lof;
     }
-    /*
-    // TODO
-    public void outliers(int minPts, double[][] data) {
+
+    public Map<Integer, Double> outliers(int minPts, List<Answer> rawData) {
+        List<List<Answer>> data = this.prepareData(rawData);
+        Map<Integer, Double> outliers = new HashMap();
+        for (List<Answer> p : data) {
+            double lof = this.localOutlierFactor(minPts, p, data);
+            if (lof > 1.0) {
+                outliers.put(p.get(0).getStudent_id(), lof);
+            }
+        }
+        outliers = sortMapByValueReverse(outliers);
+        return outliers;
     }
-    */
+
+    // Make this smarter
+    // Remove List<Answer> from List<List<Answer>> data, if Answer.getAnswer() is null;
+    public List<List<Answer>> prepareData(List<Answer> rawData) {
+        List<Answer> tmp = new ArrayList(rawData);
+        List<List<Answer>> data = new ArrayList();
+        List<Integer> students = new ArrayList();
+        List<Integer> surveys = new ArrayList();
+        List<Integer> questions = new ArrayList();
+        for (Answer ans : rawData) {
+            if (!students.contains(ans.getStudent_id()))
+                students.add(ans.getStudent_id());
+            if (!surveys.contains(ans.getSurvey_id()))
+                surveys.add(ans.getSurvey_id());
+            if (!questions.contains(ans.getQuestion_id()))
+                questions.add(ans.getQuestion_id());
+        }
+        Collections.sort(students);
+        Collections.sort(surveys);
+        Collections.sort(questions);
+        for (Integer student : students) {
+            List<Answer> studentAnswers = new ArrayList();
+            for (Integer survey : surveys) {
+                for (Integer question : questions) {
+                    for (Answer ans : tmp) {
+                        if (student == ans.getStudent_id()
+                                && survey == ans.getSurvey_id()
+                                && question == ans.getQuestion_id()) {
+                            studentAnswers.add(ans);
+                            tmp.remove(ans);
+                            break;
+                        }
+                    }
+                }
+            }
+            data.add(studentAnswers);
+        }
+        return data;
+    }
 }
