@@ -11,40 +11,49 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.dlearn.helsinki.skeleton.model.Answer;
 import org.dlearn.helsinki.skeleton.mentor.Tuple;
 import static org.dlearn.helsinki.skeleton.mentor.Distance.euclidean;
+import static org.dlearn.helsinki.skeleton.mentor.Sort.sortMapByValue;
 
 public class LocalOutlierFactor {
 
-    public Tuple<Double, List<Integer>> kNearestNeighbors(int k, List<Answer> p,
-            List<List<Answer>> data) {
-        Map<Integer, Double> neighbors = new HashMap(data.size());
+    public Tuple<Double, List<List<Answer>>> kNearestNeighbors(int k,
+            List<Answer> p, List<List<Answer>> data) {
+        Map<List<Answer>, Double> distances = new HashMap(data.size());
         for (List<Answer> o : data) {
             if (p.equals(o)) {
                 continue;
             }
-            int student_id = o.get(0).getStudent_id();
-            neighbors.put(student_id, euclidean(p, o));
+            distances.put(o, euclidean(p, o));
         }
-        List<Double> distances = new ArrayList(neighbors.values());
-        Collections.sort(distances);
-        double kDist = distances.get(0);
+        List<List<Answer>> neighbors = new ArrayList(k);
+        distances = sortMapByValue(distances);
+        int i = 0;
+        for (List<Answer> q : distances.keySet()) {
+            if (i == k)
+                break;
+            neighbors.add(q);
+            i++;
+        }
+        double kDist = distances.get(neighbors.get(0));
         return new Tuple(kDist, neighbors);
     }
 
+    /*
     public double rechabilityDistance(int k, List<Answer> p, List<Answer> o,
             List<List<Answer>> data) {
-        Tuple<Double, List<Integer>> knnResults = this.kNearestNeighbors(k, o,
+        Tuple<Double, Map<List<Answer>, Double>> knnResults = this.kNearestNeighbors(k, o,
                 data);
         double kDist = knnResults.first();
         double distance = Distance.euclidean(p, o);
         return Math.max(kDist, distance);
     }
-
-    /*
-    public double localReachabilityDensity(int k, double[] p, double[][] data) {
+    
+    public double localReachabilityDensity(int k, List<Answer> p, List<List<Answer>> data) {
         double lrd = 0.0;
         double sum = 0.0;
-        double[][] neighbors = this.kNearestNeighbors(k, p, data);
-        double[] reachDistances = new double[neighbors.length];
+        Tuple<Double, Map<List<Answer>, Double>> knnResults = this.kNearestNeighbors(k, o,
+                data);
+        int n = knnResults.second().size();
+        double[] reachDistances = new double[n];
         for (int i = 0; i < reachDistances.length; i++) {
             // remove last element from neighbor
             double[] neighbor = Arrays.copyOfRange(neighbors[i], 0,
@@ -53,7 +62,7 @@ public class LocalOutlierFactor {
         }
         for (double e : reachDistances)
             sum += e;
-        lrd = neighbors.length / sum;
+        lrd = n / sum;
         return lrd;
     }
     

@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import org.dlearn.helsinki.skeleton.model.Answer;
 import static org.dlearn.helsinki.skeleton.mentor.Distance.euclidean;
 
-import org.junit.Rule;
-import org.junit.Test;
 import org.junit.Before;
+import org.junit.Test;
+import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import static org.junit.Assert.assertEquals;
 
