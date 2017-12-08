@@ -1,7 +1,11 @@
 package org.dlearn.helsinki.skeleton.mentor;
 
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
+
+import org.dlearn.helsinki.skeleton.mentor.Distance;
 
 public class LocalOutlierFactor {
 
@@ -18,8 +22,9 @@ public class LocalOutlierFactor {
             for (int j = 0; j < data[i].length; j++) {
                 neighbors[h][j] = data[i][j];
             }
-            neighbors[h][data[i].length] = LocalOutlierFactor.euclidean(p,
-                    data[i]);
+            neighbors[h][data[i].length] = Distance.euclidean(
+                    new ArrayList(Arrays.asList(p)),
+                    new ArrayList(Arrays.asList(data[i])));
             h++;
         }
         //sort(neighbors, by=last element of every row);
@@ -33,7 +38,8 @@ public class LocalOutlierFactor {
         int n = neighbors.length - 1;
         int m = neighbors[n].length - 1;
         double kDist = neighbors[n][m];
-        double distance = LocalOutlierFactor.euclidean(p, o);
+        double distance = Distance.euclidean(new ArrayList(Arrays.asList(p)),
+                new ArrayList(Arrays.asList(o)));
         return Math.max(kDist, distance);
     }
 
@@ -74,20 +80,6 @@ public class LocalOutlierFactor {
 
     // TODO
     public void outliers(int minPts, double[][] data) {
-    }
-
-    public static double euclidean(double[] u, double[] v) {
-        double result = 0.0;
-
-        if (u.length != v.length) {
-            return result;
-        }
-
-        for (int i = 0; i < u.length; i++) {
-            result += Math.pow((u[i] - v[i]), 2);
-        }
-
-        return result;
     }
 
     public static double[][] slice(double[][] data, int start, int end) {
