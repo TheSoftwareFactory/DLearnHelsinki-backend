@@ -99,3 +99,7 @@ nbactions.xml
 node_modules
 package-lock.json
 /nbproject/
+
+# python compile stuff
+mentor/__pycache__
+mentor/*.pyc
