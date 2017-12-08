@@ -41,17 +41,18 @@ public class Group {
     public void setClass_id(int class_id) {
         this.class_id = class_id;
     }
-    
+
     public void setOpen(boolean open) {
         this.open = open;
     }
-    
+
     public Boolean getOpen() {
         return open;
     }
-        
+
     @Override
     public String toString() {
-        return "Group { _id = "+_id+", name = "+name+", class_id = "+class_id+", open = " +open+" }";
+        return "Group { _id = " + _id + ", name = " + name + ", class_id = "
+                + class_id + ", open = " + open + " }";
     }
 }

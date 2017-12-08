@@ -7,6 +7,10 @@ import org.dlearn.helsinki.skeleton.model.Survey;
 public class SurveyService {
     private final Database db = new Database();
 
+    public Survey getSurvey(int survey_id) {
+        return db.getSurvey(survey_id);
+    }
+
     public List<Survey> getAllSurveys() {
         return db.getSurveys();
     }

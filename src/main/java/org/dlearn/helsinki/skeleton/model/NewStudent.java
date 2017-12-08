@@ -8,16 +8,17 @@ public class NewStudent {
 
     @Override
     public String toString() {
-        return "NewStudent{" + "student=" + student + ", class_id=" + class_id + ", group_id=" + group_id + '}';
+        return "NewStudent{" + "student=" + student + ", class_id=" + class_id
+                + ", group_id=" + group_id + '}';
     }
 
-	public NewStudent setGroup_id(int group_id){
-		this.group_id = group_id;
-		return this;
-	}
+    public NewStudent setGroup_id(int group_id) {
+        this.group_id = group_id;
+        return this;
+    }
 
-	public NewStudent setClass_id(int class_id){
-		this.class_id = class_id;
-		return this;
-	}    
+    public NewStudent setClass_id(int class_id) {
+        this.class_id = class_id;
+        return this;
+    }
 }

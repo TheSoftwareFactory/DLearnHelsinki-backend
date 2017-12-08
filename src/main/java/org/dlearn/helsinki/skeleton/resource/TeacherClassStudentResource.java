@@ -39,15 +39,19 @@ public class TeacherClassStudentResource {
             @PathParam("class_id") int class_id,
             @PathParam("survey_id") int survey_id,
             @PathParam("student_id") int student_id) {
-        return teacherClassStudent.getStudentThemeAverage(survey_id, student_id);
+        return teacherClassStudent.getStudentThemeAverage(survey_id,
+                student_id);
     }
 
     @POST
     @Path("/{student_id}/move_to_group/{group_id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Group change_group(@PathParam("class_id") int class_id, @PathParam("student_id") int student_id, @PathParam("group_id") int group_id) {
-        if (moveToGroup.moveStudentToGroup(class_id, student_id, group_id)) {            
-            return group.getTheGroupStudentIsIn(class_id, student_id).orElse(null);
+    public Group change_group(@PathParam("class_id") int class_id,
+            @PathParam("student_id") int student_id,
+            @PathParam("group_id") int group_id) {
+        if (moveToGroup.moveStudentToGroup(class_id, student_id, group_id)) {
+            return group.getTheGroupStudentIsIn(class_id, student_id)
+                    .orElse(null);
         } else {
             return null;
         }
@@ -55,8 +59,7 @@ public class TeacherClassStudentResource {
 
     @GET
     @Path("/{student_id}")
-    public Student getStudent(
-            @PathParam("class_id") int class_id,
+    public Student getStudent(@PathParam("class_id") int class_id,
             @PathParam("student_id") int student_id) {
         System.out.println("fetching student");
         return teacherStudentService.getStudent(student_id);
@@ -69,11 +72,13 @@ public class TeacherClassStudentResource {
             @PathParam("class_id") int class_id,
             @PathParam("student_id") int student_id,
             @PathParam("amount") int amount) {
-        return progression.getStudentClassProgression(class_id, student_id, amount);
+        return progression.getStudentClassProgression(class_id, student_id,
+                amount);
     }
 
     @GET
-    public List<Student> getListOfStudents(@PathParam("class_id") int class_id) {
+    public List<Student> getListOfStudents(
+            @PathParam("class_id") int class_id) {
         System.out.println("fetching list of students from class");
         return teacherStudentService.getAllStudentsFromClass(class_id);
     }

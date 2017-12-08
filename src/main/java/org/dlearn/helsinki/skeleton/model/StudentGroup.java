@@ -13,7 +13,7 @@ public class StudentGroup {
     public List<Student> students;
 
     public StudentGroup() {
-    	super();
+        super();
         students = new ArrayList<Student>();
     }
 
@@ -25,24 +25,25 @@ public class StudentGroup {
         this.open = open;
         students = new ArrayList<Student>();
     }
-    
+
     @Override
     public String toString() {
-        return "StudentGroup { _id = "+_id+", name = "+name+", students = "+students.toString()+" }";
+        return "StudentGroup { _id = " + _id + ", name = " + name
+                + ", students = " + students.toString() + " }";
     }
 
-	public void setGroup(Group group) {		
-	    _id = group.get_id();
-	    class_id= group.getStudent_id();
-	    open = group.getOpen();
-	    name = group.getName();
-	}
+    public void setGroup(Group group) {
+        _id = group.get_id();
+        class_id = group.getStudent_id();
+        open = group.getOpen();
+        name = group.getName();
+    }
 
-	public void addStudent(Optional<Student> student) {
-		students.add(student.orElse(null));
-	}
+    public void addStudent(Optional<Student> student) {
+        students.add(student.orElse(null));
+    }
 
-	public int get_id() {
-		return _id;
-	}
+    public int get_id() {
+        return _id;
+    }
 }

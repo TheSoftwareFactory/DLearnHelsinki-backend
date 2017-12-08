@@ -18,7 +18,7 @@ public class TeacherClassSurveyService {
         System.out.println("Calling postSurvey");
         try {
             // Posting the new survey with id
-        	surveyTheme = db.postSurvey(surveyTheme);
+            surveyTheme = db.postSurvey(surveyTheme);
             // fetching all the questions in DB
             List<Question> questions = db.getQuestions(surveyTheme);
             // Posting new survey_questions

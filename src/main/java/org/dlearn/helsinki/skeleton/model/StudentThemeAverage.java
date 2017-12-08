@@ -17,8 +17,8 @@ public class StudentThemeAverage {
     }
 
     public StudentThemeAverage(int survey_id, String start_date, int theme_id,
-            String theme_title, String theme_title_fi, String description, String description_fi, int student_id,
-            float answer) {
+            String theme_title, String theme_title_fi, String description,
+            String description_fi, int student_id, float answer) {
         super();
         this.survey_id = survey_id;
         this.start_date = start_date;
@@ -58,7 +58,7 @@ public class StudentThemeAverage {
     public String getTheme_title() {
         return theme_title;
     }
-    
+
     public String getTheme_title_fi() {
         return theme_title_fi;
     }
@@ -66,7 +66,7 @@ public class StudentThemeAverage {
     public void setTheme_title(String theme_title) {
         this.theme_title = theme_title;
     }
-    
+
     public void setTheme_title_fi(String theme_title_fi) {
         this.theme_title = theme_title;
     }
@@ -74,7 +74,7 @@ public class StudentThemeAverage {
     public String getDescription() {
         return description;
     }
-    
+
     public String getDescription_fi() {
         return description_fi;
     }
@@ -82,7 +82,7 @@ public class StudentThemeAverage {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     public void setDescription_fi(String description) {
         this.description_fi = description;
     }
@@ -105,6 +105,10 @@ public class StudentThemeAverage {
 
     @Override
     public String toString() {
-        return "StudentThemeAverage { survey_id = "+survey_id+", start_date = "+start_date+", theme_id = "+theme_id+", theme_title = "+theme_title+", description = "+description+", student_id = "+student_id+", answer = "+answer+" }";
+        return "StudentThemeAverage { survey_id = " + survey_id
+                + ", start_date = " + start_date + ", theme_id = " + theme_id
+                + ", theme_title = " + theme_title + ", description = "
+                + description + ", student_id = " + student_id + ", answer = "
+                + answer + " }";
     }
 }

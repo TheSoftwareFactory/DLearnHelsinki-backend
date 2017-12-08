@@ -15,7 +15,7 @@ public class StudentSurveyAnswerService {
         answer.question_id = question_id;
         answer.student_id = student_id;
         answer.survey_id = survey_id;
-        db.putAnswerToQuestion(answer,class_id);
+        db.putAnswerToQuestion(answer, class_id);
     }
 
     public List<Answer> getAnswers(int student_id, int survey_id) {
@@ -25,6 +25,12 @@ public class StudentSurveyAnswerService {
     public List<StudentThemeAverage> getStudentThemeAverage(int student_id,
             int survey_id) {
         return db.getStudentThemeAverage(survey_id, student_id);
+    }
+
+    public boolean postAnswersToQuestion(int class_id, int survey_id,
+            int student_id, List<Answer> answers) {
+        return db.postStudentAnswersForSurvey(class_id, survey_id, student_id,
+                answers);
     }
 
 }

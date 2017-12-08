@@ -6,7 +6,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import org.dlearn.helsinki.skeleton.exceptions.PasswordException;
 import org.dlearn.helsinki.skeleton.model.NewTeacher;
 import org.dlearn.helsinki.skeleton.model.Researcher;
 import org.dlearn.helsinki.skeleton.model.Survey;
@@ -38,7 +41,14 @@ public class ResearcherAccessResource {
     @Path("/create_teacher")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Teacher createNewTeacher(NewTeacher teacher) {
-        return createNewUserService.createNewTeacher(teacher).orElse(null);
+    public Teacher createNewTeacher(NewTeacher teacher)
+            throws PasswordException {
+        try {
+            return createNewUserService.createNewTeacher(teacher).orElse(null);
+        } catch (PasswordException e) {
+            throw new WebApplicationException(
+                    Response.status(Response.Status.BAD_REQUEST)
+                            .entity("Invalid password.").build());
+        }
     }
 }

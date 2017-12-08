@@ -20,8 +20,9 @@ public class Survey {
         super();
     }
 
-    public Survey(int _id, String title, String title_fi, String description, String description_fi, Timestamp start_date,
-    		Timestamp end_date, int teacher_id, int class_id, boolean open) {
+    public Survey(int _id, String title, String title_fi, String description,
+            String description_fi, Timestamp start_date, Timestamp end_date,
+            int teacher_id, int class_id, boolean open) {
         super();
         this._id = _id;
         this.title = title;
@@ -46,7 +47,7 @@ public class Survey {
     public String getTitle() {
         return title;
     }
-    
+
     public String getTitle_fi() {
         return title_fi;
     }
@@ -54,7 +55,7 @@ public class Survey {
     public void setTitle(String title) {
         this.title = title;
     }
-    
+
     public void setTitle_fi(String title) {
         this.title_fi = title;
     }
@@ -102,7 +103,7 @@ public class Survey {
     public String getDescription() {
         return description;
     }
-    
+
     public String getDescription_fi() {
         return description_fi;
     }
@@ -110,14 +111,17 @@ public class Survey {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     public void setDescription_fi(String description) {
         this.description_fi = description;
     }
 
     @Override
     public String toString() {
-        return "Survey{" + "_id=" + _id + ", title=" + title + ", description=" + description + ", start_date=" + start_date + ", end_date=" + end_date + ", teacher_id=" + teacher_id + ", class_id=" + class_id + ", open=" + open + '}';
+        return "Survey{" + "_id=" + _id + ", title=" + title + ", description="
+                + description + ", start_date=" + start_date + ", end_date="
+                + end_date + ", teacher_id=" + teacher_id + ", class_id="
+                + class_id + ", open=" + open + '}';
     }
-    
+
 }
