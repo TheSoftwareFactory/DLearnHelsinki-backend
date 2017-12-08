@@ -3,9 +3,12 @@ package org.dlearn.helsinki.skeleteon.mentor;
 import java.util.ArrayList;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
+import static org.dlearn.helsinki.skeleton.mentor.Distance.euclidean;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.Before;
+import org.junit.rules.ExpectedException;
 import static org.junit.Assert.assertEquals;
 
 public class DistanceTest {
@@ -34,8 +37,18 @@ public class DistanceTest {
     @Test
     public void testEuclidean() {
         double expected = 1.0;
-        assertEquals(expected,
-                org.dlearn.helsinki.skeleton.mentor.Distance.euclidean(u, v),
-                0.0);
+        assertEquals(expected, euclidean(u, v), 0.0);
+    }
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
+    @Test
+    public void throwsIllegalArgumentExceptionIfListsHaveDifferentSizes() {
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage(
+                "Operands could not be broadcast together with sizes 3 and 4");
+        v.add(ans6);
+        euclidean(u, v);
     }
 }

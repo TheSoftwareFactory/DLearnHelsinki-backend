@@ -1,17 +1,19 @@
 package org.dlearn.helsinki.skeleton.mentor;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.lang.IllegalArgumentException;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
 
 public class Distance {
 
-    public static double euclidean(ArrayList<Answer> u, ArrayList<Answer> v) {
+    public static double euclidean(List<Answer> u, List<Answer> v) {
         double result = 0.0;
 
         if (u.size() != v.size()) {
-            return Double.POSITIVE_INFINITY;
+            throw new IllegalArgumentException(
+                    "Operands could not be broadcast together with sizes "
+                            + u.size() + " and " + v.size());
         }
 
         for (int i = 0; i < u.size(); i++) {
