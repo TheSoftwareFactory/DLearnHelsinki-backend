@@ -36,52 +36,49 @@ public class LocalOutlierFactor {
         double kDist = distances.get(neighbors.get(0));
         return new Tuple(kDist, neighbors);
     }
-    
+
     public double rechabilityDistance(int k, List<Answer> p, List<Answer> o,
             List<List<Answer>> data) {
-        Tuple<Double, List<List<Answer>, Double>> knnResults = this.kNearestNeighbors(k, o,
-                data);
-        double kDist = knnResults.first();
+        double kDist = this.kNearestNeighbors(k, o, data).first();
         double distance = Distance.euclidean(p, o);
         return Math.max(kDist, distance);
     }
-    
+
     /*
     public double localReachabilityDensity(int k, List<Answer> p, List<List<Answer>> data) {
-        double lrd = 0.0;
-        double sum = 0.0;
-        Tuple<Double, Map<List<Answer>, Double>> knnResults = this.kNearestNeighbors(k, o,
-                data);
-        int n = knnResults.second().size();
-        double[] reachDistances = new double[n];
-        for (int i = 0; i < reachDistances.length; i++) {
-            // remove last element from neighbor
-            double[] neighbor = Arrays.copyOfRange(neighbors[i], 0,
-                    neighbors[i].length - 1);
-            reachDistances[i] = this.rechabilityDistance(k, p, neighbor, data);
-        }
-        for (double e : reachDistances)
-            sum += e;
-        lrd = n / sum;
-        return lrd;
-    }
+       double lrd = 0.0;
+       double sum = 0.0;
+       Tuple<Double, List<List<Answer>, Double>> knnResults = this.kNearestNeighbors(k, o,
+               data).second();
     
+       int n = knnResults.second().size();
+       double[] reachDistances = new double[n];
+       for (int i = 0; i < reachDistances.length; i++) {
+        
+       reachDistances[i] = this.rechabilityDistance(k, p, neighbor, data);
+       }
+       for (double e : reachDistances)
+           sum += e;
+       lrd = n / sum;
+       return lrd;
+    }
+    /*
     public double localOutlierFactor(int k, double[] p, double[][] data) {
-        double lof = 0.0;
-        double[][] neighbors = this.kNearestNeighbors(k, p, data);
-        double lrd_p = this.localReachabilityDensity(k, p, data);
-        double[] lrd_ratios = new double[neighbors.length];
-        for (int i = 0; i < lrd_ratios.length; i++) {
-            //slice distance element out
-            double[] o = Arrays.copyOfRange(neighbors[i], 0,
-                    neighbors[i].length - 1);
-            lrd_ratios[i] = this.localReachabilityDensity(k, o, data) / lrd_p;
-        }
-        double sum = 0.0;
-        for (double e : lrd_ratios)
-            sum += e;
-        lof = sum / neighbors.length;
-        return lof;
+       double lof = 0.0;
+       double[][] neighbors = this.kNearestNeighbors(k, p, data);
+       double lrd_p = this.localReachabilityDensity(k, p, data);
+       double[] lrd_ratios = new double[neighbors.length];
+       for (int i = 0; i < lrd_ratios.length; i++) {
+           //slice distance element out
+           double[] o = Arrays.copyOfRange(neighbors[i], 0,
+                   neighbors[i].length - 1);
+           lrd_ratios[i] = this.localReachabilityDensity(k, o, data) / lrd_p;
+       }
+       double sum = 0.0;
+       for (double e : lrd_ratios)
+           sum += e;
+       lof = sum / neighbors.length;
+       return lof;
     }
     
     // TODO
