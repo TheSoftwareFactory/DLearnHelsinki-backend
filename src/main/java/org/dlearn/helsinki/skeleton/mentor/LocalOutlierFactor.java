@@ -30,18 +30,16 @@ public class LocalOutlierFactor {
         return new Tuple(kDist, neighbors);
     }
 
-    /*
-    public double rechabilityDistance(int k, double[] p, double[] o,
-            double[][] data) {
-        double[][] neighbors = this.kNearestNeighbors(k, o, data); // does not care if p present
-        int n = neighbors.length - 1;
-        int m = neighbors[n].length - 1;
-        double kDist = neighbors[n][m];
-        double distance = Distance.euclidean(new ArrayList(Arrays.asList(p)),
-                new ArrayList(Arrays.asList(o)));
+    public double rechabilityDistance(int k, List<Answer> p, List<Answer> o,
+            List<List<Answer>> data) {
+        Tuple<Double, List<Integer>> knnResults = this.kNearestNeighbors(k, o,
+                data);
+        double kDist = knnResults.first();
+        double distance = Distance.euclidean(p, o);
         return Math.max(kDist, distance);
     }
-    
+
+    /*
     public double localReachabilityDensity(int k, double[] p, double[][] data) {
         double lrd = 0.0;
         double sum = 0.0;
