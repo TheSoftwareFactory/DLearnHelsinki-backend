@@ -301,10 +301,12 @@ public class Database {
     // Takes the survey_id, the student_id
     public boolean postStudentAnswersForSurvey(int class_id, int survey_id,
             int student_id, List<Answer> answers) {
-        log.debug("Posting all answers same time isn't implemented.");
-        answers.forEach((answer) -> {
+        
+        for(Answer answer : answers) {   
+            System.out.println("putting answer");
             this.putAnswerToQuestion(answer, class_id);
-        });
+        }
+        
         return true;
 
     }
