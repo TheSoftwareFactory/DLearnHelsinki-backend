@@ -19,6 +19,14 @@ public class Answer {
         this.answer = answer;
     }
 
+    public int getSurvey_id() {
+        return this.survey_id;
+    }
+
+    public void setSurvey_id(int survey_id) {
+        this.survey_id = survey_id;
+    }
+
     public int getQuestion_id() {
         return question_id;
     }

@@ -59,7 +59,6 @@ public class ClassWithAllGroupsTest {
     public void toStringFormatTest() {
         String str = "ClassWithAllGroups{ _id = 0, name = null,"
                 + " teacher_id = 0, groups = [] }";
-        System.out.println(cwag);
         assertEquals(str, cwag.toString());
     }
 
