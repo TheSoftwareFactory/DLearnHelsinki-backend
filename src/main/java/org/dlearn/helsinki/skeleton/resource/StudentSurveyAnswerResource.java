@@ -36,11 +36,15 @@ public class StudentSurveyAnswerResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public boolean post_answers(@PathParam("student_id") int student_id,
+    public boolean postAnswers(@PathParam("student_id") int student_id,
             @PathParam("class_id") int class_id,
             @PathParam("survey_id") int survey_id, List<Answer> answers) {
 
         System.out.println("Student Answering a survey");
+        System.out.println("Class_id: " + class_id);
+        System.out.println("Stuident_id: " + student_id);
+        System.out.println("survey_id" + survey_id);
+        System.out.println(answers);
         return studentSurveyAnswerService.postAnswersToQuestion(class_id,
                 student_id, survey_id, answers);
     }
