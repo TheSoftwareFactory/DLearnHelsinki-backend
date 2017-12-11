@@ -8,7 +8,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.dlearn.helsinki.skeleton.model.AnswersAvgs;
+import org.dlearn.helsinki.skeleton.model.StudentThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Survey;
 import org.dlearn.helsinki.skeleton.service.StudentClassSurveyService;
 import org.dlearn.helsinki.skeleton.service.StudentService;
@@ -33,7 +33,7 @@ public class StudentClassSurveyResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{survey_id}/class_averages")
-    public AnswersAvgs getSurveyClassAverages(
+    public List<StudentThemeAverage> getSurveyClassAverages(
             @PathParam("student_id") int student_id,
             @PathParam("survey_id") int survey_id,
             @PathParam("class_id") int class_id) {
@@ -45,7 +45,7 @@ public class StudentClassSurveyResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{survey_id}/group_averages")
-    public AnswersAvgs getSurveyGroupAverages(
+    public List<StudentThemeAverage> getSurveyGroupAverages(
             @PathParam("student_id") int student_id,
             @PathParam("survey_id") int survey_id,
             @PathParam("class_id") int class_id) {
