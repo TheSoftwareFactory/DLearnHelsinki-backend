@@ -9,10 +9,6 @@ public class AnswerService {
 
     Database db = new Database();
 
-    public List<Answer> getClassAnswers(int class_id) {
-        return db.getClassAnswers(class_id);
-    }
-
     public List<Answer> getAnswers(int survey_id) {
         // TODO implement getAnswers to fetch all the student's answers to the particular survey
         return null;
