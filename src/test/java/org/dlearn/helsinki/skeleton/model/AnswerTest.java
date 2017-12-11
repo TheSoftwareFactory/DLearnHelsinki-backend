@@ -33,7 +33,7 @@ public class AnswerTest {
 
     @Test
     public void toStringTest() {
-        String expected = "Answer{ survey_id = 0, question_id = 0, student_id = 0, answer = 0 }";
+        String expected = "Answer{ survey_id = 0, question_id = 0, student_id = 0, answer = 0, group_id = 0 }";
         assertEquals(expected, answer1.toString());
     }
 

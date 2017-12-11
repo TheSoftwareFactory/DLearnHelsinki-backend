@@ -8,9 +8,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.dlearn.helsinki.skeleton.model.AnswersAvgs;
 import org.dlearn.helsinki.skeleton.model.ListStudentThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Student;
+import org.dlearn.helsinki.skeleton.model.StudentThemeAverage;
 import org.dlearn.helsinki.skeleton.service.ProgressionService;
 import org.dlearn.helsinki.skeleton.service.SecurityService;
 import org.dlearn.helsinki.skeleton.service.StudentService;
@@ -43,7 +43,7 @@ public class StudentAccessResource {
     @GET
     @Path("/{student_id}/survey_averages")
     @Produces(MediaType.APPLICATION_JSON)
-    public AnswersAvgs getSurveyAverages(
+    public List<StudentThemeAverage> getSurveyAverages(
             @PathParam("student_id") int student_id) {
         return studentService.getSurveyAnswerAverages(student_id, 0, 0, 0);
     }
