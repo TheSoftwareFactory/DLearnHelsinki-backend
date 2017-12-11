@@ -39,6 +39,7 @@ public class AnswerTest {
 
     @Test
     public void predefinedConstructorTest() {
+        assertEquals(0, answer2.getSurvey_id());
         assertEquals(1, answer2.getQuestion_id());
         assertEquals(2, answer2.getStudent_id());
         assertEquals(3, answer2.getAnswer());
