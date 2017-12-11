@@ -25,7 +25,7 @@ public class PasswordEncoderDummy implements PasswordEncoder {
 
         private String hash;
         private long accessed;
-        
+
         public CacheItem(String hash, long accessed) {
             this.hash = hash;
             this.accessed = accessed;
@@ -65,7 +65,7 @@ public class PasswordEncoderDummy implements PasswordEncoder {
     public String encode(CharSequence raw) {
         return this.encode(raw, BCrypt.gensalt(B_ITERATIONS));
     }
-    
+
     private String encode(CharSequence raw, String salt) {
         return BCrypt.hashpw(raw.toString(), salt);
     }
@@ -124,7 +124,7 @@ public class PasswordEncoderDummy implements PasswordEncoder {
         }
         return ret == 0;
     }
-    
+
     private boolean cacheHasHash(String hash) {
         return cache.stream()
                 .anyMatch((cacheItem) -> (cacheItem.getHash().equals(hash)));

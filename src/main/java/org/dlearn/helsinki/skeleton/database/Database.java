@@ -22,7 +22,6 @@ import org.apache.logging.log4j.Logger;
 
 import org.dlearn.helsinki.skeleton.exceptions.GroupUpdateUnsuccessful;
 import org.dlearn.helsinki.skeleton.model.Answer;
-import org.dlearn.helsinki.skeleton.model.AnswersAvgs;
 import org.dlearn.helsinki.skeleton.model.ChangePasswordStudent;
 import org.dlearn.helsinki.skeleton.model.ClassThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Classes;
@@ -302,10 +301,12 @@ public class Database {
     // Takes the survey_id, the student_id
     public boolean postStudentAnswersForSurvey(int class_id, int survey_id,
             int student_id, List<Answer> answers) {
-        log.debug("Posting all answers same time isn't implemented.");
-        answers.forEach((answer) -> {
+
+        for (Answer answer : answers) {
+            System.out.println("putting answer");
             this.putAnswerToQuestion(answer, class_id);
-        });
+        }
+
         return true;
 
     }
@@ -2154,9 +2155,9 @@ public class Database {
     //  TODO: Add checks if student belongs to class or grp in services maybe?
     // std = student, cls = class, grp = group, srv = survey
     // returns list of average values with student and possible survey
-    public AnswersAvgs getSurveyAnswerAverages(int std_id, int cls_id,
-            int grp_id, int srv_id) {
-        AnswersAvgs results = new AnswersAvgs();
+    public List<StudentThemeAverage> getSurveyAnswerAverages(int std_id,
+            int cls_id, int grp_id, int srv_id) {
+        ArrayList<StudentThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             String statement = ""
                     + "SELECT question_id, qu.theme_id, qu.question, avg(answer)\n"
@@ -2174,7 +2175,6 @@ public class Database {
                     .prepareStatement(statement)) {
                 int i = 1;
                 if (std_id > 0) {
-                    results.setStudent(this.getStudent(std_id));
                     select.setInt(i, std_id);
                     i++;
                 }
@@ -2187,16 +2187,53 @@ public class Database {
                     i++;
                 }
                 if (srv_id > 0) {
-                    results.setSurvey(this.getSurvey(srv_id));
                     select.setInt(i, srv_id);
                 }
 
                 try (ResultSet result = select.executeQuery()) {
                     while (result.next()) {
-                        results.addAverage(result.getInt("question_id"),
-                                result.getInt("theme_id"),
-                                result.getString("question"),
-                                result.getFloat("avg"));
+                        StudentThemeAverage sta = new StudentThemeAverage();
+                        sta.setAnswer(result.getFloat("avg"));
+                        sta.setTheme_title(result.getString("question"));
+                        sta.setTheme_title_fi(result.getString("question"));
+                        sta.setTheme_id(result.getInt("theme_id"));
+                        sta.setDescription("");
+                        sta.setDescription_fi("");
+                        if (srv_id > 0)
+                            sta.setSurvey_id(srv_id);
+                        if (std_id > 0)
+                            sta.setStudent_id(std_id);
+                        answers.add(sta);
+                    }
+                }
+            }
+            dbConnection.close();
+        } catch (SQLException e) {
+            log.catching(e);
+            return null;
+        }
+        return answers;
+    }
+
+    public List<Answer> getClassAnswers(int class_id) {
+        List<Answer> results = new ArrayList<>();
+        try (Connection dbConnection = getDBConnection()) {
+            String statement = "" + "SELECT an.*\n" + "FROM \"Answers\" AS an\n"
+                    + "INNER JOIN \"Surveys\" as su ON su._id=an.survey_id\n"
+                    + "WHERE su.class_id = ?";
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(statement)) {
+                select.setInt(1, class_id);
+
+                try (ResultSet result = select.executeQuery()) {
+                    while (result.next()) {
+                        Answer a = new Answer();
+                        a.setQuestion_id(result.getInt("question_id"));
+                        a.setStudent_id(result.getInt("student_id"));
+                        a.setAnswer(result.getInt("answer"));
+                        a.setSurvey_id(result.getInt("survey_id"));
+                        a.setGroup_id(result.getInt("group_id"));
+                        results.add(a);
                     }
                 }
             }

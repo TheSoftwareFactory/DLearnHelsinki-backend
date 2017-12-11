@@ -33,12 +33,13 @@ public class AnswerTest {
 
     @Test
     public void toStringTest() {
-        String expected = "Answer{ survey_id = 0, question_id = 0, student_id = 0, answer = 0 }";
+        String expected = "Answer{ survey_id = 0, question_id = 0, student_id = 0, answer = 0, group_id = 0 }";
         assertEquals(expected, answer1.toString());
     }
 
     @Test
     public void predefinedConstructorTest() {
+        assertEquals(0, answer2.getSurvey_id());
         assertEquals(1, answer2.getQuestion_id());
         assertEquals(2, answer2.getStudent_id());
         assertEquals(3, answer2.getAnswer());
