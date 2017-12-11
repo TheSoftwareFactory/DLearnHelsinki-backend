@@ -25,7 +25,7 @@ public class OutlierService {
         List<StudentLof> outlierResponse = new ArrayList();
         for(Map.Entry<Integer, Double> entry : outliers.entrySet()) {
         	int student_id = entry.getKey();
-        	String name = db.getStudent(student_id).student.getUserName();
+        	String name = db.getStudent(student_id).getUserName();
         	double lof_score = entry.getValue();
         	outlierResponse.add( new StudentLof(student_id, class_id, name, lof_score) );
         }
