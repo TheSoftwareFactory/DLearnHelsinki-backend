@@ -302,12 +302,12 @@ public class Database {
     // Takes the survey_id, the student_id
     public boolean postStudentAnswersForSurvey(int class_id, int survey_id,
             int student_id, List<Answer> answers) {
-        
-        for(Answer answer : answers) {   
+
+        for (Answer answer : answers) {
             System.out.println("putting answer");
             this.putAnswerToQuestion(answer, class_id);
         }
-        
+
         return true;
 
     }
@@ -2199,6 +2199,36 @@ public class Database {
                                 result.getInt("theme_id"),
                                 result.getString("question"),
                                 result.getFloat("avg"));
+                    }
+                }
+            }
+            dbConnection.close();
+        } catch (SQLException e) {
+            log.catching(e);
+            return null;
+        }
+        return results;
+    }
+
+    public List<Answer> getClassAnswers(int class_id) {
+        List<Answer> results = new ArrayList<>();
+        try (Connection dbConnection = getDBConnection()) {
+            String statement = "" + "SELECT an.*\n" + "FROM \"Answers\" AS an\n"
+                    + "INNER JOIN \"Surveys\" as su ON su._id=an.survey_id\n"
+                    + "WHERE su.class_id = ?";
+            try (PreparedStatement select = dbConnection
+                    .prepareStatement(statement)) {
+                select.setInt(1, class_id);
+
+                try (ResultSet result = select.executeQuery()) {
+                    while (result.next()) {
+                        Answer a = new Answer();
+                        a.setQuestion_id(result.getInt("question_id"));
+                        a.setStudent_id(result.getInt("student_id"));
+                        a.setAnswer(result.getInt("answer"));
+                        a.setSurvey_id(result.getInt("survey_id"));
+                        a.setGroup_id(result.getInt("group_id"));
+                        results.add(a);
                     }
                 }
             }
