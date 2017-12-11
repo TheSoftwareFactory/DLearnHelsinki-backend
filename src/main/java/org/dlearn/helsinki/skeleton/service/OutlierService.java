@@ -7,7 +7,6 @@ import java.util.Map;
 import org.dlearn.helsinki.skeleton.database.Database;
 import org.dlearn.helsinki.skeleton.mentor.LocalOutlierFactor;
 import org.dlearn.helsinki.skeleton.model.Answer;
-import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.StudentLof;
 
 public class OutlierService {
@@ -26,8 +25,7 @@ public class OutlierService {
         List<StudentLof> outlierResponse = new ArrayList();
         for(Map.Entry<Integer, Double> entry : outliers.entrySet()) {
         	int student_id = entry.getKey();
-        	Student student = db.getStudent();
-        	String name = student.getUserName();
+        	String name = db.getStudent(student_id).student.getUserName();
         	double lof_score = entry.getValue();
         	outlierResponse.add( new StudentLof(student_id, class_id, name, lof_score) );
         }
