@@ -23,7 +23,7 @@ public class OutlierService {
         LocalOutlierFactor lof = new LocalOutlierFactor();
         List<Answer> answers = db.getClassAnswers(class_id);
         Map<Integer, Double> outliers = lof.outliers(minPts, answers);
-        // If there are no anwers in any of the class surveys
+        // If there are no answers in any of the class surveys
         if (outliers.isEmpty())
             return null;
         List<StudentLof> outlierResponse = new ArrayList();

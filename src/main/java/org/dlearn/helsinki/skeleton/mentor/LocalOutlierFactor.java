@@ -39,8 +39,12 @@ public class LocalOutlierFactor {
             neighbors.add(q);
             i++;
         }
-        double kDist = distances.get(neighbors.get(0));
-        return new Tuple(kDist, neighbors);
+        if (neighbors.size() > 0) {
+            double kDist = distances.get(neighbors.get(0));
+            return new Tuple(kDist, neighbors);
+        } else {
+            return new Tuple(null, new ArrayList());
+        }
     }
 
     public double rechabilityDistance(int k, List<Answer> p, List<Answer> o,
@@ -78,6 +82,8 @@ public class LocalOutlierFactor {
         List<List<Answer>> neighbors = this.kNearestNeighbors(k, p, data)
                 .second();
         int n = neighbors.size();
+        if (n == 0)
+            return lof;
         double lrd_p = this.localReachabilityDensity(k, p, data);
         double[] lrd_ratios = new double[n];
         for (List<Answer> o : neighbors) {
@@ -100,10 +106,12 @@ public class LocalOutlierFactor {
         // return empty outliers if data has List:s, but
         // all the List:s have size 0
         boolean allMissing = true;
-        for(List<Answer> studentAnswers : data) {
-            if(studentAnswers.size() != 0) allMissing = false;
+        for (List<Answer> studentAnswers : data) {
+            if (studentAnswers.size() != 0)
+                allMissing = false;
         }
-        if(allMissing) return outliers;
+        if (allMissing)
+            return outliers;
         for (List<Answer> p : data) {
             double lof = this.localOutlierFactor(minPts, p, data);
             if (lof > 1.0) {
