@@ -14,8 +14,11 @@ public class StudentSurveyQuestionResource {
 
     StudentSurveyQuestionService studentSurveyQuestionService = new StudentSurveyQuestionService();
 
-    // Takes a survey_id
-    // Returns all the questions of the survey id
+    /**
+     * 
+     * @param survey_id
+     * @return all the questions of the survey id
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Question> getSurveys(@PathParam("survey_id") int survey_id) {

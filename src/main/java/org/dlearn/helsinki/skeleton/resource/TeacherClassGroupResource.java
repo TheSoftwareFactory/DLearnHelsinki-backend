@@ -33,7 +33,12 @@ public class TeacherClassGroupResource {
     private final TeacherGroupService teacherGroupService = new TeacherGroupService();
     private final ProgressionService progression = new ProgressionService();
 
-    // Simple GET to retrieve all the groups in the class and students in them.
+    /**
+     * Simple GET to retrieve all the groups in the class and students in them.
+     * @param class_id
+     * @param all
+     * @return 
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<StudentGroup> getStudentsInGroups(
@@ -42,6 +47,15 @@ public class TeacherClassGroupResource {
         return teacherGroupService.getGroupsWithStudents(class_id, all);
     }
 
+    /**
+     * Adds a group into a class
+     * @param class_id
+     * @param group
+     * @return
+     * @throws RuntimeException
+     * @throws PasswordException
+     * @throws InvalidAgeException 
+     */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -51,9 +65,11 @@ public class TeacherClassGroupResource {
         return teacherGroupService.insertNewGroupInClass(class_id, group);
     }
 
-    // simple GET with group id to retrieve a specific group
-
-    // simple GET with group_id and survey to get survey info
+    /**
+     * simple GET with group id to retrieve a specific group
+     * @param group_id
+     * @return 
+     */
     @Path("/{group_id}/surveys")
     public TeacherGroupSurveyResource getSurveyResource(
             @PathParam("group_id") int group_id) {

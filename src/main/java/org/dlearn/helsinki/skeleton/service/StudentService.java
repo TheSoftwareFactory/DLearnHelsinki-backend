@@ -16,14 +16,27 @@ public class StudentService {
         return db.getStudent(student_id);
     }
 
-    // used for every average query, returns questions with average valued answers
+    /**
+     * used for every average query, returns themes with average valued answers
+     * @param student_id
+     * @param class_id
+     * @param group_id
+     * @param survey_id
+     * @return 
+     */
     public List<StudentThemeAverage> getSurveyAnswerAverages(int student_id,
             int class_id, int group_id, int survey_id) {
         return db.getSurveyAnswerAverages(student_id, class_id, group_id,
                 survey_id);
     }
 
-    // used to get groups average answers values for single survey
+    /**
+     * used to get groups average answers values for single survey
+     * @param student_id
+     * @param class_id
+     * @param survey_id
+     * @return 
+     */
     public List<StudentThemeAverage> getGroupSurveyAnswerAverages(
             int student_id, int class_id, int survey_id) {
         Optional<Group> grp = db.getGroupForStudent(class_id, student_id);
@@ -35,7 +48,12 @@ public class StudentService {
         }
     }
 
-    // used to get groups average answers values for all the surveys
+    /**
+     * used to get groups average answers values for all the surveys
+     * @param student_id
+     * @param class_id
+     * @return 
+     */
     public List<StudentThemeAverage> getGroupAnswerAverages(int student_id,
             int class_id) {
         Optional<Group> grp = db.getGroupForStudent(class_id, student_id);

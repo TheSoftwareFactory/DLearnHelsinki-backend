@@ -2178,8 +2178,7 @@ public class Database {
             int cls_id, int grp_id, int srv_id) {
         ArrayList<StudentThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
-            String statement = ""
-                    + "SELECT th.*, avg(answer)\n"
+            String statement = "" + "SELECT th.*, avg(answer)\n"
                     + "FROM \"Answers\" AS an\n"
                     + "INNER JOIN \"Questions\" as qu ON qu._id=an.question_id\n"
                     + "INNER JOIN \"Surveys\" as su ON su._id=an.survey_id\n"
@@ -2189,8 +2188,7 @@ public class Database {
                     + ((cls_id > 0) ? " AND su.class_id=? \n" : "") // for 1 class
                     + ((grp_id > 0) ? " AND group_id=? \n" : "") // for 1 grp
                     + ((srv_id > 0) ? " AND survey_id=? \n" : "") // for 1 srv
-                    + "GROUP BY qu.theme_id, th._id\n"
-                    + "ORDER BY qu.theme_id";
+                    + "GROUP BY qu.theme_id, th._id\n" + "ORDER BY qu.theme_id";
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
                 int i = 1;
@@ -2218,7 +2216,8 @@ public class Database {
                         sta.setTheme_title_fi(result.getString("title_fi"));
                         sta.setTheme_id(result.getInt("_id"));
                         sta.setDescription(result.getString("description"));
-                        sta.setDescription_fi(result.getString("description_fi"));
+                        sta.setDescription_fi(
+                                result.getString("description_fi"));
                         if (srv_id > 0)
                             sta.setSurvey_id(srv_id);
                         if (std_id > 0)

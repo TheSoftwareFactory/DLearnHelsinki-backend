@@ -13,7 +13,7 @@ import org.dlearn.helsinki.skeleton.service.AnswerQuestionService;
 public class QuestionResource {
 
     AnswerQuestionService answerQuestionService = new AnswerQuestionService();
-    
+
     /**
      * Get questions for a survey
      * @param survey_id

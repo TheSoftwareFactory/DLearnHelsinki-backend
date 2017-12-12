@@ -21,7 +21,7 @@ public class StudentAccessResource {
     private final StudentService studentService = new StudentService();
     private final SecurityService security = new SecurityService();
     private final ProgressionService progression = new ProgressionService();
-    
+
     /**
      * 
      * @return Student
@@ -32,7 +32,7 @@ public class StudentAccessResource {
         System.out.println("calling checkLogin");
         return security.getStudent().orElse(null);
     }
-    
+
     /**
      * 
      * @param amount
@@ -47,7 +47,7 @@ public class StudentAccessResource {
                 .map(s -> progression.getStudentProgression(s._id, amount))
                 .orElse(Collections.EMPTY_LIST);
     }
-    
+
     /**
      * 
      * @param student_id
@@ -77,6 +77,11 @@ public class StudentAccessResource {
         }
     }
 
+    /**
+     * Get student info
+     * @param student_id
+     * @return Student
+     */
     @GET
     @Path("/{student_id}")
     @Produces(MediaType.APPLICATION_JSON)
