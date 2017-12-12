@@ -51,10 +51,8 @@ public class Database {
     private static final String DB_DRIVER = "org.postgresql.Driver";
 
     private static final String DEV_DB_CONNECTION = "jdbc:postgresql://localhost:5432/Dlearn_db"
-            + "?verifyServerCertificate=false"
-            + "&useSSL=true"
-            + "&useServerPrepStmts=false"
-            + "&rewriteBatchedStatements=true";
+            + "?verifyServerCertificate=false" + "&useSSL=true"
+            + "&useServerPrepStmts=false" + "&rewriteBatchedStatements=true";
     private static final String DEV_DB_USER = "postgres";
     private static final String DEV_DB_PASSWORD = "admin";
 
@@ -97,11 +95,11 @@ public class Database {
             LOG.catching(Level.FATAL, e);
         }
     }
-    
-     /** 
-     * Used to check that database is available
-     * @throws java.lang.Exception
-     */
+
+    /** 
+    * Used to check that database is available
+    * @throws java.lang.Exception
+    */
     public void testConnection() throws Exception {
         LOG.traceEntry("Testing connection");
         try (Connection dbConnection = getDBConnection()) {
@@ -112,8 +110,7 @@ public class Database {
         }
         LOG.traceExit();
     }
-    
-    
+
     /**
      * Gets a survey from database by survey_id.
      * @param survey_id
@@ -2258,7 +2255,7 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
             return null;
         }
         return results;
