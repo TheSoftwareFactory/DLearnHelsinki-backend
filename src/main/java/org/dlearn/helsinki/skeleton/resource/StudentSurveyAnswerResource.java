@@ -18,9 +18,14 @@ public class StudentSurveyAnswerResource {
 
     StudentSurveyAnswerService studentSurveyAnswerService = new StudentSurveyAnswerService();
 
-    // returns all the surveys from teacher based on the student_id. a sort of history
-    // TODO implement to answer to history request.
-
+    /**
+     * Add a single answer to database
+     * @param student_id
+     * @param class_id
+     * @param survey_id
+     * @param answer_id
+     * @param answer 
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{answer_id}")
@@ -34,6 +39,14 @@ public class StudentSurveyAnswerResource {
                 answer_id, answer, class_id);
     }
 
+    /**
+     * Add all answers of a given survey to database
+     * @param student_id
+     * @param class_id
+     * @param survey_id
+     * @param answers
+     * @return 
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public boolean postAnswers(@PathParam("student_id") int student_id,
@@ -49,6 +62,12 @@ public class StudentSurveyAnswerResource {
                 student_id, survey_id, answers);
     }
 
+    /**
+     * Get answers by a student to a given survey
+     * @param student_id
+     * @param survey_id
+     * @return 
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<StudentThemeAverage> getSurveyAnswers(

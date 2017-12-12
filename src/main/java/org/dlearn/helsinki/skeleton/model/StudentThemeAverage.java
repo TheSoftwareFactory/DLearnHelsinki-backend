@@ -68,7 +68,7 @@ public class StudentThemeAverage {
     }
 
     public void setTheme_title_fi(String theme_title_fi) {
-        this.theme_title = theme_title;
+        this.theme_title_fi = theme_title_fi;
     }
 
     public String getDescription() {

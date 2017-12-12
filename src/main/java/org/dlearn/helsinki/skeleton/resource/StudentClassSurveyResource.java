@@ -15,13 +15,16 @@ import org.dlearn.helsinki.skeleton.service.StudentService;
 
 public class StudentClassSurveyResource {
 
-    // TODO make a new service?
     StudentService studentService = new StudentService();
     StudentClassSurveyService surveyService = new StudentClassSurveyService();
 
-    // request students/{student_id}/classes/{class_id}/surveys/
-    // returns all the surveys from teacher based on the student_id. a sort of history
-    // TODO implement to answer to history request
+    /**
+     * request students/{student_id}/classes/{class_id}/surveys/
+     * TODO implement to answer to history request
+     * @param student_id
+     * @param class_id
+     * @return all the surveys from teacher based on the student_id. a sort of history
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Survey> getSurveys(@PathParam("student_id") int student_id,
@@ -30,6 +33,13 @@ public class StudentClassSurveyResource {
         return surveyService.getSurveysFromClass(student_id, class_id);
     }
 
+    /**
+     * 
+     * @param student_id
+     * @param survey_id
+     * @param class_id
+     * @return average values of one survey in all the groups of one class
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{survey_id}/class_averages")
@@ -37,11 +47,17 @@ public class StudentClassSurveyResource {
             @PathParam("student_id") int student_id,
             @PathParam("survey_id") int survey_id,
             @PathParam("class_id") int class_id) {
-        // returns average values of one survey in all the groups of one class
         return studentService.getSurveyAnswerAverages(0, class_id, 0,
                 survey_id);
     }
 
+    /**
+     * 
+     * @param student_id, required to check which group averages are looked for
+     * @param survey_id 
+     * @param class_id, required to check which group averages are looked for
+     * @return average values of one survey in all the groups of one class
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{survey_id}/group_averages")
@@ -49,34 +65,29 @@ public class StudentClassSurveyResource {
             @PathParam("student_id") int student_id,
             @PathParam("survey_id") int survey_id,
             @PathParam("class_id") int class_id) {
-        // returns average values of one survey in all the groups of one class
-        // student and class are required to check which group averages are looked for.
         return studentService.getGroupSurveyAnswerAverages(student_id, class_id,
                 survey_id);
     }
 
+    /**
+     * Used to get survey questions
+     * @param survey_id
+     * @return 
+     */
     @Path("/{survey_id}/questions")
     public StudentSurveyQuestionResource getSurveyQuestions(
             @PathParam("survey_id") int survey_id) {
-        //return surveyService.getSurveysFromTeacherId(teacher_id);
         return new StudentSurveyQuestionResource();
     }
 
+    /**
+     * 
+     * @param survey_id
+     * @return 
+     */
     @Path("/{survey_id}/answers")
     public StudentSurveyAnswerResource getSurveyAnswers(
             @PathParam("survey_id") int survey_id) {
-        //return surveyService.getSurveysFromTeacherId(teacher_id);
         return new StudentSurveyAnswerResource();
     }
-
-    /*
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void postSurvey(@PathParam("teacher_id") int teacher_id, @PathParam("class_id") int class_id, Survey survey) {
-    	survey.teacher_id = teacher_id; 
-    	survey.class_id = class_id;
-    	System.out.println(survey.getTitle());
-    	surveyService.postSurvey(survey);
-    }
-     */
 }
