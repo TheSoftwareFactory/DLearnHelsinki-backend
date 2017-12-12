@@ -121,13 +121,13 @@ public class LocalOutlierFactor {
             // Store all answers with same student_id into same List
             List<Answer> studentAnswers = new ArrayList();
             // Loop through List<Answer> tmp
-            for(Answer ans : tmp) {
+            for (Answer ans : tmp) {
                 /* If student answer is found, add it into
                    studentAnswers and remove it from tmp list
                 */
-                if(student == ans.getStudent_id()) {
+                if (student == ans.getStudent_id()) {
                     studentAnswers.add(ans);
-                    tmp.remove(ans);
+                    // tmp.remove(ans);
                 }
             }
             Collections.sort(studentAnswers, new AnswerComparator());

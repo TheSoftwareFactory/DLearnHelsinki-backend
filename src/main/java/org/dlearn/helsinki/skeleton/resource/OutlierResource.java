@@ -19,7 +19,7 @@ public class OutlierResource {
     // Takes a class_id
     // Returns all outliers of the class_id, with lof score over 1.0
     @GET
-    @Path("/class_id")
+    @Path("/{class_id}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<StudentLof> getClassOutliers(
             @PathParam("class_id") int class_id) {
