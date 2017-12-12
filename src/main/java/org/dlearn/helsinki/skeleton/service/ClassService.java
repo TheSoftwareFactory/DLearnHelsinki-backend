@@ -23,7 +23,6 @@ public class ClassService {
                     .setGroups(db.getAllGroupsFromClass(s.get_id(), false)); //by default returns only open groups
             classesGroups.add(classWithAllGroups);
         }
-        ;
         return classesGroups;
     }
 

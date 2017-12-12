@@ -27,12 +27,22 @@ public class GroupSurveyResource {
         return surveyService.getSurvey(survey_id);
     }
 
+    /**
+     * Get Questions for a survey
+     * @param survey_id
+     * @return Questions
+     */
     @Path("/{survey_id}/questions")
     public QuestionResource getQuestions(
             @PathParam("survey_id") int survey_id) {
         return new QuestionResource();
     }
 
+    /**
+     * WIP Service for AnswerResource not implemented
+     * @param survey_id
+     * @return Answers
+     */
     @Path("/{survey_id}/answers")
     public AnswerResource getAnswers(@PathParam("survey_id") int survey_id) {
         return new AnswerResource();

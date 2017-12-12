@@ -13,13 +13,4 @@ public class AnswerService {
         // TODO implement getAnswers to fetch all the student's answers to the particular survey
         return null;
     }
-    /*
-    public void postAnswers(List<Answer> answers, int survey_id) {
-        // TODO implement postAnswers to post all the student's answers to the particular survey
-        System.out.println("asnwers : " + answers);
-        System.out.println("survey_id : " + survey_id);
-        // TODO replace student_id with real student id
-        db.postStudentAnswersForSurvey(answers, survey_id, 1);
-    }
-    */
 }
