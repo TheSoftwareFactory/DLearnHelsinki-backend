@@ -11,11 +11,14 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.dlearn.helsinki.skeleton.mentor.AnswerComparator;
 import org.dlearn.helsinki.skeleton.mentor.Tuple;
 import org.dlearn.helsinki.skeleton.model.Answer;
+import org.dlearn.helsinki.skeleton.model.Question;
 import static org.dlearn.helsinki.skeleton.mentor.Distance.euclidean;
 import static org.dlearn.helsinki.skeleton.mentor.Sort.sortMapByValue;
 import static org.dlearn.helsinki.skeleton.mentor.Sort.sortMapByValueReverse;
 
 public class LocalOutlierFactor {
+
+    static final Database db = new Database();
 
     public Tuple<Double, List<List<Answer>>> kNearestNeighbors(int k,
             List<Answer> p, List<List<Answer>> data) {
@@ -102,19 +105,23 @@ public class LocalOutlierFactor {
 
     // Remove List<Answer> from List<List<Answer>> data, if Answer.getAnswer() is null;
     public List<List<Answer>> prepareData(List<Answer> rawData) {
+        int amountOfQuestions = 0;
         List<Answer> tmp = new ArrayList(rawData);
         List<List<Answer>> data = new ArrayList();
         List<Integer> students = new ArrayList();
         List<Integer> surveys = new ArrayList();
-        List<Integer> questions = new ArrayList();
         // find out all the student_id:s, survey_id:s and question_ids:
         for (Answer ans : rawData) {
             if (!students.contains(ans.getStudent_id()))
                 students.add(ans.getStudent_id());
             if (!surveys.contains(ans.getSurvey_id()))
-                surveys.add(ans.getSurvey_id());
-            if (!questions.contains(ans.getQuestion_id()))
-                questions.add(ans.getQuestion_id());
+                surveys.add(ans.getSurvey_id());    
+        }
+        // Calculates how many questions a class has in total
+        // i.e. sum all questions in all surveys of a class
+        for(Integer survey : surveys) {
+            List<Question> questions = db.getQuestionsFromSurvey(survey);
+            amountOfQuestions += questions.size();
         }
         // Loop through every possible student_id
         for (Integer student : students) {
@@ -127,11 +134,12 @@ public class LocalOutlierFactor {
                 */
                 if (student == ans.getStudent_id()) {
                     studentAnswers.add(ans);
-                    // tmp.remove(ans);
                 }
             }
-            Collections.sort(studentAnswers, new AnswerComparator());
-            data.add(studentAnswers);
+            if(studentAnswers.size() == amountOfQuestions) {
+                Collections.sort(studentAnswers, new AnswerComparator());
+                data.add(studentAnswers);
+            }
         }
         return data;
     }
