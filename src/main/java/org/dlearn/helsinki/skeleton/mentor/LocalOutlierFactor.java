@@ -137,7 +137,8 @@ public class LocalOutlierFactor {
                     studentAnswers.add(ans);
                 }
             }
-            if (studentAnswers.size() == amountOfQuestions) {
+            if (studentAnswers.size() == amountOfQuestions
+                    && studentAnswers.size() > 0) {
                 Collections.sort(studentAnswers, new AnswerComparator());
                 data.add(studentAnswers);
             }
