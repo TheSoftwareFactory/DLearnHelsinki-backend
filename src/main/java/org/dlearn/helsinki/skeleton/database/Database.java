@@ -1229,7 +1229,7 @@ public class Database {
         Map<Integer, StudentGroup> studentGroups = new TreeMap<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = null;
+            String statement;
             if (all) {
                 statement = ""
                         // Select all open groups with students 
@@ -1291,7 +1291,6 @@ public class Database {
                 } else {
                     select.setInt(1, _class_id);
                 }
-                ;
 
                 // execute query
                 try (ResultSet result = select.executeQuery()) {
