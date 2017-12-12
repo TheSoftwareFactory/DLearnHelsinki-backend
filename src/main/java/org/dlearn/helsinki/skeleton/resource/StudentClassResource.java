@@ -27,9 +27,12 @@ public class StudentClassResource {
     private final StudentService studentService = new StudentService();
     private final StudentSurveyAnswerService studentSurveyAnswerService = new StudentSurveyAnswerService();
 
-    // request students/{student_id}/classes
-    // returns the students classes based on the student_id.
-    // TODO Does not work!!!!! -Pascal (probably the sets in the db method)
+    /**
+     * request students/{student_id}/classes
+     * TODO Does not work!!!!! -Pascal (probably the sets in the db method)
+     * @param student_id
+     * @return the students classes based on the student_id.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Classes> getAllClassesStundentIsIn(
@@ -38,6 +41,11 @@ public class StudentClassResource {
         return classService.getAllClassesStundentIsIn(student_id);
     }
 
+    /**
+     * 
+     * @param class_id
+     * @return 
+     */
     @Path("/{class_id}/surveys")
     public StudentClassSurveyResource getStudentSurveyResource(
             @PathParam("class_id") int class_id) {
@@ -45,6 +53,12 @@ public class StudentClassResource {
         return new StudentClassSurveyResource();
     }
 
+    /**
+     * Get averages by group for each theme
+     * @param student_id
+     * @param class_id
+     * @return 
+     */
     @GET
     @Path("/{class_id}/group_averages")
     @Produces(MediaType.APPLICATION_JSON)
@@ -54,6 +68,12 @@ public class StudentClassResource {
         return studentService.getGroupAnswerAverages(student_id, class_id);
     }
 
+    /**
+     * Get averages for a class
+     * @param student_id
+     * @param class_id
+     * @return 
+     */
     @GET
     @Path("/{class_id}/class_averages")
     @Produces(MediaType.APPLICATION_JSON)
@@ -63,6 +83,12 @@ public class StudentClassResource {
         return studentService.getSurveyAnswerAverages(0, class_id, 0, 0);
     }
 
+    /**
+     * progression for a student
+     * @param class_id
+     * @param amount, amount of results front end wants
+     * @return 
+     */
     @GET
     @Path("/{class_id}/progression/{amount}")
     @Produces(MediaType.APPLICATION_JSON)

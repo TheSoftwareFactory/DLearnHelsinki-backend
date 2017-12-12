@@ -8,13 +8,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.dlearn.helsinki.skeleton.model.Question;
-import org.dlearn.helsinki.skeleton.model.Survey;
 import org.dlearn.helsinki.skeleton.service.AnswerQuestionService;
 
 public class QuestionResource {
 
     AnswerQuestionService answerQuestionService = new AnswerQuestionService();
 
+    /**
+     * Get questions for a survey
+     * @param survey_id
+     * @return 
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Question> getSurveyQuestions(

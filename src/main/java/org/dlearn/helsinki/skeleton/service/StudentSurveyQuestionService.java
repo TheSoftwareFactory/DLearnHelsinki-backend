@@ -9,6 +9,11 @@ public class StudentSurveyQuestionService {
 
     Database db = new Database();
 
+    /**
+     * Gets questions that belong to a survey
+     * @param survey_id
+     * @return Questions
+     */
     public List<Question> getSurveyQuestions(int survey_id) {
         return db.getQuestionsFromSurvey(survey_id);
     }
