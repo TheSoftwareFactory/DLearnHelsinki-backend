@@ -5,29 +5,19 @@ import org.junit.Before;
 import static org.junit.Assert.assertEquals;
 
 public class StudentLofTest {
+    Student student;
     StudentLof lof;
 
     @Before
     public void setUp() {
-        lof = new StudentLof(0, 1, "Mathieu", 3.0);
-    }
-
-    @Test
-    public void getNSetStudent_id() {
-        lof.setStudent_id(69);
-        assertEquals(69, lof.getStudent_id());
+        student = new Student(0, "Mathieu", "mtf", 1);
+        lof = new StudentLof(student);
     }
 
     @Test
     public void getNSetClass_id() {
         lof.setClass_id(619);
         assertEquals(619, lof.getClass_id());
-    }
-
-    @Test
-    public void getNSetName() {
-        lof.setName("Adolf");
-        assertEquals("Adolf", lof.getName());
     }
 
     @Test
@@ -38,7 +28,7 @@ public class StudentLofTest {
 
     @Test
     public void toStringTest() {
-        String expected = "StudentLof { student_id = 0, class_id = 1, name = Mathieu, lof_score = 3.0 }";
+        String expected = "StudentLof{_id=0, username=Mathieu, gender=mtf, age=1, class_id=0, lof_score=0.0}";
         assertEquals(expected, lof.toString());
     }
 }

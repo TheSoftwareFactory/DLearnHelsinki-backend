@@ -24,12 +24,13 @@ public class OutlierService {
         List<Answer> answers = db.getClassAnswers(class_id);
         Map<Integer, Double> outliers = lof.outliers(minPts, answers);
         List<StudentLof> outlierResponse = new ArrayList();
-        for(Map.Entry<Integer, Double> entry : outliers.entrySet()) {
-        	int student_id = entry.getKey();
-        	Student student = db.getStudent(student_id);
-        	String name = student.getUsername();
-        	double lof_score = entry.getValue();
-        	outlierResponse.add( new StudentLof(student_id, class_id, name, lof_score) );
+        for (Map.Entry<Integer, Double> entry : outliers.entrySet()) {
+            int student_id = entry.getKey();
+            Student student = db.getStudent(student_id);
+            StudentLof stdlof = new StudentLof(student);
+            double lof_score = entry.getValue();
+            stdlof.setLofScore(lof_score);
+            outlierResponse.add(stdlof);
         }
         return outlierResponse;
     }
