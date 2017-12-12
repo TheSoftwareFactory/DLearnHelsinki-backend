@@ -45,12 +45,16 @@ import org.dlearn.helsinki.skeleton.security.Hasher;
 
 public class Database {
 
-    private static final Logger log = LogManager.getLogger(Database.class);
+    private static final Logger LOG = LogManager.getLogger(Database.class);
 
     private static final BasicDataSource DATA_SOURCE = new BasicDataSource();
     private static final String DB_DRIVER = "org.postgresql.Driver";
 
-    private static final String DEV_DB_CONNECTION = "jdbc:postgresql://localhost:5432/Dlearn_db?verifyServerCertificate=false&useSSL=true&useServerPrepStmts=false&rewriteBatchedStatements=true";
+    private static final String DEV_DB_CONNECTION = "jdbc:postgresql://localhost:5432/Dlearn_db"
+            + "?verifyServerCertificate=false"
+            + "&useSSL=true"
+            + "&useServerPrepStmts=false"
+            + "&rewriteBatchedStatements=true";
     private static final String DEV_DB_USER = "postgres";
     private static final String DEV_DB_PASSWORD = "admin";
 
@@ -90,21 +94,31 @@ public class Database {
             }
             DATA_SOURCE.setUrl(dbUrl);
         } catch (URISyntaxException | ClassNotFoundException e) {
-            log.catching(Level.FATAL, e);
+            LOG.catching(Level.FATAL, e);
         }
     }
-
+    
+     /** 
+     * Used to check that database is available
+     * @throws java.lang.Exception
+     */
     public void testConnection() throws Exception {
-        log.traceEntry("Testing connection");
+        LOG.traceEntry("Testing connection");
         try (Connection dbConnection = getDBConnection()) {
-            log.debug("Database connection succeeded.");
+            LOG.debug("Database connection succeeded.");
             dbConnection.close();
         } catch (Exception e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit();
+        LOG.traceExit();
     }
-
+    
+    
+    /**
+     * Gets a survey from database by survey_id.
+     * @param survey_id
+     * @return Survey
+     */
     public Survey getSurvey(int survey_id) {
         Survey s = null;
         try (Connection dbConnection = getDBConnection()) {
@@ -127,15 +141,20 @@ public class Database {
 
             }
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(s);
+        LOG.traceExit(s);
         return s;
     }
 
-    // Survey postSurvey : returns the survey that was posted on the database.
+    /**
+     * Adds a new survey to database, and returns it with the database ID
+     * @param surveyTheme
+     * @return surveyTheme
+     * @throws SQLException 
+     */
     public SurveyTheme postSurvey(SurveyTheme surveyTheme) throws SQLException {
-        log.traceEntry("Posting survey {}", surveyTheme);
+        LOG.traceEntry("Posting survey {}", surveyTheme);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Surveys\" (title, title_fi, class_id, start_date, teacher_id, description, description_fi, open) "
@@ -154,20 +173,25 @@ public class Database {
                     if (result.next()) {
                         surveyTheme.set_id(result.getInt("_id"));
                     } else {
-                        log.error("Inserting survey didn't return ID of it.");
+                        LOG.error("Inserting survey didn't return ID of it.");
                     }
                 }
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(surveyTheme);
+        LOG.traceExit(surveyTheme);
         return surveyTheme;
     }
 
+    /**
+     * Get questions for a theme
+     * @param surveyTheme
+     * @return Questions
+     */
     public List<Question> getQuestions(SurveyTheme surveyTheme) {
-        log.traceEntry();
+        LOG.traceEntry();
         ArrayList<Question> questions = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -201,14 +225,14 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(questions);
+        LOG.traceExit(questions);
         return questions;
     }
 
     public Question postQuestion(Question question) throws SQLException {
-        log.traceEntry("Posting question {}", question);
+        LOG.traceEntry("Posting question {}", question);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Questions\" (question, question_fi, min_answer, max_answer) "
@@ -224,20 +248,20 @@ public class Database {
                     if (result.next()) {
                         question.set_id(result.getInt("_id"));
                     } else {
-                        log.error("Inserting question didn't return ID of it.");
+                        LOG.error("Inserting question didn't return ID of it.");
                     }
                 }
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(question);
+        LOG.traceExit(question);
         return question;
     }
 
     public void postSurveyQuestions(List<Question> questions, Survey survey) {
-        log.traceEntry("Posting questions {} for survey {}", questions, survey);
+        LOG.traceEntry("Posting questions {} for survey {}", questions, survey);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Survey_questions\" (survey_id, question_id) "
@@ -255,9 +279,9 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit();
+        LOG.traceExit();
     }
 
     // Method getQuestionFromSurvey
@@ -265,7 +289,7 @@ public class Database {
     // output : ArrayList<Question>, list of questions from the survey
     // Takes a survey id and returns all the questions set to that survey
     public List<Question> getQuestionsFromSurvey(int survey_id) {
-        log.traceEntry("Getting the questions from the survey {}", survey_id);
+        LOG.traceEntry("Getting the questions from the survey {}", survey_id);
         ArrayList<Question> questions = new ArrayList<>();
 
         try (Connection dbConnection = getDBConnection()) {
@@ -292,9 +316,9 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(questions);
+        LOG.traceExit(questions);
         return questions;
     }
 
@@ -317,7 +341,7 @@ public class Database {
     // Output : returns a list of surveys available to the student
     public List<Survey> getSurveysFromClassAsStudent(int student_id,
             int class_id) throws SQLException {
-        log.traceEntry("Getting all surveys from class {} as student {}",
+        LOG.traceEntry("Getting all surveys from class {} as student {}",
                 class_id, student_id);
         ArrayList<Survey> surveys = new ArrayList<>();
 
@@ -353,9 +377,9 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(surveys);
+        LOG.traceExit(surveys);
         return surveys;
     }
 
@@ -364,7 +388,7 @@ public class Database {
     // Output : returns a list of surveys available to the student
     public List<Survey> getSurveysFromClassAsTeacher(int teacher_id,
             int class_id) throws SQLException {
-        log.traceEntry("Getting surveys from class {} as student {}", class_id,
+        LOG.traceEntry("Getting surveys from class {} as student {}", class_id,
                 teacher_id);
         ArrayList<Survey> surveys = new ArrayList<>();
 
@@ -401,14 +425,14 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(surveys);
+        LOG.traceExit(surveys);
         return surveys;
     }
 
     public List<Survey> getSurveys() {
-        log.traceEntry("Getting all surveys");
+        LOG.traceEntry("Getting all surveys");
         List<Survey> survey = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             String statement = "SELECT _id, title, title_fi, class_id, start_date, end_date, teacher_id, description, description_fi open FROM public.\"Surveys\"";
@@ -440,14 +464,14 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(survey);
+        LOG.traceExit(survey);
         return survey;
     }
 
     public Optional<Group> getGroupForStudent(int class_id, int student_id) {
-        log.traceEntry("Getting groups for student {} in class {}", student_id,
+        LOG.traceEntry("Getting groups for student {} in class {}", student_id,
                 class_id);
         try (Connection dbConnection = getDBConnection()) {
             String statement = "" + "SELECT sc.group_id, g.name, g.open "
@@ -473,21 +497,21 @@ public class Database {
                                 this.setOpen(result.getBoolean("open"));
                             }
                         };
-                        log.traceExit(group);
+                        LOG.traceExit(group);
                         return Optional.of(group);
                     }
                 }
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit("No group");
+        LOG.traceExit("No group");
         return Optional.empty();
     }
 
     public List<Group> getAllGroupsForStudent(int student_id) {
-        log.traceEntry("Getting all groups for student {}", student_id);
+        LOG.traceEntry("Getting all groups for student {}", student_id);
         ArrayList<Group> groups = new ArrayList<>();
 
         try (Connection dbConnection = getDBConnection()) {
@@ -516,15 +540,15 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(groups);
+        LOG.traceExit(groups);
         return groups;
     }
 
     // TODO: Use optional
     public List<Group> getAllGroupsFromClass(int class_id, boolean all) {
-        log.traceEntry("Getting groups for the class {}", class_id);
+        LOG.traceEntry("Getting groups for the class {}", class_id);
         ArrayList<Group> groups = null;
 
         try (Connection dbConnection = getDBConnection()) {
@@ -552,15 +576,15 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(groups);
+        LOG.traceExit(groups);
         return groups;
     }
 
     // TODO: Use optional
     public Group getGroupFromClass(int class_id, int group_id) {
-        log.traceEntry("Getting group class {}", class_id);
+        LOG.traceEntry("Getting group class {}", class_id);
         Group group = null;
 
         try (Connection dbConnection = getDBConnection()) {
@@ -580,15 +604,15 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(group);
+        LOG.traceExit(group);
         return group;
     }
 
     public List<Student> getAllStudentsFromClassAndGroup(int class_id,
             int group_id) {
-        log.traceEntry("Getting groups for the class {}", group_id);
+        LOG.traceEntry("Getting groups for the class {}", group_id);
         ArrayList<Student> students = null;
 
         try (Connection dbConnection = getDBConnection()) {
@@ -623,14 +647,14 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(students);
+        LOG.traceExit(students);
         return students;
     }
 
     public Optional<Student> createStudent(NewStudent new_student) {
-        log.traceEntry("Creating student {}", new_student);
+        LOG.traceEntry("Creating student {}", new_student);
         Optional<Student> student = Optional.empty();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -650,20 +674,20 @@ public class Database {
                         new_student.student._id = result.getInt("_id");
                         student = Optional.of(new_student.student);
                     } else {
-                        log.error("Inserting student didn't return ID of it.");
+                        LOG.error("Inserting student didn't return ID of it.");
                     }
                 }
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(student);
+        LOG.traceExit(student);
         return student;
     }
 
     public Optional<Teacher> createTeacher(NewTeacher new_teacher) {
-        log.traceEntry("Creating new teacher {}", new_teacher);
+        LOG.traceEntry("Creating new teacher {}", new_teacher);
         Optional<Teacher> teacher = Optional.empty();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -680,20 +704,20 @@ public class Database {
                     if (result.next()) {
                         new_teacher.teacher._id = result.getInt("_id");
                     } else {
-                        log.error("Inserting teacher didn't return ID of it.");
+                        LOG.error("Inserting teacher didn't return ID of it.");
                     }
                 }
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
         return teacher;
     }
 
     public Optional<Student> changeStudentPassword(
             ChangePasswordStudent student) {
-        log.traceEntry("Changing students password {}", student);
+        LOG.traceEntry("Changing students password {}", student);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "UPDATE public.\"Students\" SET pwd = ? WHERE _id = ?";
@@ -708,23 +732,23 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
-            log.traceExit("No password change");
+            LOG.catching(e);
+            LOG.traceExit("No password change");
             return Optional.empty();
         }
         Student result = getStudent(student.student_id);
-        log.traceExit(result);
+        LOG.traceExit(result);
         return Optional.ofNullable(result);
     }
 
     public boolean addStudentToGroup(Student student, int class_id,
             int group_id) {
-        log.traceEntry("Adding student {} to group {} in class {}", student,
+        LOG.traceEntry("Adding student {} to group {} in class {}", student,
                 group_id, class_id);
         try (Connection dbConnection = getDBConnection()) {
             if (!DataBaseHelper.doesGroupClassMatch(dbConnection, group_id,
                     class_id)) {
-                log.traceExit("Group and class didn't match");
+                LOG.traceExit("Group and class didn't match");
                 return false;
             }
             String statement = "INSERT INTO public.\"Student_Classes\" (student_id, class_id, group_id) "
@@ -737,21 +761,21 @@ public class Database {
 
                 // execute query
                 insert.executeUpdate();
-                log.traceExit("Adding succesful");
+                LOG.traceExit("Adding succesful");
                 dbConnection.close();
                 return true;
             }
 
         } catch (SQLException e) {
-            log.catching(e);
-            log.traceExit("Adding failed");
+            LOG.catching(e);
+            LOG.traceExit("Adding failed");
             return false;
         }
     }
 
     // TODO: Use optional
     public Student getStudent(int studentID) {
-        log.traceEntry("Getting student {}", studentID);
+        LOG.traceEntry("Getting student {}", studentID);
         Student student = null;
 
         try (Connection dbConnection = getDBConnection()) {
@@ -773,14 +797,14 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(student);
+        LOG.traceExit(student);
         return student;
     }
 
     public Optional<List<Student>> getAllStudentsFromClass(int class_id) {
-        log.traceEntry("Getting all students from class {}", class_id);
+        LOG.traceEntry("Getting all students from class {}", class_id);
         try {
             List<Student> result = DataBaseHelper.query(
                     Database::getDBConnection,
@@ -812,17 +836,17 @@ public class Database {
                         }
                         return students;
                     });
-            log.traceExit(result);
+            LOG.traceExit(result);
             return Optional.of(result);
         } catch (SQLException e) {
-            log.catching(e);
-            log.traceExit("No students returned");
+            LOG.catching(e);
+            LOG.traceExit("No students returned");
             return Optional.empty();
         }
     }
 
     public Optional<Student> getStudentFromUsername(String username_) {
-        log.traceEntry("Getting student from the username {}", username_);
+        LOG.traceEntry("Getting student from the username {}", username_);
         Optional<Student> student = Optional.empty();
         try (Connection dbConnection = getDBConnection()) {
             String statement = "Select _id, gender, age FROM public.\"Students\" WHERE username = ?";
@@ -846,14 +870,14 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(student);
+        LOG.traceExit(student);
         return student;
     }
 
     public Optional<Teacher> getTeacherFromUsername(String username_) {
-        log.traceEntry("Getting teacher from username {}", username_);
+        LOG.traceEntry("Getting teacher from username {}", username_);
         Optional<Teacher> teacher = Optional.empty();
         try (Connection dbConnection = getDBConnection()) {
             String statement = "Select _id FROM public.\"Teachers\" WHERE username = ?";
@@ -875,14 +899,14 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(teacher);
+        LOG.traceExit(teacher);
         return teacher;
     }
 
     public Optional<Researcher> getResearcherFromUsername(String username_) {
-        log.traceEntry("Getting researcher from username {}", username_);
+        LOG.traceEntry("Getting researcher from username {}", username_);
         Optional<Researcher> researcher = Optional.empty();
         try (Connection dbConnection = getDBConnection()) {
             String statement = "Select _id FROM public.\"Researchers\" WHERE username = ?";
@@ -904,14 +928,14 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(researcher);
+        LOG.traceExit(researcher);
         return researcher;
     }
 
     public boolean doesStudentUsernameExistInDatabase(Student student) {
-        log.traceEntry("Checking if student {} exists in database", student);
+        LOG.traceEntry("Checking if student {} exists in database", student);
         boolean exists = false;
         try (Connection dbConnection = getDBConnection()) {
             String statement = "Select username FROM public.\"Students\" as std WHERE std.username = ?";
@@ -926,15 +950,15 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(exists);
+        LOG.traceExit(exists);
         return exists;
     }
 
     // TODO: Use optional
     public List<Classes> getAllClassesOfTeacher(int teacher_id) {
-        log.traceEntry("Getting all classes of teacher {}", teacher_id);
+        LOG.traceEntry("Getting all classes of teacher {}", teacher_id);
         List<Classes> classes = null;
 
         try (Connection dbConnection = getDBConnection()) {
@@ -960,15 +984,15 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(classes);
+        LOG.traceExit(classes);
         return classes;
     }
 
     // TODO: Use optional
     public List<Classes> getAllClassesStundentIsIn(int student_id) {
-        log.traceEntry("Getting all classes student {} is in", student_id);
+        LOG.traceEntry("Getting all classes student {} is in", student_id);
         List<Classes> classes = null;
 
         try (Connection dbConnection = getDBConnection()) {
@@ -997,9 +1021,9 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(classes);
+        LOG.traceExit(classes);
         return classes;
     }
 
@@ -1081,14 +1105,14 @@ public class Database {
         try {
             return DATA_SOURCE.getConnection();
         } catch (SQLException e) {
-            log.catching(Level.FATAL, e);
+            LOG.catching(Level.FATAL, e);
             return null;
         }
     }
 
     // Inserts an answer into the database
     public void putAnswerToQuestion(Answer answer, int class_id) {
-        log.traceEntry("Adding answer {}", answer);
+        LOG.traceEntry("Adding answer {}", answer);
         // finding his group_id
         Group group = getGroupForStudent(class_id, answer.student_id)
                 .orElse(null);
@@ -1115,14 +1139,14 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit();
+        LOG.traceExit();
     }
 
     public List<Answer> getAnswersFromStudentSurvey(int student_id,
             int survey_id) {
-        log.traceEntry("Getting answers from student {} survey {}", student_id,
+        LOG.traceEntry("Getting answers from student {} survey {}", student_id,
                 survey_id);
         ArrayList<Answer> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
@@ -1149,15 +1173,15 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(answers);
+        LOG.traceExit(answers);
         return answers;
     }
 
     public List<GroupThemeAverage> getAverageAnswersFromGroup(int class_id,
             int group_id, int survey_id) {
-        log.traceEntry(
+        LOG.traceEntry(
                 "Getting average answers for survey {} for group {} in class {}",
                 survey_id, group_id, class_id);
         ArrayList<GroupThemeAverage> answers = new ArrayList<>();
@@ -1196,15 +1220,15 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(answers);
+        LOG.traceExit(answers);
         return answers;
     }
 
     public List<StudentGroup> getGroupsWithStudents(int _class_id,
             boolean all) {
-        log.traceEntry("Getting groups and students in class {}", _class_id);
+        LOG.traceEntry("Getting groups and students in class {}", _class_id);
         Map<Integer, StudentGroup> studentGroups = new TreeMap<>();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -1324,15 +1348,15 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(studentGroups);
+        LOG.traceExit(studentGroups);
         return studentGroups.values().stream().collect(Collectors.toList());
     }
 
     public List<ClassThemeAverage> getClassThemeAverage(int class_id,
             int survey_id) {
-        log.traceEntry("Getting average for survey {} in class {}", survey_id,
+        LOG.traceEntry("Getting average for survey {} in class {}", survey_id,
                 class_id);
         ArrayList<ClassThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
@@ -1373,15 +1397,15 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(answers);
+        LOG.traceExit(answers);
         return answers;
     }
 
     public List<StudentThemeAverage> getStudentThemeAverage(int survey_id,
             int student_id) {
-        log.traceEntry("Getting average for survey {} in student {}", survey_id,
+        LOG.traceEntry("Getting average for survey {} in student {}", survey_id,
                 student_id);
         ArrayList<StudentThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
@@ -1419,15 +1443,15 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(answers);
+        LOG.traceExit(answers);
         return answers;
     }
 
     public Optional<List<ListStudentThemeAverage>> getStudentThemeAverageProgression(
             int student_id, int amount) {
-        log.traceEntry("Getting progression of {} for student {}", amount,
+        LOG.traceEntry("Getting progression of {} for student {}", amount,
                 student_id);
         try {
             List<ListStudentThemeAverage> result = DataBaseHelper.query(
@@ -1503,18 +1527,18 @@ public class Database {
                             }
                         }
                     });
-            log.traceExit(result);
+            LOG.traceExit(result);
             return Optional.of(result);
         } catch (SQLException e) {
-            log.catching(e);
-            log.traceExit("No average returned");
+            LOG.catching(e);
+            LOG.traceExit("No average returned");
             return Optional.empty();
         }
     }
 
     public Optional<List<ListStudentThemeAverage>> getStudentThemeAverageProgressionInClass(
             int class_id_, int student_id, int amount) {
-        log.traceEntry("Getting progression of {} for student {} in class {}",
+        LOG.traceEntry("Getting progression of {} for student {} in class {}",
                 amount, student_id, class_id_);
         try {
             List<ListStudentThemeAverage> result = DataBaseHelper.query(
@@ -1612,18 +1636,18 @@ public class Database {
                             }
                         }
                     });
-            log.traceExit(result);
+            LOG.traceExit(result);
             return Optional.of(result);
         } catch (SQLException e) {
-            log.catching(e);
-            log.traceExit("No average returned");
+            LOG.catching(e);
+            LOG.traceExit("No average returned");
             return Optional.empty();
         }
     }
 
     public Optional<List<ListGroupThemeAverage>> getGroupThemeAverageProgression(
             int class_id_, int group_id, int amount) {
-        log.traceEntry("Getting progression of {} for group {} in class {}",
+        LOG.traceEntry("Getting progression of {} for group {} in class {}",
                 amount, group_id, class_id_);
         List<ListGroupThemeAverage> averages = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
@@ -1691,11 +1715,11 @@ public class Database {
                 }
             }
             dbConnection.close();
-            log.traceExit(averages);
+            LOG.traceExit(averages);
             return Optional.of(averages);
         } catch (SQLException e) {
-            log.catching(e);
-            log.traceExit("No average returned");
+            LOG.catching(e);
+            LOG.traceExit("No average returned");
             return Optional.empty();
         }
     }
@@ -1703,7 +1727,7 @@ public class Database {
     //Is this used by the front end at all?
     public Optional<List<ListClassThemeAverage>> getClassThemeAverageProgression(
             int class_id_, int amount) {
-        log.traceEntry("Getting progression of {} for class {}", amount,
+        LOG.traceEntry("Getting progression of {} for class {}", amount,
                 class_id_);
         try {
             List<ListClassThemeAverage> result = DataBaseHelper.query(
@@ -1806,17 +1830,17 @@ public class Database {
                             }
                         }
                     });
-            log.traceExit(result);
+            LOG.traceExit(result);
             return Optional.of(result);
         } catch (SQLException e) {
-            log.catching(e);
-            log.traceExit("No average returned");
+            LOG.catching(e);
+            LOG.traceExit("No average returned");
             return Optional.empty();
         }
     }
 
     public void closeSurvey(int teacher_id, int class_id, int survey_id) {
-        log.traceEntry("Closing survey {} for teacher {} in class {}",
+        LOG.traceEntry("Closing survey {} for teacher {} in class {}",
                 survey_id, teacher_id, class_id);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -1834,14 +1858,14 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit();
+        LOG.traceExit();
     }
 
     public List<StudentThemeAverage> getStudentLifeTimeAverage(int student_id,
             int class_id) {
-        log.traceEntry("Getting student {} average in class {}", student_id,
+        LOG.traceEntry("Getting student {} average in class {}", student_id,
                 class_id);
         ArrayList<StudentThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
@@ -1880,15 +1904,15 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(answers);
+        LOG.traceExit(answers);
         return answers;
     }
 
     public List<StudentThemeAverage> getStudentHistory(int student_id,
             int class_id) {
-        log.traceEntry("Getting student {} history in class {}", student_id,
+        LOG.traceEntry("Getting student {} history in class {}", student_id,
                 class_id);
         ArrayList<StudentThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
@@ -1926,9 +1950,9 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(answers);
+        LOG.traceExit(answers);
         return answers;
 
     }
@@ -1938,13 +1962,13 @@ public class Database {
             return DataBaseHelper.doesGroupClassMatch(dbConnection, group_id,
                     class_id);
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
             return false;
         }
     }
 
     public boolean isGroupClosed(int group_id) {
-        log.traceEntry("Checking if group {} is closed", group_id);
+        LOG.traceEntry("Checking if group {} is closed", group_id);
         // If group is closed, it is empty.
         boolean closed = false;
         try (Connection dbConnection = getDBConnection()) {
@@ -1963,14 +1987,14 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(closed);
+        LOG.traceExit(closed);
         return closed;
     }
 
     public int countNumberOfStudentsInGroup(int group_id) {
-        log.traceEntry("Counting how many students are in group {}", group_id);
+        LOG.traceEntry("Counting how many students are in group {}", group_id);
         int count = 0;
         try (Connection dbConnection = getDBConnection()) {
             String select_students_count = "SELECT COUNT(t1.group_id) "
@@ -1994,15 +2018,15 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(count);
+        LOG.traceExit(count);
         return count;
     }
 
     // TODO: Use optional
     public Group createGroupInClass(int class_id, Group group) {
-        log.traceEntry("Creating group {} in class {}", group, class_id);
+        LOG.traceEntry("Creating group {} in class {}", group, class_id);
         Group createdGroup = null;
         try (Connection dbConnection = getDBConnection()) {
             String insert_group = "INSERT INTO public.\"Groups\" "
@@ -2024,14 +2048,14 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(createdGroup);
+        LOG.traceExit(createdGroup);
         return createdGroup;
     }
 
     public Group createGroupInClass(int class_id, String name) {
-        log.traceEntry("Creating group {} in class {}", name, class_id);
+        LOG.traceEntry("Creating group {} in class {}", name, class_id);
         Group createdGroup = null;
         try (Connection dbConnection = getDBConnection()) {
             String insert_group = "INSERT INTO public.\"Groups\" "
@@ -2053,14 +2077,14 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(createdGroup);
+        LOG.traceExit(createdGroup);
         return createdGroup;
     }
 
     public void addClassToTeacher(Classes teacher_class) {
-        log.traceEntry("Add class to teacher {}", teacher_class);
+        LOG.traceEntry("Add class to teacher {}", teacher_class);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Classes\" (\"name\", \"name_fi\", teacher_id) VALUES (?, ?, ?);";
@@ -2074,9 +2098,9 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit();
+        LOG.traceExit();
     }
 
     public DataSource getDataSource() {
@@ -2084,7 +2108,7 @@ public class Database {
     }
 
     public List<Student> getAllStudents() {//(int teacher_id)  
-        log.traceEntry("Getting all students ");//from {}", teacher_id);
+        LOG.traceEntry("Getting all students ");//from {}", teacher_id);
         List<Student> students = null;
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -2118,15 +2142,15 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(students);
+        LOG.traceExit(students);
         return students;
     }
 
     public boolean doesStudentIdExistInDatabase(int student_id) {
         boolean idExists = false;
-        log.traceEntry("Checking whether a student with student_id = {}",
+        LOG.traceEntry("Checking whether a student with student_id = {}",
                 student_id, " exists in databsae.");
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -2147,9 +2171,9 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
         }
-        log.traceExit(idExists);
+        LOG.traceExit(idExists);
         return idExists;
     }
 
@@ -2204,7 +2228,7 @@ public class Database {
             }
             dbConnection.close();
         } catch (SQLException e) {
-            log.catching(e);
+            LOG.catching(e);
             return null;
         }
         return results;
