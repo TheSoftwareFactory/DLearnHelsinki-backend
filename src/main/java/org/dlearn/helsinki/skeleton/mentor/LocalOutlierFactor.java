@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
 
+import org.dlearn.helsinki.skeleton.database.Database;
 import org.dlearn.helsinki.skeleton.mentor.AnswerComparator;
 import org.dlearn.helsinki.skeleton.mentor.Tuple;
 import org.dlearn.helsinki.skeleton.model.Answer;
@@ -115,11 +116,11 @@ public class LocalOutlierFactor {
             if (!students.contains(ans.getStudent_id()))
                 students.add(ans.getStudent_id());
             if (!surveys.contains(ans.getSurvey_id()))
-                surveys.add(ans.getSurvey_id());    
+                surveys.add(ans.getSurvey_id());
         }
         // Calculates how many questions a class has in total
         // i.e. sum all questions in all surveys of a class
-        for(Integer survey : surveys) {
+        for (Integer survey : surveys) {
             List<Question> questions = db.getQuestionsFromSurvey(survey);
             amountOfQuestions += questions.size();
         }
@@ -136,7 +137,7 @@ public class LocalOutlierFactor {
                     studentAnswers.add(ans);
                 }
             }
-            if(studentAnswers.size() == amountOfQuestions) {
+            if (studentAnswers.size() == amountOfQuestions) {
                 Collections.sort(studentAnswers, new AnswerComparator());
                 data.add(studentAnswers);
             }
