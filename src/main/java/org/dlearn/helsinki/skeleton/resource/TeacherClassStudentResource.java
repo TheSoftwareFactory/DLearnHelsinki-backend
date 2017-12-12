@@ -1,6 +1,5 @@
 package org.dlearn.helsinki.skeleton.resource;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -27,12 +26,13 @@ public class TeacherClassStudentResource {
     private final ProgressionService progression = new ProgressionService();
     private final GroupService group = new GroupService();
 
-    // GET student info /{student_id}/
-
-    // GET student info /{student_id}/surveys
-
-    // GET student info /{student_id}/surveys/{survey_id}/answers
-    // TODO Create a proper subresource.
+    /**
+     * 
+     * @param class_id
+     * @param survey_id
+     * @param student_id
+     * @return Theme averages for a student
+     */
     @GET
     @Path("/{student_id}/surveys/{survey_id}/answers")
     public List<StudentThemeAverage> getStudentThemeAverage(
@@ -43,6 +43,13 @@ public class TeacherClassStudentResource {
                 student_id);
     }
 
+    /**
+     * Move student to other group
+     * @param class_id
+     * @param student_id
+     * @param group_id
+     * @return group
+     */
     @POST
     @Path("/{student_id}/move_to_group/{group_id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -57,6 +64,12 @@ public class TeacherClassStudentResource {
         }
     }
 
+    /**
+     * 
+     * @param class_id
+     * @param student_id
+     * @return student
+     */
     @GET
     @Path("/{student_id}")
     public Student getStudent(@PathParam("class_id") int class_id,
@@ -65,6 +78,13 @@ public class TeacherClassStudentResource {
         return teacherStudentService.getStudent(student_id);
     }
 
+    /**
+     * 
+     * @param class_id
+     * @param student_id
+     * @param amount amount of items to get
+     * @return student progression
+     */
     @GET
     @Path("/{student_id}/progression/{amount}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -76,6 +96,11 @@ public class TeacherClassStudentResource {
                 amount);
     }
 
+    /**
+     * 
+     * @param class_id
+     * @return All students from a class
+     */
     @GET
     public List<Student> getListOfStudents(
             @PathParam("class_id") int class_id) {
