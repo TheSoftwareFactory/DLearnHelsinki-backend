@@ -2174,23 +2174,23 @@ public class Database {
 
     //  TODO: Add checks if student belongs to class or grp in services maybe?
     // std = student, cls = class, grp = group, srv = survey
-    // returns list of average values with student and possible survey
     public List<StudentThemeAverage> getSurveyAnswerAverages(int std_id,
             int cls_id, int grp_id, int srv_id) {
         ArrayList<StudentThemeAverage> answers = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             String statement = ""
-                    + "SELECT question_id, qu.theme_id, qu.question, avg(answer)\n"
+                    + "SELECT th.*, avg(answer)\n"
                     + "FROM \"Answers\" AS an\n"
                     + "INNER JOIN \"Questions\" as qu ON qu._id=an.question_id\n"
                     + "INNER JOIN \"Surveys\" as su ON su._id=an.survey_id\n"
+                    + "INNER JOIN \"Themes\" as th ON th._id=qu.theme_id\n"
                     + "WHERE 1 = 1 \n" // dummy condition to continue with AND
                     + ((std_id > 0) ? " AND student_id=? \n" : "") // for 1 student
                     + ((cls_id > 0) ? " AND su.class_id=? \n" : "") // for 1 class
                     + ((grp_id > 0) ? " AND group_id=? \n" : "") // for 1 grp
                     + ((srv_id > 0) ? " AND survey_id=? \n" : "") // for 1 srv
-                    + "GROUP BY question_id, qu.question, qu.theme_id\n"
-                    + "ORDER BY question_id, qu.theme_id";
+                    + "GROUP BY qu.theme_id, th._id\n"
+                    + "ORDER BY qu.theme_id";
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
                 int i = 1;
@@ -2209,16 +2209,16 @@ public class Database {
                 if (srv_id > 0) {
                     select.setInt(i, srv_id);
                 }
-
+                System.out.println(select);
                 try (ResultSet result = select.executeQuery()) {
                     while (result.next()) {
                         StudentThemeAverage sta = new StudentThemeAverage();
                         sta.setAnswer(result.getFloat("avg"));
-                        sta.setTheme_title(result.getString("question"));
-                        sta.setTheme_title_fi(result.getString("question"));
-                        sta.setTheme_id(result.getInt("theme_id"));
-                        sta.setDescription("");
-                        sta.setDescription_fi("");
+                        sta.setTheme_title(result.getString("title"));
+                        sta.setTheme_title_fi(result.getString("title_fi"));
+                        sta.setTheme_id(result.getInt("_id"));
+                        sta.setDescription(result.getString("description"));
+                        sta.setDescription_fi(result.getString("description_fi"));
                         if (srv_id > 0)
                             sta.setSurvey_id(srv_id);
                         if (std_id > 0)
