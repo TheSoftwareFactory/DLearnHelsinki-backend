@@ -40,8 +40,10 @@ public class TeacherResource {
     private final TeacherStudentService teacherStudentService = new TeacherStudentService();
     private final MoveToGroupService moveToGroupService = new MoveToGroupService();
 
-    // Request webapi/teachers/
-    // Returns the teacher's info based on log credentials
+    /**
+     * Request webapi/teachers/
+     * @return teacher's info based on log credentials
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Teacher getTeacher() {
@@ -49,8 +51,11 @@ public class TeacherResource {
     }
 
     // TODO delete. reason : function filled by /teachers/ GET
-    // Request webapi/teachers/1
-    // Returns a teacher based on the id given.
+    /**
+     * Request webapi/teachers/teacher_id
+     * @param teacher_id
+     * @return a teacher based on the id given.
+     */
     //@GET
     //@Path("/{teacher_id}")
     //@Produces(MediaType.APPLICATION_JSON)
@@ -58,8 +63,11 @@ public class TeacherResource {
         return new Teacher(teacher_id, "username " + teacher_id, "password");
     }
 
-    // Request webapi/teachers/1/surveys
-    // Returns a teacher based on the id given.
+    /**
+     * Request webapi/teachers/teacher_id/surveys
+     * @param teacher_id
+     * @return a teacher based on the id given.
+     */
     @Path("/{teacher_id}/classes")
     public TeacherClassResource getClassesFromId(
             @PathParam("teacher_id") int teacher_id) {
@@ -70,6 +78,14 @@ public class TeacherResource {
         }
     }
 
+    /**
+     * Create new student
+     * @param teacher_id
+     * @param student
+     * @return
+     * @throws RuntimeException
+     * @throws InvalidAgeException 
+     */
     @POST
     @Path("/{teacher_id}/create_student")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -121,6 +137,13 @@ public class TeacherResource {
         return returnedStudent;
     }
 
+    /**
+     * Used to change students password
+     * @param teacher_id
+     * @param student
+     * @return
+     * @throws PasswordException 
+     */
     @POST
     @Path("/{teacher_id}/change_student_password")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -143,6 +166,11 @@ public class TeacherResource {
         }).orElse(null);
     }
 
+    /**
+     * get all students
+     * @param teacher_id
+     * @return 
+     */
     @GET
     @Path("/{teacher_id}/students")
     @Produces(MediaType.APPLICATION_JSON)

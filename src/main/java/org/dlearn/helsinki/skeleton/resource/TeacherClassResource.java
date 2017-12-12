@@ -49,7 +49,6 @@ public class TeacherClassResource {
         classService.addClassToTeacher(teacher_class);
     }
 
-    
     /**
      * Get avg progression for a class
      * @param class_id

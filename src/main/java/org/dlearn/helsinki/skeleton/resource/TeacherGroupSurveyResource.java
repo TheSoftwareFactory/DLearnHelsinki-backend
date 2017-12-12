@@ -8,7 +8,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.dlearn.helsinki.skeleton.model.GroupAnswer;
 import org.dlearn.helsinki.skeleton.model.GroupThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.service.TeacherGroupSurveyService;
@@ -17,7 +16,13 @@ public class TeacherGroupSurveyResource {
 
     TeacherGroupSurveyService teacherGroupSurveyAnswerService = new TeacherGroupSurveyService();
 
-    // simple GET with group_id and survey to get survey info
+    /**
+     * simple GET with group_id and survey to get survey info
+     * @param class_id
+     * @param group_id
+     * @param survey_id
+     * @return 
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{survey_id}/answers")
@@ -30,7 +35,11 @@ public class TeacherGroupSurveyResource {
                 .getAverageAnswersFromGroup(class_id, group_id, survey_id);
     }
 
-    // simple GET with group_id and survey to get survey info
+    /**
+     * simple GET with group_id and survey to get survey info
+    * @param survey_id
+    * @return 
+    */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{survey_id}/questions")
