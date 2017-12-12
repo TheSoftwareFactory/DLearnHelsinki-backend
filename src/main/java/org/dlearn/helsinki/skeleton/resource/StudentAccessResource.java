@@ -21,14 +21,23 @@ public class StudentAccessResource {
     private final StudentService studentService = new StudentService();
     private final SecurityService security = new SecurityService();
     private final ProgressionService progression = new ProgressionService();
-
+    
+    /**
+     * 
+     * @return Student
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Student checkLogin() {
         System.out.println("calling checkLogin");
         return security.getStudent().orElse(null);
     }
-
+    
+    /**
+     * 
+     * @param amount
+     * @return averages for a student by theme
+     */
     @GET
     @Path("/{student_id}/progression/{amount}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -38,8 +47,12 @@ public class StudentAccessResource {
                 .map(s -> progression.getStudentProgression(s._id, amount))
                 .orElse(Collections.EMPTY_LIST);
     }
-
-    // returns averages from all surveys from all students classes
+    
+    /**
+     * 
+     * @param student_id
+     * @return averages from all surveys from all students classes
+     */
     @GET
     @Path("/{student_id}/survey_averages")
     @Produces(MediaType.APPLICATION_JSON)
@@ -48,6 +61,11 @@ public class StudentAccessResource {
         return studentService.getSurveyAnswerAverages(student_id, 0, 0, 0);
     }
 
+    /**
+     * 
+     * @param student_id
+     * @return 
+     */
     @Path("/{student_id}/classes")
     public StudentClassResource getClasses(
             @PathParam("student_id") int student_id) {
