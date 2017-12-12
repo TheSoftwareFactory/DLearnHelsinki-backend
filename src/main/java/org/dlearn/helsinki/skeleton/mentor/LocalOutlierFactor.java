@@ -103,15 +103,6 @@ public class LocalOutlierFactor {
         // return empty outliers, if there is no data
         if (data.isEmpty())
             return outliers;
-        // return empty outliers if data has List:s, but
-        // all the List:s have size 0
-        boolean allMissing = true;
-        for (List<Answer> studentAnswers : data) {
-            if (studentAnswers.size() != 0)
-                allMissing = false;
-        }
-        if (allMissing)
-            return outliers;
         for (List<Answer> p : data) {
             double lof = this.localOutlierFactor(minPts, p, data);
             if (lof > 1.0) {
