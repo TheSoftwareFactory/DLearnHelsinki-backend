@@ -5,6 +5,19 @@ public class StudentLof extends Student {
     private int class_id;
     private double lof_score;
 
+    public StudentLof() {
+    }
+
+    public StudentLof(int _id, String username, String gender, int age,
+            int class_id, double lof_score) {
+        this._id = _id;
+        this.username = username;
+        this.gender = gender;
+        this.age = age;
+        this.class_id = class_id;
+        this.lof_score = lof_score;
+    }
+
     public StudentLof(Student student) {
         this._id = student.get_id();
         this.username = student.getUsername();

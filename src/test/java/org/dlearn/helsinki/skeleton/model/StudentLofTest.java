@@ -15,6 +15,28 @@ public class StudentLofTest {
     }
 
     @Test
+    public void emptyConstructor() {
+        StudentLof std = new StudentLof();
+        assertEquals(0, std.get_id());
+        assertEquals(null, std.getUsername());
+        assertEquals(null, std.getGender());
+        assertEquals(0, std.getAge());
+        assertEquals(0, std.getClass_id());
+        assertEquals(0.0, std.getLofScore(), 0.0);
+    }
+
+    @Test
+    public void primitiveConstructor() {
+        StudentLof std = new StudentLof(1, "Dud", "Male", 69, 12, 3.0);
+        assertEquals(1, std.get_id());
+        assertEquals("Dud", std.getUsername());
+        assertEquals("Male", std.getGender());
+        assertEquals(69, std.getAge());
+        assertEquals(12, std.getClass_id());
+        assertEquals(3.0, std.getLofScore(), 3.0);
+    }
+
+    @Test
     public void getNSetClass_id() {
         lof.setClass_id(619);
         assertEquals(619, lof.getClass_id());
