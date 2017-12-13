@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
 
-import org.dlearn.helsinki.skeleton.database.Database;
 import org.dlearn.helsinki.skeleton.mentor.AnswerComparator;
 import org.dlearn.helsinki.skeleton.mentor.Tuple;
 import org.dlearn.helsinki.skeleton.model.Answer;
@@ -17,8 +16,9 @@ import static org.dlearn.helsinki.skeleton.mentor.Sort.sortMapByValue;
 import static org.dlearn.helsinki.skeleton.mentor.Sort.sortMapByValueReverse;
 
 public class LocalOutlierFactor {
-
-    static final Database db = new Database();
+    /* Follows the original paper in implementation
+       www.dbs.ifi.lmu.de/Publikationen/Papers/LOF.pdf
+    */
 
     public Tuple<Double, List<List<Answer>>> kNearestNeighbors(int k,
             List<Answer> p, List<List<Answer>> data) {
@@ -105,15 +105,22 @@ public class LocalOutlierFactor {
             return outliers;
         for (List<Answer> p : data) {
             double lof = this.localOutlierFactor(minPts, p, data);
+            // 
             if (lof > 1.0) {
                 outliers.put(p.get(0).getStudent_id(), lof);
             }
         }
+        // Sorts a Map in descending order according to Value
         outliers = sortMapByValueReverse(outliers);
         return outliers;
     }
 
-    // Remove List<Answer> from List<List<Answer>> data, if Answer.getAnswer() is null;
+    /* Method which creates a 2D List of the 1D List.
+       All answers with same student_id are grouped into same
+       List. Also the 1D lists inside data are sorted by
+       survey_id and questions_id, so that comparison in the 
+       distance calculation makes sense.
+    */
     public List<List<Answer>> prepareData(int amountOfQuestions,
             List<Answer> rawData) {
         List<List<Answer>> data = new ArrayList();
@@ -136,6 +143,10 @@ public class LocalOutlierFactor {
                     studentAnswers.add(ans);
                 }
             }
+            /* Only required length studentAnswers are added to the 
+               data List. If studentAnswers had different lengths, then
+               distance calculation would fail.
+            */
             if (studentAnswers.size() == amountOfQuestions
                     && studentAnswers.size() > 0) {
                 Collections.sort(studentAnswers, new AnswerComparator());
