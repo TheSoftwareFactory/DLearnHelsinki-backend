@@ -3,7 +3,7 @@ package org.dlearn.helsinki.skeleteon.mentor;
 import java.util.ArrayList;
 
 import org.dlearn.helsinki.skeleton.model.Answer;
-import static org.dlearn.helsinki.skeleton.mentor.Distance.euclidean;
+import org.dlearn.helsinki.skeleton.mentor.Distance;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +37,7 @@ public class DistanceTest {
     @Test
     public void testEuclidean() {
         double expected = 1.0;
-        assertEquals(expected, euclidean(u, v), 0.0);
+        assertEquals(expected, Distance.euclidean(u, v), 0.0);
     }
 
     @Rule
@@ -49,6 +49,6 @@ public class DistanceTest {
         exception.expectMessage(
                 "Operands could not be broadcast together with sizes 3 and 4");
         v.add(ans6);
-        euclidean(u, v);
+        Distance.euclidean(u, v);
     }
 }
