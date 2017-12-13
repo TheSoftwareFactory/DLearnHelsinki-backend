@@ -116,7 +116,6 @@ public class LocalOutlierFactor {
     // Remove List<Answer> from List<List<Answer>> data, if Answer.getAnswer() is null;
     public List<List<Answer>> prepareData(int amountOfQuestions,
             List<Answer> rawData) {
-        List<Answer> tmp = new ArrayList(rawData);
         List<List<Answer>> data = new ArrayList();
         List<Integer> students = new ArrayList();
         // find out all the student_id:s in a class
@@ -128,8 +127,8 @@ public class LocalOutlierFactor {
         for (Integer student : students) {
             // Store all answers with same student_id into same List
             List<Answer> studentAnswers = new ArrayList();
-            // Loop through List<Answer> tmp
-            for (Answer ans : tmp) {
+            // Loop through List<Answer> rawData
+            for (Answer ans : rawData) {
                 /* If student answer is found, add it into
                    studentAnswers and remove it from tmp list
                 */
