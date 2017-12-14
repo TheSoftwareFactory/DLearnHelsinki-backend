@@ -23,7 +23,7 @@ public class OutlierService {
         List<StudentLof> outlierResponse = new ArrayList();
         // STATIC MINPTS FOR NOW
         int amountOfQuestions = 0;
-        int minPts = 1;
+        int minPts = 10;
         List<Answer> answers = db.getClassAnswers(class_id);
         List<Integer> surveys = new ArrayList();
         LocalOutlierFactor lof = new LocalOutlierFactor();
