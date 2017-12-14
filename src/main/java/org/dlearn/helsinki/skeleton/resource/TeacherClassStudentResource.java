@@ -47,6 +47,7 @@ public class TeacherClassStudentResource {
 
     /**
      * Move student to other group
+     * POST teachers/{teacher_id}/classes/{class_id}/students/{student_id}/move_to_group/{group_id}
      * @param class_id
      * @param student_id
      * @param group_id
@@ -66,12 +67,18 @@ public class TeacherClassStudentResource {
         }
     }
     
+    /**
+     * DELETE teachers/{teacher_id}/classes/{class_id}/students/{student_id}/remove_from_group/{group_id}
+     * @param class_id
+     * @param group_id
+     * @param student_id 
+     */
     @Path("/{student_id}/remove_from_group/{group_id}")
     @DELETE
     public void removeStudentFromGroup(
             @PathParam("class_id") int class_id,
             @PathParam("group_id") int group_id,
-            @PathParam("student_id") int student_id) throws SQLException{
+            @PathParam("student_id") int student_id){
         
         teacherStudentService.removeStudentFromGroup(class_id, group_id, student_id);
     
