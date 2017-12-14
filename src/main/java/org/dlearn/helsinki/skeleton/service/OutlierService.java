@@ -21,11 +21,11 @@ public class OutlierService {
 
         List<StudentLof> outlierResponse = new ArrayList();
         // STATIC MINPTS FOR NOW
-        int minPts = 1;      
+        int minPts = 1;
         List<Answer> answers = db.getClassAnswers(class_id);
         LocalOutlierFactor lof = new LocalOutlierFactor();
         Map<Integer, Double> outliers = lof.outliers(minPts, answers);
-        
+
         // If there are no answers in any of the class surveys
         if (outliers.isEmpty())
             return outlierResponse;

@@ -32,6 +32,7 @@ public class TeacherClassSurveyResource {
             @PathParam("class_id") int class_id) {
         return surveyService.getSurveysFromClassAsTeacher(teacher_id, class_id);
     }
+
     /**
      * Creating a new survey
      * @param teacher_id

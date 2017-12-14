@@ -54,6 +54,7 @@ public class Database {
             + "&useServerPrepStmts=false" + "&rewriteBatchedStatements=true";
     private static final String DEV_DB_USER = "postgres";
     private static final String DEV_DB_PASSWORD = "admin";
+    private final Hasher HASHER = new Hasher();
 
     static {
         try {
@@ -659,8 +660,7 @@ public class Database {
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
                 insert.setString(1, new_student.student.username);
-                insert.setString(2,
-                        Hasher.getHasher().encode(new_student.password));
+                insert.setString(2, HASHER.encode(new_student.password));
                 insert.setString(3, new_student.student.gender);
                 insert.setInt(4, new_student.student.age);
 
@@ -692,8 +692,7 @@ public class Database {
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
                 insert.setString(1, new_teacher.teacher.username);
-                insert.setString(2,
-                        Hasher.getHasher().encode(new_teacher.password));
+                insert.setString(2, HASHER.encode(new_teacher.password));
 
                 // execute query
                 try (ResultSet result = insert.executeQuery()) {
@@ -719,8 +718,7 @@ public class Database {
             String statement = "UPDATE public.\"Students\" SET pwd = ? WHERE _id = ?";
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
-                insert.setString(1,
-                        Hasher.getHasher().encode(student.password));
+                insert.setString(1, HASHER.encode(student.password));
                 insert.setInt(2, student.student_id);
 
                 // execute query
@@ -768,8 +766,9 @@ public class Database {
             return false;
         }
     }
-    
-    public boolean removeStudentFromGroup(int class_id, int group_id, int student_id){
+
+    public boolean removeStudentFromGroup(int class_id, int group_id,
+            int student_id) {
         boolean success = false;
         try (Connection dbConnection = getDBConnection()) {
             if (!DataBaseHelper.doesGroupClassMatch(dbConnection, group_id,
@@ -778,18 +777,16 @@ public class Database {
                 return success;
             }
             String statement = "DELETE FROM public.\"Student_Classes\""
-                    + "WHERE student_id = ?"
-                    + "AND class_id = ?"
+                    + "WHERE student_id = ?" + "AND class_id = ?"
                     + "AND group_id = ?";
-            
+
             try (PreparedStatement delete = dbConnection
                     .prepareStatement(statement)) {
                 delete.setInt(1, student_id);
                 delete.setInt(2, class_id);
                 delete.setInt(3, group_id);
-                
-                
-                 // execute query
+
+                // execute query
                 int count = delete.executeUpdate();
                 if (count > 0)
                     success = true;
@@ -797,8 +794,8 @@ public class Database {
                 dbConnection.close();
                 return success;
             }
-            
-        }   catch (SQLException e) {
+
+        } catch (SQLException e) {
             LOG.catching(e);
             LOG.traceExit("Deletion failed");
             return success;
