@@ -770,7 +770,6 @@ public class Database {
     }
     
     public boolean removeStudentFromGroup(int class_id, int group_id, int student_id){
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         
         try (Connection dbConnection = getDBConnection()) {
             if (!DataBaseHelper.doesGroupClassMatch(dbConnection, group_id,

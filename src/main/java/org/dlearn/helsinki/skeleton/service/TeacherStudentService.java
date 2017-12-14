@@ -25,7 +25,7 @@ public class TeacherStudentService {
         return db.doesStudentIdExistInDatabase(student_id);
     }
 
-    public void removeStudentFromGroup(int class_id, int group_id, int student_id){
-        db.removeStudentFromGroup(class_id, group_id, student_id);
+    public boolean removeStudentFromGroup(int class_id, int group_id, int student_id){
+        return db.removeStudentFromGroup(class_id, group_id, student_id);  
     }
 }

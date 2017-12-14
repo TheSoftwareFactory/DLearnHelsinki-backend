@@ -72,15 +72,16 @@ public class TeacherClassStudentResource {
      * @param class_id
      * @param group_id
      * @param student_id 
+     * @return  
      */
     @Path("/{student_id}/remove_from_group/{group_id}")
     @POST
-    public void removeStudentFromGroup(
+    public boolean removeStudentFromGroup(
             @PathParam("class_id") int class_id,
             @PathParam("group_id") int group_id,
             @PathParam("student_id") int student_id){
         
-        teacherStudentService.removeStudentFromGroup(class_id, group_id, student_id);
+        return teacherStudentService.removeStudentFromGroup(class_id, group_id, student_id);
     
     }
 
