@@ -27,7 +27,5 @@ public class TeacherStudentService {
 
     public void removeStudentFromGroup(int class_id, int group_id, int student_id){
         db.removeStudentFromGroup(class_id, group_id, student_id);
-        
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
