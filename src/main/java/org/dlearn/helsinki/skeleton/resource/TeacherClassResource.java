@@ -17,11 +17,14 @@ import org.dlearn.helsinki.skeleton.model.ListClassThemeAverage;
 import org.dlearn.helsinki.skeleton.service.ProgressionService;
 
 public class TeacherClassResource {
-    // request teachers/{teacher_id}/classes
-    // returns the teacher's classes based on the teacher_id.
     private final ClassService classService = new ClassService();
     private final ProgressionService progression = new ProgressionService();
 
+    /**
+     * request teachers/{teacher_id}/classes
+     * @param teacher_id
+     * @return the teacher's classes based on the teacher_id.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<ClassWithAllGroups> getClasses(
@@ -30,6 +33,11 @@ public class TeacherClassResource {
         return classService.getAllClassesWithGroups(teacher_id); // returns only open groups
     }
 
+    /**
+     * Adds new Class
+     * @param teacher_id
+     * @param teacher_class 
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void addNewClass(@PathParam("teacher_id") int teacher_id,
@@ -41,6 +49,12 @@ public class TeacherClassResource {
         classService.addClassToTeacher(teacher_class);
     }
 
+    /**
+     * Get avg progression for a class
+     * @param class_id
+     * @param amount, amount of items show.
+     * @return 
+     */
     @GET
     @Path("/{class_id}/progression/{amount}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -50,6 +64,11 @@ public class TeacherClassResource {
         return progression.getClassProgression(class_id, amount);
     }
 
+    /**
+     * 
+     * @param class_id
+     * @return 
+     */
     @Path("/{class_id}/surveys")
     public TeacherClassSurveyResource getSurveyResource(
             @PathParam("class_id") int class_id) {
@@ -57,6 +76,11 @@ public class TeacherClassResource {
         return new TeacherClassSurveyResource();
     }
 
+    /**
+     * 
+     * @param class_id
+     * @return 
+     */
     @Path("/{class_id}/groups")
     public TeacherClassGroupResource getGroupResource(
             @PathParam("class_id") int class_id) {
@@ -64,6 +88,10 @@ public class TeacherClassResource {
         return new TeacherClassGroupResource();
     }
 
+    /**
+     * 
+     * @return 
+     */
     @Path("/{class_id}/students")
     public TeacherClassStudentResource getClassStudent() {
         return new TeacherClassStudentResource();

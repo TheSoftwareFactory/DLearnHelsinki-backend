@@ -1,7 +1,7 @@
 package org.dlearn.helsinki.skeleton.resource;
 
-import java.util.Collections;
 import java.util.List;
+import javax.ws.rs.DELETE;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -27,12 +27,13 @@ public class TeacherClassStudentResource {
     private final ProgressionService progression = new ProgressionService();
     private final GroupService group = new GroupService();
 
-    // GET student info /{student_id}/
-
-    // GET student info /{student_id}/surveys
-
-    // GET student info /{student_id}/surveys/{survey_id}/answers
-    // TODO Create a proper subresource.
+    /**
+     * GET teachers/{teacher_id}/classes/{class_id}/students/{student_id}/surveys/{survey_id}/answers
+     * @param class_id
+     * @param survey_id
+     * @param student_id
+     * @return Theme averages for a student
+     */
     @GET
     @Path("/{student_id}/surveys/{survey_id}/answers")
     public List<StudentThemeAverage> getStudentThemeAverage(
@@ -43,6 +44,14 @@ public class TeacherClassStudentResource {
                 student_id);
     }
 
+    /**
+     * Move student to other group
+     * POST teachers/{teacher_id}/classes/{class_id}/students/{student_id}/move_to_group/{group_id}
+     * @param class_id
+     * @param student_id
+     * @param group_id
+     * @return group
+     */
     @POST
     @Path("/{student_id}/move_to_group/{group_id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -56,7 +65,33 @@ public class TeacherClassStudentResource {
             return null;
         }
     }
+    
+    /**
+     * remove student from a group/class
+     * DELETE teachers/{teacher_id}/classes/{class_id}/students/{student_id}/remove_from_group/{group_id}
+     * @param class_id
+     * @param group_id
+     * @param student_id 
+     * @return  
+     */
+    @Path("/{student_id}/remove_from_group/{group_id}")
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    public String removeStudentFromGroup(
+            @PathParam("class_id") int class_id,
+            @PathParam("group_id") int group_id,
+            @PathParam("student_id") int student_id){
+        boolean success = 
+             teacherStudentService.removeStudentFromGroup(class_id, group_id, student_id);
+        return Boolean.toString(success);
+    }
 
+    /**
+     * GET teachers/{teacher_id}/classes/{class_id}/students/{student_id}
+     * @param class_id
+     * @param student_id
+     * @return student
+     */
     @GET
     @Path("/{student_id}")
     public Student getStudent(@PathParam("class_id") int class_id,
@@ -65,6 +100,13 @@ public class TeacherClassStudentResource {
         return teacherStudentService.getStudent(student_id);
     }
 
+    /**
+     * GET teachers/{teacher_id}/classes/{class_id}/students/{student_id}/progression/{amount}
+     * @param class_id
+     * @param student_id
+     * @param amount amount of items to get
+     * @return student progression
+     */
     @GET
     @Path("/{student_id}/progression/{amount}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -76,6 +118,11 @@ public class TeacherClassStudentResource {
                 amount);
     }
 
+    /**
+     * GET teachers/{teacher_id}/classes/{class_id}/students
+     * @param class_id
+     * @return All students from a class
+     */
     @GET
     public List<Student> getListOfStudents(
             @PathParam("class_id") int class_id) {
