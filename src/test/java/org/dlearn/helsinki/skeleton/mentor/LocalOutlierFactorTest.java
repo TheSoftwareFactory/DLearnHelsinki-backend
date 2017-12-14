@@ -110,6 +110,7 @@ public class LocalOutlierFactorTest {
         container.add(expected2);
         data.add(expected1);
         data.add(expected2);
+        data.add(p);
         for (int j = 0; j < 5; j++) {
             List<Answer> answers = new ArrayList();
             for (int i = 1; i < 3; i++) {
