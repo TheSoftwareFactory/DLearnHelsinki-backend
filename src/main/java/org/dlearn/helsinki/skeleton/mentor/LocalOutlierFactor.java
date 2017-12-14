@@ -15,7 +15,6 @@ import static org.dlearn.helsinki.skeleton.mentor.Distance.euclidean;
 import static org.dlearn.helsinki.skeleton.mentor.Sort.sortMapByValue;
 import static org.dlearn.helsinki.skeleton.mentor.Sort.sortMapByValueReverse;
 
-
 /* Follows the original paper in implementation
    www.dbs.ifi.lmu.de/Publikationen/Papers/LOF.pdf
 */
