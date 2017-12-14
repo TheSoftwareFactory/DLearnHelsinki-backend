@@ -1,6 +1,5 @@
 package org.dlearn.helsinki.skeleton.resource;
 
-import java.sql.SQLException;
 import java.util.List;
 import javax.ws.rs.DELETE;
 
@@ -29,7 +28,7 @@ public class TeacherClassStudentResource {
     private final GroupService group = new GroupService();
 
     /**
-     * 
+     * GET teachers/{teacher_id}/classes/{class_id}/students/{student_id}/surveys/{survey_id}/answers
      * @param class_id
      * @param survey_id
      * @param student_id
@@ -68,6 +67,7 @@ public class TeacherClassStudentResource {
     }
     
     /**
+     * remove student from a group/class
      * DELETE teachers/{teacher_id}/classes/{class_id}/students/{student_id}/remove_from_group/{group_id}
      * @param class_id
      * @param group_id
@@ -85,7 +85,7 @@ public class TeacherClassStudentResource {
     }
 
     /**
-     * 
+     * GET teachers/{teacher_id}/classes/{class_id}/students/{student_id}
      * @param class_id
      * @param student_id
      * @return student
@@ -99,7 +99,7 @@ public class TeacherClassStudentResource {
     }
 
     /**
-     * 
+     * GET teachers/{teacher_id}/classes/{class_id}/students/{student_id}/progression/{amount}
      * @param class_id
      * @param student_id
      * @param amount amount of items to get
@@ -117,7 +117,7 @@ public class TeacherClassStudentResource {
     }
 
     /**
-     * 
+     * GET teachers/{teacher_id}/classes/{class_id}/students
      * @param class_id
      * @return All students from a class
      */
