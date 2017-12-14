@@ -5,12 +5,13 @@ import org.junit.Before;
 import static org.junit.Assert.assertEquals;
 
 public class AnswerTest {
-    Answer answer1, answer2;
+    Answer answer1, answer2, answer3;
 
     @Before
     public void setUp() {
         answer1 = new Answer();
         answer2 = new Answer(0, 1, 2, 3);
+        answer3 = new Answer(0, 1, 2, 3, 4);
     }
 
     @Test
@@ -43,5 +44,17 @@ public class AnswerTest {
         assertEquals(1, answer2.getQuestion_id());
         assertEquals(2, answer2.getStudent_id());
         assertEquals(3, answer2.getAnswer());
+    }
+
+    @Test
+    public void setSurveyId() {
+        answer3.setSurvey_id(69);
+        assertEquals(69, answer3.getSurvey_id());
+    }
+
+    @Test
+    public void setGroupId() {
+        answer3.setGroup_id(44);
+        assertEquals(44, answer3.getGroup_id());
     }
 }

@@ -9,6 +9,7 @@ import org.dlearn.helsinki.skeleton.mentor.LocalOutlierFactor;
 import org.dlearn.helsinki.skeleton.model.Answer;
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.model.StudentLof;
+import org.dlearn.helsinki.skeleton.model.Question;
 
 public class OutlierService {
 
@@ -21,11 +22,24 @@ public class OutlierService {
 
         List<StudentLof> outlierResponse = new ArrayList();
         // STATIC MINPTS FOR NOW
-        int minPts = 1;      
+        int amountOfQuestions = 0;
+        int minPts = 10;
         List<Answer> answers = db.getClassAnswers(class_id);
+        List<Integer> surveys = new ArrayList();
         LocalOutlierFactor lof = new LocalOutlierFactor();
-        Map<Integer, Double> outliers = lof.outliers(minPts, answers);
-        
+        for (Answer ans : answers) {
+            if (!surveys.contains(ans.getSurvey_id()))
+                surveys.add(ans.getSurvey_id());
+        }
+        // Calculates how many questions a class has in total
+        // i.e. sum all questions in all surveys of a class
+        for (Integer survey : surveys) {
+            List<Question> questions = db.getQuestionsFromSurvey(survey);
+            amountOfQuestions += questions.size();
+        }
+        Map<Integer, Double> outliers = lof.outliers(minPts, amountOfQuestions,
+                answers);
+
         // If there are no answers in any of the class surveys
         if (outliers.isEmpty())
             return outlierResponse;

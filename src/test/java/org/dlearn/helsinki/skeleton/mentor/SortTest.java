@@ -1,4 +1,4 @@
-package org.dlearn.helsinki.skeleteon.mentor;
+package org.dlearn.helsinki.skeleton.mentor;
 
 import java.util.ArrayList;
 import java.util.List;
