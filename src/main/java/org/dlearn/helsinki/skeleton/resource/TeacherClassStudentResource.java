@@ -76,6 +76,7 @@ public class TeacherClassStudentResource {
      */
     @Path("/{student_id}/remove_from_group/{group_id}")
     @POST
+    @Produces(MediaType.APPLICATION_JSON)
     public boolean removeStudentFromGroup(
             @PathParam("class_id") int class_id,
             @PathParam("group_id") int group_id,
