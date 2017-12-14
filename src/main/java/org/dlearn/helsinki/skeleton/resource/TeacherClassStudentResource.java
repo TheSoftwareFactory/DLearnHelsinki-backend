@@ -74,7 +74,7 @@ public class TeacherClassStudentResource {
      * @param student_id 
      */
     @Path("/{student_id}/remove_from_group/{group_id}")
-    @DELETE
+    @POST
     public void removeStudentFromGroup(
             @PathParam("class_id") int class_id,
             @PathParam("group_id") int group_id,
