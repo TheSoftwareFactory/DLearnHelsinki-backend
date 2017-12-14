@@ -1,6 +1,8 @@
 package org.dlearn.helsinki.skeleton.resource;
 
+import java.sql.SQLException;
 import java.util.List;
+import javax.ws.rs.DELETE;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -62,6 +64,17 @@ public class TeacherClassStudentResource {
         } else {
             return null;
         }
+    }
+    
+    @Path("/{student_id}/remove_from_group/{group_id}")
+    @DELETE
+    public void removeStudentFromGroup(
+            @PathParam("class_id") int class_id,
+            @PathParam("group_id") int group_id,
+            @PathParam("student_id") int student_id) throws SQLException{
+        
+        teacherStudentService.removeStudentFromGroup(class_id, group_id, student_id);
+    
     }
 
     /**

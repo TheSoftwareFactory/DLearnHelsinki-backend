@@ -757,7 +757,7 @@ public class Database {
 
                 // execute query
                 insert.executeUpdate();
-                LOG.traceExit("Adding succesful");
+                LOG.traceExit("Adding successful");
                 dbConnection.close();
                 return true;
             }
@@ -765,6 +765,40 @@ public class Database {
         } catch (SQLException e) {
             LOG.catching(e);
             LOG.traceExit("Adding failed");
+            return false;
+        }
+    }
+    
+    public boolean removeStudentFromGroup(int class_id, int group_id, int student_id) throws SQLException {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        try (Connection dbConnection = getDBConnection()) {
+            if (!DataBaseHelper.doesGroupClassMatch(dbConnection, group_id,
+                    class_id)) {
+                LOG.traceExit("Group and class didn't match");
+                return false;
+            }
+            String statement = "DELETE FROM public.\"Student_Classes\""
+                    + "WHERE student_id = ?"
+                    + "AND class_id = ?"
+                    + "AND group_id = ?";
+            
+            try (PreparedStatement delete = dbConnection
+                    .prepareStatement(statement)) {
+                delete.setInt(1, student_id);
+                delete.setInt(2, class_id);
+                delete.setInt(3, group_id);
+                
+                 // execute query
+                delete.executeUpdate();
+                LOG.traceExit("Deletion successful");
+                dbConnection.close();
+                return true;
+            }
+            
+        }   catch (SQLException e) {
+            LOG.catching(e);
+            LOG.traceExit("Deletion failed");
             return false;
         }
     }

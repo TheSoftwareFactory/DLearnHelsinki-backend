@@ -119,7 +119,7 @@ public class TeacherClassGroupResource {
                             .build());
         }
     }
-
+    
     @Path("/{group_id}")
     @PUT // Quite frankly it should be UPDATE and not PUT.
     @Produces(MediaType.APPLICATION_JSON)

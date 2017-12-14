@@ -1,5 +1,6 @@
 package org.dlearn.helsinki.skeleton.service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.dlearn.helsinki.skeleton.database.Database;
@@ -22,5 +23,11 @@ public class TeacherStudentService {
 
     public boolean doesStudentIdExistInDatabase(int student_id) {
         return db.doesStudentIdExistInDatabase(student_id);
+    }
+
+    public void removeStudentFromGroup(int class_id, int group_id, int student_id) throws SQLException{
+        db.removeStudentFromGroup(class_id, group_id, student_id);
+        
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
