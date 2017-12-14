@@ -8,13 +8,18 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
 
-import org.dlearn.helsinki.skeleton.model.Answer;
+import org.dlearn.helsinki.skeleton.database.Database;
+import org.dlearn.helsinki.skeleton.mentor.AnswerComparator;
 import org.dlearn.helsinki.skeleton.mentor.Tuple;
+import org.dlearn.helsinki.skeleton.model.Answer;
+import org.dlearn.helsinki.skeleton.model.Question;
 import static org.dlearn.helsinki.skeleton.mentor.Distance.euclidean;
 import static org.dlearn.helsinki.skeleton.mentor.Sort.sortMapByValue;
 import static org.dlearn.helsinki.skeleton.mentor.Sort.sortMapByValueReverse;
 
 public class LocalOutlierFactor {
+
+    static final Database db = new Database();
 
     public Tuple<Double, List<List<Answer>>> kNearestNeighbors(int k,
             List<Answer> p, List<List<Answer>> data) {
@@ -34,8 +39,12 @@ public class LocalOutlierFactor {
             neighbors.add(q);
             i++;
         }
-        double kDist = distances.get(neighbors.get(0));
-        return new Tuple(kDist, neighbors);
+        if (neighbors.size() > 0) {
+            double kDist = distances.get(neighbors.get(0));
+            return new Tuple(kDist, neighbors);
+        } else {
+            return new Tuple(null, new ArrayList());
+        }
     }
 
     public double rechabilityDistance(int k, List<Answer> p, List<Answer> o,
@@ -73,6 +82,8 @@ public class LocalOutlierFactor {
         List<List<Answer>> neighbors = this.kNearestNeighbors(k, p, data)
                 .second();
         int n = neighbors.size();
+        if (n == 0)
+            return lof;
         double lrd_p = this.localReachabilityDensity(k, p, data);
         double[] lrd_ratios = new double[n];
         for (List<Answer> o : neighbors) {
@@ -89,6 +100,9 @@ public class LocalOutlierFactor {
     public Map<Integer, Double> outliers(int minPts, List<Answer> rawData) {
         List<List<Answer>> data = this.prepareData(rawData);
         Map<Integer, Double> outliers = new HashMap();
+        // return empty outliers, if there is no data
+        if (data.isEmpty())
+            return outliers;
         for (List<Answer> p : data) {
             double lof = this.localOutlierFactor(minPts, p, data);
             if (lof > 1.0) {
@@ -99,41 +113,44 @@ public class LocalOutlierFactor {
         return outliers;
     }
 
-    // Make this smarter
     // Remove List<Answer> from List<List<Answer>> data, if Answer.getAnswer() is null;
     public List<List<Answer>> prepareData(List<Answer> rawData) {
+        int amountOfQuestions = 0;
         List<Answer> tmp = new ArrayList(rawData);
         List<List<Answer>> data = new ArrayList();
         List<Integer> students = new ArrayList();
         List<Integer> surveys = new ArrayList();
-        List<Integer> questions = new ArrayList();
+        // find out all the student_id:s, survey_id:s and question_ids:
         for (Answer ans : rawData) {
             if (!students.contains(ans.getStudent_id()))
                 students.add(ans.getStudent_id());
             if (!surveys.contains(ans.getSurvey_id()))
                 surveys.add(ans.getSurvey_id());
-            if (!questions.contains(ans.getQuestion_id()))
-                questions.add(ans.getQuestion_id());
         }
-        Collections.sort(students);
-        Collections.sort(surveys);
-        Collections.sort(questions);
+        // Calculates how many questions a class has in total
+        // i.e. sum all questions in all surveys of a class
+        for (Integer survey : surveys) {
+            List<Question> questions = db.getQuestionsFromSurvey(survey);
+            amountOfQuestions += questions.size();
+        }
+        // Loop through every possible student_id
         for (Integer student : students) {
+            // Store all answers with same student_id into same List
             List<Answer> studentAnswers = new ArrayList();
-            for (Integer survey : surveys) {
-                for (Integer question : questions) {
-                    for (Answer ans : tmp) {
-                        if (student == ans.getStudent_id()
-                                && survey == ans.getSurvey_id()
-                                && question == ans.getQuestion_id()) {
-                            studentAnswers.add(ans);
-                            tmp.remove(ans);
-                            break;
-                        }
-                    }
+            // Loop through List<Answer> tmp
+            for (Answer ans : tmp) {
+                /* If student answer is found, add it into
+                   studentAnswers and remove it from tmp list
+                */
+                if (student == ans.getStudent_id()) {
+                    studentAnswers.add(ans);
                 }
             }
-            data.add(studentAnswers);
+            if (studentAnswers.size() == amountOfQuestions
+                    && studentAnswers.size() > 0) {
+                Collections.sort(studentAnswers, new AnswerComparator());
+                data.add(studentAnswers);
+            }
         }
         return data;
     }
