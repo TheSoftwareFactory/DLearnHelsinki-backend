@@ -59,7 +59,7 @@ public class LocalOutlierFactor {
     /* Reachability distance of objects p and o is the maximum between
        distance(p, o) and kDist(o)
     */
-    public double rechabilityDistance(int k, List<Answer> p, List<Answer> o,
+    public double reachabilityDistance(int k, List<Answer> p, List<Answer> o,
             List<List<Answer>> data) {
         double kDist = this.kNearestNeighbors(k, o, data).first();
         double distance = Distance.euclidean(p, o);
@@ -77,7 +77,7 @@ public class LocalOutlierFactor {
                 .second();
         // Calculate the sum of the reachability distances for every neighbor
         for (List<Answer> o : neighbors) {
-            double reachDistance = this.rechabilityDistance(k, p, o, data);
+            double reachDistance = this.reachabilityDistance(k, p, o, data);
             sum += reachDistance;
         }
         /* In the paper this is given in the form 1 / (sum / k), which is
