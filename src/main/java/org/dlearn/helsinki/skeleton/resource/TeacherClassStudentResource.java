@@ -76,14 +76,14 @@ public class TeacherClassStudentResource {
      */
     @Path("/{student_id}/remove_from_group/{group_id}")
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    public boolean removeStudentFromGroup(
+    @Produces(MediaType.TEXT_PLAIN)
+    public String removeStudentFromGroup(
             @PathParam("class_id") int class_id,
             @PathParam("group_id") int group_id,
             @PathParam("student_id") int student_id){
-        
-        return teacherStudentService.removeStudentFromGroup(class_id, group_id, student_id);
-    
+        boolean success = 
+             teacherStudentService.removeStudentFromGroup(class_id, group_id, student_id);
+        return Boolean.toString(success);
     }
 
     /**

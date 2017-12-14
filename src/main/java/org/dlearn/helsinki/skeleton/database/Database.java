@@ -770,12 +770,12 @@ public class Database {
     }
     
     public boolean removeStudentFromGroup(int class_id, int group_id, int student_id){
-        
+        boolean success = false;
         try (Connection dbConnection = getDBConnection()) {
             if (!DataBaseHelper.doesGroupClassMatch(dbConnection, group_id,
                     class_id)) {
                 LOG.traceExit("Group and class didn't match");
-                return false;
+                return success;
             }
             String statement = "DELETE FROM public.\"Student_Classes\""
                     + "WHERE student_id = ?"
@@ -788,17 +788,20 @@ public class Database {
                 delete.setInt(2, class_id);
                 delete.setInt(3, group_id);
                 
+                
                  // execute query
-                delete.executeUpdate();
+                int count = delete.executeUpdate();
+                if (count > 0)
+                    success = true;
                 LOG.traceExit("Deletion successful");
                 dbConnection.close();
-                return true;
+                return success;
             }
             
         }   catch (SQLException e) {
             LOG.catching(e);
             LOG.traceExit("Deletion failed");
-            return false;
+            return success;
         }
     }
 
