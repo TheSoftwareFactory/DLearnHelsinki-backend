@@ -775,7 +775,7 @@ public class Database {
         }
         return new_teacher.teacher;
     }
-    
+
     /**
      * Get all teachers
      * @return Teachers
@@ -785,11 +785,8 @@ public class Database {
         List<Teacher> teachers = null;
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "" 
-                    + "SELECT s._id,\n" 
-                    + "       s.username,\n"
-                    + "       s.firstname,\n" 
-                    + "       s.lastname\n"
+            String statement = "" + "SELECT s._id,\n" + "       s.username,\n"
+                    + "       s.firstname,\n" + "       s.lastname\n"
                     + "  FROM public.\"Teachers\" as s\n";
 
             try (PreparedStatement insert = dbConnection
@@ -799,7 +796,10 @@ public class Database {
 
                 try (ResultSet result = insert.executeQuery()) {
                     while (result.next()) {
-                        Teacher teacher = new Teacher(result.getInt("_id"),result.getString("username"), result.getString("firstname"), result.getString("lastname"));
+                        Teacher teacher = new Teacher(result.getInt("_id"),
+                                result.getString("username"),
+                                result.getString("firstname"),
+                                result.getString("lastname"));
                         teachers.add(teacher);
                     }
                 }
@@ -811,7 +811,7 @@ public class Database {
         LOG.traceExit(teachers);
         return teachers;
     }
-    
+
     /**
      * Create new theme
      * @param theme
@@ -845,7 +845,7 @@ public class Database {
         }
         return theme;
     }
-    
+
     /**
      * Get all themes
      * @return 
@@ -855,11 +855,8 @@ public class Database {
         List<Theme> themes = null;
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "" 
-                    + "SELECT s._id,\n" 
-                    + "       s.title,\n"
-                    + "       s.title_fi,\n" 
-                    + "       s.description,\n"
+            String statement = "" + "SELECT s._id,\n" + "       s.title,\n"
+                    + "       s.title_fi,\n" + "       s.description,\n"
                     + "       s.description_fi\n"
                     + "  FROM public.\"Themes\" as s\n";
 
@@ -870,7 +867,11 @@ public class Database {
 
                 try (ResultSet result = insert.executeQuery()) {
                     while (result.next()) {
-                        Theme theme = new Theme(result.getInt("_id"),result.getString("title"), result.getString("title_fi"), result.getString("description"), result.getString("description_fi"));
+                        Theme theme = new Theme(result.getInt("_id"),
+                                result.getString("title"),
+                                result.getString("title_fi"),
+                                result.getString("description"),
+                                result.getString("description_fi"));
                         themes.add(theme);
                     }
                 }
@@ -917,7 +918,7 @@ public class Database {
         }
         return question;
     }
-    
+
     /**
      * Change student password into DB
      * @param student
@@ -2693,5 +2694,5 @@ public class Database {
             return null;
         }
         return results;
-    }   
+    }
 }

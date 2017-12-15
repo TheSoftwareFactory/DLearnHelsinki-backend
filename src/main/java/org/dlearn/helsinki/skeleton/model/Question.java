@@ -21,7 +21,7 @@ public class Question {
         this.min_answer = min_answer;
         this.max_answer = max_answer;
     }
-    
+
     public Question(int _id, String question, String question_fi,
             int min_answer, int max_answer, int theme_id) {
         super();
@@ -48,7 +48,7 @@ public class Question {
     public void set_theme_id(int _id) {
         this.theme_id = _id;
     }
-    
+
     public String getQuestion() {
         return question;
     }

@@ -16,14 +16,15 @@ public class Theme {
     private String description;
     private String description_fi;
 
-    public Theme(int id, String title, String title_fi, String description, String description_fi){
-    this.id = id;
-    this.title = title;
-    this.title_fi= title_fi;
-    this.description = description;
-    this.description_fi = description_fi;
+    public Theme(int id, String title, String title_fi, String description,
+            String description_fi) {
+        this.id = id;
+        this.title = title;
+        this.title_fi = title_fi;
+        this.description = description;
+        this.description_fi = description_fi;
     }
-    
+
     /**
      * @return the id
      */
@@ -93,6 +94,5 @@ public class Theme {
     public void setDescription_fi(String description_fi) {
         this.description_fi = description_fi;
     }
-    
-    
+
 }

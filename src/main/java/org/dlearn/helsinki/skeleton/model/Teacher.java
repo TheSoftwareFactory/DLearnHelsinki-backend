@@ -16,8 +16,8 @@ public class Teacher {
         this._id = _id;
         this.username = username;
     }
-    
-        public Teacher(int _id, String username, String name, String lastname) {
+
+    public Teacher(int _id, String username, String name, String lastname) {
         super();
         this._id = _id;
         this.username = username;
@@ -40,7 +40,7 @@ public class Teacher {
     public void setUsername(String username) {
         this.username = username;
     }
-    
+
     public String getName() {
         return name;
     }
@@ -48,7 +48,7 @@ public class Teacher {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public String getLastname() {
         return lastname;
     }
