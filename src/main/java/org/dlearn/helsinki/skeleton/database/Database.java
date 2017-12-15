@@ -746,24 +746,29 @@ public class Database {
     /**
      * Create new teacher into DB
      * @param new_teacher
+     * @param name
+     * @param lastname
      * @return Teacher
      */
-    public Optional<Teacher> createTeacher(NewTeacher new_teacher) {
+    public Optional<Teacher> createTeacher(NewTeacher new_teacher, String name, String lastname) {
         LOG.traceEntry("Creating new teacher {}", new_teacher);
         Optional<Teacher> teacher = Optional.empty();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "INSERT INTO public.\"Teachers\" (username, pwd) "
-                    + "VALUES (?,?) RETURNING _id";
+            String statement = "INSERT INTO public.\"Teachers\" (username, pwd, firstname, lastname) "
+                    + "VALUES (?,?,?,?) RETURNING _id";
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
                 insert.setString(1, new_teacher.teacher.username);
                 insert.setString(2, HASHER.encode(new_teacher.password));
-
+                insert.setString(3, name);
+                insert.setString(4, lastname);
                 // execute query
                 try (ResultSet result = insert.executeQuery()) {
                     if (result.next()) {
                         new_teacher.teacher._id = result.getInt("_id");
+                        new_teacher.teacher.name = name;
+                        new_teacher.teacher.lastname = lastname;
                     } else {
                         LOG.error("Inserting teacher didn't return ID of it.");
                     }
