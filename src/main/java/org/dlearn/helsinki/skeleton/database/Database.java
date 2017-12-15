@@ -40,6 +40,7 @@ import org.dlearn.helsinki.skeleton.model.StudentThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Survey;
 import org.dlearn.helsinki.skeleton.model.SurveyTheme;
 import org.dlearn.helsinki.skeleton.model.Teacher;
+import org.dlearn.helsinki.skeleton.model.Theme;
 import org.dlearn.helsinki.skeleton.security.Hasher;
 
 public class Database {
@@ -747,18 +748,18 @@ public class Database {
      * @param new_teacher
      * @return Teacher
      */
-    public Optional<Teacher> createTeacher(NewTeacher new_teacher) {
+    public Teacher createTeacher(NewTeacher new_teacher) {
         LOG.traceEntry("Creating new teacher {}", new_teacher);
-        Optional<Teacher> teacher = Optional.empty();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "INSERT INTO public.\"Teachers\" (username, pwd) "
-                    + "VALUES (?,?) RETURNING _id";
+            String statement = "INSERT INTO public.\"Teachers\" (username, pwd, firstname, lastname) "
+                    + "VALUES (?,?,?,?) RETURNING _id";
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
                 insert.setString(1, new_teacher.teacher.username);
                 insert.setString(2, HASHER.encode(new_teacher.password));
-
+                insert.setString(3, new_teacher.teacher.name);
+                insert.setString(4, new_teacher.teacher.lastname);
                 // execute query
                 try (ResultSet result = insert.executeQuery()) {
                     if (result.next()) {
@@ -772,7 +773,150 @@ public class Database {
         } catch (SQLException e) {
             LOG.catching(e);
         }
-        return teacher;
+        return new_teacher.teacher;
+    }
+
+    /**
+     * Get all teachers
+     * @return Teachers
+     */
+    public List<Teacher> getTeachers() {
+        LOG.traceEntry("Getting all teachers ");
+        List<Teacher> teachers = null;
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "" + "SELECT s._id,\n" + "       s.username,\n"
+                    + "       s.firstname,\n" + "       s.lastname\n"
+                    + "  FROM public.\"Teachers\" as s\n";
+
+            try (PreparedStatement insert = dbConnection
+                    .prepareStatement(statement)) {
+                // execute query
+                teachers = new ArrayList<>();
+
+                try (ResultSet result = insert.executeQuery()) {
+                    while (result.next()) {
+                        Teacher teacher = new Teacher(result.getInt("_id"),
+                                result.getString("username"),
+                                result.getString("firstname"),
+                                result.getString("lastname"));
+                        teachers.add(teacher);
+                    }
+                }
+            }
+            dbConnection.close();
+        } catch (SQLException e) {
+            LOG.catching(e);
+        }
+        LOG.traceExit(teachers);
+        return teachers;
+    }
+
+    /**
+     * Create new theme
+     * @param theme
+     * @return 
+     */
+    public Theme createTheme(Theme theme) {
+        LOG.traceEntry("Creating new theme{}", theme);
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "INSERT INTO public.\"Themes\" (title, title_fi, description, description_fi) "
+                    + "VALUES (?,?,?,?) RETURNING _id";
+            try (PreparedStatement insert = dbConnection
+                    .prepareStatement(statement)) {
+                insert.setString(1, theme.getTitle());
+                insert.setString(2, theme.getTitle_fi());
+                insert.setString(3, theme.getDescription());
+                insert.setString(4, theme.getDescription_fi());
+
+                // execute query
+                try (ResultSet result = insert.executeQuery()) {
+                    if (result.next()) {
+                        theme.setId(result.getInt("_id"));
+                    } else {
+                        LOG.error("Inserting teacher didn't return ID of it.");
+                    }
+                }
+            }
+            dbConnection.close();
+        } catch (SQLException e) {
+            LOG.catching(e);
+        }
+        return theme;
+    }
+
+    /**
+     * Get all themes
+     * @return 
+     */
+    public List<Theme> getThemes() {
+        LOG.traceEntry("Getting all themes");
+        List<Theme> themes = null;
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "" + "SELECT s._id,\n" + "       s.title,\n"
+                    + "       s.title_fi,\n" + "       s.description,\n"
+                    + "       s.description_fi\n"
+                    + "  FROM public.\"Themes\" as s\n";
+
+            try (PreparedStatement insert = dbConnection
+                    .prepareStatement(statement)) {
+                // execute query
+                themes = new ArrayList<>();
+
+                try (ResultSet result = insert.executeQuery()) {
+                    while (result.next()) {
+                        Theme theme = new Theme(result.getInt("_id"),
+                                result.getString("title"),
+                                result.getString("title_fi"),
+                                result.getString("description"),
+                                result.getString("description_fi"));
+                        themes.add(theme);
+                    }
+                }
+            }
+            dbConnection.close();
+        } catch (SQLException e) {
+            LOG.catching(e);
+        }
+        LOG.traceExit(themes);
+        return themes;
+    }
+
+    /**
+     * Create new question into DB
+     * @param question
+     * @return question, with id
+     */
+    public Question createQuestion(Question question) {
+        LOG.traceEntry("Creating new question{}", question);
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "INSERT INTO public.\"Questions\" (question, question_fi, min_answer, max_answer, theme_id) "
+                    + "VALUES (?,?,?,?,?) RETURNING _id";
+            try (PreparedStatement insert = dbConnection
+                    .prepareStatement(statement)) {
+                insert.setString(1, question.getQuestion());
+                insert.setString(2, question.getQuestion_fi());
+                insert.setInt(3, question.getMin_answer());
+                insert.setInt(4, question.getMax_answer());
+                insert.setInt(5, question.get_theme_id());
+
+                // execute query
+                try (ResultSet result = insert.executeQuery()) {
+                    if (result.next()) {
+                        question.set_id(result.getInt("_id"));
+                    } else {
+                        LOG.error("Inserting teacher didn't return ID of it.");
+                    }
+                }
+            }
+            dbConnection.close();
+        } catch (SQLException e) {
+            LOG.catching(e);
+        }
+        return question;
     }
 
     /**

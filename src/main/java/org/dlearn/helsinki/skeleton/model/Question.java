@@ -7,6 +7,7 @@ public class Question {
     public String question_fi;
     public int min_answer;
     public int max_answer;
+    public int theme_id;
 
     public Question() {
     }
@@ -21,12 +22,31 @@ public class Question {
         this.max_answer = max_answer;
     }
 
+    public Question(int _id, String question, String question_fi,
+            int min_answer, int max_answer, int theme_id) {
+        super();
+        this._id = _id;
+        this.question = question;
+        this.question_fi = question_fi;
+        this.min_answer = min_answer;
+        this.max_answer = max_answer;
+        this.theme_id = theme_id;
+    }
+
     public int get_id() {
         return _id;
     }
 
     public void set_id(int _id) {
         this._id = _id;
+    }
+
+    public int get_theme_id() {
+        return theme_id;
+    }
+
+    public void set_theme_id(int _id) {
+        this.theme_id = _id;
     }
 
     public String getQuestion() {
