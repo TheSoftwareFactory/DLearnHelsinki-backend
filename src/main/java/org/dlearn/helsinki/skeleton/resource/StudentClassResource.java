@@ -42,7 +42,7 @@ public class StudentClassResource {
     }
 
     /**
-     * 
+     * request students/{student_id}/classes/{class_id}/surveys
      * @param class_id
      * @return 
      */
@@ -55,6 +55,7 @@ public class StudentClassResource {
 
     /**
      * Get averages by group for each theme
+     * request students/{student_id}/classes/{class_id}/group_averages
      * @param student_id
      * @param class_id
      * @return 
@@ -70,6 +71,7 @@ public class StudentClassResource {
 
     /**
      * Get averages for a class
+     * request students/{student_id}/classes/{class_id}/class_averages
      * @param student_id
      * @param class_id
      * @return 
@@ -85,6 +87,7 @@ public class StudentClassResource {
 
     /**
      * progression for a student
+     * request students/{student_id}/classes/{class_id}/progression/{amount}
      * @param class_id
      * @param amount, amount of results front end wants
      * @return 

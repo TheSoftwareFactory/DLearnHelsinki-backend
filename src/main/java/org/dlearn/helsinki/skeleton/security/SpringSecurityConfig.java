@@ -13,6 +13,7 @@ import org.springframework.web.cors.CorsConfiguration;
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private final Database db = new Database();
+    private final Hasher HASHER = new Hasher();
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth)
@@ -32,7 +33,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                         + " union "
                         + "select username as username, 'ROLE_RESEARCHER' as role from public.\"Researchers\""
                         + ") A where username=?")
-                .passwordEncoder(Hasher.getHasher());
+                .passwordEncoder(HASHER);
     }
 
     @Override
@@ -48,6 +49,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .hasAnyRole("TEACHER", "STUDENT")
                 .antMatchers("/webapi/teachers/**").hasAnyRole("TEACHER")
                 .antMatchers("/webapi/researcher/**").hasAnyRole("RESEARCHER")
-                .and().httpBasic();
+                .antMatchers("/webapi/outliers/**")
+                .hasAnyRole("TEACHER", "RESEARCHER").and().httpBasic();
     }
 }
