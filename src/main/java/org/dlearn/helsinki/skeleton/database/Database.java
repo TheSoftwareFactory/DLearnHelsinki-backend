@@ -774,6 +774,39 @@ public class Database {
         }
         return teacher;
     }
+    
+    public List<Teacher> getTeachers() {
+        LOG.traceEntry("Getting all teachers ");
+        List<Teacher> teachers = null;
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "" 
+                    + "SELECT s._id,\n" 
+                    + "       s.username,\n"
+                    + "       s.firstname,\n" 
+                    + "       s.lastname\n"
+                    + "  FROM public.\"Teachers\" as s\n";
+
+            try (PreparedStatement insert = dbConnection
+                    .prepareStatement(statement)) {
+                // execute query
+                teachers = new ArrayList<>();
+
+                try (ResultSet result = insert.executeQuery()) {
+                    while (result.next()) {
+                        Teacher teacher = new Teacher(result.getInt("_id"),result.getString("username"), result.getString("firstname"), result.getString("lastname"));
+                        teachers.add(teacher);
+                    }
+                }
+            }
+            dbConnection.close();
+        } catch (SQLException e) {
+            LOG.catching(e);
+        }
+        LOG.traceExit(teachers);
+        return teachers;
+    }
+    
 
     /**
      * Change student password into DB
@@ -2550,5 +2583,5 @@ public class Database {
             return null;
         }
         return results;
-    }
+    }   
 }
