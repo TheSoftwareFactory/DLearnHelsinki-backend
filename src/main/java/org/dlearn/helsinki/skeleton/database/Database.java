@@ -750,7 +750,7 @@ public class Database {
      * @param lastname
      * @return Teacher
      */
-    public Optional<Teacher> createTeacher(NewTeacher new_teacher, String name, String lastname) {
+    public Optional<Teacher> createTeacher(NewTeacher new_teacher) {
         LOG.traceEntry("Creating new teacher {}", new_teacher);
         Optional<Teacher> teacher = Optional.empty();
         try (Connection dbConnection = getDBConnection()) {
@@ -761,14 +761,12 @@ public class Database {
                     .prepareStatement(statement)) {
                 insert.setString(1, new_teacher.teacher.username);
                 insert.setString(2, HASHER.encode(new_teacher.password));
-                insert.setString(3, name);
-                insert.setString(4, lastname);
+                insert.setString(3, new_teacher.teacher.name);
+                insert.setString(4, new_teacher.teacher.lastname);
                 // execute query
                 try (ResultSet result = insert.executeQuery()) {
                     if (result.next()) {
                         new_teacher.teacher._id = result.getInt("_id");
-                        new_teacher.teacher.name = name;
-                        new_teacher.teacher.lastname = lastname;
                     } else {
                         LOG.error("Inserting teacher didn't return ID of it.");
                     }
