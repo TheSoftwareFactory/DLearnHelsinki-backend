@@ -40,6 +40,7 @@ import org.dlearn.helsinki.skeleton.model.StudentThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Survey;
 import org.dlearn.helsinki.skeleton.model.SurveyTheme;
 import org.dlearn.helsinki.skeleton.model.Teacher;
+import org.dlearn.helsinki.skeleton.model.Theme;
 import org.dlearn.helsinki.skeleton.security.Hasher;
 
 public class Database {
@@ -775,6 +776,10 @@ public class Database {
         return teacher;
     }
     
+    /**
+     * Get all teachers
+     * @return Teachers
+     */
     public List<Teacher> getTeachers() {
         LOG.traceEntry("Getting all teachers ");
         List<Teacher> teachers = null;
@@ -807,6 +812,38 @@ public class Database {
         return teachers;
     }
     
+        public List<Theme> getThemes() {
+        LOG.traceEntry("Getting all themes");
+        List<Theme> themes = null;
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "" 
+                    + "SELECT s._id,\n" 
+                    + "       s.title,\n"
+                    + "       s.title_fi,\n" 
+                    + "       s.description,\n"
+                    + "       s.description_fi\n"
+                    + "  FROM public.\"Themes\" as s\n";
+
+            try (PreparedStatement insert = dbConnection
+                    .prepareStatement(statement)) {
+                // execute query
+                themes = new ArrayList<>();
+
+                try (ResultSet result = insert.executeQuery()) {
+                    while (result.next()) {
+                        Theme theme = new Theme(result.getInt("_id"),result.getString("title"), result.getString("title_fi"), result.getString("description"), result.getString("description_fi"));
+                        themes.add(theme);
+                    }
+                }
+            }
+            dbConnection.close();
+        } catch (SQLException e) {
+            LOG.catching(e);
+        }
+        LOG.traceExit(themes);
+        return themes;
+    }
 
     /**
      * Change student password into DB
