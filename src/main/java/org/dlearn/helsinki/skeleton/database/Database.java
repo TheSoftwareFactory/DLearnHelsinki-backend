@@ -351,9 +351,13 @@ public class Database {
 
     }
 
-    // Method : getSurveysFromClassAsStudent
-    // Input  : the survey_id, the student_id
-    // Output : returns a list of surveys available to the student
+    /**
+     * Gets surveys for a student form a class
+     * @param student_id
+     * @param class_id
+     * @return a list of surveys available to the student
+     * @throws SQLException 
+     */
     public List<Survey> getSurveysFromClassAsStudent(int student_id,
             int class_id) throws SQLException {
         LOG.traceEntry("Getting all surveys from class {} as student {}",
@@ -398,12 +402,16 @@ public class Database {
         return surveys;
     }
 
-    // Method : getSurveysFromClassAsStudent
-    // Input  : the survey_id, the student_id
-    // Output : returns a list of surveys available to the student
+    /**
+     * 
+     * @param teacher_id
+     * @param class_id
+     * @return a list of surveys.
+     * @throws SQLException 
+     */
     public List<Survey> getSurveysFromClassAsTeacher(int teacher_id,
             int class_id) throws SQLException {
-        LOG.traceEntry("Getting surveys from class {} as student {}", class_id,
+        LOG.traceEntry("Getting surveys from class {} as teacher {}", class_id,
                 teacher_id);
         ArrayList<Survey> surveys = new ArrayList<>();
 
@@ -446,12 +454,16 @@ public class Database {
         return surveys;
     }
 
+    /**
+     * 
+     * @return all surveys
+     */
     public List<Survey> getSurveys() {
         LOG.traceEntry("Getting all surveys");
         List<Survey> survey = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
             String statement = "SELECT _id, title, title_fi, class_id, start_date, end_date, teacher_id, description, description_fi open FROM public.\"Surveys\"";
-            //prepare statement with student_id
+
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
                 // execute query
@@ -485,6 +497,12 @@ public class Database {
         return survey;
     }
 
+    /**
+     * Gets group info of a student
+     * @param class_id
+     * @param student_id
+     * @return Group
+     */
     public Optional<Group> getGroupForStudent(int class_id, int student_id) {
         LOG.traceEntry("Getting groups for student {} in class {}", student_id,
                 class_id);
@@ -525,6 +543,11 @@ public class Database {
         return Optional.empty();
     }
 
+    /**
+     * Gets all groups student belongs to
+     * @param student_id
+     * @return Groups
+     */
     public List<Group> getAllGroupsForStudent(int student_id) {
         LOG.traceEntry("Getting all groups for student {}", student_id);
         ArrayList<Group> groups = new ArrayList<>();
@@ -561,7 +584,12 @@ public class Database {
         return groups;
     }
 
-    // TODO: Use optional
+    /**
+     * Get all groups in a class
+     * @param class_id
+     * @param all
+     * @return Groups
+     */
     public List<Group> getAllGroupsFromClass(int class_id, boolean all) {
         LOG.traceEntry("Getting groups for the class {}", class_id);
         ArrayList<Group> groups = null;
@@ -572,7 +600,6 @@ public class Database {
             if (!all) {
                 statement += "AND (open = true)";
             }
-            //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
                 select.setInt(1, class_id);
@@ -597,14 +624,18 @@ public class Database {
         return groups;
     }
 
-    // TODO: Use optional
+    /**
+     * 
+     * @param class_id
+     * @param group_id
+     * @return 
+     */
     public Group getGroupFromClass(int class_id, int group_id) {
         LOG.traceEntry("Getting group class {}", class_id);
         Group group = null;
 
         try (Connection dbConnection = getDBConnection()) {
             String statement = "Select name, open FROM public.\"Groups\" WHERE (class_id = ?) and (_id = ?);";
-            //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
                 select.setInt(1, class_id);
@@ -624,7 +655,13 @@ public class Database {
         LOG.traceExit(group);
         return group;
     }
-
+    
+    /**
+     * Get all students in a class
+     * @param class_id
+     * @param group_id
+     * @return Students
+     */
     public List<Student> getAllStudentsFromClassAndGroup(int class_id,
             int group_id) {
         LOG.traceEntry("Getting groups for the class {}", group_id);
@@ -668,6 +705,11 @@ public class Database {
         return students;
     }
 
+    /**
+     * Creates a new student into DB
+     * @param new_student
+     * @return Student
+     */
     public Optional<Student> createStudent(NewStudent new_student) {
         LOG.traceEntry("Creating student {}", new_student);
         Optional<Student> student = Optional.empty();
@@ -699,7 +741,12 @@ public class Database {
         LOG.traceExit(student);
         return student;
     }
-
+    
+    /**
+     * Create new teacher into DB
+     * @param new_teacher
+     * @return Teacher
+     */
     public Optional<Teacher> createTeacher(NewTeacher new_teacher) {
         LOG.traceEntry("Creating new teacher {}", new_teacher);
         Optional<Teacher> teacher = Optional.empty();
@@ -728,6 +775,11 @@ public class Database {
         return teacher;
     }
 
+    /**
+     * Change student password into DB
+     * @param student
+     * @return Student
+     */
     public Optional<Student> changeStudentPassword(
             ChangePasswordStudent student) {
         LOG.traceEntry("Changing students password {}", student);
@@ -753,6 +805,13 @@ public class Database {
         return Optional.ofNullable(result);
     }
 
+    /**
+     * Add student to a group
+     * @param student
+     * @param class_id
+     * @param group_id
+     * @return boolean
+     */
     public boolean addStudentToGroup(Student student, int class_id,
             int group_id) {
         LOG.traceEntry("Adding student {} to group {} in class {}", student,
@@ -785,6 +844,13 @@ public class Database {
         }
     }
 
+    /**
+     * Remove student from a group
+     * @param class_id
+     * @param group_id
+     * @param student_id
+     * @return 
+     */
     public boolean removeStudentFromGroup(int class_id, int group_id,
             int student_id) {
         boolean success = false;
@@ -820,7 +886,11 @@ public class Database {
         }
     }
 
-    // TODO: Use optional
+    /**
+     * 
+     * @param studentID
+     * @return Student
+     */
     public Student getStudent(int studentID) {
         LOG.traceEntry("Getting student {}", studentID);
         Student student = null;
@@ -850,6 +920,11 @@ public class Database {
         return student;
     }
 
+    /**
+     * Get all students in class <class_id>
+     * @param class_id
+     * @return Students
+     */
     public Optional<List<Student>> getAllStudentsFromClass(int class_id) {
         LOG.traceEntry("Getting all students from class {}", class_id);
         try {
@@ -892,6 +967,11 @@ public class Database {
         }
     }
 
+    /**
+     * Get Student by username
+     * @param username_
+     * @return Student
+     */
     public Optional<Student> getStudentFromUsername(String username_) {
         LOG.traceEntry("Getting student from the username {}", username_);
         Optional<Student> student = Optional.empty();
@@ -923,6 +1003,11 @@ public class Database {
         return student;
     }
 
+    /**
+     * Get Teacher by username
+     * @param username_
+     * @return Teacher
+     */
     public Optional<Teacher> getTeacherFromUsername(String username_) {
         LOG.traceEntry("Getting teacher from username {}", username_);
         Optional<Teacher> teacher = Optional.empty();
@@ -952,12 +1037,16 @@ public class Database {
         return teacher;
     }
 
+    /**
+     * Get Researcher by username
+     * @param username_
+     * @return Researcher
+     */
     public Optional<Researcher> getResearcherFromUsername(String username_) {
         LOG.traceEntry("Getting researcher from username {}", username_);
         Optional<Researcher> researcher = Optional.empty();
         try (Connection dbConnection = getDBConnection()) {
             String statement = "Select _id FROM public.\"Researchers\" WHERE username = ?";
-            //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
                 select.setString(1, username_);
@@ -981,6 +1070,11 @@ public class Database {
         return researcher;
     }
 
+    /**
+     * Check for username in DB
+     * @param student
+     * @return boolean
+     */
     public boolean doesStudentUsernameExistInDatabase(Student student) {
         LOG.traceEntry("Checking if student {} exists in database", student);
         boolean exists = false;
@@ -1003,7 +1097,11 @@ public class Database {
         return exists;
     }
 
-    // TODO: Use optional
+    /**
+     * Get classes for a teacher
+     * @param teacher_id
+     * @return Classes
+     */
     public List<Classes> getAllClassesOfTeacher(int teacher_id) {
         LOG.traceEntry("Getting all classes of teacher {}", teacher_id);
         List<Classes> classes = null;
@@ -1037,7 +1135,11 @@ public class Database {
         return classes;
     }
 
-    // TODO: Use optional
+    /**
+     * Get classes where a student student_id is in.
+     * @param student_id
+     * @return Classes
+     */
     public List<Classes> getAllClassesStundentIsIn(int student_id) {
         LOG.traceEntry("Getting all classes student {} is in", student_id);
         List<Classes> classes = null;
@@ -1073,7 +1175,11 @@ public class Database {
         LOG.traceExit(classes);
         return classes;
     }
-
+    
+    /**
+     * Close Group
+     * @param group_id 
+     */
     public void closeGroup(int group_id) {
         try (Connection dbConnection = getDBConnection()) {
             String update_statement = "UPDATE public.\"Groups\" "
@@ -1090,11 +1196,15 @@ public class Database {
         }
     }
 
+    /**
+     * check if group exists
+     * @param group_id
+     * @return boolean
+     */
     public boolean doesGroupExistInDatabase(int group_id) {
         boolean exists = false;
         try (Connection dbConnection = getDBConnection()) {
             String statement = "Select username FROM public.\"Groups\" as std WHERE std.username = ?";
-            //prepare statement with student_id
             try (PreparedStatement select = dbConnection
                     .prepareStatement(statement)) {
                 select.setInt(1, group_id);
@@ -1112,6 +1222,12 @@ public class Database {
         return exists;
     }
 
+    /**
+     * change group name
+     * @param class_id
+     * @param group_id
+     * @param group 
+     */
     public void updateGroupName(int class_id, int group_id, Group group) {
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -1139,15 +1255,11 @@ public class Database {
     /////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
-    // TODO: Use optional
+
+    /**
+     * connect to DB
+     * @return 
+     */
     private static Connection getDBConnection() {
         try {
             return DATA_SOURCE.getConnection();
