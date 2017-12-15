@@ -49,6 +49,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .hasAnyRole("TEACHER", "STUDENT")
                 .antMatchers("/webapi/teachers/**").hasAnyRole("TEACHER")
                 .antMatchers("/webapi/researcher/**").hasAnyRole("RESEARCHER")
+                .antMatchers("/researcher**").hasAnyRole("RESEARCHER")
                 .antMatchers("/webapi/outliers/**")
                 .hasAnyRole("TEACHER", "RESEARCHER").and().httpBasic();
     }
