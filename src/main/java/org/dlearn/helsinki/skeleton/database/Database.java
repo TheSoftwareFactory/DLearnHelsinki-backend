@@ -748,9 +748,8 @@ public class Database {
      * @param new_teacher
      * @return Teacher
      */
-    public Optional<Teacher> createTeacher(NewTeacher new_teacher) {
+    public Teacher createTeacher(NewTeacher new_teacher) {
         LOG.traceEntry("Creating new teacher {}", new_teacher);
-        Optional<Teacher> teacher = Optional.empty();
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
             String statement = "INSERT INTO public.\"Teachers\" (username, pwd, firstname, lastname) "
@@ -774,7 +773,7 @@ public class Database {
         } catch (SQLException e) {
             LOG.catching(e);
         }
-        return teacher;
+        return new_teacher.teacher;
     }
     
     /**
@@ -889,7 +888,7 @@ public class Database {
      * @param question
      * @return question, with id
      */
-    public Question createTheme(Question question) {
+    public Question createQuestion(Question question) {
         LOG.traceEntry("Creating new question{}", question);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
