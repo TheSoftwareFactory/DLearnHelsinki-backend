@@ -44,7 +44,7 @@ public class ResearcherAccessResource {
     public Teacher createNewTeacher(NewTeacher teacher)
             throws PasswordException {
         try {
-            return createNewUserService.createNewTeacher(teacher).orElse(null);
+            return createNewUserService.createNewTeacher(teacher);
         } catch (PasswordException e) {
             throw new WebApplicationException(
                     Response.status(Response.Status.BAD_REQUEST)
