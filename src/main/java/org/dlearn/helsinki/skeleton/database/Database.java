@@ -811,8 +811,41 @@ public class Database {
         LOG.traceExit(teachers);
         return teachers;
     }
+    /**
+     * Create new theme
+     * @param theme
+     * @return 
+     */
+    public Theme createTheme(Theme theme) {
+        LOG.traceEntry("Creating new theme{}", theme);
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "INSERT INTO public.\"Themes\" (title, title_fi, description, description_fi) "
+                    + "VALUES (?,?,?,?) RETURNING _id";
+            try (PreparedStatement insert = dbConnection
+                    .prepareStatement(statement)) {
+                insert.setString(1, theme.getTitle());
+                insert.setString(2, theme.getTitle_fi());
+                insert.setString(3, theme.getDescription());
+                insert.setString(4, theme.getDescription_fi());
+
+                // execute query
+                try (ResultSet result = insert.executeQuery()) {
+                    if (result.next()) {
+                        theme.setId(result.getInt("_id"));
+                    } else {
+                        LOG.error("Inserting teacher didn't return ID of it.");
+                    }
+                }
+            }
+            dbConnection.close();
+        } catch (SQLException e) {
+            LOG.catching(e);
+        }
+        return theme;
+    }
     
-        public List<Theme> getThemes() {
+    public List<Theme> getThemes() {
         LOG.traceEntry("Getting all themes");
         List<Theme> themes = null;
         try (Connection dbConnection = getDBConnection()) {
