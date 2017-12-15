@@ -8,22 +8,27 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
 
-import org.dlearn.helsinki.skeleton.database.Database;
 import org.dlearn.helsinki.skeleton.mentor.AnswerComparator;
 import org.dlearn.helsinki.skeleton.mentor.Tuple;
 import org.dlearn.helsinki.skeleton.model.Answer;
-import org.dlearn.helsinki.skeleton.model.Question;
 import static org.dlearn.helsinki.skeleton.mentor.Distance.euclidean;
 import static org.dlearn.helsinki.skeleton.mentor.Sort.sortMapByValue;
 import static org.dlearn.helsinki.skeleton.mentor.Sort.sortMapByValueReverse;
 
+/* Follows the original paper in implementation
+   www.dbs.ifi.lmu.de/Publikationen/Papers/LOF.pdf
+*/
 public class LocalOutlierFactor {
 
-    static final Database db = new Database();
-
+    /* kNN implementation according to the paper. In the paper this is 
+       called k-distance neighborhood of an object p.
+       This method returns the comparison k-distance and the neighborhood
+       of an object p.
+    */
     public Tuple<Double, List<List<Answer>>> kNearestNeighbors(int k,
             List<Answer> p, List<List<Answer>> data) {
         Map<List<Answer>, Double> distances = new HashMap(data.size());
+        // Calculate the distances between p and every object in data.
         for (List<Answer> o : data) {
             if (p.equals(o)) {
                 continue;
@@ -31,8 +36,12 @@ public class LocalOutlierFactor {
             distances.put(o, euclidean(p, o));
         }
         List<List<Answer>> neighbors = new ArrayList(k);
+        /* sort the distances according to the distance to select
+           k first distances.
+        */
         distances = sortMapByValue(distances);
         int i = 0;
+        // Only return k neighbors
         for (List<Answer> q : distances.keySet()) {
             if (i == k)
                 break;
@@ -47,98 +56,116 @@ public class LocalOutlierFactor {
         }
     }
 
-    public double rechabilityDistance(int k, List<Answer> p, List<Answer> o,
+    /* Reachability distance of objects p and o is the maximum between
+       distance(p, o) and kDist(o)
+    */
+    public double reachabilityDistance(int k, List<Answer> p, List<Answer> o,
             List<List<Answer>> data) {
         double kDist = this.kNearestNeighbors(k, o, data).first();
         double distance = Distance.euclidean(p, o);
         return Math.max(kDist, distance);
     }
 
+    /* Calculates the local reachability density of data object p.
+    */
     public double localReachabilityDensity(int k, List<Answer> p,
             List<List<Answer>> data) {
         double lrd = 0.0;
         double sum = 0.0;
-        int i = 0;
+        // Find out k nearest neighbors of p
         List<List<Answer>> neighbors = this.kNearestNeighbors(k, p, data)
                 .second();
-        int n = neighbors.size();
-        double[] reachDistances = new double[n];
+        // Calculate the sum of the reachability distances for every neighbor
         for (List<Answer> o : neighbors) {
-            reachDistances[i] = this.rechabilityDistance(k, p, o, data);
-            i++;
+            double reachDistance = this.reachabilityDistance(k, p, o, data);
+            sum += reachDistance;
         }
-        for (double e : reachDistances) {
-            sum += e;
-        }
+        /* In the paper this is given in the form 1 / (sum / k), which is
+           equal to k / sum
+        */
+        int n = neighbors.size();
         lrd = n / sum;
         return lrd;
     }
 
+    /* Calculates the local outlier factor of data object p.
+       Here the minPts is replaced with k to highlight the 
+       role of the parameter w.r.t. kNN.
+    */
     public double localOutlierFactor(int k, List<Answer> p,
             List<List<Answer>> data) {
         double lof = 0.0;
         double sum = 0.0;
-        int i = 0;
         List<List<Answer>> neighbors = this.kNearestNeighbors(k, p, data)
                 .second();
         int n = neighbors.size();
         if (n == 0)
             return lof;
         double lrd_p = this.localReachabilityDensity(k, p, data);
-        double[] lrd_ratios = new double[n];
         for (List<Answer> o : neighbors) {
-            lrd_ratios[i] = this.localReachabilityDensity(k, o, data) / lrd_p;
-            i++;
-        }
-        for (double e : lrd_ratios) {
-            sum += e;
+            double lrd_ratio = this.localReachabilityDensity(k, o, data)
+                    / lrd_p;
+            sum += lrd_ratio;
         }
         lof = sum / n;
         return lof;
     }
 
-    public Map<Integer, Double> outliers(int minPts, List<Answer> rawData) {
-        List<List<Answer>> data = this.prepareData(rawData);
+    /* A Method that is called to analyse outliers.
+       @param minPts: is the variable introduced in the original paper.
+       Changing the value of minPts might give different results and take
+       more run time. Proper analysis would take in results with different
+       minPts values and present some aggregate as the solution.
+       @param int amountOfQuestions: is the size of a desired data object
+       in the data List
+    
+    */
+    public Map<Integer, Double> outliers(int minPts, int amountOfQuestions,
+            List<Answer> rawData) {
+        // Change the dimension of the data
+        List<List<Answer>> data = this.prepareData(amountOfQuestions, rawData);
         Map<Integer, Double> outliers = new HashMap();
-        // return empty outliers, if there is no data
         if (data.isEmpty())
             return outliers;
+        // Calculate the local outlier factor for every object p in data 
         for (List<Answer> p : data) {
             double lof = this.localOutlierFactor(minPts, p, data);
+            /* According to the paper: "..for most objects in the cluster
+               their LOF are approximately equal to 1." i.e. every object
+               with a LOF higher than 1 is a potential outlier.
+            */
             if (lof > 1.0) {
                 outliers.put(p.get(0).getStudent_id(), lof);
             }
         }
+        // Sorts a Map in descending order according to Value
         outliers = sortMapByValueReverse(outliers);
         return outliers;
     }
 
-    // Remove List<Answer> from List<List<Answer>> data, if Answer.getAnswer() is null;
-    public List<List<Answer>> prepareData(List<Answer> rawData) {
-        int amountOfQuestions = 0;
-        List<Answer> tmp = new ArrayList(rawData);
+    /* Method which creates a 2D List of the 1D List.
+       All answers with same student_id are grouped into same
+       List. Also the 1D lists inside data are sorted by
+       survey_id and questions_id, so that comparison in the 
+       distance calculation makes sense.
+    */
+    public List<List<Answer>> prepareData(int amountOfQuestions,
+            List<Answer> rawData) {
         List<List<Answer>> data = new ArrayList();
         List<Integer> students = new ArrayList();
-        List<Integer> surveys = new ArrayList();
-        // find out all the student_id:s, survey_id:s and question_ids:
+        if (rawData.isEmpty())
+            return data;
+        // find out all the student_id:s in a class
         for (Answer ans : rawData) {
             if (!students.contains(ans.getStudent_id()))
                 students.add(ans.getStudent_id());
-            if (!surveys.contains(ans.getSurvey_id()))
-                surveys.add(ans.getSurvey_id());
-        }
-        // Calculates how many questions a class has in total
-        // i.e. sum all questions in all surveys of a class
-        for (Integer survey : surveys) {
-            List<Question> questions = db.getQuestionsFromSurvey(survey);
-            amountOfQuestions += questions.size();
         }
         // Loop through every possible student_id
         for (Integer student : students) {
             // Store all answers with same student_id into same List
             List<Answer> studentAnswers = new ArrayList();
-            // Loop through List<Answer> tmp
-            for (Answer ans : tmp) {
+            // Loop through List<Answer> rawData
+            for (Answer ans : rawData) {
                 /* If student answer is found, add it into
                    studentAnswers and remove it from tmp list
                 */
@@ -146,6 +173,10 @@ public class LocalOutlierFactor {
                     studentAnswers.add(ans);
                 }
             }
+            /* Only required length studentAnswers are added to the 
+               data List. If studentAnswers had different lengths, then
+               distance calculation would fail.
+            */
             if (studentAnswers.size() == amountOfQuestions
                     && studentAnswers.size() > 0) {
                 Collections.sort(studentAnswers, new AnswerComparator());
