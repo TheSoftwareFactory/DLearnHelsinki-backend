@@ -16,8 +16,11 @@ public class OutlierResource {
 
     OutlierService outlierService = new OutlierService();
 
-    // Takes a class_id
-    // Returns all outliers of the class_id, with lof score over 1.0
+    /**
+     * 
+     * @param class_id
+     * @return all outliers of the class_id, with lof score over 1.0
+     */
     @GET
     @Path("/{class_id}")
     @Produces(MediaType.APPLICATION_JSON)

@@ -227,7 +227,13 @@ public class Database {
         LOG.traceExit(questions);
         return questions;
     }
-
+    
+    /**
+     * Add a question to database
+     * @param question
+     * @return
+     * @throws SQLException 
+     */
     public Question postQuestion(Question question) throws SQLException {
         LOG.traceEntry("Posting question {}", question);
         try (Connection dbConnection = getDBConnection()) {
@@ -257,6 +263,11 @@ public class Database {
         return question;
     }
 
+    /**
+     * Adds a set of questions to a survey
+     * @param questions
+     * @param survey 
+     */
     public void postSurveyQuestions(List<Question> questions, Survey survey) {
         LOG.traceEntry("Posting questions {} for survey {}", questions, survey);
         try (Connection dbConnection = getDBConnection()) {
@@ -281,10 +292,11 @@ public class Database {
         LOG.traceExit();
     }
 
-    // Method getQuestionFromSurvey
-    // parameter : int, id of survey
-    // output : ArrayList<Question>, list of questions from the survey
-    // Takes a survey id and returns all the questions set to that survey
+    /**
+     * 
+     * @param survey_id id of survey
+     * @return all the questions set to that survey
+     */
     public List<Question> getQuestionsFromSurvey(int survey_id) {
         LOG.traceEntry("Getting the questions from the survey {}", survey_id);
         ArrayList<Question> questions = new ArrayList<>();
@@ -319,8 +331,14 @@ public class Database {
         return questions;
     }
 
-    // Method : postSutdentAnswersForSurvey
-    // Takes the survey_id, the student_id
+    /**
+     * Adds students answers.
+     * @param class_id
+     * @param survey_id
+     * @param student_id
+     * @param answers
+     * @return 
+     */
     public boolean postStudentAnswersForSurvey(int class_id, int survey_id,
             int student_id, List<Answer> answers) {
 

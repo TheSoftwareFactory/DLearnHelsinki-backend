@@ -34,7 +34,7 @@ public class StudentClassSurveyResource {
     }
 
     /**
-     * 
+     * request students/{student_id}/classes/{class_id}/surveys/{survey_id}/class_averages
      * @param student_id
      * @param survey_id
      * @param class_id
@@ -52,7 +52,7 @@ public class StudentClassSurveyResource {
     }
 
     /**
-     * 
+     * request students/{student_id}/classes/{class_id}/surveys/{survey_id}/group_averages
      * @param student_id, required to check which group averages are looked for
      * @param survey_id 
      * @param class_id, required to check which group averages are looked for
@@ -70,6 +70,7 @@ public class StudentClassSurveyResource {
     }
 
     /**
+     * request students/{student_id}/classes/{class_id}/surveys/{survey_id}/questions
      * Used to get survey questions
      * @param survey_id
      * @return 
@@ -81,7 +82,7 @@ public class StudentClassSurveyResource {
     }
 
     /**
-     * 
+     * request students/{student_id}/classes/{class_id}/surveys/{survey_id}/answers
      * @param survey_id
      * @return 
      */
