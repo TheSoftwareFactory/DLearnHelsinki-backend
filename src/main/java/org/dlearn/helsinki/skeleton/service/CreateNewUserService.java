@@ -47,7 +47,7 @@ public class CreateNewUserService {
         return student;
     }
 
-    public Optional<Teacher> createNewTeacher(NewTeacher newTeacher)
+    public Teacher createNewTeacher(NewTeacher newTeacher)
             throws PasswordException {
 
         //Check password
