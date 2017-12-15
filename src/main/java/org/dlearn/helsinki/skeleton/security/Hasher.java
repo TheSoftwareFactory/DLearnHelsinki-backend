@@ -60,12 +60,12 @@ public class Hasher implements PasswordEncoder {
         cache = new TreeSet(
                 (Comparator<CacheItem>) (o1, o2) -> o2.compareTo(o1));
     }
-    
+
     @Override
     public String encode(CharSequence raw) {
         return this.encode(raw, BCrypt.gensalt(B_ITERATIONS));
     }
-    
+
     private String encode(CharSequence raw, String salt) {
         return BCrypt.hashpw(raw.toString(), salt);
     }

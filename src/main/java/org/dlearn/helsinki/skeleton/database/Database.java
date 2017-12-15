@@ -227,7 +227,7 @@ public class Database {
         LOG.traceExit(questions);
         return questions;
     }
-    
+
     /**
      * Add a question to database
      * @param question
@@ -655,7 +655,7 @@ public class Database {
         LOG.traceExit(group);
         return group;
     }
-    
+
     /**
      * Get all students in a class
      * @param class_id
@@ -741,7 +741,7 @@ public class Database {
         LOG.traceExit(student);
         return student;
     }
-    
+
     /**
      * Create new teacher into DB
      * @param new_teacher
@@ -1175,7 +1175,7 @@ public class Database {
         LOG.traceExit(classes);
         return classes;
     }
-    
+
     /**
      * Close Group
      * @param group_id 
@@ -1269,7 +1269,11 @@ public class Database {
         }
     }
 
-    // Inserts an answer into the database
+    /**
+     * Insert an answer into the database
+     * @param answer
+     * @param class_id 
+     */
     public void putAnswerToQuestion(Answer answer, int class_id) {
         LOG.traceEntry("Adding answer {}", answer);
         // finding his group_id
@@ -1303,6 +1307,12 @@ public class Database {
         LOG.traceExit();
     }
 
+    /**
+     * Get answers for a survey survey_id from a student student_id
+     * @param student_id
+     * @param survey_id
+     * @return Answers
+     */
     public List<Answer> getAnswersFromStudentSurvey(int student_id,
             int survey_id) {
         LOG.traceEntry("Getting answers from student {} survey {}", student_id,
@@ -1338,6 +1348,13 @@ public class Database {
         return answers;
     }
 
+    /**
+     * 
+     * @param class_id
+     * @param group_id
+     * @param survey_id
+     * @return Average answers for a group by theme
+     */
     public List<GroupThemeAverage> getAverageAnswersFromGroup(int class_id,
             int group_id, int survey_id) {
         LOG.traceEntry(
@@ -1385,6 +1402,12 @@ public class Database {
         return answers;
     }
 
+    /**
+     * Get students in class, and their groups
+     * @param _class_id
+     * @param all
+     * @return 
+     */
     public List<StudentGroup> getGroupsWithStudents(int _class_id,
             boolean all) {
         LOG.traceEntry("Getting groups and students in class {}", _class_id);
@@ -1512,6 +1535,12 @@ public class Database {
         return studentGroups.values().stream().collect(Collectors.toList());
     }
 
+    /**
+     * Get theme average by class
+     * @param class_id
+     * @param survey_id
+     * @return 
+     */
     public List<ClassThemeAverage> getClassThemeAverage(int class_id,
             int survey_id) {
         LOG.traceEntry("Getting average for survey {} in class {}", survey_id,
@@ -1561,6 +1590,12 @@ public class Database {
         return answers;
     }
 
+    /**
+     * Get averages for a single student and survey
+     * @param survey_id
+     * @param student_id
+     * @return 
+     */
     public List<StudentThemeAverage> getStudentThemeAverage(int survey_id,
             int student_id) {
         LOG.traceEntry("Getting average for survey {} in student {}", survey_id,
@@ -1607,6 +1642,12 @@ public class Database {
         return answers;
     }
 
+    /**
+     * Get average progression for a student
+     * @param student_id
+     * @param amount amount of past surveys shown in progression
+     * @return 
+     */
     public Optional<List<ListStudentThemeAverage>> getStudentThemeAverageProgression(
             int student_id, int amount) {
         LOG.traceEntry("Getting progression of {} for student {}", amount,
@@ -1694,6 +1735,13 @@ public class Database {
         }
     }
 
+    /**
+     * Get student progression within a class
+     * @param class_id_
+     * @param student_id
+     * @param amount
+     * @return 
+     */
     public Optional<List<ListStudentThemeAverage>> getStudentThemeAverageProgressionInClass(
             int class_id_, int student_id, int amount) {
         LOG.traceEntry("Getting progression of {} for student {} in class {}",
@@ -1803,6 +1851,13 @@ public class Database {
         }
     }
 
+    /**
+     * get group progression
+     * @param class_id_
+     * @param group_id
+     * @param amount
+     * @return 
+     */
     public Optional<List<ListGroupThemeAverage>> getGroupThemeAverageProgression(
             int class_id_, int group_id, int amount) {
         LOG.traceEntry("Getting progression of {} for group {} in class {}",
@@ -1882,7 +1937,12 @@ public class Database {
         }
     }
 
-    //Is this used by the front end at all?
+    /**
+     * Get progression of a class
+     * @param class_id_
+     * @param amount
+     * @return 
+     */
     public Optional<List<ListClassThemeAverage>> getClassThemeAverageProgression(
             int class_id_, int amount) {
         LOG.traceEntry("Getting progression of {} for class {}", amount,
@@ -1997,6 +2057,12 @@ public class Database {
         }
     }
 
+    /**
+     * close survey
+     * @param teacher_id
+     * @param class_id
+     * @param survey_id 
+     */
     public void closeSurvey(int teacher_id, int class_id, int survey_id) {
         LOG.traceEntry("Closing survey {} for teacher {} in class {}",
                 survey_id, teacher_id, class_id);
@@ -2021,6 +2087,12 @@ public class Database {
         LOG.traceExit();
     }
 
+    /**
+     * Get student avg
+     * @param student_id
+     * @param class_id
+     * @return 
+     */
     public List<StudentThemeAverage> getStudentLifeTimeAverage(int student_id,
             int class_id) {
         LOG.traceEntry("Getting student {} average in class {}", student_id,
@@ -2068,6 +2140,12 @@ public class Database {
         return answers;
     }
 
+    /**
+     * Get history for a student
+     * @param student_id
+     * @param class_id
+     * @return 
+     */
     public List<StudentThemeAverage> getStudentHistory(int student_id,
             int class_id) {
         LOG.traceEntry("Getting student {} history in class {}", student_id,
@@ -2115,6 +2193,12 @@ public class Database {
 
     }
 
+    /**
+     * check that a group group_id belongs to a class class_id
+     * @param group_id
+     * @param class_id
+     * @return 
+     */
     public boolean doesGroupClassMatch(int group_id, int class_id) {
         try (Connection dbConnection = getDBConnection()) {
             return DataBaseHelper.doesGroupClassMatch(dbConnection, group_id,
@@ -2125,6 +2209,11 @@ public class Database {
         }
     }
 
+    /**
+     * check if grope is closed
+     * @param group_id
+     * @return boolean
+     */
     public boolean isGroupClosed(int group_id) {
         LOG.traceEntry("Checking if group {} is closed", group_id);
         // If group is closed, it is empty.
@@ -2151,6 +2240,11 @@ public class Database {
         return closed;
     }
 
+    /**
+     * Check how many students are in a group group_id
+     * @param group_id
+     * @return 
+     */
     public int countNumberOfStudentsInGroup(int group_id) {
         LOG.traceEntry("Counting how many students are in group {}", group_id);
         int count = 0;
@@ -2182,7 +2276,12 @@ public class Database {
         return count;
     }
 
-    // TODO: Use optional
+    /**
+     * Crate new group into a class, by group
+     * @param class_id
+     * @param group
+     * @return 
+     */
     public Group createGroupInClass(int class_id, Group group) {
         LOG.traceEntry("Creating group {} in class {}", group, class_id);
         Group createdGroup = null;
@@ -2212,6 +2311,12 @@ public class Database {
         return createdGroup;
     }
 
+    /**
+     * Crate new group into a class, by group name
+     * @param class_id
+     * @param name
+     * @return 
+     */
     public Group createGroupInClass(int class_id, String name) {
         LOG.traceEntry("Creating group {} in class {}", name, class_id);
         Group createdGroup = null;
@@ -2241,6 +2346,10 @@ public class Database {
         return createdGroup;
     }
 
+    /**
+     * Create new class for a teacher
+     * @param teacher_class 
+     */
     public void addClassToTeacher(Classes teacher_class) {
         LOG.traceEntry("Add class to teacher {}", teacher_class);
         try (Connection dbConnection = getDBConnection()) {
@@ -2261,10 +2370,18 @@ public class Database {
         LOG.traceExit();
     }
 
+    /**
+     * Get DB
+     * @return  DB
+     */
     public DataSource getDataSource() {
         return DATA_SOURCE;
     }
 
+    /**
+     * Get all students
+     * @return students
+     */
     public List<Student> getAllStudents() {//(int teacher_id)  
         LOG.traceEntry("Getting all students ");//from {}", teacher_id);
         List<Student> students = null;
@@ -2294,9 +2411,7 @@ public class Database {
                                 result.getInt("age"));
                         students.add(student);
                     }
-                    ;
                 }
-                ;
             }
             dbConnection.close();
         } catch (SQLException e) {
@@ -2306,6 +2421,11 @@ public class Database {
         return students;
     }
 
+    /**
+     * 
+     * @param student_id
+     * @return 
+     */
     public boolean doesStudentIdExistInDatabase(int student_id) {
         boolean idExists = false;
         LOG.traceEntry("Checking whether a student with student_id = {}",
@@ -2335,7 +2455,7 @@ public class Database {
         return idExists;
     }
 
-    //  TODO: Add checks if student belongs to class or grp in services maybe?
+    // TODO: Add checks if student belongs to class or grp in services maybe?
     // std = student, cls = class, grp = group, srv = survey
     public List<StudentThemeAverage> getSurveyAnswerAverages(int std_id,
             int cls_id, int grp_id, int srv_id) {
@@ -2397,6 +2517,11 @@ public class Database {
         return answers;
     }
 
+    /**
+     * Get all answers in a class.
+     * @param class_id
+     * @return 
+     */
     public List<Answer> getClassAnswers(int class_id) {
         List<Answer> results = new ArrayList<>();
         try (Connection dbConnection = getDBConnection()) {
