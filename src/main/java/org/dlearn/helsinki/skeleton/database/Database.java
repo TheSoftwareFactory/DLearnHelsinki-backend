@@ -883,8 +883,12 @@ public class Database {
         return themes;
     }
 
-    
-        public Question createTheme(Question question) {
+    /**
+     * Create new question into DB
+     * @param question
+     * @return question, with id
+     */
+    public Question createTheme(Question question) {
         LOG.traceEntry("Creating new question{}", question);
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
@@ -913,7 +917,6 @@ public class Database {
         }
         return question;
     }
-    
     
     /**
      * Change student password into DB
