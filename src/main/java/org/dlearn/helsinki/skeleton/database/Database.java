@@ -811,6 +811,7 @@ public class Database {
         LOG.traceExit(teachers);
         return teachers;
     }
+    
     /**
      * Create new theme
      * @param theme
@@ -845,6 +846,10 @@ public class Database {
         return theme;
     }
     
+    /**
+     * Get all themes
+     * @return 
+     */
     public List<Theme> getThemes() {
         LOG.traceEntry("Getting all themes");
         List<Theme> themes = null;
@@ -878,6 +883,38 @@ public class Database {
         return themes;
     }
 
+    
+        public Question createTheme(Question question) {
+        LOG.traceEntry("Creating new question{}", question);
+        try (Connection dbConnection = getDBConnection()) {
+            // Set up batch of statements
+            String statement = "INSERT INTO public.\"Questions\" (question, question_fi, min_answer, max_answer, theme_id) "
+                    + "VALUES (?,?,?,?,?) RETURNING _id";
+            try (PreparedStatement insert = dbConnection
+                    .prepareStatement(statement)) {
+                insert.setString(1, question.getQuestion());
+                insert.setString(2, question.getQuestion_fi());
+                insert.setInt(3, question.getMin_answer());
+                insert.setInt(4, question.getMax_answer());
+                insert.setInt(5, question.get_theme_id());
+
+                // execute query
+                try (ResultSet result = insert.executeQuery()) {
+                    if (result.next()) {
+                        question.set_id(result.getInt("_id"));
+                    } else {
+                        LOG.error("Inserting teacher didn't return ID of it.");
+                    }
+                }
+            }
+            dbConnection.close();
+        } catch (SQLException e) {
+            LOG.catching(e);
+        }
+        return question;
+    }
+    
+    
     /**
      * Change student password into DB
      * @param student
