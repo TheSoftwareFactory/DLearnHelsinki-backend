@@ -746,8 +746,6 @@ public class Database {
     /**
      * Create new teacher into DB
      * @param new_teacher
-     * @param name
-     * @param lastname
      * @return Teacher
      */
     public Optional<Teacher> createTeacher(NewTeacher new_teacher) {
