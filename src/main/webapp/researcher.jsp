@@ -88,6 +88,7 @@
             <label>Password</label>
             <input type="text" class="form-control input-md" name="add_teacher_pwd"/>
         </div>
+        <input type="hidden" name="method" value="add_teacher">
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     </div>
@@ -143,6 +144,7 @@
             <label>Description in Finnish</label>
             <input type="text" class="form-control input-md" name="add_theme_description_fi"/>
         </div>
+        <input type="hidden" name="method" value="add_theme">
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     </div>
@@ -202,12 +204,14 @@
         </div>
         <div class="form-group">
             <label>Theme</label>
-            <select name="add_question_theme">
+            <select name="add_question_theme" class="form-control">
+                <option value="" disabled selected>Select theme</option>
             <% for (Theme t : ResearcherHelper.listThemes()) {
                 out.print("<option value=\""+t.getId()+"\">"+t.getTitle()+"</option>");
             } %>
             </select>         
-        </div>
+        </div>           
+        <input type="hidden" name="method" value="add_question">
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     </div>
@@ -257,7 +261,7 @@
 
         function myFunction() {
             if(confirm(<%=msg%>)){
-                window.location.reload();  
+                window.location.reload();
             }
             
         }
