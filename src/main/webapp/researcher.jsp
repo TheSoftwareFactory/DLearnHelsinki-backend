@@ -116,25 +116,25 @@
         <h3>Add teacher:</h3>
         <div class="form-group">
             <label>First Name</label>
-            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_teacher_first" required
+            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_teacher_first" placeholder="Must be atleast 5 characters" required
                 oninvalid="this.setCustomValidity('Enter First name Here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Last Name</label>
-            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_teacher_last" required
+            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_teacher_last" placeholder="Must be atleast 5 characters" required
                 oninvalid="this.setCustomValidity('Enter Last name Here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Username</label>
-            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_teacher_user" required
+            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_teacher_user" placeholder="Must be atleast 5 characters" required
                 oninvalid="this.setCustomValidity('Enter Username Here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Password</label>
-            <input pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" type="text" class="form-control input-md" name="add_teacher_pwd" required
+            <input pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" type="text" class="form-control input-md" name="add_teacher_pwd" placeholder="Must contain upper and lower case letters, and numbers." required
                 oninvalid="this.setCustomValidity('Enter password Here, requires one lower case and upper case letter, and a number')"
                 oninput="setCustomValidity('')"  />
             
@@ -181,25 +181,25 @@
         <h3>Add theme:</h3>
         <div class="form-group">
             <label>Title</label>
-            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_theme_title" required
+            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_theme_title" placeholder="Must be atleast 5 characters" required
                 oninvalid="this.setCustomValidity('Enter theme title here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Title in Finnish</label>
-            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_theme_title_fi" required
+            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_theme_title_fi" placeholder="Must be atleast 5 characters" required
                 oninvalid="this.setCustomValidity('Enter theme title in finnish')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Description</label>
-            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_theme_description" required
+            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_theme_description" placeholder="Must be atleast 5 characters" required
                 oninvalid="this.setCustomValidity('Enter theme description here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Description in Finnish</label>
-            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_theme_description_fi" required
+            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_theme_description_fi" placeholder="Must be atleast 5 characters" required
                 oninvalid="this.setCustomValidity('Enter theme description in finnish here')"
                 oninput="setCustomValidity('')"  />
         </div>
@@ -247,13 +247,13 @@
         <h3>Add Question</h3>
         <div class="form-group">
             <label>Question</label>
-            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_question_question" required
+            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_question_question" placeholder="Must be atleast 5 characters" required
                 oninvalid="this.setCustomValidity('Enter question here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Question in Finnish</label>
-            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_question_question_fi" required
+            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_question_question_fi" placeholder="Must be atleast 5 characters" required
                 oninvalid="this.setCustomValidity('Enter question in finnish here')"
                 oninput="setCustomValidity('')"  />
         </div>
