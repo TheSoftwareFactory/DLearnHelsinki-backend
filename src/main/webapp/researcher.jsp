@@ -18,8 +18,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Researchers Page</title>
         <script src="scripts/jquery.min.js"></script>
-        <link href="styles/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-        <script src="scripts/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css">
+        <script src="scripts/bootstrap.min.js"></script>
 
         <style>
             body{ padding-bottom:70px; }
@@ -32,7 +32,6 @@
             .td_question {width: 50%; text-align: left;}
             .td_center {text-align: center;}
             
-            .alert{display: none;}
         </style>
     </head>
     <body>
@@ -43,19 +42,40 @@
     <%--Success Popups--%>
     
     <%
+        String method = request.getParameter("method");
+        boolean success = false;
         String msg = "";
-        Teacher teacher;
-        Question question;
-        Theme theme;
-        
-        if ((teacher = ResearcherHelper.addTeacher(request)) != null) {
-            msg = "Added teacher: "+teacher.username;
-        } 
-        else if ((question = ResearcherHelper.addQuestion(request)) != null) {
-            msg = "Added question: "+question.question;
-        }
-        else if ((theme = ResearcherHelper.addTheme(request)) != null) {
-            msg = "Added Theme "+theme.getTitle();
+
+        if (method != null && !method.isEmpty()) {
+            switch (method) {
+            case "teacher":
+                Teacher teacher = ResearcherHelper.addTeacher(request);
+                if (teacher != null) {
+                    msg = "Added teacher: "+teacher.username;
+                    success = true;
+                }
+                break;
+            case "question":
+                Question question = ResearcherHelper.addQuestion(request);
+                if (question != null) {
+                    msg = "Added question: "+question.question;
+                    success = true;
+                }
+                break;
+            case "theme":
+                Theme theme = ResearcherHelper.addTheme(request);
+                if (theme != null) {
+                    msg = "Added theme: "+theme.getTitle();
+                    success = true;
+                }
+                break;
+            default:  
+                success = true;
+                break;
+            }
+            if (!success) {
+                msg = "Failed to create "+method;
+            }
         }
     %>
             
@@ -70,32 +90,24 @@
     </div>
         
     <%-- Alerts --%>   
-        
+    
+    <% if (!msg.isEmpty()) { %>
+    <% if (success) { %>
     <div class="alert alert-success alert-dismissable" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
-        <strong>Well done!</strong> You successfully read this important alert message.
+        <%= msg %>
     </div>
-    <div class="alert alert-info alert-dismissable" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <strong>Heads up!</strong> This alert needs your attention, but it's not super important.
-    </div>
-    <div class="alert alert-warning alert-dismissable" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <strong>Warning!</strong> Better check yourself, you're not looking too good.
-    </div>
+    <% } else { %>
     <div class="alert alert-danger alert-dismissable" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
-        <strong>Missing data!</strong> Check that all fields are filled.
+         <%= msg %>
     </div>
-
+    <% } } %>
+    
     <%--Teacher Page--%>
         
     <div id="teacher_div" class="collapse indent">
@@ -127,7 +139,7 @@
                 oninput="setCustomValidity('')"  />
             
         </div>
-        <input type="hidden" name="method" value="add_teacher">
+        <input type="hidden" name="method" value="teacher">
         <button type="submit" name="submit" class="btn btn-primary">Submit</button>
     </form>
     </div>
@@ -191,7 +203,7 @@
                 oninvalid="this.setCustomValidity('Enter theme description in finnish here')"
                 oninput="setCustomValidity('')"  />
         </div>
-        <input type="hidden" name="method" value="add_theme">
+        <input type="hidden" name="method" value="theme">
         <button type="submit" name="submit" class="btn btn-primary">Submit</button>
     </form>
     </div>
@@ -266,7 +278,7 @@
             } %>
             </select>         
         </div>           
-        <input type="hidden" name="method" value="add_question">
+        <input type="hidden" name="method" value="question">
         <button type="submit" name="submit" class="btn btn-primary">Submit</button>
     </form>
     </div>
@@ -308,36 +320,17 @@
     </div>   <%--/div accordion--%>
     </div>   <%--/div container--%>
     
-    <% 
-        if (!msg.isEmpty()) {
-    %> 
-    <script>
-        document.getElementsByTagName("body")[0].onload = function() {myFunction();};
-
-        function myFunction() {
-            if(confirm(<%=msg%>)){
-                window.location.reload();
-            }
-            
-        }        
-    </script>
-    <% } %>
-    
-    
-    <script>
-        $(document).ready(function(){
-            $('button').click(function(){
-                
-                $('.alert').show();
-            }); 
-        });
-    </script>
-    
     <script>
         var $myGroup = $('#adders');
         $myGroup.on('show.bs.collapse','.collapse', function() {
             $myGroup.find('.collapse.in').collapse('hide');
-        }); 
+        });
+        
+        <% if (method != null) { %>
+            $myGroup.find('#<%=method%>_div').collapse('show')
+        <% } else { %>
+            $myGroup.find('#teacher_div').collapse('show')
+        <% } %>
     </script>
     
     </body>
