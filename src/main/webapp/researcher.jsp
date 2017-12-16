@@ -21,7 +21,13 @@
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <style>
-            .table-wrapper { height: 300px; overflow: auto; }   
+            body{ padding-bottom:70px; }
+            .table-wrapper { height: 300px; overflow: auto; }
+            .td_id {width: 10%; text-align: left;}
+            .td_id_2row {width: 10%; text-align: left; vertical-align: middle !important;}
+            .td_title {width: 20%; text-align: left;}
+            .td_description {width: 70%; text-align: left;}
+            .td_name {width: 30%; text-align: left;}
         </style>
     </head>
     <body>
@@ -53,9 +59,9 @@
     <div class="accordion-group" id="adders">
       
     <div class="form-group">
-        <button type="button" class="btn btn-info" data-toggle="collapse" data-parent="#adders" data-target="#teacher_div">Add Teacher</button>
-        <button type="button" class="btn btn-info" data-toggle="collapse" data-parent="#adders" data-target="#theme_div">Add Theme</button>
-        <button type="button" class="btn btn-info" data-toggle="collapse" data-parent="#adders" data-target="#question_div">Add Question</button>
+        <button type="button" class="btn btn-info" data-toggle="collapse" data-parent="#adders" data-target="#teacher_div">Teachers</button>
+        <button type="button" class="btn btn-info" data-toggle="collapse" data-parent="#adders" data-target="#theme_div">Themes</button>
+        <button type="button" class="btn btn-info" data-toggle="collapse" data-parent="#adders" data-target="#question_div">Questions</button>
     </div>
     
     <%--Teacher Page--%>
@@ -88,10 +94,10 @@
     <table style="margin-bottom: 0px;" class="table table-striped">
         <thead>
         <tr>
-            <th>ID</th>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Username</th>
+            <th class="td_id">ID</th>
+            <th class="td_name">Firstname</th>
+            <th class="td_name">Lastname</th>
+            <th class="td_name">Username</th>
         </tr>
         </thead>
     </table>
@@ -102,10 +108,10 @@
         for (Teacher t : ResearcherHelper.listTeachers()) {
         %>
         <tr>
-            <td> <%= t.get_id() %> </td>
-            <td> <%= t.getName() %> </td>
-            <td> <%= t.getLastname()%> </td>
-            <td> <%= t.getUsername()%> </td>            
+            <td class="td_id"> <%= t.get_id() %> </td>
+            <td class="td_name"> <%= t.getName() %> </td>
+            <td class="td_name"> <%= t.getLastname()%> </td>
+            <td class="td_name"> <%= t.getUsername()%> </td>            
         </tr>
         <%}%>
     </tbody>
@@ -138,30 +144,36 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     </div>
-    <table class="table table-striped">
-    <thead>
-      <tr>
-        <th style="text-align: center;">ID</th>
-        <th>title</th>
-        <th>Description</th>
-      </tr>
-    </thead>
+        
+    <h2> Themes </h2>
+    <table style="margin-bottom: 0px;" class="table">
+        <thead>
+          <tr>
+            <th class="td_id">ID</th>
+            <th class="td_title">Title</th>
+            <th class="td_description">Description</th>
+          </tr>
+        </thead>
+    </table>
+    <div class="table-wrapper">
+    <table class="table">
     <tbody>
         <% 
         for (Theme t : ResearcherHelper.listThemes()) {
         %>
         <tr>
-            <td rowspan="2" style="vertical-align: middle; text-align: center;"> <%= t.getId() %> </td>
-            <td> <%= t.getTitle() %> </td>
-            <td> <%= t.getDescription() %> </td>            
+            <td rowspan="2" class="td_id_2row"> <%= t.getId() %> </td>
+            <td class="td_title"> <%= t.getTitle() %> </td>
+            <td class="td_description"> <%= t.getDescription() %> </td>            
         </tr>
         <tr>
-            <td> <%= t.getTitle_fi() %> </td>
-            <td> <%= t.getDescription_fi() %> </td>            
+            <td class="td_title"> <%= t.getTitle_fi() %> </td>
+            <td class="td_description"> <%= t.getDescription_fi() %> </td>            
         </tr>
         <%}%>
     </tbody>
     </table>
+    </div>
     </div>
     
     <%--Questions Page--%>
