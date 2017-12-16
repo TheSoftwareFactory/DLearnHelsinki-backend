@@ -28,6 +28,8 @@
             .td_title {width: 20%; text-align: left;}
             .td_description {width: 70%; text-align: left;}
             .td_name {width: 30%; text-align: left;}
+            .td_question {width: 50%; text-align: left;}
+            .td_center {text-align: center;}
         </style>
     </head>
     <body>
@@ -214,14 +216,14 @@
     <table style="margin-bottom: 0px;" class="table">
         <thead>
           <tr>
-            <th class="td_name" rowspan="2">Theme</th>
-            <th class="td_id" rowspan="2">ID</th>
-            <th class="td_name" rowspan="2">Question</th>
-            <th class="td_title" colspan="2">Answer range</th>
+            <th class="td_title" rowspan="2">Theme</th>
+            <th class="td_id td_center" rowspan="2">ID</th>
+            <th class="td_question" rowspan="2">Question</th>
+            <th class="td_title td_center" colspan="2">Answer range</th>
           </tr>
              <tr>
-                <th class="td_id">Min</th>
-                <th class="td_id">Max</th>
+                <th class="td_id td_center">Min</th>
+                <th class="td_id td_center">Max</th>
             </tr>
         </thead>
     </table>
@@ -232,11 +234,11 @@
         for (Question q : ResearcherHelper.listQuestions()) {
         %>
         <tr>
-            <td class="td_name td_2row"> <%= q.get_theme_title() %> </td>             
-            <td class="td_id td_2row"> <%= q.get_id() %> </td>
-            <td class="td_name td_2row"> <%= q.getQuestion() %> <br> <%= q.getQuestion_fi() %> </td>
-            <td class="td_id td_2row"> <%= q.getMin_answer() %> </td>
-            <td class="td_id td_2row"> <%= q.getMax_answer() %> </td>
+            <td class="td_title td_2row"> <%= q.get_theme_title() %> </td>             
+            <td class="td_id td_center td_2row"> <%= q.get_id() %> </td>
+            <td class="td_question td_2row"> <%= q.getQuestion() %> <br> <%= q.getQuestion_fi() %> </td>
+            <td class="td_id td_center td_2row"> <%= q.getMin_answer() %> </td>
+            <td class="td_id td_center td_2row"> <%= q.getMax_answer() %> </td>
         </tr>
         <%}%>
     </tbody>
