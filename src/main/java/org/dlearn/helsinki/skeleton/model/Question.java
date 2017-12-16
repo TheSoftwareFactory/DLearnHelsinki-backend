@@ -8,6 +8,7 @@ public class Question {
     public int min_answer;
     public int max_answer;
     public int theme_id;
+    public String theme_title;
 
     public Question() {
     }
@@ -31,6 +32,18 @@ public class Question {
         this.min_answer = min_answer;
         this.max_answer = max_answer;
         this.theme_id = theme_id;
+    }
+
+    public Question(int _id, String question, String question_fi,
+            int min_answer, int max_answer, int theme_id, String theme_title) {
+        super();
+        this._id = _id;
+        this.question = question;
+        this.question_fi = question_fi;
+        this.min_answer = min_answer;
+        this.max_answer = max_answer;
+        this.theme_id = theme_id;
+        this.theme_title = theme_title;
     }
 
     public int get_id() {

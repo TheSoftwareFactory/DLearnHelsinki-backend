@@ -73,8 +73,16 @@ public class ResearcherHelper {
 
     }
 
-    static public List<Theme> listTheme() {
+    static public List<Theme> listThemes() {
         return db.getThemes();
+    }
+
+    static public List<Teacher> listTeachers() {
+        return db.getTeachers();
+    }
+
+    static public List<Question> listQuestions() {
+        return db.getQuestions();
     }
 
     static private int toInt(String s) {
