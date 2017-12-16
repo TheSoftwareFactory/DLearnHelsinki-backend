@@ -851,9 +851,10 @@ public class Database {
         List<Question> questions = null;
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "" + "SELECT qu.*, th.title"
-                    + "FROM public.\"Questions\" as qu"
-                    + "INNER JOIN public.\"Themes\" as th ON th._id=qu.theme_id";
+            String statement = "" + "SELECT qu.*, th.title "
+                    + "FROM public.\"Questions\" as qu "
+                    + "INNER JOIN public.\"Themes\" as th ON th._id=qu.theme_id "
+                    + "ORDER BY qu.theme_id, qu._id";
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
                 // execute query
@@ -943,7 +944,7 @@ public class Database {
                     if (result.next()) {
                         question.set_id(result.getInt("_id"));
                     } else {
-                        LOG.error("Inserting teacher didn't return ID of it.");
+                        LOG.error("Inserting Question didn't return ID of it.");
                     }
                 }
             }

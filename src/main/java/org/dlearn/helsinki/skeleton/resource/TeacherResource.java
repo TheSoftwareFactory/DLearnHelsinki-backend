@@ -10,6 +10,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -24,11 +25,13 @@ import org.dlearn.helsinki.skeleton.model.ChangePasswordStudent;
 import org.dlearn.helsinki.skeleton.model.NewStudent;
 
 import org.dlearn.helsinki.skeleton.model.Student;
+import org.dlearn.helsinki.skeleton.model.StudentThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Teacher;
 import org.dlearn.helsinki.skeleton.service.ChangePasswordService;
 import org.dlearn.helsinki.skeleton.service.CreateNewUserService;
 import org.dlearn.helsinki.skeleton.service.MoveToGroupService;
 import org.dlearn.helsinki.skeleton.service.SecurityService;
+import org.dlearn.helsinki.skeleton.service.StudentService;
 import org.dlearn.helsinki.skeleton.service.TeacherStudentService;
 
 @Path("/teachers")
@@ -39,6 +42,7 @@ public class TeacherResource {
     private final SecurityService security = new SecurityService();
     private final TeacherStudentService teacherStudentService = new TeacherStudentService();
     private final MoveToGroupService moveToGroupService = new MoveToGroupService();
+    private final StudentService studentService = new StudentService();
 
     /**
      * Request webapi/teachers/
@@ -182,5 +186,18 @@ public class TeacherResource {
         }
 
         return students;
+    }
+    
+        /**
+     * 
+     * @param student_id
+     * @return averages from all surveys from all students classes
+     */
+    @GET
+    @Path("/{teacher_id}/survey_averages")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<StudentThemeAverage> getSurveyAverages(
+            @QueryParam("student_id") int student_id) {
+        return studentService.getSurveyAnswerAverages(student_id, 0, 0, 0);
     }
 }

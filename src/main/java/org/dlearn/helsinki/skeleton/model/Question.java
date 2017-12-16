@@ -62,6 +62,14 @@ public class Question {
         this.theme_id = _id;
     }
 
+    public String get_theme_title() {
+        return theme_title;
+    }
+
+    public void set_theme_title(String title) {
+        this.theme_title = title;
+    }
+
     public String getQuestion() {
         return question;
     }

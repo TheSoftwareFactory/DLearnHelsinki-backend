@@ -8,17 +8,21 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.dlearn.helsinki.skeleton.model.ClassWithAllGroups;
 import org.dlearn.helsinki.skeleton.model.Classes;
 import org.dlearn.helsinki.skeleton.service.ClassService;
 import org.dlearn.helsinki.skeleton.model.ListClassThemeAverage;
+import org.dlearn.helsinki.skeleton.model.StudentThemeAverage;
 import org.dlearn.helsinki.skeleton.service.ProgressionService;
+import org.dlearn.helsinki.skeleton.service.StudentService;
 
 public class TeacherClassResource {
     private final ClassService classService = new ClassService();
     private final ProgressionService progression = new ProgressionService();
+    private final StudentService studentService = new StudentService();
 
     /**
      * request teachers/{teacher_id}/classes
@@ -95,5 +99,35 @@ public class TeacherClassResource {
     @Path("/{class_id}/students")
     public TeacherClassStudentResource getClassStudent() {
         return new TeacherClassStudentResource();
+    }
+
+    /**
+    * Get averages by group for each theme
+    * request teachers/{teacher_id}/classes/{class_id}/group_averages
+    * @param class_id
+    * @param group_id, given in ?group_id={group_id}
+    * @return 
+    */
+    @GET
+    @Path("/{class_id}/group_averages")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<StudentThemeAverage> getGroupAverage(
+            @PathParam("class_id") int class_id,
+            @QueryParam("group_id") int group_id) {
+        return studentService.getSurveyAnswerAverages(0, class_id, group_id, 0);
+    }
+
+    /**
+     * Get averages for a class
+     * request teachers/{teacher_id}/classes/{class_id}/class_averages
+     * @param class_id
+     * @return 
+     */
+    @GET
+    @Path("/{class_id}/class_averages")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<StudentThemeAverage> getStudentClassAverage(
+            @PathParam("class_id") int class_id) {
+        return studentService.getSurveyAnswerAverages(0, class_id, 0, 0);
     }
 }
