@@ -29,12 +29,6 @@
             .td_description {width: 70%; text-align: left;}
             .td_name {width: 30%; text-align: left;}
         </style>
-        <script>
-            var $myGroup = $('#adders');
-            $myGroup.on('show.bs.collapse','.collapse', function() {
-                $myGroup.find('.collapse.in').collapse('hide');
-            }); 
-        </script>
     </head>
     <body>
     <div class="container">
@@ -123,7 +117,7 @@
     </tbody>
     </table>
     </div>
-    </div>
+    </div>  <%--/div teacher_div --%>
     
     <%--Theme Page--%>
     
@@ -180,7 +174,7 @@
     </tbody>
     </table>
     </div>
-    </div>
+    </div> <%--/div theme_div --%>
     
     <%--Questions Page--%>
     
@@ -248,12 +242,10 @@
     </tbody>
     </table>
     </div>
+    </div>   <%--/div question_div --%>
     
-    
-    </div>
-    </div>
-    </div>
-    </body>
+    </div>   <%--/div accordion--%>
+    </div>   <%--/div container--%>
     
     <% 
         if (!msg.isEmpty()) {
@@ -269,4 +261,12 @@
         }
     </script>
     <% } %>
+    <script>
+        var $myGroup = $('#adders');
+        $myGroup.on('show.bs.collapse','.collapse', function() {
+            $myGroup.find('.collapse.in').collapse('hide');
+        }); 
+    </script>
+    
+    </body>
 </html>
