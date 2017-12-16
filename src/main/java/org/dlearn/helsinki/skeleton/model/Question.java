@@ -61,7 +61,7 @@ public class Question {
     public void set_theme_id(int _id) {
         this.theme_id = _id;
     }
-    
+
     public String get_theme_title() {
         return theme_title;
     }
