@@ -208,7 +208,8 @@
             <td> <%= t.get_id() %> </td>
             <td> <%= t.getQuestion() %> </td>
             <td> <%= t.getMin_answer() %> </td>
-            <td> <%= t.getMax_answer() %> </td>            
+            <td> <%= t.getMax_answer() %> </td>
+            <td> <%= t.get_theme_title() %> </td>             
         </tr>
         <%}%>
     </tbody>

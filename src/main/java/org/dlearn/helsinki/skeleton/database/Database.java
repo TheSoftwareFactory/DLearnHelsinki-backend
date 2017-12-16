@@ -851,8 +851,9 @@ public class Database {
         List<Question> questions = null;
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = "" + "SELECT qu.*, th.title"
-                    + "FROM public.\"Questions\" as qu"
+            String statement = "" 
+                    + "SELECT qu.*, th.title "
+                    + "FROM public.\"Questions\" as qu "
                     + "INNER JOIN public.\"Themes\" as th ON th._id=qu.theme_id";
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
