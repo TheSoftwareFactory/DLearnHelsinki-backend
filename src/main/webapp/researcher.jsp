@@ -11,6 +11,10 @@
 <%@ page import="org.dlearn.helsinki.skeleton.model.Theme"%>
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+<style>
+    
+</style>
+
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -187,8 +191,8 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     </div>
-    <table class="table table-striped">
-    <thead>
+    <table class="table table-striped" style="display: table; border-collapse: separate;">
+    <thead style="display: table-header-group; width: 100%;">
       <tr>
         <th style="vertical-align: middle; text-align: center;" rowspan="2">ID</th>
         <th style="vertical-align: middle;" rowspan="2">Question</th>
@@ -200,7 +204,7 @@
         <th>Max</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody style="display: block; height: 400px; overflow: auto; width: 100%;">
         <% 
         for (Question t : ResearcherHelper.listQuestions()) {
         %>
