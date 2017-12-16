@@ -31,6 +31,8 @@
             .td_name {width: 30%; text-align: left;}
             .td_question {width: 50%; text-align: left;}
             .td_center {text-align: center;}
+            
+            .alert{display: none;}
         </style>
     </head>
     <body>
@@ -56,7 +58,7 @@
             msg = "Added Theme "+theme.getTitle();
         }
     %>
-    
+            
     <%--Menu buttons--%>
     
     <div class="accordion-group" id="adders">
@@ -65,6 +67,33 @@
         <button type="button" class="btn btn-info" data-toggle="collapse" data-parent="#adders" data-target="#teacher_div">Teachers</button>
         <button type="button" class="btn btn-info" data-toggle="collapse" data-parent="#adders" data-target="#theme_div">Themes</button>
         <button type="button" class="btn btn-info" data-toggle="collapse" data-parent="#adders" data-target="#question_div">Questions</button>
+    </div>
+        
+    <%-- Alerts --%>   
+        
+    <div class="alert alert-success alert-dismissable" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Well done!</strong> You successfully read this important alert message.
+    </div>
+    <div class="alert alert-info alert-dismissable" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Heads up!</strong> This alert needs your attention, but it's not super important.
+    </div>
+    <div class="alert alert-warning alert-dismissable" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Warning!</strong> Better check yourself, you're not looking too good.
+    </div>
+    <div class="alert alert-danger alert-dismissable" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Missing data!</strong> Check that all fields are filled.
     </div>
     
     <%--Teacher Page--%>
@@ -75,22 +104,31 @@
         <h3>Add teacher:</h3>
         <div class="form-group">
             <label>First Name</label>
-            <input type="text" class="form-control input-md" name="add_teacher_first"/>
+            <input type="text" class="form-control input-md" name="add_teacher_first" required
+                oninvalid="this.setCustomValidity('Enter First name Here')"
+                oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Last Name</label>
-            <input type="text" class="form-control input-md" name="add_teacher_last"/>
+            <input type="text" class="form-control input-md" name="add_teacher_last" required
+                oninvalid="this.setCustomValidity('Enter Last name Here')"
+                oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Username</label>
-            <input type="text" class="form-control input-md" name="add_teacher_user"/>
+            <input type="text" class="form-control input-md" name="add_teacher_user" required
+                oninvalid="this.setCustomValidity('Enter Username Here')"
+                oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Password</label>
-            <input type="text" class="form-control input-md" name="add_teacher_pwd"/>
+            <input type="text" class="form-control input-md" name="add_teacher_pwd" required
+                oninvalid="this.setCustomValidity('Enter password Here')"
+                oninput="setCustomValidity('')"  />
+            
         </div>
         <input type="hidden" name="method" value="add_teacher">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" name="submit" class="btn btn-primary">Submit</button>
     </form>
     </div>
     
@@ -131,22 +169,22 @@
         <h3>Add theme:</h3>
         <div class="form-group">
             <label>Title</label>
-            <input type="text" class="form-control input-md" name="add_theme_title"/>
+            <input type="text" class="form-control input-md" name="add_theme_title" required/>
         </div>
         <div class="form-group">
             <label>Title in Finnish</label>
-            <input type="text" class="form-control input-md" name="add_theme_title_fi"/>
+            <input type="text" class="form-control input-md" name="add_theme_title_fi" required/>
         </div>
         <div class="form-group">
             <label>Description</label>
-            <input type="text" class="form-control input-md" name="add_theme_description"/>
+            <input type="text" class="form-control input-md" name="add_theme_description" required/>
         </div>
         <div class="form-group">
             <label>Description in Finnish</label>
-            <input type="text" class="form-control input-md" name="add_theme_description_fi"/>
+            <input type="text" class="form-control input-md" name="add_theme_description_fi" required/>
         </div>
         <input type="hidden" name="method" value="add_theme">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" name="submit" class="btn btn-primary">Submit</button>
     </form>
     </div>
         
@@ -189,19 +227,19 @@
         <h3>Add Question</h3>
         <div class="form-group">
             <label>Question</label>
-            <input type="text" class="form-control input-md" name="add_question_question"/>
+            <input type="text" class="form-control input-md" name="add_question_question" required/>
         </div>
         <div class="form-group">
             <label>Question in Finnish</label>
-            <input type="text" class="form-control input-md" name="add_question_question_fi"/>
+            <input type="text" class="form-control input-md" name="add_question_question_fi" required/>
         </div>
         <div class="form-group">
             <label>Min Value of answer</label>
-            <input type="text" class="form-control input-md" name="add_question_min_answer"/>
+            <input type="text" class="form-control input-md" name="add_question_min_answer" required/>
         </div>
         <div class="form-group">
             <label>Max Value of answer</label>
-            <input type="text" class="form-control input-md" name="add_question_max_answer"/>
+            <input type="text" class="form-control input-md" name="add_question_max_answer" required/>
         </div>
         <div class="form-group">
             <label>Theme</label>
@@ -213,7 +251,7 @@
             </select>         
         </div>           
         <input type="hidden" name="method" value="add_question">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" name="submit" class="btn btn-primary">Submit</button>
     </form>
     </div>
    
@@ -265,9 +303,20 @@
                 window.location.reload();
             }
             
-        }
+        }        
     </script>
     <% } %>
+    
+    
+    <script>
+        $(document).ready(function(){
+            $('button').click(function(){
+                
+                $('.alert').show();
+            }); 
+        });
+    </script>
+    
     <script>
         var $myGroup = $('#adders');
         $myGroup.on('show.bs.collapse','.collapse', function() {
@@ -277,3 +326,4 @@
     
     </body>
 </html>
+
