@@ -42,15 +42,16 @@
         }
     %>
     
-    <div id="adders">
-        
-    <div class="center-block">
+    <div class="accordion-group" id="adders">
+      
+    <div class="form-group">
         <button type="button" class="btn btn-info" data-toggle="collapse" data-parent="#adders" data-target="#teacher_div">Add Teacher</button>
         <button type="button" class="btn btn-info" data-toggle="collapse" data-parent="#adders" data-target="#theme_div">Add Theme</button>
         <button type="button" class="btn btn-info" data-toggle="collapse" data-parent="#adders" data-target="#question_div">Add Question</button>
     </div>
-
-    <div id="teacher_div" style="max-width: 50%;" class="collapse indent">
+    
+    <div id="teacher_div" class="collapse indent">
+    <div style="max-width: 50%">
     <form name="add_teacher" action="" method="post">
         <h3>Add teacher:</h3>
         <div class="form-group">
@@ -72,8 +73,33 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     </div>
+        
+    <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Username</th>
+      </tr>
+    </thead>
+    <tbody>
+        <% 
+        for (Teacher t : ResearcherHelper.listTeachers()) {
+        %>
+        <tr>
+            <td> <%= t.get_id() %> </td>
+            <td> <%= t.getName() %> </td>
+            <td> <%= t.getLastname()%> </td>
+            <td> <%= t.getUsername()%> </td>            
+        </tr>
+        <%}%>
+    </tbody>
+    </table>
+    </div>
     
-    <div id="theme_div" style="max-width: 50%;" class="collapse indent">
+    <div id="theme_div" class="collapse indent">
+    <div style="max-width: 50%;">
     <form name="add_theme" action="" method="post">
         <h3>Add theme:</h3>
         <div class="form-group">
@@ -95,9 +121,32 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     </div>
+    <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Username</th>
+      </tr>
+    </thead>
+    <tbody>
+        <% 
+        for (Teacher t : ResearcherHelper.listTeachers()) {
+        %>
+        <tr>
+            <td> <%= t.get_id() %> </td>
+            <td> <%= t.getName() %> </td>
+            <td> <%= t.getLastname()%> </td>
+            <td> <%= t.getUsername()%> </td>            
+        </tr>
+        <%}%>
+    </tbody>
+    </table>
+    </div>
     
-    
-    <div id="question_div" style="max-width: 50%;" class="collapse">
+    <div id="question_div" class="collapse">
+    <div style="max-width: 50%;">
     <form name="add_question" action="" method="post">
         <h3>Add Question</h3>
         <div class="form-group">
@@ -119,7 +168,7 @@
         <div class="form-group">
             <label>Theme</label>
             <select name="add_question_theme">
-            <% for (Theme t : ResearcherHelper.listTheme()) {
+            <% for (Theme t : ResearcherHelper.listThemes()) {
                 out.print("<option value=\""+t.getId()+"\">"+t.getTitle()+"</option>");
             } %>
             </select>         
@@ -127,6 +176,28 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     </div>
+    <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Username</th>
+      </tr>
+    </thead>
+    <tbody>
+        <% 
+        for (Teacher t : ResearcherHelper.listTeachers()) {
+        %>
+        <tr>
+            <td> <%= t.get_id() %> </td>
+            <td> <%= t.getName() %> </td>
+            <td> <%= t.getLastname()%> </td>
+            <td> <%= t.getUsername()%> </td>            
+        </tr>
+        <%}%>
+    </tbody>
+    </table>
     </div>
     </div>
     </body>
@@ -141,6 +212,12 @@
             alert("<%=msg%>")
         }
     </script>
-    
     <% } %>
+    <script>
+        var $myGroup = $('#adders');
+        $myGroup.on('show.bs.collapse','.collapse', function() {
+            console.log("HERE");
+            $myGroup.find('.collapse.in').collapse('hide');
+        }); 
+    </script>
 </html>
