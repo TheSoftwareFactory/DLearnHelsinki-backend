@@ -90,7 +90,7 @@
     </form>
     </div>
     
-    <h2> Teachers </h2>
+    <h3> Teachers </h3>
     <table style="margin-bottom: 0px;" class="table table-striped">
         <thead>
         <tr>
@@ -145,7 +145,7 @@
     </form>
     </div>
         
-    <h2> Themes </h2>
+    <h3> Themes </h3>
     <table style="margin-bottom: 0px;" class="table">
         <thead>
           <tr>
@@ -257,12 +257,4 @@
         }
     </script>
     <% } %>
-    <script>
-        $( "table" ).wrap( "<div class='table-overflow'></div>" );
-        var $myGroup = $('#adders');
-        $myGroup.on('show.bs.collapse','.collapse', function() {
-            console.log("HERE");
-            $myGroup.find('.collapse.in').collapse('hide');
-        }); 
-    </script>
 </html>
