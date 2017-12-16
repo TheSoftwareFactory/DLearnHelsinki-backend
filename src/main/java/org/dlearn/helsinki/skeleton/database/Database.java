@@ -854,7 +854,8 @@ public class Database {
             String statement = "" 
                     + "SELECT qu.*, th.title "
                     + "FROM public.\"Questions\" as qu "
-                    + "INNER JOIN public.\"Themes\" as th ON th._id=qu.theme_id";
+                    + "INNER JOIN public.\"Themes\" as th ON th._id=qu.theme_id "
+                    + "ORDER BY qu.theme_id, qu._id";
             try (PreparedStatement insert = dbConnection
                     .prepareStatement(statement)) {
                 // execute query

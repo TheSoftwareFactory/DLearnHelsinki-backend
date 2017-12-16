@@ -192,7 +192,7 @@
       <tr>
         <th style="vertical-align: middle; text-align: center;" rowspan="2">ID</th>
         <th style="vertical-align: middle;" rowspan="2">Question</th>
-        <th style="vertical-align: middle; text-align: center;" colspan="2">Answer range</th>
+        <th style="vertical-align: middle;" colspan="2">Answer range</th>
         <th style="vertical-align: middle;" rowspan="2">Theme</th>
       </tr>
        <tr>
@@ -205,11 +205,14 @@
         for (Question t : ResearcherHelper.listQuestions()) {
         %>
         <tr>
-            <td> <%= t.get_id() %> </td>
+            <td rowspan="2" style="vertical-align: middle; text-align: center;"> <%= t.get_id() %> </td>
             <td> <%= t.getQuestion() %> </td>
-            <td> <%= t.getMin_answer() %> </td>
-            <td> <%= t.getMax_answer() %> </td>
-            <td> <%= t.get_theme_title() %> </td>             
+            <td rowspan="2" style="vertical-align: middle;"> <%= t.getMin_answer() %> </td>
+            <td rowspan="2" style="vertical-align: middle;"> <%= t.getMax_answer() %> </td>
+            <td rowspan="2" style="vertical-align: middle;"> <%= t.get_theme_title() %> </td>             
+        </tr>
+        <tr>
+            <td> <%= t.getQuestion_fi() %> </td>            
         </tr>
         <%}%>
     </tbody>
