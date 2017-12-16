@@ -37,7 +37,7 @@ public class ResearcherHelper {
         question_fi = request.getParameter("add_question_question_fi");
         min_answer = toInt(request.getParameter("add_question_min_answer"));
         max_answer = toInt(request.getParameter("add_question_max_answer"));
-        theme = toInt(request.getParameter("add_teacher_pwd"));
+        theme = toInt(request.getParameter("add_question_theme"));
 
         if (question == null || question_fi == null || question.isEmpty()
                 || question_fi.isEmpty()) {
