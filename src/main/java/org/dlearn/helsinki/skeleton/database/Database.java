@@ -945,7 +945,7 @@ public class Database {
                     if (result.next()) {
                         question.set_id(result.getInt("_id"));
                     } else {
-                        LOG.error("Inserting teacher didn't return ID of it.");
+                        LOG.error("Inserting Question didn't return ID of it.");
                     }
                 }
             }
