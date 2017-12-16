@@ -11,9 +11,7 @@
 <%@ page import="org.dlearn.helsinki.skeleton.model.Theme"%>
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<style>
-    
-</style>
+
 
 <html>
     <head>
@@ -22,6 +20,9 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <style>
+            .table-wrapper { height: 300px; overflow: auto; }   
+        </style>
     </head>
     <body>
     <div class="container">
@@ -82,7 +83,8 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     </div>
-        
+    
+    <h2> Teachers </h2>
     <table class="table table-striped">
     <thead>
       <tr>
@@ -92,6 +94,9 @@
         <th>Username</th>
       </tr>
     </thead>
+    </table>
+    <div class="table-wrapper">
+    <table style="margin-top:0;" class="table table-striped">
     <tbody>
         <% 
         for (Teacher t : ResearcherHelper.listTeachers()) {
@@ -237,6 +242,7 @@
     </script>
     <% } %>
     <script>
+        $( "table" ).wrap( "<div class='table-overflow'></div>" );
         var $myGroup = $('#adders');
         $myGroup.on('show.bs.collapse','.collapse', function() {
             console.log("HERE");
