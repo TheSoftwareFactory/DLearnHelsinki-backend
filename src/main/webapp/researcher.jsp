@@ -325,7 +325,7 @@
             $myGroup.find('.collapse.in').collapse('hide');
         });
         
-        <% if (method != null) { %>
+        <% if (method != null && !method.isEmpty()) { %>
             $myGroup.find('#<%=method%>_div').collapse('show');
         <% } else { %>
             $myGroup.find('#teacher_div').collapse('show');
