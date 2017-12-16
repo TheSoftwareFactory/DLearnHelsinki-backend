@@ -80,12 +80,12 @@
             
     <%--Menu buttons--%>
     
-    <div class="accordion-group" id="adders">
+    <div id="elements">
       
     <div class="form-group">
-        <button type="button" class="btn btn-info" data-toggle="collapse" data-parent="#adders" data-target="#teacher_div">Teachers</button>
-        <button type="button" class="btn btn-info" data-toggle="collapse" data-parent="#adders" data-target="#theme_div">Themes</button>
-        <button type="button" class="btn btn-info" data-toggle="collapse" data-parent="#adders" data-target="#question_div">Questions</button>
+        <button type="button" class="btn btn-info" data-toggle="collapse" data-parent="#elements" data-target="#teacher_div">Teachers</button>
+        <button type="button" class="btn btn-info" data-toggle="collapse" data-parent="#elements" data-target="#theme_div">Themes</button>
+        <button type="button" class="btn btn-info" data-toggle="collapse" data-parent="#elements" data-target="#question_div">Questions</button>
     </div>
         
     <%-- Alerts --%>   
@@ -109,31 +109,31 @@
     
     <%--Teacher Page--%>
         
-    <div id="teacher_div" class="collapse indent">
+    <div id="teacher_div" class="collapse">
     <div style="max-width: 50%">
     <form name="add_teacher" action="" method="post">
         <h3>Add teacher:</h3>
         <div class="form-group">
             <label>First Name</label>
-            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_teacher_first" placeholder="Must be atleast 5 characters" required
+            <input pattern=".{5,}" type="text" class="form-control" name="add_teacher_first" placeholder="Must be atleast 5 characters" required
                 oninvalid="this.setCustomValidity('Enter First name Here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Last Name</label>
-            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_teacher_last" placeholder="Must be atleast 5 characters" required
+            <input pattern=".{5,}" type="text" class="form-control" name="add_teacher_last" placeholder="Must be atleast 5 characters" required
                 oninvalid="this.setCustomValidity('Enter Last name Here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Username</label>
-            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_teacher_user" placeholder="Must be atleast 5 characters" required
+            <input pattern=".{5,}" type="text" class="form-control" name="add_teacher_user" placeholder="Must be atleast 5 characters" required
                 oninvalid="this.setCustomValidity('Enter Username Here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Password</label>
-            <input pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" type="text" class="form-control input-md" name="add_teacher_pwd" placeholder="Must contain upper and lower case letters, and numbers." required
+            <input pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" type="text" class="form-control" name="add_teacher_pwd" placeholder="Must contain upper and lower case letters, and numbers." required
                 oninvalid="this.setCustomValidity('Enter password Here, requires one lower case and upper case letter, and a number')"
                 oninput="setCustomValidity('')"  />
             
@@ -174,31 +174,31 @@
     
     <%--Theme Page--%>
     
-    <div id="theme_div" class="collapse indent">
+    <div id="theme_div" class="collapse">
     <div style="max-width: 50%;">
     <form name="add_theme" action="" method="post">
         <h3>Add theme:</h3>
         <div class="form-group">
             <label>Title</label>
-            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_theme_title" placeholder="Must be atleast 5 characters" required
+            <input pattern=".{5,}" type="text" class="form-control" name="add_theme_title" placeholder="Must be atleast 5 characters" required
                 oninvalid="this.setCustomValidity('Enter theme title here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Title in Finnish</label>
-            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_theme_title_fi" placeholder="Must be atleast 5 characters" required
+            <input pattern=".{5,}" type="text" class="form-control" name="add_theme_title_fi" placeholder="Must be atleast 5 characters" required
                 oninvalid="this.setCustomValidity('Enter theme title in finnish')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Description</label>
-            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_theme_description" placeholder="Must be atleast 5 characters" required
+            <input pattern=".{5,}" type="text" class="form-control" name="add_theme_description" placeholder="Must be atleast 5 characters" required
                 oninvalid="this.setCustomValidity('Enter theme description here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Description in Finnish</label>
-            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_theme_description_fi" placeholder="Must be atleast 5 characters" required
+            <input pattern=".{5,}" type="text" class="form-control" name="add_theme_description_fi" placeholder="Must be atleast 5 characters" required
                 oninvalid="this.setCustomValidity('Enter theme description in finnish here')"
                 oninput="setCustomValidity('')"  />
         </div>
@@ -246,26 +246,26 @@
         <h3>Add Question</h3>
         <div class="form-group">
             <label>Question</label>
-            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_question_question" placeholder="Must be atleast 5 characters" required
+            <input pattern=".{5,}" type="text" class="form-control" name="add_question_question" placeholder="Must be atleast 5 characters" required
                 oninvalid="this.setCustomValidity('Enter question here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Question in Finnish</label>
-            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_question_question_fi" placeholder="Must be atleast 5 characters" required
+            <input pattern=".{5,}" type="text" class="form-control" name="add_question_question_fi" placeholder="Must be atleast 5 characters" required
                 oninvalid="this.setCustomValidity('Enter question in finnish here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Min Value of answer</label>
-            <input type="text" class="form-control input-md" name="add_question_min_answer" required
+            <input type="text" class="form-control" name="add_question_min_answer" required
                 oninvalid="this.setCustomValidity('Enter minimum answer here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Max Value of answer</label>
-            <input type="text" class="form-control input-md" name="add_question_max_answer" required
-                ninvalid="this.setCustomValidity('Enter maximum answer here here')"
+            <input type="text" class="form-control" name="add_question_max_answer" required
+                oninvalid="this.setCustomValidity('Enter maximum answer here here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
@@ -320,12 +320,12 @@
     </div>   <%--/div container--%>
     
     <script>
-        var $myGroup = $('#adders');
+        var $myGroup = $('#elements');
         $myGroup.on('show.bs.collapse','.collapse', function() {
             $myGroup.find('.collapse.in').collapse('hide');
         });
         
-        <% if (method != null) { %>
+        <% if (method != null && !method.isEmpty()) { %>
             $myGroup.find('#<%=method%>_div').collapse('show');
         <% } else { %>
             $myGroup.find('#teacher_div').collapse('show');
