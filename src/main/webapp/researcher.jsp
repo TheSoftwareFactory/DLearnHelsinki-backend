@@ -96,7 +96,7 @@
     </thead>
     </table>
     <div class="table-wrapper">
-    <table style="margin-top:0;" class="table table-striped">
+    <table class="table table-striped">
     <tbody>
         <% 
         for (Teacher t : ResearcherHelper.listTeachers()) {
@@ -110,6 +110,7 @@
         <%}%>
     </tbody>
     </table>
+    </div>
     </div>
     
     <%--Theme Page--%>
@@ -237,7 +238,10 @@
         document.getElementsByTagName("body")[0].onload = function() {myFunction();};
 
         function myFunction() {
-            alert("<%=msg%>");
+            if(confirm(<%=msg%>)){
+                window.location.reload();  
+            }
+            
         }
     </script>
     <% } %>
