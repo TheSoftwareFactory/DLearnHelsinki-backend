@@ -24,7 +24,8 @@
     
     <h1 class="text-center">Researchers Control Page</h1>
  
-  
+    <%--Success Popups--%>
+    
     <%
         String msg = "";
         Teacher teacher;
@@ -42,6 +43,8 @@
         }
     %>
     
+    <%--Menu buttons--%>
+    
     <div class="accordion-group" id="adders">
       
     <div class="form-group">
@@ -50,6 +53,8 @@
         <button type="button" class="btn btn-info" data-toggle="collapse" data-parent="#adders" data-target="#question_div">Add Question</button>
     </div>
     
+    <%--Teacher Page--%>
+        
     <div id="teacher_div" class="collapse indent">
     <div style="max-width: 50%">
     <form name="add_teacher" action="" method="post">
@@ -77,7 +82,7 @@
     <table class="table table-striped">
     <thead>
       <tr>
-        <th>Id</th>
+        <th>ID</th>
         <th>Firstname</th>
         <th>Lastname</th>
         <th>Username</th>
@@ -97,6 +102,8 @@
     </tbody>
     </table>
     </div>
+    
+    <%--Theme Page--%>
     
     <div id="theme_div" class="collapse indent">
     <div style="max-width: 50%;">
@@ -124,26 +131,30 @@
     <table class="table table-striped">
     <thead>
       <tr>
-        <th>Id</th>
-        <th>Firstname</th>
-        <th>Lastname</th>
-        <th>Username</th>
+        <th style="text-align: center;">ID</th>
+        <th>title</th>
+        <th>Description</th>
       </tr>
     </thead>
     <tbody>
         <% 
-        for (Teacher t : ResearcherHelper.listTeachers()) {
+        for (Theme t : ResearcherHelper.listThemes()) {
         %>
         <tr>
-            <td> <%= t.get_id() %> </td>
-            <td> <%= t.getName() %> </td>
-            <td> <%= t.getLastname()%> </td>
-            <td> <%= t.getUsername()%> </td>            
+            <td rowspan="2" style="vertical-align: middle; text-align: center;"> <%= t.getId() %> </td>
+            <td> <%= t.getTitle() %> </td>
+            <td> <%= t.getDescription() %> </td>            
+        </tr>
+        <tr>
+            <td> <%= t.getTitle_fi() %> </td>
+            <td> <%= t.getDescription_fi() %> </td>            
         </tr>
         <%}%>
     </tbody>
     </table>
     </div>
+    
+    <%--Questions Page--%>
     
     <div id="question_div" class="collapse">
     <div style="max-width: 50%;">
@@ -179,21 +190,25 @@
     <table class="table table-striped">
     <thead>
       <tr>
-        <th>Id</th>
-        <th>Firstname</th>
-        <th>Lastname</th>
-        <th>Username</th>
+        <th style="vertical-align: middle; text-align: center;" rowspan="2">ID</th>
+        <th style="vertical-align: middle;" rowspan="2">Question</th>
+        <th style="vertical-align: middle; text-align: center;" colspan="2">Answer range</th>
+        <th style="vertical-align: middle;" rowspan="2">Theme</th>
+      </tr>
+       <tr>
+        <th>Min</th>
+        <th>Max</th>
       </tr>
     </thead>
     <tbody>
         <% 
-        for (Teacher t : ResearcherHelper.listTeachers()) {
+        for (Question t : ResearcherHelper.listQuestions()) {
         %>
         <tr>
             <td> <%= t.get_id() %> </td>
-            <td> <%= t.getName() %> </td>
-            <td> <%= t.getLastname()%> </td>
-            <td> <%= t.getUsername()%> </td>            
+            <td> <%= t.getQuestion() %> </td>
+            <td> <%= t.getMin_answer() %> </td>
+            <td> <%= t.getMax_answer() %> </td>            
         </tr>
         <%}%>
     </tbody>
@@ -206,10 +221,10 @@
         if (!msg.isEmpty()) {
     %> 
     <script>
-        document.getElementsByTagName("body")[0].onload = function() {myFunction()};
+        document.getElementsByTagName("body")[0].onload = function() {myFunction();};
 
         function myFunction() {
-            alert("<%=msg%>")
+            alert("<%=msg%>");
         }
     </script>
     <% } %>

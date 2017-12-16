@@ -82,7 +82,7 @@ public class ResearcherHelper {
     }
 
     static public List<Question> listQuestions() {
-       return db.getQuestions();
+        return db.getQuestions();
     }
 
     static private int toInt(String s) {

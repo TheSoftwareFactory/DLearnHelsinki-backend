@@ -33,7 +33,7 @@ public class Question {
         this.max_answer = max_answer;
         this.theme_id = theme_id;
     }
-    
+
     public Question(int _id, String question, String question_fi,
             int min_answer, int max_answer, int theme_id, String theme_title) {
         super();

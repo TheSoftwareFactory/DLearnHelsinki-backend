@@ -851,8 +851,7 @@ public class Database {
         List<Question> questions = null;
         try (Connection dbConnection = getDBConnection()) {
             // Set up batch of statements
-            String statement = ""
-                    + "SELECT qu.*, th.title"
+            String statement = "" + "SELECT qu.*, th.title"
                     + "FROM public.\"Questions\" as qu"
                     + "INNER JOIN public.\"Themes\" as th ON th._id=qu.theme_id";
             try (PreparedStatement insert = dbConnection
@@ -862,8 +861,7 @@ public class Database {
 
                 try (ResultSet result = insert.executeQuery()) {
                     while (result.next()) {
-                        Question question = new Question(
-                                result.getInt("_id"),
+                        Question question = new Question(result.getInt("_id"),
                                 result.getString("question"),
                                 result.getString("question_fi"),
                                 result.getInt("min_answer"),
@@ -880,9 +878,9 @@ public class Database {
         }
         LOG.traceExit(questions);
         return questions;
-        
+
     }
-    
+
     /**
      * Get all themes
      * @return 
