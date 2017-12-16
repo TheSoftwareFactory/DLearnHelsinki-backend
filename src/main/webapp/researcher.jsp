@@ -95,7 +95,7 @@
         </button>
         <strong>Missing data!</strong> Check that all fields are filled.
     </div>
-    
+
     <%--Teacher Page--%>
         
     <div id="teacher_div" class="collapse indent">
@@ -104,26 +104,26 @@
         <h3>Add teacher:</h3>
         <div class="form-group">
             <label>First Name</label>
-            <input type="text" class="form-control input-md" name="add_teacher_first" required
+            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_teacher_first" required
                 oninvalid="this.setCustomValidity('Enter First name Here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Last Name</label>
-            <input type="text" class="form-control input-md" name="add_teacher_last" required
+            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_teacher_last" required
                 oninvalid="this.setCustomValidity('Enter Last name Here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Username</label>
-            <input type="text" class="form-control input-md" name="add_teacher_user" required
+            <input pattern=".{5,}" type="text" class="form-control input-md" name="add_teacher_user" required
                 oninvalid="this.setCustomValidity('Enter Username Here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Password</label>
-            <input type="text" class="form-control input-md" name="add_teacher_pwd" required
-                oninvalid="this.setCustomValidity('Enter password Here')"
+            <input pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" type="text" class="form-control input-md" name="add_teacher_pwd" required
+                oninvalid="this.setCustomValidity('Enter password Here, requires one lower case and upper case letter, and a number')"
                 oninput="setCustomValidity('')"  />
             
         </div>
@@ -169,19 +169,27 @@
         <h3>Add theme:</h3>
         <div class="form-group">
             <label>Title</label>
-            <input type="text" class="form-control input-md" name="add_theme_title" required/>
+            <input type="text" class="form-control input-md" name="add_theme_title" required
+                oninvalid="this.setCustomValidity('Enter theme title here')"
+                oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Title in Finnish</label>
-            <input type="text" class="form-control input-md" name="add_theme_title_fi" required/>
+            <input type="text" class="form-control input-md" name="add_theme_title_fi" required
+                oninvalid="this.setCustomValidity('Enter theme title in finnish')"
+                oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Description</label>
-            <input type="text" class="form-control input-md" name="add_theme_description" required/>
+            <input type="text" class="form-control input-md" name="add_theme_description" required
+                oninvalid="this.setCustomValidity('Enter theme description here')"
+                oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Description in Finnish</label>
-            <input type="text" class="form-control input-md" name="add_theme_description_fi" required/>
+            <input type="text" class="form-control input-md" name="add_theme_description_fi" required
+                oninvalid="this.setCustomValidity('Enter theme description in finnish here')"
+                oninput="setCustomValidity('')"  />
         </div>
         <input type="hidden" name="method" value="add_theme">
         <button type="submit" name="submit" class="btn btn-primary">Submit</button>
@@ -227,19 +235,27 @@
         <h3>Add Question</h3>
         <div class="form-group">
             <label>Question</label>
-            <input type="text" class="form-control input-md" name="add_question_question" required/>
+            <input type="text" class="form-control input-md" name="add_question_question" required
+                oninvalid="this.setCustomValidity('Enter question here')"
+                oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Question in Finnish</label>
-            <input type="text" class="form-control input-md" name="add_question_question_fi" required/>
+            <input type="text" class="form-control input-md" name="add_question_question_fi" required
+                oninvalid="this.setCustomValidity('Enter question in finnish here')"
+                oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Min Value of answer</label>
-            <input type="text" class="form-control input-md" name="add_question_min_answer" required/>
+            <input type="text" class="form-control input-md" name="add_question_min_answer" required
+                oninvalid="this.setCustomValidity('Enter minimum answer here')"
+                oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Max Value of answer</label>
-            <input type="text" class="form-control input-md" name="add_question_max_answer" required/>
+            <input type="text" class="form-control input-md" name="add_question_max_answer" required
+                ninvalid="this.setCustomValidity('Enter maximum answer here here')"
+                oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Theme</label>
