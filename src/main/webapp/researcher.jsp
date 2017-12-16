@@ -85,15 +85,15 @@
     </div>
     
     <h2> Teachers </h2>
-    <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Firstname</th>
-        <th>Lastname</th>
-        <th>Username</th>
-      </tr>
-    </thead>
+    <table style="margin-bottom: 0px;" class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Username</th>
+        </tr>
+        </thead>
     </table>
     <div class="table-wrapper">
     <table class="table table-striped">
