@@ -4,8 +4,7 @@
     Author     : Eero
 --%>
 
-<%@ page import = "java.util.Map" %>
-<%@ page import = "org.dlearn.helsinki.skeleton.database.ResearcherHelper" %>
+<%@ page import="org.dlearn.helsinki.skeleton.database.ResearcherHelper" %>
 <%@ page import="org.dlearn.helsinki.skeleton.model.Teacher"%>
 <%@ page import="org.dlearn.helsinki.skeleton.model.Question"%>
 <%@ page import="org.dlearn.helsinki.skeleton.model.Theme"%>
@@ -327,9 +326,9 @@
         });
         
         <% if (method != null) { %>
-            $myGroup.find('#<%=method%>_div').collapse('show')
+            $myGroup.find('#<%=method%>_div').collapse('show');
         <% } else { %>
-            $myGroup.find('#teacher_div').collapse('show')
+            $myGroup.find('#teacher_div').collapse('show');
         <% } %>
     </script>
     
