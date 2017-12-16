@@ -24,11 +24,17 @@
             body{ padding-bottom:70px; }
             .table-wrapper { height: 300px; overflow: auto; }
             .td_id {width: 10%; text-align: left;}
-            .td_id_2row {width: 10%; text-align: left; vertical-align: middle !important;}
+            .td_2row {vertical-align: middle !important;}
             .td_title {width: 20%; text-align: left;}
             .td_description {width: 70%; text-align: left;}
             .td_name {width: 30%; text-align: left;}
         </style>
+        <script>
+            var $myGroup = $('#adders');
+            $myGroup.on('show.bs.collapse','.collapse', function() {
+                $myGroup.find('.collapse.in').collapse('hide');
+            }); 
+        </script>
     </head>
     <body>
     <div class="container">
@@ -162,7 +168,7 @@
         for (Theme t : ResearcherHelper.listThemes()) {
         %>
         <tr>
-            <td rowspan="2" class="td_id_2row"> <%= t.getId() %> </td>
+            <td rowspan="2" class="td_id td_2row"> <%= t.getId() %> </td>
             <td class="td_title"> <%= t.getTitle() %> </td>
             <td class="td_description"> <%= t.getDescription() %> </td>            
         </tr>
@@ -209,36 +215,42 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     </div>
-    <table class="table table-striped" style="display: table; border-collapse: separate;">
-    <thead style="display: table-header-group; width: 100%;">
-      <tr>
-        <th style="vertical-align: middle; text-align: center;" rowspan="2">ID</th>
-        <th style="vertical-align: middle;" rowspan="2">Question</th>
-        <th style="vertical-align: middle;" colspan="2">Answer range</th>
-        <th style="vertical-align: middle;" rowspan="2">Theme</th>
-      </tr>
-       <tr>
-        <th>Min</th>
-        <th>Max</th>
-      </tr>
-    </thead>
-    <tbody style="display: block; height: 400px; overflow: auto; width: 100%;">
+   
+    <h3> Questions </h3>
+    <table style="margin-bottom: 0px;" class="table">
+        <thead>
+          <tr>
+            <th class="td_name" rowspan="2">Theme</th>
+            <th class="td_id" rowspan="2">ID</th>
+            <th class="td_name" rowspan="2">Question</th>
+            <th class="td_title" colspan="2">Answer range</th>
+          </tr>
+             <tr>
+                <th class="td_id">Min</th>
+                <th class="td_id">Max</th>
+            </tr>
+        </thead>
+    </table>
+    <div class="table-wrapper">
+    <table class="table">
+    <tbody>
         <% 
-        for (Question t : ResearcherHelper.listQuestions()) {
+        for (Question q : ResearcherHelper.listQuestions()) {
         %>
         <tr>
-            <td rowspan="2" style="vertical-align: middle; text-align: center;"> <%= t.get_id() %> </td>
-            <td> <%= t.getQuestion() %> </td>
-            <td rowspan="2" style="vertical-align: middle;"> <%= t.getMin_answer() %> </td>
-            <td rowspan="2" style="vertical-align: middle;"> <%= t.getMax_answer() %> </td>
-            <td rowspan="2" style="vertical-align: middle;"> <%= t.get_theme_title() %> </td>             
-        </tr>
-        <tr>
-            <td> <%= t.getQuestion_fi() %> </td>            
+            <td class="td_name td_2row"> <%= q.get_theme_title() %> </td>             
+            <td class="td_id td_2row"> <%= q.get_id() %> </td>
+            <td class="td_name td_2row"> <%= q.getQuestion() %> <br> <%= q.getQuestion_fi() %> </td>
+            <td class="td_id td_2row"> <%= q.getMin_answer() %> </td>
+            <td class="td_id td_2row"> <%= q.getMax_answer() %> </td>
         </tr>
         <%}%>
     </tbody>
     </table>
+    </div>
+    
+    
+    </div>
     </div>
     </div>
     </body>
@@ -257,10 +269,4 @@
         }
     </script>
     <% } %>
-    <script>
-        var $myGroup = $('#adders');
-        $myGroup.on('show.bs.collapse','.collapse', function() {
-            $myGroup.find('.collapse.in').collapse('hide');
-        }); 
-    </script>
 </html>
