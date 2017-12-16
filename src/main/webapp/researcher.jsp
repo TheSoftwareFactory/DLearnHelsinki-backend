@@ -257,4 +257,10 @@
         }
     </script>
     <% } %>
+    <script>
+        var $myGroup = $('#adders');
+        $myGroup.on('show.bs.collapse','.collapse', function() {
+            $myGroup.find('.collapse.in').collapse('hide');
+        }); 
+    </script>
 </html>
