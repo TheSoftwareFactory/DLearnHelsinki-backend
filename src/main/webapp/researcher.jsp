@@ -115,13 +115,13 @@
         <h3>Add teacher:</h3>
         <div class="form-group">
             <label>First Name</label>
-            <input pattern=".{5,}" type="text" class="form-control" name="add_teacher_first" placeholder="Must be atleast 5 characters" required
+            <input pattern=".{3,}" type="text" class="form-control" name="add_teacher_first" placeholder="Must be atleast 3 characters" required
                 oninvalid="this.setCustomValidity('Enter First name Here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Last Name</label>
-            <input pattern=".{5,}" type="text" class="form-control" name="add_teacher_last" placeholder="Must be atleast 5 characters" required
+            <input pattern=".{3,}" type="text" class="form-control" name="add_teacher_last" placeholder="Must be atleast 3 characters" required
                 oninvalid="this.setCustomValidity('Enter Last name Here')"
                 oninput="setCustomValidity('')"  />
         </div>
@@ -180,25 +180,25 @@
         <h3>Add theme:</h3>
         <div class="form-group">
             <label>Title</label>
-            <input pattern=".{5,}" type="text" class="form-control" name="add_theme_title" placeholder="Must be atleast 5 characters" required
+            <input pattern=".{3,50}" type="text" class="form-control" name="add_theme_title" placeholder="Must be atleast 3 and less than 50 characters" required
                 oninvalid="this.setCustomValidity('Enter theme title here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Title in Finnish</label>
-            <input pattern=".{5,}" type="text" class="form-control" name="add_theme_title_fi" placeholder="Must be atleast 5 characters" required
+            <input pattern=".{3,50}" type="text" class="form-control" name="add_theme_title_fi" placeholder="Must be atleast 3 and less than 50 characters" required
                 oninvalid="this.setCustomValidity('Enter theme title in finnish')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Description</label>
-            <input pattern=".{5,}" type="text" class="form-control" name="add_theme_description" placeholder="Must be atleast 5 characters" required
+            <input pattern=".{5,256}" type="text" class="form-control" name="add_theme_description" placeholder="Must be atleast 5 and less than 256 characters" required
                 oninvalid="this.setCustomValidity('Enter theme description here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Description in Finnish</label>
-            <input pattern=".{5,}" type="text" class="form-control" name="add_theme_description_fi" placeholder="Must be atleast 5 characters" required
+            <input pattern=".{5,256}" type="text" class="form-control" name="add_theme_description_fi" placeholder="Must be atleast 5 and less than 256 characters" required
                 oninvalid="this.setCustomValidity('Enter theme description in finnish here')"
                 oninput="setCustomValidity('')"  />
         </div>
@@ -246,13 +246,13 @@
         <h3>Add Question</h3>
         <div class="form-group">
             <label>Question</label>
-            <input pattern=".{5,}" type="text" class="form-control" name="add_question_question" placeholder="Must be atleast 5 characters" required
+            <input pattern=".{3,}" type="text" class="form-control" name="add_question_question" placeholder="Must be atleast 3 characters" required
                 oninvalid="this.setCustomValidity('Enter question here')"
                 oninput="setCustomValidity('')"  />
         </div>
         <div class="form-group">
             <label>Question in Finnish</label>
-            <input pattern=".{5,}" type="text" class="form-control" name="add_question_question_fi" placeholder="Must be atleast 5 characters" required
+            <input pattern=".{3,}" type="text" class="form-control" name="add_question_question_fi" placeholder="Must be atleast 3 characters" required
                 oninvalid="this.setCustomValidity('Enter question in finnish here')"
                 oninput="setCustomValidity('')"  />
         </div>
