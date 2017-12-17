@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.dlearn.helsinki.skeleton.database.Database;
 import org.dlearn.helsinki.skeleton.model.Answer;
-import org.dlearn.helsinki.skeleton.model.StudentThemeAverage;
+import org.dlearn.helsinki.skeleton.model.ThemeAverage;
 
 public class StudentSurveyAnswerService {
 
@@ -22,9 +22,9 @@ public class StudentSurveyAnswerService {
         return db.getAnswersFromStudentSurvey(student_id, survey_id);
     }
 
-    public List<StudentThemeAverage> getStudentThemeAverage(int student_id,
+    public List<ThemeAverage> getStudentThemeAverage(int student_id,
             int survey_id) {
-        return db.getStudentThemeAverage(survey_id, student_id);
+        return db.getSurveyAnswerAverages(student_id, 0, 0, survey_id);
     }
 
     public boolean postAnswersToQuestion(int class_id, int survey_id,

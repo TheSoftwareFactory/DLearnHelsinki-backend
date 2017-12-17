@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.dlearn.helsinki.skeleton.database.Database;
 import org.dlearn.helsinki.skeleton.model.Group;
 import org.dlearn.helsinki.skeleton.model.Student;
-import org.dlearn.helsinki.skeleton.model.StudentThemeAverage;
+import org.dlearn.helsinki.skeleton.model.ThemeAverage;
 
 public class StudentService {
 
@@ -24,7 +24,7 @@ public class StudentService {
      * @param survey_id
      * @return 
      */
-    public List<StudentThemeAverage> getSurveyAnswerAverages(int student_id,
+    public List<ThemeAverage> getSurveyAnswerAverages(int student_id,
             int class_id, int group_id, int survey_id) {
         return db.getSurveyAnswerAverages(student_id, class_id, group_id,
                 survey_id);
@@ -37,8 +37,8 @@ public class StudentService {
      * @param survey_id
      * @return 
      */
-    public List<StudentThemeAverage> getGroupSurveyAnswerAverages(
-            int student_id, int class_id, int survey_id) {
+    public List<ThemeAverage> getGroupSurveyAnswerAverages(int student_id,
+            int class_id, int survey_id) {
         Optional<Group> grp = db.getGroupForStudent(class_id, student_id);
         if (grp.isPresent()) {
             return db.getSurveyAnswerAverages(0, class_id, grp.get()._id,
@@ -54,7 +54,7 @@ public class StudentService {
      * @param class_id
      * @return 
      */
-    public List<StudentThemeAverage> getGroupAnswerAverages(int student_id,
+    public List<ThemeAverage> getGroupAnswerAverages(int student_id,
             int class_id) {
         Optional<Group> grp = db.getGroupForStudent(class_id, student_id);
         if (grp.isPresent()) {

@@ -11,8 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.dlearn.helsinki.skeleton.model.ClassThemeAverage;
-import org.dlearn.helsinki.skeleton.model.StudentThemeAverage;
+import org.dlearn.helsinki.skeleton.model.ThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Survey;
 import org.dlearn.helsinki.skeleton.model.SurveyTheme;
 import org.dlearn.helsinki.skeleton.service.StudentService;
@@ -77,7 +76,7 @@ public class TeacherClassSurveyResource {
      */
     @GET
     @Path("/{survey_id}/answers")
-    public List<ClassThemeAverage> getClassAverage(
+    public List<ThemeAverage> getClassAverage(
             @PathParam("class_id") int class_id,
             @PathParam("survey_id") int survey_id) {
         return surveyService.getClassThemeAverage(class_id, survey_id);
@@ -92,7 +91,7 @@ public class TeacherClassSurveyResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{survey_id}/class_averages")
-    public List<StudentThemeAverage> getSurveyClassAverages(
+    public List<ThemeAverage> getSurveyClassAverages(
             @PathParam("survey_id") int survey_id,
             @PathParam("class_id") int class_id) {
         return studentService.getSurveyAnswerAverages(0, class_id, 0,
@@ -109,7 +108,7 @@ public class TeacherClassSurveyResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{survey_id}/group_averages")
-    public List<StudentThemeAverage> getSurveyGroupAverages(
+    public List<ThemeAverage> getSurveyGroupAverages(
             @PathParam("class_id") int class_id,
             @PathParam("survey_id") int survey_id,
             @QueryParam("group_id") int group_id) {

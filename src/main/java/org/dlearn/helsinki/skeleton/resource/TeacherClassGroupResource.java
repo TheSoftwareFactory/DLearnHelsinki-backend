@@ -1,5 +1,6 @@
 package org.dlearn.helsinki.skeleton.resource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -23,7 +24,7 @@ import org.dlearn.helsinki.skeleton.exceptions.GroupUpdateUnsuccessful;
 import org.dlearn.helsinki.skeleton.exceptions.InvalidAgeException;
 import org.dlearn.helsinki.skeleton.exceptions.PasswordException;
 import org.dlearn.helsinki.skeleton.model.Group;
-import org.dlearn.helsinki.skeleton.model.ListGroupThemeAverage;
+import org.dlearn.helsinki.skeleton.model.ListThemeAverage;
 import org.dlearn.helsinki.skeleton.model.NewStudentGroup;
 import org.dlearn.helsinki.skeleton.model.Student;
 import org.dlearn.helsinki.skeleton.service.ProgressionService;
@@ -59,7 +60,7 @@ public class TeacherClassGroupResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public StudentGroup ginsertGroupInClass(@PathParam("class_id") int class_id,
+    public StudentGroup insertGroupInClass(@PathParam("class_id") int class_id,
             NewStudentGroup group)
             throws RuntimeException, PasswordException, InvalidAgeException {
         return teacherGroupService.insertNewGroupInClass(class_id, group);
@@ -80,7 +81,7 @@ public class TeacherClassGroupResource {
     @GET
     @Path("/{group_id}/progression/{amount}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<ListGroupThemeAverage> getProgression(
+    public List<ListThemeAverage> getProgression(
             @PathParam("class_id") int class_id,
             @PathParam("group_id") int group_id,
             @PathParam("amount") int amount) {
