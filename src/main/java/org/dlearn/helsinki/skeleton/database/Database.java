@@ -1749,7 +1749,7 @@ public class Database {
      *
      * @param std_id student_id
      * @param cls_id class_id (<=0 results all classes)
-     * @param amount
+     * @param amount ( some legacy variable ? )
      * @return List with theme averages and surveys
      */
     public List<ListThemeAverage> getStudentThemeAverageProgression(int std_id,
@@ -1759,13 +1759,9 @@ public class Database {
         List<ListThemeAverage> progression = new ArrayList<>();
         List<Survey> surveys = this.getStudentsAnsweredSurveys(std_id);
         for (Survey survey : surveys) {
-            if (cls_id <= 0) {
-                List<ThemeAverage> avgs = this.getSurveyAnswerAverages(std_id,
-                        0, 0, survey._id);
-                progression.add(new ListThemeAverage(avgs, survey));
-            } else {
-                List<ThemeAverage> avgs = this.getSurveyAnswerAverages(std_id,
-                        cls_id, 0, survey._id);
+            List<ThemeAverage> avgs;
+            if (survey.class_id == cls_id || cls_id <= 0) {
+                avgs = this.getSurveyAnswerAverages(std_id, cls_id, 0, survey._id);
                 progression.add(new ListThemeAverage(avgs, survey));
             }
         }
@@ -1787,15 +1783,9 @@ public class Database {
         List<ListThemeAverage> progression = new ArrayList<>();
         List<Survey> surveys = this.getGroupAnsweredSurveys(cls_id, grp_id);
         for (Survey survey : surveys) {
-            if (grp_id <= 0) {
-                List<ThemeAverage> avgs = this.getSurveyAnswerAverages(0,
-                        cls_id, 0, survey._id);
-                progression.add(new ListThemeAverage(avgs, survey));
-            } else {
-                List<ThemeAverage> avgs = this.getSurveyAnswerAverages(0,
-                        cls_id, grp_id, survey._id);
-                progression.add(new ListThemeAverage(avgs, survey));
-            }
+            List<ThemeAverage> avgs = this.getSurveyAnswerAverages(0,
+                    cls_id, grp_id, survey._id);
+            progression.add(new ListThemeAverage(avgs, survey));
         }
         System.out.println(progression);
         return progression;

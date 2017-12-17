@@ -60,7 +60,7 @@ public class TeacherClassGroupResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public StudentGroup ginsertGroupInClass(@PathParam("class_id") int class_id,
+    public StudentGroup insertGroupInClass(@PathParam("class_id") int class_id,
             NewStudentGroup group)
             throws RuntimeException, PasswordException, InvalidAgeException {
         return teacherGroupService.insertNewGroupInClass(class_id, group);
