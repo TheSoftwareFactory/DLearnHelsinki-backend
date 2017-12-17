@@ -99,16 +99,18 @@ public class Hasher implements PasswordEncoder {
         }
 
         // Slow hash check, uses BCrypt to check if raw is matched to encoded
-        String slowHash = this.encode(raw, encoded);
-        if (compareHashes(slowHash, encoded)) {
-            String fastHash = this.encode_fast(encoded + raw, encoded);
-            if (!cacheHasHash(fastHash)) {
-                cache.add(new CacheItem(fastHash, new Date().getTime()));
+        try {
+            String slowHash = this.encode(raw, encoded);
+            if (compareHashes(slowHash, encoded)) {
+                String fastHash = this.encode_fast(encoded + raw, encoded);
+                if (!cacheHasHash(fastHash)) {
+                    cache.add(new CacheItem(fastHash, new Date().getTime()));
+                }
+                return true;
             }
-            return true;
-        } else {
-            return false;
-        }
+        } catch (IllegalArgumentException e) {
+        } // For plaintexts (invalid salt)
+        return false;
     }
 
     private boolean compareHashes(String a, String b) {

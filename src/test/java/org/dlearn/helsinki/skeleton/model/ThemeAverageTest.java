@@ -4,8 +4,8 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-public class ClassThemeAverageTest {
-    ClassThemeAverage cta = new ClassThemeAverage();
+public class ThemeAverageTest {
+    ThemeAverage cta = new ThemeAverage();
 
     @Test
     public void surveyIdGetAndSet() {
@@ -62,8 +62,8 @@ public class ClassThemeAverageTest {
 
     @Test
     public void answerSetAndGetOtherConstructor() {
-        cta = new ClassThemeAverage(1, "2017-11-10", 1, "title", "otsikko",
-                "description", "kuvaus", 1, 5.0f);
+        cta = new ThemeAverage(1, "2017-11-10", 1, "title", "otsikko",
+                "description", "kuvaus", 1, 1, 1, 5.0f);
         assertEquals(5.0f, cta.getAnswer(), 0.0f);
         cta.setAnswer(4.0f);
         assertEquals(4.0f, cta.getAnswer(), 0.0f);
@@ -71,9 +71,7 @@ public class ClassThemeAverageTest {
 
     @Test
     public void toStringFormatTest() {
-        String str = "ClassThemeAverage{ survey_id = 0, start_date = null,"
-                + " theme_id = 0, theme_title = null, description = null,"
-                + " class_id = 0, answer = 0.0 }";
+        String str = "ThemeAverage { survey_id = 0, start_date = null, theme_id = 0, theme_title = null, description = null, student_id = 0, group_id = 0, class_id = 0, answer = 0.0 }";
         assertEquals(str, cta.toString());
     }
 

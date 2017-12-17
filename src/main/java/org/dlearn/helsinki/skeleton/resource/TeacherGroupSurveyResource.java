@@ -8,7 +8,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.dlearn.helsinki.skeleton.model.GroupThemeAverage;
+import org.dlearn.helsinki.skeleton.model.ThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.service.TeacherGroupSurveyService;
 
@@ -26,7 +26,7 @@ public class TeacherGroupSurveyResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{survey_id}/answers")
-    public List<GroupThemeAverage> getAnswersFromSurvey(
+    public List<ThemeAverage> getAnswersFromSurvey(
             @PathParam("class_id") int class_id,
             @PathParam("group_id") int group_id,
             @PathParam("survey_id") int survey_id) {

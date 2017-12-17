@@ -25,8 +25,8 @@ import org.dlearn.helsinki.skeleton.model.ChangePasswordStudent;
 import org.dlearn.helsinki.skeleton.model.NewStudent;
 
 import org.dlearn.helsinki.skeleton.model.Student;
-import org.dlearn.helsinki.skeleton.model.StudentThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Teacher;
+import org.dlearn.helsinki.skeleton.model.ThemeAverage;
 import org.dlearn.helsinki.skeleton.service.ChangePasswordService;
 import org.dlearn.helsinki.skeleton.service.CreateNewUserService;
 import org.dlearn.helsinki.skeleton.service.MoveToGroupService;
@@ -68,7 +68,7 @@ public class TeacherResource {
     }
 
     /**
-     * Request webapi/teachers/teacher_id/surveys
+     * Request webapi/teachers/teacher_id/classes
      * @param teacher_id
      * @return a teacher based on the id given.
      */
@@ -187,16 +187,16 @@ public class TeacherResource {
 
         return students;
     }
-    
-        /**
-     * 
-     * @param student_id
-     * @return averages from all surveys from all students classes
-     */
+
+    /**
+    * 
+    * @param student_id
+    * @return averages from all surveys from all students classes
+    */
     @GET
     @Path("/{teacher_id}/survey_averages")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<StudentThemeAverage> getSurveyAverages(
+    public List<ThemeAverage> getSurveyAverages(
             @QueryParam("student_id") int student_id) {
         return studentService.getSurveyAnswerAverages(student_id, 0, 0, 0);
     }

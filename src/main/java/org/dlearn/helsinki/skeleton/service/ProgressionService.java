@@ -1,37 +1,31 @@
 
 package org.dlearn.helsinki.skeleton.service;
 
-import java.util.Collections;
 import java.util.List;
 import org.dlearn.helsinki.skeleton.database.Database;
-import org.dlearn.helsinki.skeleton.model.ListClassThemeAverage;
-import org.dlearn.helsinki.skeleton.model.ListGroupThemeAverage;
-import org.dlearn.helsinki.skeleton.model.ListStudentThemeAverage;
+import org.dlearn.helsinki.skeleton.model.ListThemeAverage;
 
 public class ProgressionService {
     private static final Database DB = new Database();
 
-    public List<ListStudentThemeAverage> getStudentProgression(int student_id,
+    public List<ListThemeAverage> getStudentProgression(int student_id,
             int amount) {
-        return DB.getStudentThemeAverageProgression(student_id, amount)
-                .orElse(Collections.EMPTY_LIST);
+        return DB.getStudentThemeAverageProgression(student_id, 0, amount);
     }
 
-    public List<ListStudentThemeAverage> getStudentClassProgression(
-            int class_id, int student_id, int amount) {
-        return DB.getStudentThemeAverageProgressionInClass(class_id, student_id,
-                amount).orElse(Collections.EMPTY_LIST);
+    public List<ListThemeAverage> getStudentClassProgression(int class_id,
+            int student_id, int amount) {
+        return DB.getStudentThemeAverageProgression(student_id, class_id,
+                amount);
     }
 
-    public List<ListGroupThemeAverage> getGroupProgression(int class_id,
+    public List<ListThemeAverage> getGroupProgression(int class_id,
             int group_id, int amount) {
-        return DB.getGroupThemeAverageProgression(class_id, group_id, amount)
-                .orElse(Collections.EMPTY_LIST);
+        return DB.getGroupThemeAverageProgression(class_id, group_id, amount);
     }
 
-    public List<ListClassThemeAverage> getClassProgression(int class_id,
+    public List<ListThemeAverage> getClassProgression(int class_id,
             int amount) {
-        return DB.getClassThemeAverageProgression(class_id, amount)
-                .orElse(Collections.EMPTY_LIST);
+        return DB.getGroupThemeAverageProgression(class_id, 0, amount);
     }
 }

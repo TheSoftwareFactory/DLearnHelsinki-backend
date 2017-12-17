@@ -1,8 +1,6 @@
 package org.dlearn.helsinki.skeleton.model;
 
-import java.util.Date;
-
-public class GroupThemeAverage {
+public class ThemeAverage {
 
     private int survey_id;
     private String start_date;
@@ -11,13 +9,18 @@ public class GroupThemeAverage {
     private String theme_title_fi;
     private String description;
     private String description_fi;
+    private int student_id;
+    private int class_id;
     private int group_id;
     private float answer;
 
-    public GroupThemeAverage(int survey_id, String start_date, int theme_id,
+    public ThemeAverage() {
+    }
+
+    public ThemeAverage(int survey_id, String start_date, int theme_id,
             String theme_title, String theme_title_fi, String description,
-            String description_fi, int group_id, float answer) {
-        super();
+            String description_fi, int student_id, int class_id, int group_id,
+            float answer) {
         this.survey_id = survey_id;
         this.start_date = start_date;
         this.theme_id = theme_id;
@@ -25,11 +28,20 @@ public class GroupThemeAverage {
         this.theme_title_fi = theme_title_fi;
         this.description = description;
         this.description_fi = description_fi;
+        this.student_id = student_id;
+        this.class_id = class_id;
         this.group_id = group_id;
         this.answer = answer;
     }
 
-    public GroupThemeAverage() {
+    @Override
+    public String toString() {
+        return "ThemeAverage { " + "survey_id = " + survey_id
+                + ", start_date = " + start_date + ", theme_id = " + theme_id
+                + ", theme_title = " + theme_title + ", description = "
+                + description + ", student_id = " + student_id + ", group_id = "
+                + group_id + ", class_id = " + class_id + ", answer = " + answer
+                + " }";
     }
 
     public int getSurvey_id() {
@@ -60,12 +72,12 @@ public class GroupThemeAverage {
         return theme_title;
     }
 
-    public String getTheme_title_fi() {
-        return theme_title_fi;
-    }
-
     public void setTheme_title(String theme_title) {
         this.theme_title = theme_title;
+    }
+
+    public String getTheme_title_fi() {
+        return theme_title_fi;
     }
 
     public void setTheme_title_fi(String theme_title_fi) {
@@ -76,16 +88,32 @@ public class GroupThemeAverage {
         return description;
     }
 
-    public String getDescription_fi() {
-        return description_fi;
-    }
-
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public void setDescription_fi(String description) {
-        this.description_fi = description;
+    public String getDescription_fi() {
+        return description_fi;
+    }
+
+    public void setDescription_fi(String description_fi) {
+        this.description_fi = description_fi;
+    }
+
+    public int getStudent_id() {
+        return student_id;
+    }
+
+    public void setStudent_id(int student_id) {
+        this.student_id = student_id;
+    }
+
+    public int getClass_id() {
+        return class_id;
+    }
+
+    public void setClass_id(int class_id) {
+        this.class_id = class_id;
     }
 
     public int getGroup_id() {
@@ -102,14 +130,5 @@ public class GroupThemeAverage {
 
     public void setAnswer(float answer) {
         this.answer = answer;
-    }
-
-    @Override
-    public String toString() {
-        return "GroupThemeAverage { survey_id = " + survey_id
-                + ", start_date = " + start_date + ", theme_id = " + theme_id
-                + ", theme_title = " + theme_title + ", description = "
-                + description + ", group_id = " + group_id + ", answer = "
-                + answer + " }";
     }
 }

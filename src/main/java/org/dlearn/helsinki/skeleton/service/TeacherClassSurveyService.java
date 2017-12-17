@@ -5,10 +5,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.dlearn.helsinki.skeleton.database.Database;
-import org.dlearn.helsinki.skeleton.model.ClassThemeAverage;
 import org.dlearn.helsinki.skeleton.model.Question;
 import org.dlearn.helsinki.skeleton.model.Survey;
 import org.dlearn.helsinki.skeleton.model.SurveyTheme;
+import org.dlearn.helsinki.skeleton.model.ThemeAverage;
 
 public class TeacherClassSurveyService {
 
@@ -46,9 +46,9 @@ public class TeacherClassSurveyService {
         return new ArrayList<Survey>();
     }
 
-    public List<ClassThemeAverage> getClassThemeAverage(int class_id,
+    public List<ThemeAverage> getClassThemeAverage(int class_id,
             int survey_id) {
-        return db.getClassThemeAverage(class_id, survey_id);
+        return db.getSurveyAnswerAverages(0, class_id, 0, survey_id);
     }
 
     public void closeSurvey(int teacher_id, int class_id, int survey_id) {
