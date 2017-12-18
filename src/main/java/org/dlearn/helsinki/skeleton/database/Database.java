@@ -215,9 +215,10 @@ public class Database {
                     while (result.next()) {
                         Question question = new Question();
                         question.setQuestion(result.getString(1));
-                        question.setMin_answer(result.getInt(2));
-                        question.setMax_answer(result.getInt(3));
-                        question.set_id(result.getInt(4));
+                        question.setQuestion_fi(result.getString(2));
+                        question.setMin_answer(result.getInt(3));
+                        question.setMax_answer(result.getInt(4));
+                        question.set_id(result.getInt(5));
                         questions.add(question);
                     }
                 }
